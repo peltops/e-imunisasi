@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "683504612347",
+    "firebase_url": "https://eimunisasi-81ae1.firebaseio.com",
+    "project_id": "eimunisasi-81ae1",
+    "storage_bucket": "eimunisasi-81ae1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:683504612347:android:c5dd6b0d58b1ce7d97115e",
+        "android_client_info": {
+          "package_name": "com.example.e_imunisasi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "683504612347-2inv0k0ltc7asj3cmli4junq0jg0uj4d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3SWRuu3Y5v-MC4saOILpeXLsFiVbcEGc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "683504612347-2inv0k0ltc7asj3cmli4junq0jg0uj4d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:683504612347:android:d939a0f250cdbe8e97115e",
+        "android_client_info": {
+          "package_name": "com.example.eimunisasi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "683504612347-2inv0k0ltc7asj3cmli4junq0jg0uj4d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3SWRuu3Y5v-MC4saOILpeXLsFiVbcEGc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "683504612347-2inv0k0ltc7asj3cmli4junq0jg0uj4d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
