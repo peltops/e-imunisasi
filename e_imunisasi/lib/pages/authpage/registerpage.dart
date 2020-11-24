@@ -1,16 +1,19 @@
 import 'package:e_imunisasi/pages/authpage/Widget/bezierContainer.dart';
 import 'package:flutter/material.dart';
+import 'package:e_imunisasi/services/auth.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
 
-class RegisterMedis extends StatefulWidget {
-  final Function toggleView;
-  RegisterMedis({this.toggleView});
+class Register extends StatefulWidget {
+  final String typeRegis;
+
+  Register({this.typeRegis});
 
   @override
-  _RegisterMedisState createState() => _RegisterMedisState();
+  _RegisterState createState() => _RegisterState();
 }
 
-class _RegisterMedisState extends State<RegisterMedis> {
+class _RegisterState extends State<Register> {
+  final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
 
   //Email and Pass state
@@ -31,10 +34,13 @@ class _RegisterMedisState extends State<RegisterMedis> {
           backgroundColor: Colors.transparent,
           iconTheme: IconThemeData(color: Colors.black),
           elevation: 0.0,
-          title: Text(
-            "Daftar Sebagai Tenaga Kesehatan",
-            style: TextStyle(color: Colors.black),
-          ),
+          title: widget.typeRegis == 'anakCollection'
+              ? Text("Daftar Sebagai Anak",
+                  style: TextStyle(color: Colors.black))
+              : Text(
+                  "Daftar Sebagai Tenaga Kesehatan",
+                  style: TextStyle(color: Colors.black),
+                ),
         ),
         body: Stack(children: [
           Positioned(
@@ -224,16 +230,19 @@ class _RegisterMedisState extends State<RegisterMedis> {
                                   setState(() {
                                     loading = true;
                                   });
-                                  // dynamic result =
-                                  //     await _auth.registerWithEmailAndPassword(
-                                  //         nama, email, password,);
-                                  Navigator.pop(context);
-                                  // if (result == null) {
-                                  //   setState(() {
-                                  //     loading = true;
-                                  //     error = "Email Sudah Terdaftar";
-                                  //   });
-                                  // }
+                                  dynamic result =
+                                      await _auth.registerWithEmailAndPassword(
+                                          nama,
+                                          email,
+                                          password,
+                                          widget.typeRegis);
+                                  registerAlertDialog(context, email);
+                                  if (result == null) {
+                                    setState(() {
+                                      loading = true;
+                                      error = "Email Sudah Terdaftar";
+                                    });
+                                  }
                                 }
                               }
                             : null,
@@ -256,5 +265,33 @@ class _RegisterMedisState extends State<RegisterMedis> {
                 )))),
           )
         ]));
+  }
+
+  registerAlertDialog(BuildContext context, String email) {
+    // set up the buttons
+
+    Widget cancelButton = FlatButton(
+      child: Text("Kembali"),
+      onPressed: () {
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+      },
+    );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      elevation: 5.0,
+      title: Text("Terimakasih telah mendaftar"),
+      content: Text("Silahkan verifikasi email: $email terlebih dahulu"),
+      actions: [
+        cancelButton,
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 }

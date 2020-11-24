@@ -35,10 +35,21 @@ dependencies:
   # Add the dependencies for any other Firebase products you want to use in your app
   # For example, to use Firebase Authentication and Cloud Firestore
   firebase_auth: ^0.14.0+5
-  cloud_firestore: ^0.12.9+4
+  cloud_firestore: ^0.13.4+2
+  firebase_storage: ^3.1.5
+  firebase_helpers: ^0.1.8
   provider: ^3.1.0
   keyboard_avoider: ^0.1.2
-  flutter_signin_button: ^1.1.0
+  google_fonts: ^0.3.5
+  image_picker: ^0.6.7+12
+  table_calendar: ^2.2.3
+  splashscreen:
+  fl_chart: ^0.12.0
+  stats: ^1.0.0
+
+
+
+
 
 dev_dependencies:
   flutter_test:
@@ -55,9 +66,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/img/logo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

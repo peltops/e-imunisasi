@@ -1,4 +1,5 @@
 import 'package:e_imunisasi/models/user.dart';
+import 'package:e_imunisasi/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
@@ -6,24 +7,12 @@ class AuthService {
 
   //creat user obj on firebaseuser
   User _userFromFirebaseUser(FirebaseUser user) {
-    return user != null ? User(uid: user.uid) : null;
+    return user != null ? User(uid: user.uid, email: user.email) : null;
   }
 
   //auth change user stream
   Stream<User> get user {
     return _auth.onAuthStateChanged.map(_userFromFirebaseUser);
-  }
-
-  //sign in anon
-  Future signInAnon() async {
-    try {
-      AuthResult result = await _auth.signInAnonymously();
-      FirebaseUser user = result.user;
-      return _userFromFirebaseUser(user);
-    } catch (e) {
-      print(e.toString());
-      return null;
-    }
   }
 
   //sign in with email
@@ -32,7 +21,10 @@ class AuthService {
       AuthResult result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       FirebaseUser user = result.user;
-      return _userFromFirebaseUser(user);
+      print(user.isEmailVerified);
+      return user.isEmailVerified
+          ? _userFromFirebaseUser(user)
+          : print('Email belum diverifikasi');
     } catch (e) {
       print(e.toString());
       return null;
@@ -40,11 +32,17 @@ class AuthService {
   }
 
   //register with email
-  Future registerWithEmailAndPassword(String email, String password) async {
+  Future registerWithEmailAndPassword(
+      String name, String email, String password, String typeRegis) async {
     try {
       AuthResult result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       FirebaseUser user = result.user;
+      typeRegis == 'anakCollection'
+          ? await DatabaseService(uid: user.uid, email: user.email)
+              .updateUserDataAnak(email, name, '', '', '', '', '', '', '', '')
+          : await DatabaseService(uid: user.uid, email: user.email)
+              .updateUserDataMedis(email, name, '', '', '', '', '');
       await user.sendEmailVerification();
       return _userFromFirebaseUser(user);
     } catch (e) {
@@ -55,8 +53,19 @@ class AuthService {
   }
 
   //Reset Password
-  Future recoveryPassword(String email) async {
+  Future recoveryPassword(String email) {
     return _auth.sendPasswordResetEmail(email: email);
+  }
+
+  Future cekVerifiedEmail() async {
+    try {
+      FirebaseUser user = await _auth.currentUser();
+      await user.reload();
+      user = await _auth.currentUser();
+      return user;
+    } catch (e) {
+      return e.message;
+    }
   }
 
   //sign out
