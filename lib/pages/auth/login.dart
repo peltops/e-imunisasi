@@ -3,7 +3,6 @@ import 'package:eimunisasi/pages/auth/resetpassword.dart';
 import 'package:eimunisasi/pages/widget/button_custom.dart';
 import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 import 'package:eimunisasi/pages/widget/text_form_custom.dart';
-import 'package:eimunisasi/pages/wrapper.dart';
 import 'package:eimunisasi/services/auth.dart';
 import 'package:eimunisasi/utils/dismiss_keyboard.dart';
 import 'package:snack/snack.dart';
@@ -185,6 +184,9 @@ class _LoginPageState extends State<LoginPage> {
                               } catch (e) {
                                 snackbarCustom(e.message.toString())
                                     .show(context);
+                                setState(() {
+                                  loading = false;
+                                });
                               }
                             }
                           }

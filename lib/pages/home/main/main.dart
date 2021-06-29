@@ -1,5 +1,5 @@
 import 'package:eimunisasi/pages/home/main/Kontak/kontak.dart';
-import 'package:eimunisasi/pages/home/main/bukusehat/buku_sehat.dart';
+import 'package:eimunisasi/pages/home/main/bukusehat/child/list_anak.dart';
 import 'package:eimunisasi/pages/home/main/calendar/kalender.dart';
 import 'package:eimunisasi/pages/home/main/vaksinasi/vaksinasi.dart';
 import 'package:flutter/material.dart';
@@ -46,10 +46,7 @@ class _MainPageState extends State<MainPage> {
                     elevation: 0,
                     child: GridView.count(
                         padding: EdgeInsets.all(20),
-                        // Create a grid with 2 columns. If you change the scrollDirection to
-                        // horizontal, this produces 2 rows.
                         crossAxisCount: 2,
-                        // Generate 100 widgets that display their index in the List.
                         children: [
                           TombolMenu(
                                   icon: Icons.calendar_today,
@@ -79,8 +76,7 @@ class _MainPageState extends State<MainPage> {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) =>
-                                                BukuSehatPage()));
+                                            builder: (context) => ListAnak()));
                                   },
                                   label: 'Buku Sehat')
                               .tombolMenuCustom(),

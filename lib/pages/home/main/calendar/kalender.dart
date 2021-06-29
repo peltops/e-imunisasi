@@ -1,6 +1,9 @@
 import 'dart:collection';
+import 'dart:math';
 
 import 'package:eimunisasi/pages/home/main/calendar/add_event.dart';
+import 'package:eimunisasi/pages/home/main/calendar/update_event.dart';
+import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 import 'package:intl/intl.dart';
 import 'package:eimunisasi/models/calendar.dart';
 import 'package:eimunisasi/models/user.dart';
@@ -234,22 +237,36 @@ class _KalenderPageState extends State<KalenderPage> {
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: [
-                                                Text(
-                                                  e.activity,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
+                                                Flexible(
+                                                  child: Text(
+                                                    e.activity,
+                                                  ),
                                                 ),
-                                                Row(
-                                                  children: [
-                                                    IconButton(
-                                                        icon: Icon(Icons.edit),
-                                                        onPressed: null),
-                                                    IconButton(
-                                                        icon:
-                                                            Icon(Icons.delete),
-                                                        onPressed: null)
+                                                SizedBox(
+                                                  width: 5,
+                                                ),
+                                                PopupMenuButton(
+                                                  onSelected: (item) =>
+                                                      selectedItem(
+                                                          context,
+                                                          item,
+                                                          e.documentID,
+                                                          e),
+                                                  initialValue: 2,
+                                                  child: Icon(
+                                                    Icons.menu_outlined,
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
+                                                  ),
+                                                  itemBuilder: (context) => [
+                                                    PopupMenuItem<int>(
+                                                        value: 0,
+                                                        child: Text("Ubah")),
+                                                    PopupMenuItem<int>(
+                                                        value: 1,
+                                                        child: Text("Hapus")),
                                                   ],
-                                                )
+                                                ),
                                               ],
                                             )),
                                           ],
@@ -270,5 +287,25 @@ class _KalenderPageState extends State<KalenderPage> {
             MaterialPageRoute(builder: (context) => AddEventCalendar())),
       ),
     );
+  }
+
+  void selectedItem(BuildContext context, item, docID, Calendars data) {
+    switch (item) {
+      case 0:
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => UpdateEventCalendar(
+                  docID: docID,
+                  data: data,
+                )));
+        break;
+      case 1:
+        try {
+          FirestoreDatabase(uid: data.uid).deleteEvent(docID);
+          snackbarCustom('Data berhasil dihapus').show(context);
+        } catch (e) {
+          snackbarCustom(e.toString()).show(context);
+        }
+        break;
+    }
   }
 }

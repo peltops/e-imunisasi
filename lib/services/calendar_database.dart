@@ -11,6 +11,12 @@ class FirestoreDatabase {
   Future<void> setEvent(Calendars calendars) =>
       _service.collection('calendars').add(calendars.toMap());
 
+  Future<void> updateEvent(Calendars calendars, docID) =>
+      _service.collection('calendars').doc(docID).update(calendars.toMap());
+
+  Future<void> deleteEvent(docID) =>
+      _service.collection('calendars').doc(docID).delete();
+
   // Future<void> deleteJob(Job job) async {
   //   // delete where entry.jobId == job.jobId
   //   final allEntries = await entriesStream(job: job).first;
@@ -42,11 +48,6 @@ class FirestoreDatabase {
 
   Stream<List<Calendars>> get calendarsStream =>
       _service.collection('calendars').snapshots().map(_listEventKalender);
-
-  // Future<void> setEntry(Entry entry) => _service.setData(
-  //       path: FirestorePath.entry(uid, entry.id),
-  //       data: entry.toMap(),
-  //     );
 
   // Future<void> deleteEntry(Entry entry) =>
   //     _service.deleteData(path: FirestorePath.entry(uid, entry.id));
