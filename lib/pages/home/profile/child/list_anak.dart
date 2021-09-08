@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eimunisasi/models/anak.dart';
 import 'package:eimunisasi/pages/home/profile/child/anak.dart';
 import 'package:eimunisasi/pages/home/profile/child/daftar_anak.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +16,7 @@ class ListAnak extends StatelessWidget {
           backgroundColor: Colors.pink[300],
           elevation: 0,
           title: Text(
-            'Profil',
+            'Pilih Anak',
             style: TextStyle(fontWeight: FontWeight.w700),
           ),
           centerTitle: true,
@@ -32,20 +32,18 @@ class ListAnak extends StatelessWidget {
                     width: double.infinity,
                     child: Card(
                         elevation: 0,
-                        child: StreamBuilder<
-                                DocumentSnapshot<Map<String, dynamic>>>(
-                            stream: AnakService().documentStream,
-                            builder: (context, snapshot) {
+                        child: StreamBuilder<List<Anak>>(
+                            stream: AnakService().anakStream,
+                            builder:
+                                (context, AsyncSnapshot<List<Anak>> snapshot) {
                               if (snapshot.hasData) {
-                                var data;
-                                if (snapshot.data.data() != null) {
-                                  data = snapshot.data;
-                                  indexAnak = data.data().length;
+                                final data = snapshot.data;
 
+                                if (snapshot.data != null) {
+                                  indexAnak = data.length;
                                   return ListView.builder(
-                                    itemCount: data.data().length,
+                                    itemCount: data.length,
                                     itemBuilder: (context, index) {
-                                      index = index + 1;
                                       return Card(
                                           child: ListTile(
                                         onTap: () {
@@ -54,28 +52,23 @@ class ListAnak extends StatelessWidget {
                                               MaterialPageRoute(
                                                   builder: (context) =>
                                                       AnakPage(
-                                                        nama: data[index
-                                                                .toString()]
-                                                            ['nama'],
-                                                        nik: data[index
-                                                            .toString()]['nik'],
-                                                        tempatLahir: data[index
-                                                                .toString()]
-                                                            ['tempat_lahir'],
-                                                        tanggalLahir: data[index
-                                                                .toString()]
-                                                            ['tanggal_lahir'],
-                                                        jenisKelamin: data[index
-                                                                .toString()]
-                                                            ['jenis_kelamin'],
-                                                        golDarah: data[index
-                                                                .toString()]
-                                                            ['gol_darah'],
-                                                        indexAnak: index - 1,
+                                                        nama: data[index].nama,
+                                                        nik: data[index].nik,
+                                                        tempatLahir: data[index]
+                                                            .tempatLahir,
+                                                        tanggalLahir:
+                                                            data[index]
+                                                                .tanggalLahir,
+                                                        jenisKelamin:
+                                                            data[index]
+                                                                .jenisKelamin,
+                                                        golDarah: data[index]
+                                                            .golDarah,
+                                                        indexAnak: index,
                                                       )));
                                         },
                                         title: Text(
-                                          data[index.toString()]['nama'],
+                                          data[index].nama,
                                           style: TextStyle(
                                               fontWeight: FontWeight.w700),
                                         ),
@@ -87,7 +80,8 @@ class ListAnak extends StatelessWidget {
                                 }
                               } else if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
-                                return LinearProgressIndicator();
+                                return Center(
+                                    child: CircularProgressIndicator());
                               }
                               return Center(
                                 child: Text('Tidak ada data'),

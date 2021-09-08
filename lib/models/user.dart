@@ -1,8 +1,9 @@
 class Users {
   final String uid;
-  final String firstName;
-  final String lastName;
-  final String phoneNumber;
+  final String momName;
+  final String dadName;
+  final String nomorhpAyah;
+  final String nomorhpIbu;
   final String email;
   final String golDarahAyah;
   final String golDarahIbu;
@@ -12,14 +13,15 @@ class Users {
   final String avatarURL;
   final bool verified;
   Users(
-      {this.phoneNumber,
-      this.golDarahAyah,
+      {this.golDarahAyah,
       this.golDarahIbu,
       this.pekerjaanAyah,
       this.pekerjaanIbu,
+      this.nomorhpAyah,
+      this.nomorhpIbu,
       this.alamat,
-      this.firstName,
-      this.lastName,
+      this.momName,
+      this.dadName,
       this.uid,
       this.email,
       this.avatarURL,
@@ -29,9 +31,10 @@ class Users {
     return Users(
       uid: data['uid'],
       email: data['email'] ?? '',
-      firstName: data['firstName'] ?? '',
-      lastName: data['lastName'] ?? '',
-      phoneNumber: data['phoneNumber'] ?? '',
+      momName: data['momName'] ?? '',
+      dadName: data['dadName'] ?? '',
+      nomorhpAyah: data['nomorhpAyah'] ?? '',
+      nomorhpIbu: data['nomorhpIbu'] ?? '',
       golDarahAyah: data['golDarahAyah'] ?? '',
       golDarahIbu: data['golDarahIbu'] ?? '',
       pekerjaanAyah: data['pekerjaanAyah'] ?? '',
@@ -45,9 +48,10 @@ class Users {
   Map<String, dynamic> toJson() => {
         "uid": uid,
         "email": email,
-        "firstName": firstName,
-        "lastName": lastName,
-        "phoneNumber": phoneNumber,
+        "momName": momName,
+        "dadName": dadName,
+        "nomorhpAyah": nomorhpAyah,
+        "nomorhpIbu": nomorhpIbu,
         'golDarahAyah': golDarahAyah,
         'golDarahIbu': golDarahIbu,
         'pekerjaanAyah': pekerjaanAyah,

@@ -1,14 +1,19 @@
 import 'dart:ui';
 
 import 'package:eimunisasi/models/anak.dart';
+import 'package:eimunisasi/models/list_imunisasi.dart';
+import 'package:eimunisasi/models/user.dart';
 import 'package:eimunisasi/pages/widget/button_custom.dart';
 import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 import 'package:eimunisasi/pages/widget/text_form_custom.dart';
 import 'package:eimunisasi/services/anak_database.dart';
+import 'package:eimunisasi/services/calendar_database.dart';
 import 'package:eimunisasi/utils/dismiss_keyboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class DaftarAnakPage extends StatefulWidget {
   final indexAnak;
@@ -42,11 +47,14 @@ class _DaftarAnakPageState extends State<DaftarAnakPage> {
     super.initState();
   }
 
+  var pilihanJenisKelamin = ['Laki-laki', 'Perempuan', 'Lainnya'];
+  var pilihanGolDarah = ['A', 'AB', 'B', 'O'];
+  bool loading = false;
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<Users>(context);
     final kFirstDay = DateTime(DateTime.now().year - 5);
     final kLastDay = DateTime.now();
-    bool loading = false;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.pink[300],
@@ -150,23 +158,64 @@ class _DaftarAnakPageState extends State<DaftarAnakPage> {
                                   ],
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 5.0),
-                                  child: TextFormCustom(
-                                    label: 'Jenis Kelamin',
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: FormBuilderDropdown(
                                     onChanged: (val) {
                                       _jenisKelaminCtrl.text = val;
                                     },
+
+                                    name: 'Jenis kelamin',
+                                    decoration: InputDecoration(
+                                      fillColor: Color(0xfff3f3f4),
+                                      border: InputBorder.none,
+                                      filled: true,
+                                      labelText: 'Jenis Kelamin',
+                                      labelStyle:
+                                          TextStyle(color: Colors.black),
+                                    ),
+                                    // initialValue: 'Male',
+                                    allowClear: true,
+                                    hint: Text(
+                                      'Pilih jenis kelamin',
+                                    ),
+                                    validator: FormBuilderValidators.compose([
+                                      FormBuilderValidators.required(context)
+                                    ]),
+                                    items: pilihanJenisKelamin
+                                        .map((val) => DropdownMenuItem(
+                                              value: val,
+                                              child: Text('$val'),
+                                            ))
+                                        .toList(),
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 5.0),
-                                  child: TextFormCustom(
-                                    label: 'Golongan Darah',
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: FormBuilderDropdown(
                                     onChanged: (val) {
                                       _golDarahCtrl.text = val;
                                     },
+                                    name: 'Golongan Darah',
+                                    decoration: InputDecoration(
+                                      fillColor: Color(0xfff3f3f4),
+                                      border: InputBorder.none,
+                                      filled: true,
+                                      labelText: 'Golongan Darah',
+                                      labelStyle:
+                                          TextStyle(color: Colors.black),
+                                    ),
+                                    // initialValue: 'Male',
+                                    allowClear: true,
+                                    hint: Text('Pilih golongan darah'),
+                                    validator: FormBuilderValidators.compose([
+                                      FormBuilderValidators.required(context)
+                                    ]),
+                                    items: pilihanGolDarah
+                                        .map((val) => DropdownMenuItem(
+                                              value: val,
+                                              child: Text('$val'),
+                                            ))
+                                        .toList(),
                                   ),
                                 ),
                                 Padding(
@@ -190,47 +239,47 @@ class _DaftarAnakPageState extends State<DaftarAnakPage> {
                                           ),
                                     onPressed: !loading
                                         ? () async {
+                                            dismissKeyboard(context);
                                             DateTime tempDate = new DateFormat(
                                                     "dd-MM-yyyy")
                                                 .parse(_tanggalLahirCtrl.text);
-                                            dismissKeyboard(context);
                                             setState(() {
                                               loading = true;
                                             });
                                             try {
-                                              AnakService()
-                                                  .setData(
-                                                      Anak(
-                                                          _nikCtrl.text,
+                                              AnakService().setData(
+                                                  Anak(
+                                                      nik: _nikCtrl.text,
+                                                      tempatLahir:
                                                           _tempatLahirCtrl.text,
+                                                      jenisKelamin:
                                                           _jenisKelaminCtrl
                                                               .text,
+                                                      golDarah:
                                                           _golDarahCtrl.text,
-                                                          _namaCtrl.text,
-                                                          tempDate),
-                                                      widget.indexAnak,
-                                                      set: widget.indexAnak == 0
-                                                          ? true
-                                                          : false)
-                                                  .then((value) {
-                                                    snackbarCustom(
-                                                            'Data anak berhasil ditambah')
-                                                        .show(context);
+                                                      nama: _namaCtrl.text,
+                                                      tanggalLahir: tempDate),
+                                                  widget.indexAnak,
+                                                  set: widget.indexAnak == 0
+                                                      ? true
+                                                      : false);
+                                              JadwalImunisasi()
+                                                  .jadwalImunisai(user.uid,
+                                                      tempDate, _namaCtrl.text)
+                                                  .forEach((e) =>
+                                                      FirestoreDatabase(
+                                                              uid: user.uid)
+                                                          .setEvent(e));
 
-                                                    Navigator.pop(context);
-                                                  })
-                                                  .catchError((onError) =>
-                                                      snackbarCustom(
-                                                              'Terjadi kesalahan: $onError')
-                                                          .show(context))
-                                                  .whenComplete(
-                                                      () => setState(() {
-                                                            loading = false;
-                                                          }));
+                                              Navigator.pop(context);
                                             } catch (e) {
                                               snackbarCustom(
-                                                      e.message.toString())
+                                                      'Terjadi kesalahan: ' + e)
                                                   .show(context);
+                                            } finally {
+                                              setState(() {
+                                                loading = false;
+                                              });
                                             }
                                           }
                                         : null,

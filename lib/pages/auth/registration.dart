@@ -22,8 +22,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   //Email and Pass state
   bool loading = false;
-  String firstName = "";
-  String lastName = "";
+  String momName = "";
   String phoneNumber = "";
   String email = "";
   String password = "";
@@ -93,33 +92,21 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                   SizedBox(height: 5.0),
                   TextFormCustom(
-                    label: 'Nama Depan',
-                    hintText: '',
+                    label: 'Nama lengkap',
+                    hintText: 'Nama lengkap ibu balita',
                     icon: null,
                     validator: (val) =>
-                        val.isEmpty ? 'Silahkan masukkan Nama Depan' : null,
+                        val.isEmpty ? 'Silahkan masukkan Nama lengkap' : null,
                     onChanged: (val) {
                       setState(() {
-                        firstName = val;
-                      });
-                    },
-                  ),
-                  TextFormCustom(
-                    label: 'Nama Belakang',
-                    hintText: '',
-                    icon: null,
-                    validator: (val) =>
-                        val.isEmpty ? 'Silahkan masukkan Nama Belakang' : null,
-                    onChanged: (val) {
-                      setState(() {
-                        lastName = val;
+                        momName = val;
                       });
                     },
                   ),
                   TextFormCustom(
                     keyboardType: TextInputType.emailAddress,
                     label: 'Email',
-                    hintText: '',
+                    hintText: 'Email ibu balita',
                     icon: null,
                     validator: MultiValidator([
                       EmailValidator(errorText: 'Masukan email yang valid'),
@@ -134,7 +121,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   TextFormCustom(
                     keyboardType: TextInputType.phone,
                     label: 'No. Handphone',
-                    hintText: '',
+                    hintText: 'No. handphone ibu balita',
                     icon: null,
                     validator: MultiValidator([
                       RequiredValidator(errorText: 'Masukan No. Handphone'),
@@ -195,9 +182,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               });
                               try {
                                 await _auth.signUp(email, password,
-                                    firstName: firstName,
-                                    lastName: lastName,
-                                    phoneNumber: phoneNumber);
+                                    momName: momName, nomorhpIbu: phoneNumber);
                                 Navigator.pop(context);
                               } catch (e) {
                                 snackbarCustom(e.message.toString())

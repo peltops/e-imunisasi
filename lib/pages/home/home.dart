@@ -1,6 +1,14 @@
-import 'package:eimunisasi/pages/home/main/main.dart';
+import 'package:eimunisasi/pages/home/bantuan/bantuan_page.dart';
+import 'package:eimunisasi/pages/home/utama/main.dart';
+import 'package:eimunisasi/pages/home/pesan/pesan_page.dart';
 import 'package:eimunisasi/pages/home/profile/profile_page.dart';
+import 'package:eimunisasi/services/notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:eimunisasi/models/hive_calendar_activity.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class HomePage extends StatefulWidget {
   @override
@@ -8,22 +16,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    Provider.of<NotificationService>(context, listen: false).initialize();
+    super.initState();
+  }
+
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   int _selectedIndex = 0;
   final List<Widget> _widgetOptions = [
     MainPage(),
     ProfilePage(),
-    Center(
-      child: Text(
-        'Index 2: School',
-      ),
-    ),
-    Center(
-      child: Text(
-        'Index 3: School',
-      ),
-    ),
+    PesanPage(),
+    BantuanPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -36,7 +42,23 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      body: _widgetOptions[_selectedIndex],
+      body: ValueListenableBuilder<Box<CalendarsHive>>(
+          valueListenable:
+              Hive.box<CalendarsHive>('calendar_activity').listenable(),
+          builder: (context, box, _) {
+            List<CalendarsHive> calendarsActivity =
+                box.values.toList().cast<CalendarsHive>();
+            return Consumer<NotificationService>(builder: (context, model, _) {
+              final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+              calendarsActivity.asMap().forEach((i, val) {
+                if (val.date.isAfter(now)) {
+                  model.sheduledNotification(i, 'Pengingat jadwal',
+                      'Aktivitas: ' + val.activity, val.date);
+                }
+              });
+              return _widgetOptions[_selectedIndex];
+            });
+          }),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
@@ -44,22 +66,22 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Icons.home_outlined),
             activeIcon: Icon(Icons.home_rounded),
             // ignore: deprecated_member_use
-            label: 'Home',
+            label: 'Utama',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
             activeIcon: Icon(Icons.person),
-            label: 'Buku Sehat',
+            label: 'Profil',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.email_outlined),
             activeIcon: Icon(Icons.email_rounded),
-            label: 'Statistik',
+            label: 'Pesan',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.list_outlined),
             activeIcon: Icon(Icons.list_alt_rounded),
-            label: 'Informasi',
+            label: 'Bantuan',
           )
         ],
         currentIndex: _selectedIndex,

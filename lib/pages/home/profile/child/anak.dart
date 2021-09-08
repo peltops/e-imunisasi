@@ -8,6 +8,7 @@ import 'package:eimunisasi/services/anak_database.dart';
 import 'package:eimunisasi/utils/dismiss_keyboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
 
 class AnakPage extends StatefulWidget {
@@ -37,9 +38,7 @@ class _AnakPageState extends State<AnakPage> {
 
   @override
   void initState() {
-    print(widget.indexAnak);
-    DateTime _tanggalLahir =
-        DateTime.parse(widget.tanggalLahir.toDate().toString());
+    DateTime _tanggalLahir = DateTime.parse(widget.tanggalLahir.toString());
 
     _namaCtrl = TextEditingController(text: widget.nama);
     _nikCtrl = TextEditingController(text: widget.nik);
@@ -51,11 +50,13 @@ class _AnakPageState extends State<AnakPage> {
     super.initState();
   }
 
+  var pilihanJenisKelamin = ['Laki-laki', 'Perempuan', 'Lainnya'];
+  var pilihanGolDarah = ['A', 'AB', 'B', 'O'];
+  bool loading = false;
   @override
   Widget build(BuildContext context) {
     final kFirstDay = DateTime(DateTime.now().year - 5);
     final kLastDay = DateTime.now();
-    bool loading = false;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.pink[300],
@@ -77,7 +78,13 @@ class _AnakPageState extends State<AnakPage> {
                 height: MediaQuery.of(context).size.height / 6,
                 child: Card(
                   elevation: 0,
-                  child: Center(child: Text(_namaCtrl.text)),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(_namaCtrl.text),
+                      Text('Umur: ' + Anak().umurAnak(widget.tanggalLahir))
+                    ],
+                  ),
                 ),
               ),
               Expanded(
@@ -147,8 +154,7 @@ class _AnakPageState extends State<AnakPage> {
                                                 formattedDate.toString();
                                           });
                                         },
-                                            currentTime:
-                                                widget.tanggalLahir.toDate(),
+                                            currentTime: widget.tanggalLahir,
                                             locale: LocaleType.id),
                                         readOnly: true,
                                         label: 'Tanggal Lahir',
@@ -159,29 +165,59 @@ class _AnakPageState extends State<AnakPage> {
                                 ],
                               ),
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 5.0),
-                                child: TextFormCustom(
-                                  initialValue: _jenisKelaminCtrl.text,
-                                  label: 'Jenis Kelamin',
+                                padding: const EdgeInsets.all(5.0),
+                                child: FormBuilderDropdown(
                                   onChanged: (val) {
-                                    setState(() {
-                                      // password = val;
-                                    });
+                                    _jenisKelaminCtrl.text = val;
                                   },
+                                  name: 'Jenis kelamin',
+                                  decoration: InputDecoration(
+                                    fillColor: Color(0xfff3f3f4),
+                                    border: InputBorder.none,
+                                    filled: true,
+                                    labelText: 'Jenis Kelamin',
+                                    labelStyle: TextStyle(color: Colors.black),
+                                  ),
+                                  initialValue: _jenisKelaminCtrl.text,
+                                  hint: Text(
+                                    'Pilih jenis kelamin',
+                                  ),
+                                  validator: FormBuilderValidators.compose([
+                                    FormBuilderValidators.required(context)
+                                  ]),
+                                  items: pilihanJenisKelamin
+                                      .map((val) => DropdownMenuItem(
+                                            value: val,
+                                            child: Text('$val'),
+                                          ))
+                                      .toList(),
                                 ),
                               ),
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 5.0),
-                                child: TextFormCustom(
-                                  initialValue: _golDarahCtrl.text,
-                                  label: 'Golongan Darah',
+                                padding: const EdgeInsets.all(5.0),
+                                child: FormBuilderDropdown(
                                   onChanged: (val) {
-                                    setState(() {
-                                      // password = val;
-                                    });
+                                    _golDarahCtrl.text = val;
                                   },
+                                  name: 'Golongan Darah',
+                                  decoration: InputDecoration(
+                                    fillColor: Color(0xfff3f3f4),
+                                    border: InputBorder.none,
+                                    filled: true,
+                                    labelText: 'Golongan Darah',
+                                    labelStyle: TextStyle(color: Colors.black),
+                                  ),
+                                  initialValue: _golDarahCtrl.text,
+                                  hint: Text('Pilih golongan darah'),
+                                  validator: FormBuilderValidators.compose([
+                                    FormBuilderValidators.required(context)
+                                  ]),
+                                  items: pilihanGolDarah
+                                      .map((val) => DropdownMenuItem(
+                                            value: val,
+                                            child: Text('$val'),
+                                          ))
+                                      .toList(),
                                 ),
                               ),
                               Padding(
@@ -205,23 +241,28 @@ class _AnakPageState extends State<AnakPage> {
                                         ),
                                   onPressed: !loading
                                       ? () async {
+                                          setState(() {
+                                            loading = true;
+                                          });
                                           DateTime tempDate = new DateFormat(
                                                   "dd-MM-yyyy")
                                               .parse(_tanggalLahirCtrl.text);
                                           dismissKeyboard(context);
-                                          setState(() {
-                                            loading = true;
-                                          });
                                           try {
                                             AnakService()
                                                 .setData(
                                                     Anak(
-                                                        _nikCtrl.text,
-                                                        _tempatLahirCtrl.text,
-                                                        _jenisKelaminCtrl.text,
-                                                        _golDarahCtrl.text,
-                                                        _namaCtrl.text,
-                                                        tempDate),
+                                                        nik: _nikCtrl.text,
+                                                        tempatLahir:
+                                                            _tempatLahirCtrl
+                                                                .text,
+                                                        jenisKelamin:
+                                                            _jenisKelaminCtrl
+                                                                .text,
+                                                        golDarah:
+                                                            _golDarahCtrl.text,
+                                                        nama: _namaCtrl.text,
+                                                        tanggalLahir: tempDate),
                                                     widget.indexAnak)
                                                 .then((value) {
                                                   snackbarCustom(

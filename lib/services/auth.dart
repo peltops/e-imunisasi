@@ -24,7 +24,7 @@ class AuthService {
 
   //register with email
   Future signUp(String email, String password,
-      {String firstName, String lastName, String phoneNumber}) async {
+      {String momName, String nomorhpIbu}) async {
     try {
       await _auth
           .createUserWithEmailAndPassword(email: email, password: password)
@@ -32,9 +32,10 @@ class AuthService {
         Users _newUser = Users(
             uid: result.user.uid,
             email: result.user.email,
-            firstName: firstName,
-            lastName: lastName,
-            phoneNumber: phoneNumber,
+            momName: momName,
+            nomorhpIbu: nomorhpIbu,
+            golDarahAyah: '-',
+            golDarahIbu: '-',
             verified: result.user.emailVerified);
         //update the user in firestore
         _updateUserFirestore(_newUser, result.user);

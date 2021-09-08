@@ -36,8 +36,11 @@ class _ProfilePageState extends State<ProfilePage> {
                 height: MediaQuery.of(context).size.height / 4,
                 child: Card(
                     elevation: 0,
-                    child: SvgPicture.asset(
-                        'assets/images/undraw_online_cv_qy9w.svg')),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: SvgPicture.asset(
+                          'assets/images/undraw_online_cv_qy9w.svg'),
+                    )),
               ),
               Card(
                   child: ListTile(
@@ -63,8 +66,12 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 trailing: Icon(Icons.keyboard_arrow_right_rounded),
               )),
-              SizedBox(height: 20),
+              Expanded(
+                child: Container(),
+              ),
               Card(
+                  elevation: 0,
+                  color: Theme.of(context).primaryColor,
                   child: ListTile(
                       onTap: () {
                         try {
@@ -74,8 +81,14 @@ class _ProfilePageState extends State<ProfilePage> {
                           snackbarCustom(e.message.toString());
                         }
                       },
-                      title: Text('Logout'),
-                      leading: Icon(Icons.logout))),
+                      title: Text('Logout',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white)),
+                      trailing: Icon(
+                        Icons.logout,
+                        color: Colors.white,
+                      ))),
             ],
           ),
         ),
