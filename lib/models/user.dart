@@ -41,7 +41,7 @@ class Users {
       pekerjaanIbu: data['pekerjaanIbu'] ?? '',
       alamat: data['alamat'] ?? '',
       avatarURL: data['avatarURL'] ?? '',
-      verified: data['verified'] ?? '',
+      verified: data['verified'] ?? false,
     );
   }
 

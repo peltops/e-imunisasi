@@ -51,7 +51,7 @@ class _AnakPageState extends State<AnakPage> {
   }
 
   var pilihanJenisKelamin = ['Laki-laki', 'Perempuan', 'Lainnya'];
-  var pilihanGolDarah = ['A', 'AB', 'B', 'O'];
+  var pilihanGolDarah = ['-', 'A', 'AB', 'B', 'O'];
   bool loading = false;
   @override
   Widget build(BuildContext context) {

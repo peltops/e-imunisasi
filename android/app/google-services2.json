@@ -111,14 +111,6 @@
           }
         },
         {
-          "client_id": "683504612347-nfsaep6l6270t55urg1m61l5a8a0jg3m.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.peltops.e_imunisasi",
-            "certificate_hash": "056a6426c12401cccdc22e4ac2fb5c032bf3e2b2"
-          }
-        },
-        {
           "client_id": "683504612347-2inv0k0ltc7asj3cmli4junq0jg0uj4d.apps.googleusercontent.com",
           "client_type": 3
         }

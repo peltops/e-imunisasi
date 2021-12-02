@@ -1,10 +1,14 @@
+import 'package:country_code_picker/country_code_picker.dart';
+import 'package:eimunisasi/pages/auth/otp_page.dart';
+import 'package:eimunisasi/pages/auth/registration_email.dart';
 import 'package:eimunisasi/pages/widget/button_custom.dart';
 import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 import 'package:eimunisasi/pages/widget/text_form_custom.dart';
 import 'package:eimunisasi/services/auth.dart';
-import 'package:eimunisasi/utils/custom_validator.dart';
 import 'package:eimunisasi/utils/dismiss_keyboard.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:sim_info/sim_info.dart';
 import 'package:snack/snack.dart';
 import 'package:flutter/material.dart';
 import 'package:keyboard_avoider/keyboard_avoider.dart';
@@ -22,21 +26,64 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   //Email and Pass state
   bool loading = false;
-  String momName = "";
-  String phoneNumber = "";
-  String email = "";
-  String password = "";
-  String error = "";
-  bool _sandi = true;
+  String phoneNumber, verId, countryCode, momName, smsCode, email, error;
+  bool codeOTPSent = false;
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
-  showHide() {
+  // siminfo
+  String _isoCountryCode;
+
+  Future<void> getSimInfo() async {
+    String isoCountryCode = await SimInfo.getIsoCountryCode;
+
     setState(() {
-      _sandi = !_sandi;
+      _isoCountryCode = isoCountryCode;
     });
   }
 
   @override
+  void initState() {
+    getSimInfo();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final PhoneVerificationFailed verificationfailed =
+        (FirebaseAuthException exception) {
+      // throw exception;
+      setState(() {
+        error = 'Terjadi kesalahan, Silahkan coba beberapa saat lagi!';
+        loading = false;
+      });
+      snackbarCustom('Terjadi masalah: ${exception.message.toString()}');
+    };
+    final PhoneCodeSent codeSent =
+        (String verificationId, [int forceResendingToken]) {
+      setState(() {
+        verId = verificationId;
+        codeOTPSent = true;
+        loading = false;
+        loading = false;
+      });
+      var phone = phoneNumber;
+
+      if (phone[0] == '0') {
+        phone = phone.substring(1);
+      }
+      phone = countryCode + phone;
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+              builder: (context) => OTPPage(
+                    phoneNumber: phone,
+                    verId: verificationId,
+                    description: 'register',
+                  )),
+          (route) => false);
+    };
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -87,73 +134,56 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     height: 5.0,
                   ),
                   Text(
-                    error,
+                    error ?? '',
                     style: TextStyle(color: Colors.red, fontSize: 15.0),
                   ),
                   SizedBox(height: 5.0),
-                  TextFormCustom(
-                    label: 'Nama lengkap',
-                    hintText: 'Nama lengkap ibu balita',
-                    icon: null,
-                    validator: (val) =>
-                        val.isEmpty ? 'Silahkan masukkan Nama lengkap' : null,
-                    onChanged: (val) {
-                      setState(() {
-                        momName = val;
-                      });
-                    },
-                  ),
-                  TextFormCustom(
-                    keyboardType: TextInputType.emailAddress,
-                    label: 'Email',
-                    hintText: 'Email ibu balita',
-                    icon: null,
-                    validator: MultiValidator([
-                      EmailValidator(errorText: 'Masukan email yang valid'),
-                      RequiredValidator(errorText: 'Masukan email'),
-                    ]),
-                    onChanged: (val) {
-                      setState(() {
-                        email = val;
-                      });
-                    },
-                  ),
-                  TextFormCustom(
-                    keyboardType: TextInputType.phone,
-                    label: 'No. Handphone',
-                    hintText: 'No. handphone ibu balita',
-                    icon: null,
-                    validator: MultiValidator([
-                      RequiredValidator(errorText: 'Masukan No. Handphone'),
-                      MaxLengthValidator(15,
-                          errorText: 'No.Handphone terlalu panjang'),
-                      CPhoneValidator(errorText: 'No.Handphone dimulai +62')
-                    ]),
-                    onChanged: (val) {
-                      setState(() {
-                        phoneNumber = val;
-                      });
-                    },
-                  ),
-                  TextFormCustom(
-                    label: 'Password',
-                    hintText: '',
-                    obscureText: _sandi,
-                    icon: IconButton(
-                      icon: Icon(
-                          _sandi ? Icons.visibility_off : Icons.visibility),
-                      onPressed: () => showHide(),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      'Nomor Ponsel Orang tua/Wali',
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    validator: MultiValidator([
-                      RequiredValidator(errorText: 'Masukan password'),
-                      MinLengthValidator(8,
-                          errorText: 'Password minimal 8 karakter'),
-                    ]),
-                    onChanged: (val) {
-                      setState(() {
-                        password = val;
-                      });
-                    },
+                  ),
+                  SizedBox(height: 5.0),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.pink[300],
+                        ),
+                        child: CountryCodePicker(
+                          textStyle: TextStyle(color: Colors.white),
+                          onInit: (value) {
+                            countryCode = value.toString();
+                          },
+                          onChanged: (value) {
+                            setState(() {
+                              countryCode = value.toString();
+                            });
+                          },
+                          initialSelection: _isoCountryCode ?? "ID",
+                          showOnlyCountryWhenClosed: false,
+                        ),
+                      ),
+                      Expanded(
+                        child: TextFormCustom(
+                          keyboardType: TextInputType.phone,
+                          hintText: '87654321',
+                          validator: MultiValidator([
+                            RequiredValidator(errorText: 'Masukan No. Ponsel!'),
+                            MaxLengthValidator(13,
+                                errorText: 'No. Ponsel terlalu panjang'),
+                          ]),
+                          onChanged: (val) {
+                            setState(() {
+                              phoneNumber = val;
+                            });
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(
                     height: 20.0,
@@ -180,22 +210,47 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               setState(() {
                                 loading = true;
                               });
-                              try {
-                                await _auth.signUp(email, password,
-                                    momName: momName, nomorhpIbu: phoneNumber);
-                                Navigator.pop(context);
-                              } catch (e) {
-                                snackbarCustom(e.message.toString())
-                                    .show(context);
-                              } finally {
-                                setState(() {
-                                  loading = false;
-                                });
+                              var phone = phoneNumber;
+                              if (phone[0] == '0') {
+                                phone = phone.substring(1);
                               }
+                              var codePhoneNumber = countryCode + phone;
+                              _auth
+                                  .checkUserExists(codePhoneNumber)
+                                  .then((value) {
+                                if (value) {
+                                  snackbarCustom(
+                                          'Nomor sudah terdaftar, Silahkan login')
+                                      .show(context);
+                                  setState(() {
+                                    loading = false;
+                                  });
+                                } else {
+                                  try {
+                                    _auth.verifyPhoneNumber(codePhoneNumber,
+                                        context, codeSent, verificationfailed);
+                                  } catch (e) {
+                                    loading = false;
+                                    snackbarCustom(
+                                            'Terjadi kesalahan, coba sesaat lagi!')
+                                        .show(context);
+                                  }
+                                }
+                              });
                             }
                           }
                         : null,
                   ),
+                  SizedBox(height: 10),
+                  buttonCustom(
+                      textChild: Text(
+                        "Daftar dengan Email",
+                        style: TextStyle(fontSize: 15.0, color: Colors.white),
+                      ),
+                      onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RegistrationEmailPage()))),
                 ]),
               ),
             )),

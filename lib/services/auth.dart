@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eimunisasi/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -14,6 +15,62 @@ class AuthService {
   //auth change user stream
   Stream<Users> get userActive {
     return _auth.authStateChanges().map(_userFromFirebaseUser);
+  }
+
+  // Sign in with phone number
+  Future verifyPhoneNumber(
+      String phone, BuildContext context, codeSent, verificationFailed) async {
+    _auth
+        .verifyPhoneNumber(
+            phoneNumber: phone,
+            timeout: Duration(seconds: 60),
+            verificationCompleted: null,
+            verificationFailed: verificationFailed,
+            codeSent: codeSent,
+            codeAutoRetrievalTimeout: null)
+        .catchError((e) => throw e);
+  }
+
+  Future checkUserExists(phoneNumber) {
+    return _db
+        .collection('users')
+        .where('nomorhpIbu', isEqualTo: phoneNumber)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      if (querySnapshot.docs.isNotEmpty) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+  }
+
+  Future signUpWithOTP(smsCode, verId, phoneNumber) async {
+    AuthCredential credential =
+        PhoneAuthProvider.credential(verificationId: verId, smsCode: smsCode);
+    try {
+      await _auth.signInWithCredential(credential).then((result) {
+        Users _newUser = Users(
+            uid: result.user.uid,
+            nomorhpIbu: result.user.phoneNumber,
+            golDarahAyah: '-',
+            golDarahIbu: '-');
+        //update the user in firestore
+        _updateUserFirestore(_newUser, result.user);
+      });
+    } on FirebaseAuthException catch (e) {
+      throw e;
+    }
+  }
+
+  Future signInWithOTP(smsCode, verId, phoneNumber) async {
+    AuthCredential credential =
+        PhoneAuthProvider.credential(verificationId: verId, smsCode: smsCode);
+    try {
+      await _auth.signInWithCredential(credential);
+    } on FirebaseAuthException catch (e) {
+      throw e;
+    }
   }
 
   //sign in with email
@@ -32,11 +89,11 @@ class AuthService {
         Users _newUser = Users(
             uid: result.user.uid,
             email: result.user.email,
-            momName: momName,
-            nomorhpIbu: nomorhpIbu,
             golDarahAyah: '-',
             golDarahIbu: '-',
             verified: result.user.emailVerified);
+        // send verification to user email
+        result.user.sendEmailVerification();
         //update the user in firestore
         _updateUserFirestore(_newUser, result.user);
       });

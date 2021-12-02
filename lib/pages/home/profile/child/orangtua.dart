@@ -60,15 +60,15 @@ class _OrangtuaPageState extends State<OrangtuaPage> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               Users user = snapshot.data;
-              _namaAyahCtrl.text = user.dadName;
-              _namaIbuCtrl.text = user.momName;
-              _pekerjaanAyahCtrl.text = user.pekerjaanAyah;
-              _pekerjaanIbuCtrl.text = user.pekerjaanIbu;
-              _golDarahAyahCtrl.text = user.golDarahAyah;
-              _golDarahIbuCtrl.text = user.golDarahIbu;
-              _nomorAyahCtrl.text = user.nomorhpAyah;
-              _nomorIbuCtrl.text = user.nomorhpIbu;
-              _alamatCtrl.text = user.alamat;
+              _namaAyahCtrl.text = user.dadName ?? '';
+              _namaIbuCtrl.text = user.momName ?? '';
+              _pekerjaanAyahCtrl.text = user.pekerjaanAyah ?? '';
+              _pekerjaanIbuCtrl.text = user.pekerjaanIbu ?? '';
+              _golDarahAyahCtrl.text = user.golDarahAyah ?? '';
+              _golDarahIbuCtrl.text = user.golDarahIbu ?? '';
+              _nomorAyahCtrl.text = user.nomorhpAyah ?? '';
+              _nomorIbuCtrl.text = user.nomorhpIbu ?? '';
+              _alamatCtrl.text = user.alamat ?? '';
 
               return Container(
                 color: Colors.pink[100],
@@ -86,21 +86,12 @@ class _OrangtuaPageState extends State<OrangtuaPage> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                user.avatarURL == ''
+                                user.avatarURL == null || user.avatarURL.isEmpty
                                     ? CircleAvatar(
                                         foregroundColor: Colors.white,
                                         radius: 50.0,
                                         child: Stack(
                                           children: [
-                                            Align(
-                                              alignment: Alignment.center,
-                                              child: Text(
-                                                user.momName.substring(0, 1),
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 50),
-                                              ),
-                                            ),
                                             Align(
                                               alignment: Alignment.bottomRight,
                                               child: CircleAvatar(
@@ -168,10 +159,32 @@ class _OrangtuaPageState extends State<OrangtuaPage> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text(_currentUser.email),
-                                    Text(_currentUser.emailVerified
-                                        ? ' (Terverifikasi)'
-                                        : ' (Belum Verifikasi)'),
+                                    Text(_currentUser.email ??
+                                        _currentUser.phoneNumber),
+                                    _currentUser.email != null
+                                        ? _currentUser.emailVerified
+                                            ? Text(' (Terverifikasi)')
+                                            : GestureDetector(
+                                                onTap: () async {
+                                                  await _currentUser
+                                                      .sendEmailVerification()
+                                                      .then((value) {
+                                                    snackbarCustom(
+                                                            "Berhasil, cek email ${_currentUser.email}")
+                                                        .show(context);
+                                                  }).catchError((onError) =>
+                                                          snackbarCustom(
+                                                                  "Terjadi kesalahan: \n $onError")
+                                                              .show(context));
+                                                },
+                                                child: Text(
+                                                  ' (Verifikasi sekarang)',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              )
+                                        : Container(),
                                   ],
                                 ),
                               ],
@@ -351,7 +364,8 @@ class _OrangtuaPageState extends State<OrangtuaPage> {
                                                   const EdgeInsets.symmetric(
                                                       horizontal: 5.0),
                                               child: TextFormCustom(
-                                                initialValue: user.nomorhpIbu,
+                                                initialValue:
+                                                    _currentUser.phoneNumber,
                                                 label: 'No.handphone Ibu',
                                                 onChanged: (val) {
                                                   _nomorIbuCtrl.text = val;

@@ -21,6 +21,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    // final FirebaseAuth _auth = FirebaseAuth.instance;
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.pink[300],

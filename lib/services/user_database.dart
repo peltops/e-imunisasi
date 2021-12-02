@@ -21,10 +21,11 @@ class UserService extends FirestoreDatabase {
       _service.collection('users').doc(_currentUser.uid).update(users.toJson());
 
   Users _userSnapshot(DocumentSnapshot snapshot) {
-    Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+    var data = Map<String, dynamic>.from(snapshot.data());
     return Users.fromMap(data);
   }
 
+  // stream user
   Stream<Users> get userStream => _service
       .collection('users')
       .doc(_currentUser.uid)

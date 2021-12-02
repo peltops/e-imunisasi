@@ -13,6 +13,9 @@ class CPhoneValidator extends TextFieldValidator {
   @override
   bool isValid(String value) {
     // return true if the value is valid according the your condition
-    return hasMatch(r'\+(\d+)+|\(\d+\)$', value);
+
+    String patttern = r'(^\+([0-9]{1,3})([0-9]{10,13}))';
+    RegExp regExp = new RegExp(patttern);
+    return regExp.hasMatch(value);
   }
 }
