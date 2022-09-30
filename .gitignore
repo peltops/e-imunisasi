@@ -47,3 +47,6 @@ app.*.map.json
 
 # Keys jks
 /keys
+
+# fvm
+.fvm/flutter_sdk

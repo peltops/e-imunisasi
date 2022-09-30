@@ -1,6 +1,7 @@
 import 'package:eimunisasi/pages/home/profile/child/list_anak.dart';
 import 'package:eimunisasi/pages/home/profile/child/orangtua.dart';
 import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
+import 'package:eimunisasi/pages/wrapper.dart';
 import 'package:eimunisasi/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -76,6 +77,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       onTap: () {
                         try {
                           AuthService().signOut();
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) => Wrapper()),
+                              (route) => false);
                           snackbarCustom('Berhasil keluar');
                         } catch (e) {
                           snackbarCustom(e.message.toString());
