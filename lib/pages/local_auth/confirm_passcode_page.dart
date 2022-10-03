@@ -1,4 +1,5 @@
 import 'package:eimunisasi/pages/home/home.dart';
+import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 import 'package:eimunisasi/services/local_auth_service.dart';
 import 'package:eimunisasi/utils/dismiss_keyboard.dart';
 import 'package:flutter/material.dart';
@@ -75,11 +76,7 @@ class _ConfirmPasscodePageState extends State<ConfirmPasscodePage> {
                                           (route) => false),
                                 );
                           } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('PIN Tidak Sama!'),
-                              ),
-                            );
+                            snackbarCustom('PIN Tidak Sama!').show(context);
                           }
                         }
                       },

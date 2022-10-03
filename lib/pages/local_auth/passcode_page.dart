@@ -1,5 +1,6 @@
 import 'package:eimunisasi/pages/home/home.dart';
 import 'package:eimunisasi/pages/local_auth/confirm_passcode_page.dart';
+import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 import 'package:eimunisasi/services/local_auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
@@ -97,11 +98,7 @@ class _PasscodePageState extends State<PasscodePage> {
                                     builder: (context) => HomePage()),
                                 (route) => false);
                           } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('PIN Salah!'),
-                              ),
-                            );
+                            snackbarCustom('PIN Salah!').show(context);
                           }
                         }
                       } else {
