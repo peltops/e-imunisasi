@@ -7,7 +7,9 @@ import 'package:eimunisasi/services/user_database.dart';
 import 'package:eimunisasi/utils/dismiss_keyboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:intl/intl.dart';
 
 class OrangtuaPage extends StatefulWidget {
   const OrangtuaPage({Key key}) : super(key: key);
@@ -25,7 +27,13 @@ class _OrangtuaPageState extends State<OrangtuaPage> {
       _golDarahIbuCtrl,
       _nomorAyahCtrl,
       _nomorIbuCtrl,
-      _alamatCtrl;
+      _emailCtrl,
+      _alamatCtrl,
+      _tempatLahirCtrl,
+      _tanggalLahirCtrl,
+      _nomorKkCtrl,
+      _nomorKtpCtrl;
+
   @override
   void initState() {
     _namaAyahCtrl = TextEditingController();
@@ -36,13 +44,22 @@ class _OrangtuaPageState extends State<OrangtuaPage> {
     _golDarahIbuCtrl = TextEditingController();
     _nomorAyahCtrl = TextEditingController();
     _nomorIbuCtrl = TextEditingController();
+    _emailCtrl = TextEditingController();
     _alamatCtrl = TextEditingController();
+    _tempatLahirCtrl = TextEditingController();
+    _tanggalLahirCtrl = TextEditingController(text: 'Pilih Tanggal Lahir');
+    _nomorKkCtrl = TextEditingController();
+    _nomorKtpCtrl = TextEditingController();
     super.initState();
   }
 
   var pilihanGolDarah = ['-', 'A', 'AB', 'B', 'O'];
+  var pilihanPekerjaan = ['IRT', 'ASN/Karyawan', 'Wirausaha'];
   @override
   Widget build(BuildContext context) {
+    DateFormat format = new DateFormat("dd-MM-yyyy");
+    final kFirstDay = DateTime(DateTime.now().year - 5);
+    final kLastDay = DateTime.now();
     final _currentUser = FirebaseAuth.instance.currentUser;
     bool loading = false;
     return Scaffold(
@@ -69,326 +86,347 @@ class _OrangtuaPageState extends State<OrangtuaPage> {
               _nomorAyahCtrl.text = user.nomorhpAyah ?? '';
               _nomorIbuCtrl.text = user.nomorhpIbu ?? '';
               _alamatCtrl.text = user.alamat ?? '';
+              _emailCtrl.text = _currentUser.email ?? '';
+              _tempatLahirCtrl.text = user.tempatLahir ?? '';
+              _tanggalLahirCtrl.text = user.tanggalLahir != null
+                  ? DateFormat('dd-MM-yyyy').format(user.tanggalLahir)
+                  : '';
+              _nomorKkCtrl.text = user.noKK ?? '';
+              _nomorKtpCtrl.text = user.noKTP ?? '';
+              if (!pilihanPekerjaan.contains(user.pekerjaanIbu)) {
+                pilihanPekerjaan.add(user.pekerjaanIbu);
+              }
 
               return Container(
                 color: Colors.pink[100],
                 child: Padding(
                   padding: EdgeInsets.all(20),
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Container(
-                        width: double.infinity,
-                        // height: MediaQuery.of(context).size.height / 6,
-                        child: Card(
-                          elevation: 0,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 5),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                user.avatarURL == null || user.avatarURL.isEmpty
-                                    ? CircleAvatar(
-                                        foregroundColor: Colors.white,
-                                        radius: 50.0,
-                                        child: Stack(
-                                          children: [
-                                            Align(
-                                              alignment: Alignment.bottomRight,
-                                              child: CircleAvatar(
-                                                foregroundColor: Colors.white,
-                                                backgroundColor:
-                                                    Theme.of(context)
-                                                        .accentColor,
-                                                radius: 15,
-                                                child: IconButton(
-                                                    alignment: Alignment.center,
-                                                    icon: Icon(
-                                                      Icons.photo_camera,
-                                                      size: 15.0,
-                                                    ),
-                                                    onPressed: () async {
-                                                      ModalPickerImage()
-                                                          .showPicker(context);
-                                                    }),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    : CircleAvatar(
-                                        radius: 50.0,
-                                        backgroundColor: Colors.transparent,
-                                        backgroundImage: NetworkImage(
-                                            'https://i.pinimg.com/originals/d2/4d/db/d24ddb8271b8ea9b4bbf4b67df8cbc01.gif',
-                                            scale: 0.1),
-                                        child: Stack(
-                                          children: [
-                                            Align(
-                                              alignment: Alignment.center,
-                                              child: CircleAvatar(
-                                                radius: 50,
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                                backgroundImage: NetworkImage(
-                                                    user.avatarURL,
-                                                    scale: 0.1),
-                                              ),
-                                            ),
-                                            Align(
-                                              alignment: Alignment.bottomRight,
-                                              child: CircleAvatar(
-                                                radius: 15,
-                                                child: IconButton(
-                                                    alignment: Alignment.center,
-                                                    icon: Icon(
-                                                      Icons.photo_camera,
-                                                      size: 15.0,
-                                                    ),
-                                                    onPressed: () async {
-                                                      ModalPickerImage()
-                                                          .showPicker(context);
-                                                    }),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(_currentUser.email ??
-                                        _currentUser.phoneNumber),
-                                    _currentUser.email != null
-                                        ? _currentUser.emailVerified
-                                            ? Text(' (Terverifikasi)')
-                                            : GestureDetector(
-                                                onTap: () async {
-                                                  await _currentUser
-                                                      .sendEmailVerification()
-                                                      .then((value) {
-                                                    snackbarCustom(
-                                                            "Berhasil, cek email ${_currentUser.email}")
-                                                        .show(context);
-                                                  }).catchError((onError) =>
-                                                          snackbarCustom(
-                                                                  "Terjadi kesalahan: \n $onError")
-                                                              .show(context));
-                                                },
-                                                child: Text(
-                                                  ' (Verifikasi sekarang)',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                              )
-                                        : Container(),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
                       Expanded(
                           child: Container(
                               width: double.infinity,
                               child: Card(
                                 child: SingleChildScrollView(
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 5.0),
-                                              child: TextFormCustom(
-                                                initialValue: user.dadName,
-                                                label: 'Nama Ayah',
-                                                validator: (val) => val.length <
-                                                        8
-                                                    ? 'Masukan Password min 8'
-                                                    : null,
-                                                onChanged: (val) {
-                                                  _namaAyahCtrl.text = val;
-                                                },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 5.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 5),
+                                          child: Column(
+                                            children: [
+                                              user.avatarURL == null ||
+                                                      user.avatarURL.isEmpty
+                                                  ? CircleAvatar(
+                                                      foregroundColor:
+                                                          Colors.white,
+                                                      radius: 50.0,
+                                                      child: Stack(
+                                                        children: [
+                                                          Align(
+                                                            alignment: Alignment
+                                                                .bottomRight,
+                                                            child: CircleAvatar(
+                                                              foregroundColor:
+                                                                  Colors.white,
+                                                              backgroundColor:
+                                                                  Theme.of(
+                                                                          context)
+                                                                      .accentColor,
+                                                              radius: 15,
+                                                              child: IconButton(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .center,
+                                                                  icon: Icon(
+                                                                    Icons
+                                                                        .photo_camera,
+                                                                    size: 15.0,
+                                                                  ),
+                                                                  onPressed:
+                                                                      () async {
+                                                                    ModalPickerImage()
+                                                                        .showPicker(
+                                                                            context);
+                                                                  }),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    )
+                                                  : CircleAvatar(
+                                                      radius: 50.0,
+                                                      backgroundColor:
+                                                          Colors.transparent,
+                                                      backgroundImage: NetworkImage(
+                                                          'https://i.pinimg.com/originals/d2/4d/db/d24ddb8271b8ea9b4bbf4b67df8cbc01.gif',
+                                                          scale: 0.1),
+                                                      child: Stack(
+                                                        children: [
+                                                          Align(
+                                                            alignment: Alignment
+                                                                .center,
+                                                            child: CircleAvatar(
+                                                              radius: 50,
+                                                              backgroundColor:
+                                                                  Colors
+                                                                      .transparent,
+                                                              backgroundImage:
+                                                                  NetworkImage(
+                                                                      user
+                                                                          .avatarURL,
+                                                                      scale:
+                                                                          0.1),
+                                                            ),
+                                                          ),
+                                                          Align(
+                                                            alignment: Alignment
+                                                                .bottomRight,
+                                                            child: CircleAvatar(
+                                                              radius: 15,
+                                                              child: IconButton(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .center,
+                                                                  icon: Icon(
+                                                                    Icons
+                                                                        .photo_camera,
+                                                                    size: 15.0,
+                                                                  ),
+                                                                  onPressed:
+                                                                      () async {
+                                                                    ModalPickerImage()
+                                                                        .showPicker(
+                                                                            context);
+                                                                  }),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                              SizedBox(
+                                                height: 5,
                                               ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 5.0),
-                                              child: TextFormCustom(
-                                                initialValue: user.momName,
-                                                label: 'Nama Ibu',
-                                                onChanged: (val) {
-                                                  _namaIbuCtrl.text = val;
-                                                },
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  _currentUser.email != null
+                                                      ? _currentUser
+                                                              .emailVerified
+                                                          ? Text(
+                                                              ' (Terverifikasi)')
+                                                          : GestureDetector(
+                                                              onTap: () async {
+                                                                try {
+                                                                  await _currentUser
+                                                                      .sendEmailVerification();
+                                                                  snackbarCustom(
+                                                                          "Berhasil, cek email ${_currentUser.email}")
+                                                                      .show(
+                                                                          context);
+                                                                } on FirebaseException catch (e) {
+                                                                  snackbarCustom(e
+                                                                          .message)
+                                                                      .show(
+                                                                          context);
+                                                                } catch (e) {
+                                                                  snackbarCustom(
+                                                                          "Terjadi kesalahan: \n $e")
+                                                                      .show(
+                                                                          context);
+                                                                }
+                                                              },
+                                                              child: Text(
+                                                                'Belum Terverifikasi (Verifikasi sekarang)',
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ),
+                                                            )
+                                                      : Container(),
+                                                ],
                                               ),
-                                            ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 5.0),
-                                              child: TextFormCustom(
-                                                initialValue:
-                                                    user.pekerjaanAyah,
-                                                label: 'Pekerjaan Ayah',
-                                                onChanged: (val) {
-                                                  _pekerjaanAyahCtrl.text = val;
-                                                },
-                                              ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 5.0),
-                                              child: TextFormCustom(
-                                                initialValue: user.pekerjaanIbu,
-                                                label: 'Pekerjaan Ibu',
-                                                onChanged: (val) {
-                                                  _pekerjaanIbuCtrl.text = val;
-                                                },
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(5.0),
-                                              child: FormBuilderDropdown(
-                                                onChanged: (val) {
-                                                  _golDarahAyahCtrl.text = val;
-                                                },
-                                                name: 'Golongan Darah',
-                                                decoration: InputDecoration(
-                                                  fillColor: Color(0xfff3f3f4),
-                                                  border: InputBorder.none,
-                                                  filled: true,
-                                                  labelText: 'Golongan Darah',
-                                                  labelStyle: TextStyle(
-                                                      color: Colors.black),
-                                                ),
-                                                initialValue: user.golDarahAyah,
-                                                hint: Text(
-                                                    'Pilih golongan darah'),
-                                                validator: FormBuilderValidators
-                                                    .compose([
-                                                  FormBuilderValidators
-                                                      .required(context)
-                                                ]),
-                                                items: pilihanGolDarah
-                                                    .map((val) =>
-                                                        DropdownMenuItem(
-                                                          value: val,
-                                                          child: Text('$val'),
-                                                        ))
-                                                    .toList(),
-                                              ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(5.0),
-                                              child: FormBuilderDropdown(
-                                                onChanged: (val) {
-                                                  _golDarahIbuCtrl.text = val;
-                                                },
-                                                name: 'Golongan Darah',
-                                                decoration: InputDecoration(
-                                                  fillColor: Color(0xfff3f3f4),
-                                                  border: InputBorder.none,
-                                                  filled: true,
-                                                  labelText: 'Golongan Darah',
-                                                  labelStyle: TextStyle(
-                                                      color: Colors.black),
-                                                ),
-                                                initialValue: user.golDarahIbu,
-                                                hint: Text(
-                                                    'Pilih golongan darah'),
-                                                validator: FormBuilderValidators
-                                                    .compose([
-                                                  FormBuilderValidators
-                                                      .required(context)
-                                                ]),
-                                                items: pilihanGolDarah
-                                                    .map((val) =>
-                                                        DropdownMenuItem(
-                                                          value: val,
-                                                          child: Text('$val'),
-                                                        ))
-                                                    .toList(),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 5.0),
-                                              child: TextFormCustom(
-                                                initialValue: user.nomorhpAyah,
-                                                label: 'No.handphone Ayah',
-                                                onChanged: (val) {
-                                                  _nomorAyahCtrl.text = val;
-                                                },
-                                              ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 5.0),
-                                              child: TextFormCustom(
-                                                initialValue:
-                                                    _currentUser.phoneNumber,
-                                                label: 'No.handphone Ibu',
-                                                onChanged: (val) {
-                                                  _nomorIbuCtrl.text = val;
-                                                },
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 5.0),
-                                        child: TextFormCustom(
-                                          initialValue: user.alamat,
-                                          label: 'Alamat',
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Text(
+                                          'Profil Orangtua',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20),
+                                        ),
+                                        TextFormCustom(
+                                          initialValue: user.momName,
+                                          label:
+                                              'Nama Lengkap (Sesuai Akte Lahir/KTP)',
                                           onChanged: (val) {
-                                            _alamatCtrl.text = val;
+                                            _namaIbuCtrl.text = val;
                                           },
                                         ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: buttonCustom(
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              child: TextFormCustom(
+                                                initialValue: user.tempatLahir,
+                                                label: 'Tempat Lahir',
+                                                onChanged: (val) {
+                                                  _tempatLahirCtrl.text = val;
+                                                },
+                                              ),
+                                            ),
+                                            SizedBox(width: 10),
+                                            Expanded(
+                                              child: TextFormCustom(
+                                                onTap: () =>
+                                                    DatePicker.showDatePicker(
+                                                  context,
+                                                  theme: DatePickerTheme(
+                                                    doneStyle: TextStyle(
+                                                        color: Theme.of(context)
+                                                            .accentColor),
+                                                  ),
+                                                  showTitleActions: true,
+                                                  minTime: kFirstDay,
+                                                  maxTime: kLastDay,
+                                                  onChanged: (val) {
+                                                    String formattedDate =
+                                                        DateFormat('dd-MM-yyyy')
+                                                            .format(val);
+                                                    setState(() {
+                                                      _tanggalLahirCtrl.text =
+                                                          formattedDate
+                                                              .toString();
+                                                    });
+                                                  },
+                                                  onConfirm: (val) {
+                                                    String formattedDate =
+                                                        DateFormat('dd-MM-yyyy')
+                                                            .format(val);
+                                                    setState(() {
+                                                      _tanggalLahirCtrl.text =
+                                                          formattedDate
+                                                              .toString();
+                                                    });
+                                                  },
+                                                  currentTime:
+                                                      user.tanggalLahir ??
+                                                          DateTime.now(),
+                                                  locale: LocaleType.id,
+                                                ),
+                                                readOnly: true,
+                                                label: 'Tanggal Lahir',
+                                                controller: _tanggalLahirCtrl,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        TextFormCustom(
+                                          keyboardType: TextInputType.number,
+                                          initialValue: user.noKTP,
+                                          label: 'No NIK',
+                                          onChanged: (val) {
+                                            _nomorKtpCtrl.text = val;
+                                          },
+                                        ),
+                                        TextFormCustom(
+                                          keyboardType: TextInputType.number,
+                                          initialValue: user.noKK,
+                                          label: 'No KK',
+                                          onChanged: (val) {
+                                            _nomorKkCtrl.text = val;
+                                          },
+                                        ),
+                                        FormBuilderDropdown(
+                                          onChanged: (val) {
+                                            _pekerjaanIbuCtrl.text = val;
+                                          },
+                                          name: 'Pekerjaan',
+                                          decoration: InputDecoration(
+                                            fillColor: Color(0xfff3f3f4),
+                                            border: InputBorder.none,
+                                            filled: true,
+                                            labelText: 'Pekerjaan',
+                                            labelStyle:
+                                                TextStyle(color: Colors.black),
+                                          ),
+                                          initialValue: user.pekerjaanIbu,
+                                          hint: Text('Pilih Pekerjaan'),
+                                          validator:
+                                              FormBuilderValidators.compose([
+                                            FormBuilderValidators.required(
+                                                context)
+                                          ]),
+                                          items: pilihanPekerjaan
+                                              .map((val) => DropdownMenuItem(
+                                                    value: val,
+                                                    child: Text('$val'),
+                                                  ))
+                                              .toList(),
+                                        ),
+                                        SizedBox(height: 5),
+                                        FormBuilderDropdown(
+                                          onChanged: (val) {
+                                            _golDarahIbuCtrl.text = val;
+                                          },
+                                          name: 'Golongan Darah',
+                                          decoration: InputDecoration(
+                                            fillColor: Color(0xfff3f3f4),
+                                            border: InputBorder.none,
+                                            filled: true,
+                                            labelText: 'Golongan Darah',
+                                            labelStyle:
+                                                TextStyle(color: Colors.black),
+                                          ),
+                                          initialValue: user.golDarahIbu,
+                                          hint: Text('Pilih golongan darah'),
+                                          validator:
+                                              FormBuilderValidators.compose([
+                                            FormBuilderValidators.required(
+                                                context)
+                                          ]),
+                                          items: pilihanGolDarah
+                                              .map((val) => DropdownMenuItem(
+                                                    value: val,
+                                                    child: Text('$val'),
+                                                  ))
+                                              .toList(),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Text(
+                                          'Informasi Akun',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20),
+                                        ),
+                                        if (_currentUser.email != null)
+                                          TextFormCustom(
+                                            readOnly: true,
+                                            initialValue: _currentUser.email,
+                                            label: 'Email',
+                                            onChanged: (val) {
+                                              _emailCtrl.text = val;
+                                            },
+                                          ),
+                                        if (_currentUser.phoneNumber != null)
+                                          TextFormCustom(
+                                            readOnly: true,
+                                            initialValue:
+                                                _currentUser.phoneNumber,
+                                            label: 'No.handphone Ibu',
+                                            onChanged: (val) {
+                                              _nomorIbuCtrl.text = val;
+                                            },
+                                          ),
+                                        buttonCustom(
                                           textChild: !loading
                                               ? Text(
                                                   "Simpan",
@@ -412,7 +450,8 @@ class _OrangtuaPageState extends State<OrangtuaPage> {
                                                   dismissKeyboard(context);
                                                   loading = true;
                                                   await UserService()
-                                                      .updateUser(Users(
+                                                      .updateUser(
+                                                        Users(
                                                           alamat:
                                                               _alamatCtrl.text,
                                                           dadName: _namaAyahCtrl
@@ -438,7 +477,20 @@ class _OrangtuaPageState extends State<OrangtuaPage> {
                                                               _pekerjaanIbuCtrl
                                                                   .text,
                                                           avatarURL:
-                                                              user.avatarURL))
+                                                              user.avatarURL,
+                                                          tanggalLahir:
+                                                              format.parse(
+                                                                  _tanggalLahirCtrl
+                                                                      .text),
+                                                          tempatLahir:
+                                                              _tempatLahirCtrl
+                                                                  .text,
+                                                          noKK:
+                                                              _nomorKkCtrl.text,
+                                                          noKTP: _nomorKtpCtrl
+                                                              .text,
+                                                        ),
+                                                      )
                                                       .then((value) {
                                                         snackbarCustom(
                                                                 'Data berhasil diperbarui')
@@ -458,9 +510,9 @@ class _OrangtuaPageState extends State<OrangtuaPage> {
                                                   });
                                                 }
                                               : null,
-                                        ),
-                                      )
-                                    ],
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
                               )))

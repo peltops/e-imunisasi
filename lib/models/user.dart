@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Users {
   final String uid;
   final String momName;
@@ -12,20 +14,29 @@ class Users {
   final String alamat;
   final String avatarURL;
   final bool verified;
-  Users(
-      {this.golDarahAyah,
-      this.golDarahIbu,
-      this.pekerjaanAyah,
-      this.pekerjaanIbu,
-      this.nomorhpAyah,
-      this.nomorhpIbu,
-      this.alamat,
-      this.momName,
-      this.dadName,
-      this.uid,
-      this.email,
-      this.avatarURL,
-      this.verified});
+  final String tempatLahir;
+  final DateTime tanggalLahir;
+  final String noKK;
+  final String noKTP;
+  Users({
+    this.golDarahAyah,
+    this.golDarahIbu,
+    this.pekerjaanAyah,
+    this.pekerjaanIbu,
+    this.nomorhpAyah,
+    this.nomorhpIbu,
+    this.alamat,
+    this.momName,
+    this.dadName,
+    this.uid,
+    this.email,
+    this.avatarURL,
+    this.verified,
+    this.tempatLahir,
+    this.tanggalLahir,
+    this.noKK,
+    this.noKTP,
+  });
 
   factory Users.fromMap(Map data) {
     return Users(
@@ -42,6 +53,11 @@ class Users {
       alamat: data['alamat'] ?? '',
       avatarURL: data['avatarURL'] ?? '',
       verified: data['verified'] ?? false,
+      tempatLahir: data['tempatLahir'] ?? '',
+      tanggalLahir:
+          (data['tanggalLahir'] as Timestamp).toDate() ?? DateTime.now(),
+      noKK: data['noKK'] ?? '',
+      noKTP: data['noKTP'] ?? '',
     );
   }
 
@@ -59,6 +75,10 @@ class Users {
         'alamat': alamat,
         'avatarURL': avatarURL,
         "verified": verified,
+        "tempatLahir": tempatLahir,
+        "tanggalLahir": tanggalLahir,
+        "noKK": noKK,
+        "noKTP": noKTP,
       };
 }
 

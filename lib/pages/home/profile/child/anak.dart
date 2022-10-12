@@ -126,7 +126,9 @@ class _AnakPageState extends State<AnakPage> {
                                       child: TextFormCustom(
                                         initialValue: _tempatLahirCtrl.text,
                                         label: 'Tempat Lahir',
-                                        onChanged: (val) {},
+                                        onChanged: (val) {
+                                          _tempatLahirCtrl.text = val;
+                                        },
                                       ),
                                     ),
                                   ),

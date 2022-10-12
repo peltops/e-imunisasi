@@ -37,7 +37,6 @@ class _DaftarAnakPageState extends State<DaftarAnakPage> {
   final _formKey = GlobalKey<FormState>();
   @override
   void initState() {
-    print(widget.indexAnak.toString());
     _tanggalLahirCtrl = TextEditingController(text: '');
     _namaCtrl = TextEditingController(text: '');
     _nikCtrl = TextEditingController(text: '');
