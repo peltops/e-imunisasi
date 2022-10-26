@@ -1,6 +1,5 @@
 import 'package:eimunisasi/models/anak.dart';
-import 'package:eimunisasi/pages/home/utama/bukusehat/grafik_tumbuh_kembang.dart';
-import 'package:eimunisasi/pages/home/utama/bukusehat/riwayat_vaksinasi.dart';
+import 'package:eimunisasi/pages/home/utama/bukusehat/rekam_medis_pasien/rekam_medis_pasien_screen.dart';
 import 'package:eimunisasi/pages/home/utama/bukusehat/tabel_tumbuh_kembang.dart';
 import 'package:flutter/material.dart';
 import 'package:eimunisasi/services/anak_database.dart';
@@ -45,67 +44,15 @@ class ListAnak extends StatelessWidget {
                                     return Card(
                                         child: ListTile(
                                       onTap: () {
-                                        if (this.page == 'riwayat') {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      RiwayatPage(
-                                                        nama: data[index].nama,
-                                                        nik: data[index].nik,
-                                                        tempatLahir: data[index]
-                                                            .tempatLahir,
-                                                        tanggalLahir:
-                                                            data[index]
-                                                                .tanggalLahir,
-                                                        jenisKelamin:
-                                                            data[index]
-                                                                .jenisKelamin,
-                                                        golDarah: data[index]
-                                                            .golDarah,
-                                                        indexAnak: index,
-                                                      )));
-                                        } else if (this.page == 'tabel') {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      TabelTumbuhKembang(
-                                                        nama: data[index].nama,
-                                                        nik: data[index].nik,
-                                                        tempatLahir: data[index]
-                                                            .tempatLahir,
-                                                        tanggalLahir:
-                                                            data[index]
-                                                                .tanggalLahir,
-                                                        jenisKelamin:
-                                                            data[index]
-                                                                .jenisKelamin,
-                                                        golDarah: data[index]
-                                                            .golDarah,
-                                                        indexAnak: index,
-                                                      )));
-                                        } else if (this.page == 'grafik') {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      GrafikTumbuhKembang(
-                                                        nama: data[index].nama,
-                                                        nik: data[index].nik,
-                                                        tempatLahir: data[index]
-                                                            .tempatLahir,
-                                                        tanggalLahir:
-                                                            data[index]
-                                                                .tanggalLahir,
-                                                        jenisKelamin:
-                                                            data[index]
-                                                                .jenisKelamin,
-                                                        golDarah: data[index]
-                                                            .golDarah,
-                                                        indexAnak: index,
-                                                      )));
-                                        }
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                RekamMedisPasienScreen(
+                                              anak: data[index],
+                                            ),
+                                          ),
+                                        );
                                       },
                                       title: Text(
                                         data[index].nama,

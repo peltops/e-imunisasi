@@ -38,56 +38,23 @@ class _BukuSehatPageState extends State<BukuSehatPage> {
                         height: 20,
                       ),
                       Card(
-                          child: ListTile(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ListAnak(
-                                        page: 'riwayat',
-                                      )));
-                        },
-                        leading: Icon(
-                          Icons.history,
-                          color: Theme.of(context).primaryColor,
-                          size: 30,
+                        child: ListTile(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ListAnak(
+                                          page: 'riwayat',
+                                        )));
+                          },
+                          leading: Icon(
+                            Icons.history,
+                            color: Theme.of(context).primaryColor,
+                            size: 30,
+                          ),
+                          title: Text('Buku Sehat'),
                         ),
-                        title: Text('Riwayat Vaksinasi'),
-                      )),
-                      Card(
-                          child: ListTile(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ListAnak(
-                                        page: 'tabel',
-                                      )));
-                        },
-                        leading: Icon(
-                          Icons.table_chart_outlined,
-                          color: Theme.of(context).primaryColor,
-                          size: 30,
-                        ),
-                        title: Text('Tabel Tumbuh Kembang'),
-                      )),
-                      Card(
-                          child: ListTile(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ListAnak(
-                                        page: 'grafik',
-                                      )));
-                        },
-                        leading: Icon(
-                          Icons.bar_chart_rounded,
-                          color: Theme.of(context).primaryColor,
-                          size: 30,
-                        ),
-                        title: Text('Grafik Tumbuh Kembang'),
-                      )),
+                      ),
                     ],
                   ),
                 ),
