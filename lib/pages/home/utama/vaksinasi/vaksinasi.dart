@@ -1,4 +1,4 @@
-import 'package:eimunisasi/pages/home/utama/vaksinasi/daftar_vaksinasi.dart';
+import 'package:eimunisasi/pages/home/utama/vaksinasi/list_anak_vaksinasi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -46,7 +46,7 @@ class _VaksinasiPageState extends State<VaksinasiPage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => DaftarVaksinasiPage()));
+                                  builder: (context) => ListAnakVaksinasi()));
                         },
                         leading: Icon(
                           Icons.medical_services_outlined,
@@ -54,6 +54,21 @@ class _VaksinasiPageState extends State<VaksinasiPage> {
                           size: 30,
                         ),
                         title: Text('Vaksinasi'),
+                      )),
+                      Card(
+                          child: ListTile(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ListAnakVaksinasi()));
+                        },
+                        leading: Icon(
+                          Icons.list_rounded,
+                          color: Theme.of(context).primaryColor,
+                          size: 30,
+                        ),
+                        title: Text('Daftar Janji'),
                       )),
                     ],
                   ),

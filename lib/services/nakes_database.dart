@@ -27,6 +27,6 @@ class NakesDatabase {
     }).toList();
   }
 
-  Stream<List<NakesModel>> get calendarsStream =>
+  Stream<List<NakesModel>> get nakesStream =>
       _service.collection('tenaga_kesehatan').snapshots().map(_listData);
 }

@@ -32,7 +32,7 @@ class _ListDaftarNakesState extends State<ListDaftarNakes> {
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: StreamBuilder<List<NakesModel>>(
-                      stream: NakesDatabase().calendarsStream,
+                      stream: NakesDatabase().nakesStream,
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           var data = snapshot.data;
