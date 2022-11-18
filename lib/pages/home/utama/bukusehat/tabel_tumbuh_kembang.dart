@@ -1,4 +1,6 @@
 import 'package:eimunisasi/models/anak.dart';
+import 'package:eimunisasi/models/checkup_model.dart';
+import 'package:eimunisasi/services/checkups_services.dart';
 import 'package:flutter/material.dart';
 
 class TabelTumbuhKembang extends StatefulWidget {
@@ -63,60 +65,93 @@ class _TabelTumbuhKembangState extends State<TabelTumbuhKembang> {
                       ],
                     )),
               ),
-              Expanded(
-                  child: SizedBox.expand(
-                child: Card(
-                    elevation: 0,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Tabel Tumbuh Kembang Anak',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.w700),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          SizedBox(
-                            width: double.infinity,
-                            child: DataTable(
-                                headingTextStyle: TextStyle(
-                                    fontFamily: 'Nunito',
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
-                                dataTextStyle: TextStyle(
-                                  fontFamily: 'Nunito',
-                                  color: Colors.black,
-                                ),
-                                headingRowColor: MaterialStateColor.resolveWith(
-                                    (states) => Theme.of(context).primaryColor),
-                                columns: <DataColumn>[
-                                  DataColumn(
-                                    label: Text(
-                                      'Berat\nBadan',
-                                      overflow: TextOverflow.visible,
-                                    ),
+              StreamBuilder<List<CheckupModel>>(
+                  stream: CheckupsServices().checkupsStream(widget.nik),
+                  builder: (context, snapshot) {
+                    var data = <CheckupModel>[];
+                    if (snapshot.hasData) {
+                      data = snapshot.data;
+                    } else {
+                      data = [];
+                    }
+                    return Expanded(
+                        child: SizedBox.expand(
+                      child: Card(
+                          elevation: 0,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Tabel Tumbuh Kembang Anak',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w700),
                                   ),
-                                  DataColumn(
-                                    label: Text(
-                                      'Tinggi\nBadan',
-                                    ),
+                                  SizedBox(
+                                    height: 10,
                                   ),
-                                  DataColumn(
-                                    label: Text(
-                                      'Lingkar\nKepala',
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: DataTable(
+                                      headingTextStyle: TextStyle(
+                                          fontFamily: 'Nunito',
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                      dataTextStyle: TextStyle(
+                                        fontFamily: 'Nunito',
+                                        color: Colors.black,
+                                      ),
+                                      headingRowColor:
+                                          MaterialStateColor.resolveWith(
+                                              (states) => Theme.of(context)
+                                                  .primaryColor),
+                                      columns: <DataColumn>[
+                                        DataColumn(
+                                          label: Text(
+                                            'Berat\nBadan',
+                                            overflow: TextOverflow.visible,
+                                          ),
+                                        ),
+                                        DataColumn(
+                                          label: Text(
+                                            'Tinggi\nBadan',
+                                          ),
+                                        ),
+                                        DataColumn(
+                                          label: Text(
+                                            'Lingkar\nKepala',
+                                          ),
+                                        ),
+                                      ],
+                                      rows: [
+                                        if (data.length > 0)
+                                          for (var i = 0; i < data.length; i++)
+                                            DataRow(cells: [
+                                              DataCell(Text(data[i]
+                                                      .beratBadan
+                                                      .toString() ??
+                                                  '')),
+                                              DataCell(Text(data[i]
+                                                      .tinggiBadan
+                                                      .toString() ??
+                                                  '')),
+                                              DataCell(Text(data[i]
+                                                      .lingkarKepala
+                                                      .toString() ??
+                                                  '')),
+                                            ]),
+                                      ],
                                     ),
                                   ),
                                 ],
-                                rows: <DataRow>[]),
-                          ),
-                        ],
-                      ),
-                    )),
-              )),
+                              ),
+                            ),
+                          )),
+                    ));
+                  }),
             ],
           ),
         ),

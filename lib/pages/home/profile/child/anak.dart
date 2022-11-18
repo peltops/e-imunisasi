@@ -2,10 +2,12 @@ import 'dart:ui';
 
 import 'package:eimunisasi/models/anak.dart';
 import 'package:eimunisasi/pages/widget/button_custom.dart';
+import 'package:eimunisasi/pages/widget/image_picker.dart';
 import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 import 'package:eimunisasi/pages/widget/text_form_custom.dart';
 import 'package:eimunisasi/services/anak_database.dart';
 import 'package:eimunisasi/utils/dismiss_keyboard.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -75,13 +77,13 @@ class _AnakPageState extends State<AnakPage> {
             children: [
               Container(
                 width: double.infinity,
-                height: MediaQuery.of(context).size.height / 6,
+                height: MediaQuery.of(context).size.height / 5,
                 child: Card(
                   elevation: 0,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(_namaCtrl.text),
+                      FittedBox(child: _PhotoProfile(url: '')),
                       Text('Umur: ' + Anak().umurAnak(widget.tanggalLahir))
                     ],
                   ),
@@ -296,6 +298,82 @@ class _AnakPageState extends State<AnakPage> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _PhotoProfile extends StatelessWidget {
+  final String url;
+  const _PhotoProfile({Key key, @required this.url}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: Column(
+        children: [
+          url == '' || url.isEmpty
+              ? CircleAvatar(
+                  radius: 30.0,
+                  foregroundColor: Colors.white,
+                  child: Stack(
+                    children: [
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: CircleAvatar(
+                          foregroundColor: Colors.white,
+                          backgroundColor: Theme.of(context).accentColor,
+                          radius: 15,
+                          child: IconButton(
+                              alignment: Alignment.center,
+                              icon: Icon(
+                                Icons.photo_camera,
+                                size: 15.0,
+                              ),
+                              onPressed: () async {
+                                ModalPickerImage().showPicker(context);
+                              }),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              : CircleAvatar(
+                  radius: 30.0,
+                  backgroundColor: Colors.transparent,
+                  backgroundImage: NetworkImage(
+                      'https://i.pinimg.com/originals/d2/4d/db/d24ddb8271b8ea9b4bbf4b67df8cbc01.gif',
+                      scale: 0.1),
+                  child: Stack(
+                    children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: CircleAvatar(
+                          radius: 50,
+                          backgroundColor: Colors.transparent,
+                          backgroundImage: NetworkImage(url, scale: 0.1),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: CircleAvatar(
+                          radius: 15,
+                          child: IconButton(
+                              alignment: Alignment.center,
+                              icon: Icon(
+                                Icons.photo_camera,
+                                size: 15.0,
+                              ),
+                              onPressed: () async {
+                                ModalPickerImage().showPicker(context);
+                              }),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+        ],
       ),
     );
   }

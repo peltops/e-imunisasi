@@ -47,7 +47,7 @@ class _OrangtuaPageState extends State<OrangtuaPage> {
     _emailCtrl = TextEditingController();
     _alamatCtrl = TextEditingController();
     _tempatLahirCtrl = TextEditingController();
-    _tanggalLahirCtrl = TextEditingController(text: 'Pilih Tanggal Lahir');
+    _tanggalLahirCtrl = TextEditingController();
     _nomorKkCtrl = TextEditingController();
     _nomorKtpCtrl = TextEditingController();
     super.initState();
@@ -88,15 +88,17 @@ class _OrangtuaPageState extends State<OrangtuaPage> {
               _alamatCtrl.text = user.alamat ?? '';
               _emailCtrl.text = _currentUser.email ?? '';
               _tempatLahirCtrl.text = user.tempatLahir ?? '';
-              _tanggalLahirCtrl.text = user.tanggalLahir != null
-                  ? DateFormat('dd-MM-yyyy').format(user.tanggalLahir)
-                  : '';
+              // _tanggalLahirCtrl.text = user.tanggalLahir != null
+              //     ? DateFormat('dd-MM-yyyy').format(user.tanggalLahir)
+              //     : 'Pilih Tanggal Lahir';
               _nomorKkCtrl.text = user.noKK ?? '';
               _nomorKtpCtrl.text = user.noKTP ?? '';
               if (!pilihanPekerjaan.contains(user.pekerjaanIbu)) {
                 pilihanPekerjaan.add(user.pekerjaanIbu);
               }
-
+              final tanggalLahir = user.tanggalLahir != null
+                  ? DateFormat('dd-MM-yyyy').format(user.tanggalLahir)
+                  : 'Pilih Tanggal Lahir';
               return Container(
                 color: Colors.pink[100],
                 child: Padding(
@@ -116,147 +118,7 @@ class _OrangtuaPageState extends State<OrangtuaPage> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 5),
-                                          child: Column(
-                                            children: [
-                                              user.avatarURL == null ||
-                                                      user.avatarURL.isEmpty
-                                                  ? CircleAvatar(
-                                                      foregroundColor:
-                                                          Colors.white,
-                                                      radius: 50.0,
-                                                      child: Stack(
-                                                        children: [
-                                                          Align(
-                                                            alignment: Alignment
-                                                                .bottomRight,
-                                                            child: CircleAvatar(
-                                                              foregroundColor:
-                                                                  Colors.white,
-                                                              backgroundColor:
-                                                                  Theme.of(
-                                                                          context)
-                                                                      .accentColor,
-                                                              radius: 15,
-                                                              child: IconButton(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .center,
-                                                                  icon: Icon(
-                                                                    Icons
-                                                                        .photo_camera,
-                                                                    size: 15.0,
-                                                                  ),
-                                                                  onPressed:
-                                                                      () async {
-                                                                    ModalPickerImage()
-                                                                        .showPicker(
-                                                                            context);
-                                                                  }),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    )
-                                                  : CircleAvatar(
-                                                      radius: 50.0,
-                                                      backgroundColor:
-                                                          Colors.transparent,
-                                                      backgroundImage: NetworkImage(
-                                                          'https://i.pinimg.com/originals/d2/4d/db/d24ddb8271b8ea9b4bbf4b67df8cbc01.gif',
-                                                          scale: 0.1),
-                                                      child: Stack(
-                                                        children: [
-                                                          Align(
-                                                            alignment: Alignment
-                                                                .center,
-                                                            child: CircleAvatar(
-                                                              radius: 50,
-                                                              backgroundColor:
-                                                                  Colors
-                                                                      .transparent,
-                                                              backgroundImage:
-                                                                  NetworkImage(
-                                                                      user
-                                                                          .avatarURL,
-                                                                      scale:
-                                                                          0.1),
-                                                            ),
-                                                          ),
-                                                          Align(
-                                                            alignment: Alignment
-                                                                .bottomRight,
-                                                            child: CircleAvatar(
-                                                              radius: 15,
-                                                              child: IconButton(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .center,
-                                                                  icon: Icon(
-                                                                    Icons
-                                                                        .photo_camera,
-                                                                    size: 15.0,
-                                                                  ),
-                                                                  onPressed:
-                                                                      () async {
-                                                                    ModalPickerImage()
-                                                                        .showPicker(
-                                                                            context);
-                                                                  }),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                              SizedBox(
-                                                height: 5,
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  _currentUser.email != null
-                                                      ? _currentUser
-                                                              .emailVerified
-                                                          ? Text(
-                                                              ' (Terverifikasi)')
-                                                          : GestureDetector(
-                                                              onTap: () async {
-                                                                try {
-                                                                  await _currentUser
-                                                                      .sendEmailVerification();
-                                                                  snackbarCustom(
-                                                                          "Berhasil, cek email ${_currentUser.email}")
-                                                                      .show(
-                                                                          context);
-                                                                } on FirebaseException catch (e) {
-                                                                  snackbarCustom(e
-                                                                          .message)
-                                                                      .show(
-                                                                          context);
-                                                                } catch (e) {
-                                                                  snackbarCustom(
-                                                                          "Terjadi kesalahan: \n $e")
-                                                                      .show(
-                                                                          context);
-                                                                }
-                                                              },
-                                                              child: Text(
-                                                                'Belum Terverifikasi (Verifikasi sekarang)',
-                                                                style: TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold),
-                                                              ),
-                                                            )
-                                                      : Container(),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
+                                        _PhotoProfile(url: user.avatarURL),
                                         const SizedBox(height: 10),
                                         Text(
                                           'Profil Orangtua',
@@ -324,7 +186,10 @@ class _OrangtuaPageState extends State<OrangtuaPage> {
                                                 ),
                                                 readOnly: true,
                                                 label: 'Tanggal Lahir',
-                                                controller: _tanggalLahirCtrl,
+                                                hintText: _tanggalLahirCtrl
+                                                        .text.isNotEmpty
+                                                    ? _tanggalLahirCtrl.text
+                                                    : tanggalLahir,
                                               ),
                                             ),
                                           ],
@@ -447,6 +312,15 @@ class _OrangtuaPageState extends State<OrangtuaPage> {
                                                 ),
                                           onPressed: !loading
                                               ? () async {
+                                                  DateTime tempDate =
+                                                      _tanggalLahirCtrl
+                                                              .text.isNotEmpty
+                                                          ? new DateFormat(
+                                                                  "dd-MM-yyyy")
+                                                              .parse(
+                                                                  _tanggalLahirCtrl
+                                                                      .text)
+                                                          : user.tanggalLahir;
                                                   dismissKeyboard(context);
                                                   loading = true;
                                                   await UserService()
@@ -479,9 +353,7 @@ class _OrangtuaPageState extends State<OrangtuaPage> {
                                                           avatarURL:
                                                               user.avatarURL,
                                                           tanggalLahir:
-                                                              format.parse(
-                                                                  _tanggalLahirCtrl
-                                                                      .text),
+                                                              tempDate,
                                                           tempatLahir:
                                                               _tempatLahirCtrl
                                                                   .text,
@@ -529,6 +401,114 @@ class _OrangtuaPageState extends State<OrangtuaPage> {
               child: Text('Tidak ada data'),
             );
           }),
+    );
+  }
+}
+
+class _PhotoProfile extends StatelessWidget {
+  final String url;
+  const _PhotoProfile({Key key, @required this.url}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final _currentUser = FirebaseAuth.instance.currentUser;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: Column(
+        children: [
+          url == null || url.isEmpty
+              ? CircleAvatar(
+                  foregroundColor: Colors.white,
+                  radius: 50.0,
+                  child: Stack(
+                    children: [
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: CircleAvatar(
+                          foregroundColor: Colors.white,
+                          backgroundColor: Theme.of(context).accentColor,
+                          radius: 15,
+                          child: IconButton(
+                              alignment: Alignment.center,
+                              icon: Icon(
+                                Icons.photo_camera,
+                                size: 15.0,
+                              ),
+                              onPressed: () async {
+                                ModalPickerImage().showPicker(context);
+                              }),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              : CircleAvatar(
+                  radius: 50.0,
+                  backgroundColor: Colors.transparent,
+                  backgroundImage: NetworkImage(
+                      'https://i.pinimg.com/originals/d2/4d/db/d24ddb8271b8ea9b4bbf4b67df8cbc01.gif',
+                      scale: 0.1),
+                  child: Stack(
+                    children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: CircleAvatar(
+                          radius: 50,
+                          backgroundColor: Colors.transparent,
+                          backgroundImage: NetworkImage(url, scale: 0.1),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: CircleAvatar(
+                          radius: 15,
+                          child: IconButton(
+                              alignment: Alignment.center,
+                              icon: Icon(
+                                Icons.photo_camera,
+                                size: 15.0,
+                              ),
+                              onPressed: () async {
+                                ModalPickerImage().showPicker(context);
+                              }),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+          SizedBox(
+            height: 5,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _currentUser.email != null
+                  ? _currentUser.emailVerified
+                      ? Text(' (Terverifikasi)')
+                      : GestureDetector(
+                          onTap: () async {
+                            try {
+                              await _currentUser.sendEmailVerification();
+                              snackbarCustom(
+                                      "Berhasil, cek email ${_currentUser.email}")
+                                  .show(context);
+                            } on FirebaseException catch (e) {
+                              snackbarCustom(e.message).show(context);
+                            } catch (e) {
+                              snackbarCustom("Terjadi kesalahan: \n $e")
+                                  .show(context);
+                            }
+                          },
+                          child: Text(
+                            'Belum Terverifikasi (Verifikasi sekarang)',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        )
+                  : Container(),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
