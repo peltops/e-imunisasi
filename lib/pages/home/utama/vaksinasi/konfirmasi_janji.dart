@@ -33,7 +33,7 @@ class _DaftarVaksinasiPageState extends State<DaftarVaksinasiPage> {
           backgroundColor: Colors.pink[300],
           elevation: 0.0,
           title: Text(
-            "Pilihan",
+            "Janji",
             style: TextStyle(fontWeight: FontWeight.w700),
           ),
         ),
