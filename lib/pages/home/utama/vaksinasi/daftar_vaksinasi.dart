@@ -1,33 +1,49 @@
+import 'package:eimunisasi/models/anak.dart';
+import 'package:eimunisasi/models/nakes.dart';
 import 'package:eimunisasi/pages/home/utama/vaksinasi/konfirmasi_janji.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 
 class DaftarVaksinasiPage extends StatefulWidget {
+  final Anak anak;
+  final Nakes nakes;
+  const DaftarVaksinasiPage(
+      {Key key, @required this.anak, @required this.nakes})
+      : super(key: key);
   @override
   _DaftarVaksinasiPageState createState() => _DaftarVaksinasiPageState();
 }
 
 class _DaftarVaksinasiPageState extends State<DaftarVaksinasiPage> {
   String _tanggal = 'Pilih tanggal';
-  int selectedRadioTile;
+  JadwalImunisasi selectedRadioTile;
 
   final kFirstDay = DateTime.now();
   final kLastDay = DateTime(DateTime.now().year + 1);
   @override
   void initState() {
-    selectedRadioTile = 0;
     super.initState();
   }
 
-  setSelectedRadioTile(int val) {
+  setSelectedRadioTile(JadwalImunisasi val) {
     setState(() {
       selectedRadioTile = val;
     });
+    print(selectedRadioTile.jam);
   }
 
   @override
   Widget build(BuildContext context) {
+    final jadwal = widget.nakes.jadwal;
+    List<String> jadwalPraktek = [];
+    for (var i = 0; i < jadwal.length; i++) {
+      final hari = jadwal.keys.elementAt(i);
+      final jam = jadwal.values.elementAt(i);
+      for (var j = 0; j < jam.length; j++) {
+        jadwalPraktek.add('$hari, ${jam[j]}');
+      }
+    }
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -52,7 +68,7 @@ class _DaftarVaksinasiPageState extends State<DaftarVaksinasiPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'NAMA NAKES',
+                          'Nama Nakes: ' + widget.nakes.namaLengkap,
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 15),
                         ),
@@ -67,9 +83,7 @@ class _DaftarVaksinasiPageState extends State<DaftarVaksinasiPage> {
                         SizedBox(
                           height: 10,
                         ),
-                        Text(
-                          'Hari 1- Hari 7 20.00 - 22.00',
-                        ),
+                        Text(jadwalPraktek.join('\n')),
                         SizedBox(
                           height: 10,
                         ),
@@ -78,19 +92,26 @@ class _DaftarVaksinasiPageState extends State<DaftarVaksinasiPage> {
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 15),
                         ),
-                        RadioListTile(
-                          contentPadding: EdgeInsets.all(0),
-                          value: 1,
-                          groupValue: selectedRadioTile,
-                          title: Text('Senin 20.00 - 22.00'),
-                          onChanged: setSelectedRadioTile,
-                        ),
-                        RadioListTile(
-                          contentPadding: EdgeInsets.all(0),
-                          value: 2,
-                          groupValue: selectedRadioTile,
-                          title: Text('Rabu 7 20.00 - 22.00'),
-                          onChanged: setSelectedRadioTile,
+                        Column(
+                          children: () {
+                            final jadwalImunisasi =
+                                widget.nakes.jadwalImunisasi;
+                            if (jadwalImunisasi == null) {
+                              return Text('Belum ada jadwal imunisasi');
+                            } else {
+                              return jadwalImunisasi
+                                  .map(
+                                    (e) => RadioListTile(
+                                      contentPadding: EdgeInsets.all(0),
+                                      value: e,
+                                      groupValue: selectedRadioTile,
+                                      title: Text(e.hari + ', ' + e.jam),
+                                      onChanged: setSelectedRadioTile,
+                                    ),
+                                  )
+                                  .toList();
+                            }
+                          }(),
                         ),
                         SizedBox(
                           height: 10,

@@ -84,7 +84,8 @@ class _AnakPageState extends State<AnakPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       FittedBox(child: _PhotoProfile(url: '')),
-                      Text('Umur: ' + Anak().umurAnak(widget.tanggalLahir))
+                      Text('Umur: ' +
+                          Anak(tanggalLahir: widget.tanggalLahir).umurAnak)
                     ],
                   ),
                 ),

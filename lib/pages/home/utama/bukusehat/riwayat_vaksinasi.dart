@@ -70,7 +70,8 @@ class _RiwayatPageState extends State<RiwayatPage> {
                                 style: TextStyle(
                                     fontSize: 20, fontWeight: FontWeight.w700),
                               ),
-                              Text(Anak().umurAnak(widget.tanggalLahir))
+                              Text(Anak(tanggalLahir: widget.tanggalLahir)
+                                  .umurAnak)
                             ],
                           ),
                         ],

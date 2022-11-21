@@ -6,6 +6,17 @@ class Anak {
   final String jenisKelamin;
   final String golDarah;
 
+  get umurAnak {
+    if (this.tanggalLahir == null || this.tanggalLahir == '') {
+      return 'Umur belum diisi';
+    }
+    Duration dur = DateTime.now().difference(this.tanggalLahir);
+    String tahun = (dur.inDays / 365).floor().toString();
+    String bulan = ((dur.inDays % 365) / 30).floor().toString();
+
+    return tahun + " tahun, " + bulan + " bulan ";
+  }
+
   Anak(
       {this.nik,
       this.tempatLahir,
@@ -13,14 +24,6 @@ class Anak {
       this.golDarah,
       this.nama,
       this.tanggalLahir});
-
-  String umurAnak(DateTime tglLahir) {
-    Duration dur = DateTime.now().difference(tglLahir);
-    String tahun = (dur.inDays / 365).floor().toString();
-    String bulan = ((dur.inDays % 365) / 30).floor().toString();
-
-    return tahun + " tahun, " + bulan + " bulan ";
-  }
 
   factory Anak.fromMap(Map data) {
     return Anak(

@@ -1,10 +1,12 @@
+import 'package:eimunisasi/models/anak.dart';
 import 'package:eimunisasi/models/nakes.dart';
 import 'package:eimunisasi/pages/home/utama/vaksinasi/daftar_vaksinasi.dart';
 import 'package:eimunisasi/services/nakes_service.dart';
 import 'package:flutter/material.dart';
 
 class ListNakes extends StatelessWidget {
-  const ListNakes({Key key}) : super(key: key);
+  final Anak anak;
+  const ListNakes({Key key, @required this.anak}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +26,7 @@ class ListNakes extends StatelessWidget {
           padding: EdgeInsets.all(20),
           child: Column(
             children: [
+              SearchBar(),
               Expanded(
                 child: Container(
                   width: double.infinity,
@@ -45,7 +48,10 @@ class ListNakes extends StatelessWidget {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              DaftarVaksinasiPage(),
+                                              DaftarVaksinasiPage(
+                                            anak: anak,
+                                            nakes: data[index],
+                                          ),
                                         ));
                                   },
                                   title: Text(
@@ -53,6 +59,7 @@ class ListNakes extends StatelessWidget {
                                     style:
                                         TextStyle(fontWeight: FontWeight.w700),
                                   ),
+                                  subtitle: Text(data[index].profesi),
                                   trailing:
                                       Icon(Icons.keyboard_arrow_right_rounded),
                                 ));
@@ -73,6 +80,28 @@ class ListNakes extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class SearchBar extends StatelessWidget {
+  const SearchBar({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: TextField(
+        decoration: InputDecoration(
+          hintText: 'Pencarian',
+          suffixIcon: Icon(Icons.search),
+          border: InputBorder.none,
         ),
       ),
     );

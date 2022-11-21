@@ -46,7 +46,9 @@ class ListAnakVaksinasi extends StatelessWidget {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) => ListNakes(),
+                                              builder: (context) => ListNakes(
+                                                anak: data[index],
+                                              ),
                                             ));
                                       },
                                       title: Text(
@@ -54,6 +56,7 @@ class ListAnakVaksinasi extends StatelessWidget {
                                         style: TextStyle(
                                             fontWeight: FontWeight.w700),
                                       ),
+                                      subtitle: Text(data[index].umurAnak),
                                       trailing: Icon(
                                           Icons.keyboard_arrow_right_rounded),
                                     ));

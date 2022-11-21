@@ -61,7 +61,7 @@ class _TabelTumbuhKembangState extends State<TabelTumbuhKembang> {
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.w700),
                         ),
-                        Text(Anak().umurAnak(widget.tanggalLahir))
+                        Text(Anak(tanggalLahir: widget.tanggalLahir).umurAnak)
                       ],
                     )),
               ),

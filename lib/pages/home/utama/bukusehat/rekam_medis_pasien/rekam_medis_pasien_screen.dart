@@ -47,6 +47,7 @@ class RekamMedisPasienScreen extends StatelessWidget {
                       ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(
                             height: 10,
@@ -56,7 +57,7 @@ class RekamMedisPasienScreen extends StatelessWidget {
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.w700),
                           ),
-                          Text(Anak().umurAnak(anak.tanggalLahir))
+                          Text(anak.umurAnak)
                         ],
                       ),
                     ],
