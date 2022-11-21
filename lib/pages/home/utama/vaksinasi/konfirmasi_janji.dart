@@ -1,32 +1,19 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 
-class DaftarVaksinasiPage extends StatefulWidget {
+class KonfirmasiVaksinasiPage extends StatefulWidget {
   @override
-  _DaftarVaksinasiPageState createState() => _DaftarVaksinasiPageState();
+  _KonfirmasiVaksinasiPageState createState() =>
+      _KonfirmasiVaksinasiPageState();
 }
 
-class _DaftarVaksinasiPageState extends State<DaftarVaksinasiPage> {
-  String _tanggal = 'Pilih tanggal';
-  int selectedRadioTile;
-
-  final kFirstDay = DateTime.now();
-  final kLastDay = DateTime(DateTime.now().year + 1);
-  @override
-  void initState() {
-    selectedRadioTile = 0;
-    super.initState();
-  }
-
-  setSelectedRadioTile(int val) {
-    setState(() {
-      selectedRadioTile = val;
-    });
-  }
-
+class _KonfirmasiVaksinasiPageState extends State<KonfirmasiVaksinasiPage> {
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -50,87 +37,132 @@ class _DaftarVaksinasiPageState extends State<DaftarVaksinasiPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'NAMA NAKES',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 15),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          'Jadwal Praktek',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 15),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          'Hari 1- Hari 7 20.00 - 22.00',
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          'Jadwal Praktek Imunisasi',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 15),
-                        ),
-                        RadioListTile(
-                          contentPadding: EdgeInsets.all(0),
-                          value: 1,
-                          groupValue: selectedRadioTile,
-                          title: Text('Senin 20.00 - 22.00'),
-                          onChanged: setSelectedRadioTile,
-                        ),
-                        RadioListTile(
-                          contentPadding: EdgeInsets.all(0),
-                          value: 2,
-                          groupValue: selectedRadioTile,
-                          title: Text('Rabu 7 20.00 - 22.00'),
-                          onChanged: setSelectedRadioTile,
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        ListTile(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          onTap: () {
-                            DatePicker.showDatePicker(context,
-                                theme: DatePickerTheme(
-                                  doneStyle: TextStyle(
-                                    color: Theme.of(context).accentColor,
-                                  ),
+                        Center(
+                          child: CachedNetworkImage(
+                            imageUrl:
+                                'https://www.cilips.org.uk/wp-content/uploads/2021/09/qr-code-7.png',
+                            imageBuilder: (context, imageProvider) => Container(
+                              width: 200,
+                              height: 200,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.rectangle,
+                                image: DecorationImage(
+                                  image: imageProvider,
+                                  fit: BoxFit.contain,
                                 ),
-                                showTitleActions: true,
-                                minTime: kFirstDay,
-                                maxTime: kLastDay, onConfirm: (val) {
-                              String formattedDate =
-                                  DateFormat('yyyy-MM-dd').format(val);
-                              setState(() {
-                                _tanggal = formattedDate.toString();
-                              });
-                            },
-                                currentTime: DateTime.now(),
-                                locale: LocaleType.id);
-                          },
-                          trailing: Icon(
-                            Icons.date_range,
-                            color: Theme.of(context).primaryColor,
-                            size: 30,
+                              ),
+                            ),
+                            placeholder: (context, url) => Container(
+                              width: 200,
+                              height: 200,
+                              child: FittedBox(
+                                  child: Shimmer(
+                                      gradient: LinearGradient(colors: [
+                                        Colors.grey[300],
+                                        Colors.grey[100]
+                                      ]),
+                                      child: Icon(Icons.qr_code))),
+                            ),
+                            errorWidget: (context, url, error) => Container(
+                              width: 200,
+                              height: 200,
+                              child: FittedBox(
+                                  child: Icon(
+                                Icons.error,
+                                color: Colors.red[300],
+                              )),
+                            ),
                           ),
-                          title: Text(_tanggal),
                         ),
-                        SizedBox(
-                          height: 10,
+                        SizedBox(height: 10),
+                        Text(
+                          'Konfirmasi Janji',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 15),
                         ),
+                        Text(
+                          'Janji dengan Nakes telah dibuat. Lihat detal Informasi berikut',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.person,
+                              color: Colors.pink[300],
+                            ),
+                            SizedBox(width: 10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Nama Pasien',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15),
+                                ),
+                                Text(
+                                  'Umur',
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.person,
+                              color: Colors.pink[300],
+                            ),
+                            SizedBox(width: 10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Nama Nakes',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15),
+                                ),
+                                Text(
+                                  'Nama Klinik',
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        Table(
+                          children: [
+                            TableRow(children: [
+                              Text(
+                                'Tanggal :',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 15),
+                              ),
+                              Text(
+                                '28 Januari 2021',
+                              ),
+                            ]),
+                            TableRow(children: [
+                              Text(
+                                'Jam :',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 15),
+                              ),
+                              Text(
+                                '20.00',
+                              ),
+                            ]),
+                          ],
+                        ),
+                        SizedBox(height: 10),
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {},
-                            child: Text('Buat Janji'),
+                            child: Text('Halaman Utama'),
                           ),
                         )
                       ],

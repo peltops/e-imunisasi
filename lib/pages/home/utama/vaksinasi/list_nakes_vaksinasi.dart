@@ -34,7 +34,6 @@ class ListNakes extends StatelessWidget {
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           final data = snapshot.data;
-                          print(data);
                           if (snapshot.data != null) {
                             return ListView.builder(
                               itemCount: data.length,

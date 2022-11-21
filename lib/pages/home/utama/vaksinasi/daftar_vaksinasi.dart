@@ -1,3 +1,4 @@
+import 'package:eimunisasi/pages/home/utama/vaksinasi/konfirmasi_janji.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
@@ -129,7 +130,15 @@ class _DaftarVaksinasiPageState extends State<DaftarVaksinasiPage> {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      KonfirmasiVaksinasiPage(),
+                                ),
+                              );
+                            },
                             child: Text('Buat Janji'),
                           ),
                         )
