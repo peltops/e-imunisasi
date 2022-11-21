@@ -12,6 +12,7 @@ class NakesService extends FirestoreDatabase {
   List<Nakes> _listData(QuerySnapshot snapshot) {
     return snapshot.docs.map((e) {
       var data = Map<String, dynamic>.from(e.data());
+      data['id'] = e.id;
       log(data.toString());
       return Nakes.fromMap(data);
     }).toList();

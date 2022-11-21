@@ -14,16 +14,10 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
 
 class AnakPage extends StatefulWidget {
-  final nama, nik, tempatLahir, tanggalLahir, jenisKelamin, golDarah, indexAnak;
+  final Anak anak;
   const AnakPage({
     Key key,
-    @required this.nama,
-    @required this.nik,
-    @required this.tempatLahir,
-    @required this.tanggalLahir,
-    @required this.jenisKelamin,
-    @required this.golDarah,
-    @required this.indexAnak,
+    @required this.anak,
   }) : super(key: key);
 
   @override
@@ -40,15 +34,16 @@ class _AnakPageState extends State<AnakPage> {
 
   @override
   void initState() {
-    DateTime _tanggalLahir = DateTime.parse(widget.tanggalLahir.toString());
+    DateTime _tanggalLahir =
+        DateTime.parse(widget.anak.tanggalLahir.toString());
 
-    _namaCtrl = TextEditingController(text: widget.nama);
-    _nikCtrl = TextEditingController(text: widget.nik);
-    _tempatLahirCtrl = TextEditingController(text: widget.tempatLahir);
+    _namaCtrl = TextEditingController(text: widget.anak.nama);
+    _nikCtrl = TextEditingController(text: widget.anak.nik);
+    _tempatLahirCtrl = TextEditingController(text: widget.anak.tempatLahir);
     _tanggalLahirCtrl = TextEditingController(
         text: DateFormat('dd-MM-yyyy').format(_tanggalLahir).toString());
-    _jenisKelaminCtrl = TextEditingController(text: widget.jenisKelamin);
-    _golDarahCtrl = TextEditingController(text: widget.golDarah);
+    _jenisKelaminCtrl = TextEditingController(text: widget.anak.jenisKelamin);
+    _golDarahCtrl = TextEditingController(text: widget.anak.golDarah);
     super.initState();
   }
 
@@ -85,7 +80,7 @@ class _AnakPageState extends State<AnakPage> {
                     children: [
                       FittedBox(child: _PhotoProfile(url: '')),
                       Text('Umur: ' +
-                          Anak(tanggalLahir: widget.tanggalLahir).umurAnak)
+                          Anak(tanggalLahir: widget.anak.tanggalLahir).umurAnak)
                     ],
                   ),
                 ),
@@ -140,17 +135,17 @@ class _AnakPageState extends State<AnakPage> {
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 5.0),
                                       child: TextFormCustom(
-                                        onTap: () => DatePicker.showDatePicker(
-                                            context,
-                                            theme: DatePickerTheme(
-                                              doneStyle: TextStyle(
-                                                  color: Theme.of(context)
-                                                      .accentColor),
-                                            ),
-                                            showTitleActions: true,
-                                            minTime: kFirstDay,
-                                            maxTime: kLastDay,
-                                            onConfirm: (val) {
+                                        onTap: () =>
+                                            DatePicker.showDatePicker(context,
+                                                theme: DatePickerTheme(
+                                                  doneStyle: TextStyle(
+                                                      color: Theme.of(context)
+                                                          .accentColor),
+                                                ),
+                                                showTitleActions: true,
+                                                minTime: kFirstDay,
+                                                maxTime: kLastDay,
+                                                onConfirm: (val) {
                                           String formattedDate =
                                               DateFormat('dd-MM-yyyy')
                                                   .format(val);
@@ -159,8 +154,9 @@ class _AnakPageState extends State<AnakPage> {
                                                 formattedDate.toString();
                                           });
                                         },
-                                            currentTime: widget.tanggalLahir,
-                                            locale: LocaleType.id),
+                                                currentTime:
+                                                    widget.anak.tanggalLahir,
+                                                locale: LocaleType.id),
                                         readOnly: true,
                                         label: 'Tanggal Lahir',
                                         controller: _tanggalLahirCtrl,
@@ -255,20 +251,22 @@ class _AnakPageState extends State<AnakPage> {
                                           dismissKeyboard(context);
                                           try {
                                             AnakService()
-                                                .setData(
-                                                    Anak(
-                                                        nik: _nikCtrl.text,
-                                                        tempatLahir:
-                                                            _tempatLahirCtrl
-                                                                .text,
-                                                        jenisKelamin:
-                                                            _jenisKelaminCtrl
-                                                                .text,
-                                                        golDarah:
-                                                            _golDarahCtrl.text,
-                                                        nama: _namaCtrl.text,
-                                                        tanggalLahir: tempDate),
-                                                    widget.indexAnak)
+                                                .updateData(
+                                                  Anak(
+                                                    id: widget.anak.id,
+                                                    parentId:
+                                                        widget.anak.parentId,
+                                                    nik: _nikCtrl.text,
+                                                    tempatLahir:
+                                                        _tempatLahirCtrl.text,
+                                                    jenisKelamin:
+                                                        _jenisKelaminCtrl.text,
+                                                    golDarah:
+                                                        _golDarahCtrl.text,
+                                                    nama: _namaCtrl.text,
+                                                    tanggalLahir: tempDate,
+                                                  ),
+                                                )
                                                 .then((value) {
                                                   snackbarCustom(
                                                           'Data anak berhasil diperbarui')

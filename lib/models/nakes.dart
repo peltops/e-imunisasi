@@ -27,7 +27,7 @@ class NakesModel {
 
 class Nakes {
   // Document ID	clinicID	email	jadwal	kartuKeluarga	namaLengkap	nik	noTelpon	photoURL profesi	tanggalLahir	tempatLahir
-
+  final String id;
   final String clinicID;
   final String email;
   final Map<String, dynamic> jadwal;
@@ -42,6 +42,7 @@ class Nakes {
   final String tempatLahir;
 
   Nakes({
+    this.id,
     this.clinicID,
     this.email,
     this.jadwal,
@@ -58,6 +59,7 @@ class Nakes {
 
   factory Nakes.fromMap(Map data) {
     return Nakes(
+      id: data['id'],
       clinicID: data['clinicID'],
       email: data['email'],
       jadwal: data['jadwal'],
@@ -77,6 +79,7 @@ class Nakes {
 
   Map<String, dynamic> toMap() {
     return {
+      "id": id,
       "clinicID": clinicID,
       "email": email,
       "jadwal": jadwal,

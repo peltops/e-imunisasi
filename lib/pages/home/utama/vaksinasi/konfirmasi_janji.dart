@@ -1,10 +1,14 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:eimunisasi/models/jadwal_janji.dart';
+import 'package:eimunisasi/pages/home/home.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:shimmer/shimmer.dart';
 
 class KonfirmasiVaksinasiPage extends StatefulWidget {
+  final JadwalJanjiModel appointment;
+
+  const KonfirmasiVaksinasiPage({Key key, @required this.appointment})
+      : super(key: key);
   @override
   _KonfirmasiVaksinasiPageState createState() =>
       _KonfirmasiVaksinasiPageState();
@@ -13,6 +17,7 @@ class KonfirmasiVaksinasiPage extends StatefulWidget {
 class _KonfirmasiVaksinasiPageState extends State<KonfirmasiVaksinasiPage> {
   @override
   Widget build(BuildContext context) {
+    print(widget.appointment);
     final size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
@@ -38,40 +43,9 @@ class _KonfirmasiVaksinasiPageState extends State<KonfirmasiVaksinasiPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Center(
-                          child: CachedNetworkImage(
-                            imageUrl:
-                                'https://www.cilips.org.uk/wp-content/uploads/2021/09/qr-code-7.png',
-                            imageBuilder: (context, imageProvider) => Container(
-                              width: 200,
-                              height: 200,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.rectangle,
-                                image: DecorationImage(
-                                  image: imageProvider,
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                            ),
-                            placeholder: (context, url) => Container(
-                              width: 200,
-                              height: 200,
-                              child: FittedBox(
-                                  child: Shimmer(
-                                      gradient: LinearGradient(colors: [
-                                        Colors.grey[300],
-                                        Colors.grey[100]
-                                      ]),
-                                      child: Icon(Icons.qr_code))),
-                            ),
-                            errorWidget: (context, url, error) => Container(
-                              width: 200,
-                              height: 200,
-                              child: FittedBox(
-                                  child: Icon(
-                                Icons.error,
-                                color: Colors.red[300],
-                              )),
-                            ),
+                          child: QrImage(
+                            data: widget.appointment.id,
+                            size: size.width * 0.5,
                           ),
                         ),
                         SizedBox(height: 10),
@@ -81,7 +55,7 @@ class _KonfirmasiVaksinasiPageState extends State<KonfirmasiVaksinasiPage> {
                               fontWeight: FontWeight.bold, fontSize: 15),
                         ),
                         Text(
-                          'Janji dengan Nakes telah dibuat. Lihat detal Informasi berikut',
+                          'Janji dengan Nakes telah dibuat. Lihat detal Informasi berikut: ',
                           style: TextStyle(color: Colors.red),
                         ),
                         SizedBox(height: 10),
@@ -96,13 +70,13 @@ class _KonfirmasiVaksinasiPageState extends State<KonfirmasiVaksinasiPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Nama Pasien',
+                                  widget.appointment.anak.nama,
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15),
                                 ),
                                 Text(
-                                  'Umur',
+                                  widget.appointment.anak.umurAnak,
                                 ),
                               ],
                             ),
@@ -120,13 +94,13 @@ class _KonfirmasiVaksinasiPageState extends State<KonfirmasiVaksinasiPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Nama Nakes',
+                                  widget.appointment.nakes.namaLengkap,
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15),
                                 ),
                                 Text(
-                                  'Nama Klinik',
+                                  widget.appointment.nakes.profesi,
                                 ),
                               ],
                             ),
@@ -142,7 +116,8 @@ class _KonfirmasiVaksinasiPageState extends State<KonfirmasiVaksinasiPage> {
                                     fontWeight: FontWeight.bold, fontSize: 15),
                               ),
                               Text(
-                                '28 Januari 2021',
+                                DateFormat('dd MMMM yyyy')
+                                    .format(widget.appointment.tanggal),
                               ),
                             ]),
                             TableRow(children: [
@@ -152,7 +127,7 @@ class _KonfirmasiVaksinasiPageState extends State<KonfirmasiVaksinasiPage> {
                                     fontWeight: FontWeight.bold, fontSize: 15),
                               ),
                               Text(
-                                '20.00',
+                                widget.appointment.desc.split(', ')[1],
                               ),
                             ]),
                           ],
@@ -161,7 +136,13 @@ class _KonfirmasiVaksinasiPageState extends State<KonfirmasiVaksinasiPage> {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => HomePage()),
+                                  (route) => false);
+                            },
                             child: Text('Halaman Utama'),
                           ),
                         )

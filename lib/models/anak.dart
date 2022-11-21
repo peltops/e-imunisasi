@@ -1,4 +1,8 @@
+import 'dart:async';
+
 class Anak {
+  final String id;
+  final String parentId;
   final String nama;
   final String nik;
   final String tempatLahir;
@@ -17,16 +21,21 @@ class Anak {
     return tahun + " tahun, " + bulan + " bulan ";
   }
 
-  Anak(
-      {this.nik,
-      this.tempatLahir,
-      this.jenisKelamin,
-      this.golDarah,
-      this.nama,
-      this.tanggalLahir});
+  Anak({
+    this.id,
+    this.parentId,
+    this.nik,
+    this.tempatLahir,
+    this.jenisKelamin,
+    this.golDarah,
+    this.nama,
+    this.tanggalLahir,
+  });
 
   factory Anak.fromMap(Map data) {
     return Anak(
+      id: data['id'],
+      parentId: data['parentId'],
       nama: data['nama'],
       nik: data['nik'] ?? '',
       tempatLahir: data['tempat_lahir'] ?? '',
@@ -35,16 +44,37 @@ class Anak {
       golDarah: data['gol_darah'] ?? '',
     );
   }
-  Map<String, dynamic> toMap(int index) {
+  Map<String, dynamic> toMap() {
     return {
-      index.toString(): {
-        "nama": nama,
-        "nik": nik,
-        "tempat_lahir": tempatLahir,
-        "tanggal_lahir": tanggalLahir,
-        "jenis_kelamin": jenisKelamin,
-        "gol_darah": golDarah,
-      },
+      'parentId': parentId,
+      "nama": nama,
+      "nik": nik,
+      "tempat_lahir": tempatLahir,
+      "tanggal_lahir": tanggalLahir,
+      "jenis_kelamin": jenisKelamin,
+      "gol_darah": golDarah,
     };
+  }
+
+  Anak copyWith({
+    String id,
+    String parentId,
+    String nama,
+    String nik,
+    String tempatLahir,
+    DateTime tanggalLahir,
+    String jenisKelamin,
+    String golDarah,
+  }) {
+    return Anak(
+      id: id ?? this.id,
+      parentId: parentId ?? this.parentId,
+      nama: nama ?? this.nama,
+      nik: nik ?? this.nik,
+      tempatLahir: tempatLahir ?? this.tempatLahir,
+      tanggalLahir: tanggalLahir ?? this.tanggalLahir,
+      jenisKelamin: jenisKelamin ?? this.jenisKelamin,
+      golDarah: golDarah ?? this.golDarah,
+    );
   }
 }

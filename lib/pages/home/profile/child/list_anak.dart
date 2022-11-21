@@ -48,24 +48,13 @@ class ListAnak extends StatelessWidget {
                                           child: ListTile(
                                         onTap: () {
                                           Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      AnakPage(
-                                                        nama: data[index].nama,
-                                                        nik: data[index].nik,
-                                                        tempatLahir: data[index]
-                                                            .tempatLahir,
-                                                        tanggalLahir:
-                                                            data[index]
-                                                                .tanggalLahir,
-                                                        jenisKelamin:
-                                                            data[index]
-                                                                .jenisKelamin,
-                                                        golDarah: data[index]
-                                                            .golDarah,
-                                                        indexAnak: index,
-                                                      )));
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => AnakPage(
+                                                anak: data[index],
+                                              ),
+                                            ),
+                                          );
                                         },
                                         title: Text(
                                           data[index].nama,

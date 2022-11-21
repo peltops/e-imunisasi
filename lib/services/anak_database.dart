@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eimunisasi/models/anak.dart';
 import 'package:eimunisasi/services/calendar_database.dart';
@@ -7,33 +9,32 @@ class AnakService extends FirestoreDatabase {
   final _currentUser = FirebaseAuth.instance.currentUser;
   final _service = FirebaseFirestore.instance;
 
-  // add new and update anak
-  Future<void> setData(Anak anak, int index, {bool set = false}) => (set)
-      ? _service
-          .collection('children')
-          .doc(_currentUser.uid)
-          .set(anak.toMap(index + 1))
-      : _service
-          .collection('children')
-          .doc(_currentUser.uid)
-          .update(anak.toMap(index + 1));
+  // add appointment event
+  Future<Anak> setData(Anak anak) {
+    final data = anak.copyWith(parentId: _currentUser.uid);
+    return _service.collection('children').add(data.toMap()).then((value) {
+      print(value.id);
+      return Future.value(data.copyWith(id: value.id));
+    });
+  }
 
-// Stream List Anak
-  List<Anak> _listAnak(DocumentSnapshot<Map<String, dynamic>> snapshot) {
-    // print(snapshot.data().values.map((e) => e.runtimeType));
-    return snapshot.data().values.map((e) => Anak.fromMap(e)).toList();
+  // update appointment event
+  Future<void> updateData(Anak anak) =>
+      _service.collection('children').doc(anak.id).update(anak.toMap());
+
+// Stream List Nakes
+  List<Anak> _listData(QuerySnapshot snapshot) {
+    return snapshot.docs.map((e) {
+      var data = Map<String, dynamic>.from(e.data());
+      data['id'] = e.id;
+      log(data.toString());
+      return Anak.fromMap(data);
+    }).toList();
   }
 
   Stream<List<Anak>> get anakStream => _service
       .collection('children')
-      .doc(_currentUser.uid)
+      .where('parentId', isEqualTo: _currentUser.uid)
       .snapshots()
-      .map(_listAnak);
-
-  // stream anak
-  Stream<DocumentSnapshot<Map<String, dynamic>>> get documentStream =>
-      FirebaseFirestore.instance
-          .collection('children')
-          .doc(_currentUser.uid)
-          .snapshots();
+      .map(_listData);
 }

@@ -247,21 +247,17 @@ class _DaftarAnakPageState extends State<DaftarAnakPage> {
                                             });
                                             try {
                                               AnakService().setData(
-                                                  Anak(
-                                                      nik: _nikCtrl.text,
-                                                      tempatLahir:
-                                                          _tempatLahirCtrl.text,
-                                                      jenisKelamin:
-                                                          _jenisKelaminCtrl
-                                                              .text,
-                                                      golDarah:
-                                                          _golDarahCtrl.text,
-                                                      nama: _namaCtrl.text,
-                                                      tanggalLahir: tempDate),
-                                                  widget.indexAnak,
-                                                  set: widget.indexAnak == 0
-                                                      ? true
-                                                      : false);
+                                                Anak(
+                                                  nik: _nikCtrl.text,
+                                                  tempatLahir:
+                                                      _tempatLahirCtrl.text,
+                                                  jenisKelamin:
+                                                      _jenisKelaminCtrl.text,
+                                                  golDarah: _golDarahCtrl.text,
+                                                  nama: _namaCtrl.text,
+                                                  tanggalLahir: tempDate,
+                                                ),
+                                              );
                                               JadwalImunisasi()
                                                   .jadwalImunisai(user.uid,
                                                       tempDate, _namaCtrl.text)
