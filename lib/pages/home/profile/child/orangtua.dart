@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eimunisasi/models/user.dart';
 import 'package:eimunisasi/pages/widget/button_custom.dart';
 import 'package:eimunisasi/pages/widget/image_picker.dart';
@@ -57,7 +58,6 @@ class _OrangtuaPageState extends State<OrangtuaPage> {
   var pilihanPekerjaan = ['IRT', 'ASN/Karyawan', 'Wirausaha'];
   @override
   Widget build(BuildContext context) {
-    DateFormat format = new DateFormat("dd-MM-yyyy");
     final kFirstDay = DateTime(DateTime.now().year - 5);
     final kLastDay = DateTime.now();
     final _currentUser = FirebaseAuth.instance.currentUser;
@@ -153,8 +153,24 @@ class _OrangtuaPageState extends State<OrangtuaPage> {
                                                   context,
                                                   theme: DatePickerTheme(
                                                     doneStyle: TextStyle(
-                                                        color: Theme.of(context)
-                                                            .accentColor),
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .secondary,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontFamily: 'Nunito',
+                                                    ),
+                                                    cancelStyle: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontFamily: 'Nunito',
+                                                      color: Colors.black,
+                                                    ),
+                                                    itemStyle: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontFamily: 'Nunito',
+                                                    ),
                                                   ),
                                                   showTitleActions: true,
                                                   minTime: kFirstDay,
@@ -291,8 +307,8 @@ class _OrangtuaPageState extends State<OrangtuaPage> {
                                               _nomorIbuCtrl.text = val;
                                             },
                                           ),
-                                        buttonCustom(
-                                          textChild: !loading
+                                        ButtonCustom(
+                                          child: !loading
                                               ? Text(
                                                   "Simpan",
                                                   style: TextStyle(
@@ -426,7 +442,8 @@ class _PhotoProfile extends StatelessWidget {
                         alignment: Alignment.bottomRight,
                         child: CircleAvatar(
                           foregroundColor: Colors.white,
-                          backgroundColor: Theme.of(context).accentColor,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.secondary,
                           radius: 15,
                           child: IconButton(
                               alignment: Alignment.center,
@@ -435,7 +452,9 @@ class _PhotoProfile extends StatelessWidget {
                                 size: 15.0,
                               ),
                               onPressed: () async {
-                                ModalPickerImage().showPicker(context);
+                                ModalPickerImage().showPicker(context, (val) {
+                                  UserService().updateUserAvatar(val);
+                                });
                               }),
                         ),
                       ),
@@ -445,7 +464,7 @@ class _PhotoProfile extends StatelessWidget {
               : CircleAvatar(
                   radius: 50.0,
                   backgroundColor: Colors.transparent,
-                  backgroundImage: NetworkImage(
+                  backgroundImage: CachedNetworkImageProvider(
                       'https://i.pinimg.com/originals/d2/4d/db/d24ddb8271b8ea9b4bbf4b67df8cbc01.gif',
                       scale: 0.1),
                   child: Stack(
@@ -455,7 +474,8 @@ class _PhotoProfile extends StatelessWidget {
                         child: CircleAvatar(
                           radius: 50,
                           backgroundColor: Colors.transparent,
-                          backgroundImage: NetworkImage(url, scale: 0.1),
+                          backgroundImage:
+                              CachedNetworkImageProvider(url, scale: 0.1),
                         ),
                       ),
                       Align(
@@ -469,7 +489,9 @@ class _PhotoProfile extends StatelessWidget {
                                 size: 15.0,
                               ),
                               onPressed: () async {
-                                ModalPickerImage().showPicker(context);
+                                ModalPickerImage().showPicker(context, (val) {
+                                  UserService().updateUserAvatar(val);
+                                });
                               }),
                         ),
                       ),

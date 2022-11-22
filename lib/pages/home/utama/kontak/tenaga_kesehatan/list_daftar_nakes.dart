@@ -1,4 +1,5 @@
 import 'package:eimunisasi/models/nakes.dart';
+import 'package:eimunisasi/pages/widget/search_bar.dart';
 import 'package:eimunisasi/services/nakes_database.dart';
 import 'package:flutter/material.dart';
 
@@ -38,28 +39,7 @@ class _ListDaftarNakesState extends State<ListDaftarNakes> {
                           var data = snapshot.data;
                           return Column(
                             children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Container(
-                                  color: Colors.grey[100],
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 0.0),
-                                    child: Row(
-                                      children: <Widget>[
-                                        Expanded(
-                                            child: TextFormField(
-                                          decoration: InputDecoration(
-                                              border: InputBorder.none,
-                                              contentPadding:
-                                                  EdgeInsets.all(0)),
-                                        )),
-                                        Icon(Icons.search),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
+                              SearchBar(),
                               Flexible(
                                   child: ListView.builder(
                                 itemCount: data.length,
@@ -69,7 +49,9 @@ class _ListDaftarNakesState extends State<ListDaftarNakes> {
                                         CrossAxisAlignment.stretch,
                                     children: [
                                       Card(
-                                          color: Theme.of(context).accentColor,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary,
                                           child: Padding(
                                             padding: const EdgeInsets.all(10.0),
                                             child: Text(

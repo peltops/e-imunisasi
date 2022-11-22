@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eimunisasi/models/anak.dart';
 import 'package:eimunisasi/pages/widget/button_custom.dart';
 import 'package:eimunisasi/pages/widget/image_picker.dart';
@@ -7,7 +8,6 @@ import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 import 'package:eimunisasi/pages/widget/text_form_custom.dart';
 import 'package:eimunisasi/services/anak_database.dart';
 import 'package:eimunisasi/utils/dismiss_keyboard.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -78,7 +78,11 @@ class _AnakPageState extends State<AnakPage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      FittedBox(child: _PhotoProfile(url: '')),
+                      FittedBox(
+                          child: _PhotoProfile(
+                        url: widget.anak.photoURL,
+                        id: widget.anak.id,
+                      )),
                       Text('Umur: ' +
                           Anak(tanggalLahir: widget.anak.tanggalLahir).umurAnak)
                     ],
@@ -139,8 +143,21 @@ class _AnakPageState extends State<AnakPage> {
                                             DatePicker.showDatePicker(context,
                                                 theme: DatePickerTheme(
                                                   doneStyle: TextStyle(
-                                                      color: Theme.of(context)
-                                                          .accentColor),
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .secondary,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontFamily: 'Nunito',
+                                                  ),
+                                                  cancelStyle: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontFamily: 'Nunito',
+                                                    color: Colors.black,
+                                                  ),
+                                                  itemStyle: TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                    fontFamily: 'Nunito',
+                                                  ),
                                                 ),
                                                 showTitleActions: true,
                                                 minTime: kFirstDay,
@@ -223,8 +240,8 @@ class _AnakPageState extends State<AnakPage> {
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(10.0),
-                                child: buttonCustom(
-                                  textChild: !loading
+                                child: ButtonCustom(
+                                  child: !loading
                                       ? Text(
                                           "Simpan",
                                           style: TextStyle(
@@ -265,6 +282,8 @@ class _AnakPageState extends State<AnakPage> {
                                                         _golDarahCtrl.text,
                                                     nama: _namaCtrl.text,
                                                     tanggalLahir: tempDate,
+                                                    photoURL:
+                                                        widget.anak.photoURL,
                                                   ),
                                                 )
                                                 .then((value) {
@@ -303,8 +322,10 @@ class _AnakPageState extends State<AnakPage> {
 }
 
 class _PhotoProfile extends StatelessWidget {
+  final String id;
   final String url;
-  const _PhotoProfile({Key key, @required this.url}) : super(key: key);
+  const _PhotoProfile({Key key, @required this.url, @required this.id})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -314,7 +335,7 @@ class _PhotoProfile extends StatelessWidget {
         children: [
           url == '' || url.isEmpty
               ? CircleAvatar(
-                  radius: 30.0,
+                  radius: 50.0,
                   foregroundColor: Colors.white,
                   child: Stack(
                     children: [
@@ -322,7 +343,8 @@ class _PhotoProfile extends StatelessWidget {
                         alignment: Alignment.bottomRight,
                         child: CircleAvatar(
                           foregroundColor: Colors.white,
-                          backgroundColor: Theme.of(context).accentColor,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.secondary,
                           radius: 15,
                           child: IconButton(
                               alignment: Alignment.center,
@@ -331,7 +353,9 @@ class _PhotoProfile extends StatelessWidget {
                                 size: 15.0,
                               ),
                               onPressed: () async {
-                                ModalPickerImage().showPicker(context);
+                                ModalPickerImage().showPicker(context, (val) {
+                                  AnakService().updatePhoto(val, id);
+                                });
                               }),
                         ),
                       ),
@@ -339,9 +363,9 @@ class _PhotoProfile extends StatelessWidget {
                   ),
                 )
               : CircleAvatar(
-                  radius: 30.0,
+                  radius: 50.0,
                   backgroundColor: Colors.transparent,
-                  backgroundImage: NetworkImage(
+                  backgroundImage: CachedNetworkImageProvider(
                       'https://i.pinimg.com/originals/d2/4d/db/d24ddb8271b8ea9b4bbf4b67df8cbc01.gif',
                       scale: 0.1),
                   child: Stack(
@@ -351,7 +375,8 @@ class _PhotoProfile extends StatelessWidget {
                         child: CircleAvatar(
                           radius: 50,
                           backgroundColor: Colors.transparent,
-                          backgroundImage: NetworkImage(url, scale: 0.1),
+                          backgroundImage:
+                              CachedNetworkImageProvider(url, scale: 0.1),
                         ),
                       ),
                       Align(
@@ -365,7 +390,9 @@ class _PhotoProfile extends StatelessWidget {
                                 size: 15.0,
                               ),
                               onPressed: () async {
-                                ModalPickerImage().showPicker(context);
+                                ModalPickerImage().showPicker(context, (val) {
+                                  AnakService().updatePhoto(val, id);
+                                });
                               }),
                         ),
                       ),

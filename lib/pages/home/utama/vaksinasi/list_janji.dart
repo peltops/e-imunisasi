@@ -1,22 +1,24 @@
-import 'package:eimunisasi/models/anak.dart';
-import 'package:eimunisasi/models/nakes.dart';
-import 'package:eimunisasi/pages/home/utama/vaksinasi/daftar_vaksinasi.dart';
-import 'package:eimunisasi/pages/widget/search_bar.dart';
-import 'package:eimunisasi/services/nakes_service.dart';
+import 'package:eimunisasi/models/appointment.dart';
+import 'package:eimunisasi/models/user.dart';
+import 'package:eimunisasi/pages/home/utama/vaksinasi/konfirmasi_janji.dart';
+import 'package:eimunisasi/services/appointment_services.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
-class ListNakes extends StatelessWidget {
-  final Anak anak;
-  const ListNakes({Key key, @required this.anak}) : super(key: key);
+class ListJanjiVaksinasi extends StatelessWidget {
+  final page;
+  const ListJanjiVaksinasi({Key key, this.page}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final currentUser = Provider.of<Users>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.pink[300],
         elevation: 0,
         title: Text(
-          'Pilih nakes',
+          'Pilih Janji',
           style: TextStyle(fontWeight: FontWeight.w700),
         ),
         centerTitle: true,
@@ -25,19 +27,16 @@ class ListNakes extends StatelessWidget {
         color: Colors.pink[100],
         child: Padding(
           padding: EdgeInsets.all(20),
-          child: Card(
-            elevation: 0,
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: SearchBar(),
-                ),
-                Expanded(
-                  child: Container(
-                    width: double.infinity,
-                    child: StreamBuilder<List<Nakes>>(
-                      stream: NakesService().nakesStream,
+          child: Column(
+            children: [
+              Expanded(
+                child: Container(
+                  width: double.infinity,
+                  child: Card(
+                    elevation: 0,
+                    child: FutureBuilder<List<AppointmentModel>>(
+                      future: AppointmentService(uid: currentUser.uid)
+                          .getAppointment(),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           final data = snapshot.data;
@@ -45,7 +44,7 @@ class ListNakes extends StatelessWidget {
                             return ListView.builder(
                               itemCount: data.length,
                               itemBuilder: (context, index) {
-                                final nakes = data[index];
+                                final appointment = data[index];
                                 return Card(
                                     child: ListTile(
                                   onTap: () {
@@ -53,18 +52,25 @@ class ListNakes extends StatelessWidget {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              DaftarVaksinasiPage(
-                                            anak: anak,
-                                            nakes: nakes,
+                                              KonfirmasiVaksinasiPage(
+                                            appointment: appointment,
                                           ),
                                         ));
                                   },
                                   title: Text(
-                                    nakes.namaLengkap,
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w700),
+                                    appointment.anak.nama +
+                                        ' (${appointment.anak.umurAnak})',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                    ),
                                   ),
-                                  subtitle: Text(nakes.profesi),
+                                  subtitle: Text(
+                                    DateFormat('dd MMMM yyyy')
+                                        .format(appointment.tanggal),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
                                   trailing:
                                       Icon(Icons.keyboard_arrow_right_rounded),
                                 ));
@@ -82,8 +88,8 @@ class ListNakes extends StatelessWidget {
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

@@ -188,8 +188,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   SizedBox(
                     height: 20.0,
                   ),
-                  buttonCustom(
-                    textChild: !loading
+                  ButtonCustom(
+                    child: !loading
                         ? Text(
                             "Daftar",
                             style:
@@ -242,8 +242,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         : null,
                   ),
                   SizedBox(height: 10),
-                  buttonCustom(
-                      textChild: Text(
+                  ButtonCustom(
+                      child: Text(
                         "Daftar dengan Email",
                         style: TextStyle(fontSize: 15.0, color: Colors.white),
                       ),

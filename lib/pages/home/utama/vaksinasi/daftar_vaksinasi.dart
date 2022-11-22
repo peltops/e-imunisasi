@@ -1,8 +1,9 @@
 import 'package:eimunisasi/models/anak.dart';
-import 'package:eimunisasi/models/jadwal_janji.dart';
+import 'package:eimunisasi/models/appointment.dart';
 import 'package:eimunisasi/models/nakes.dart';
 import 'package:eimunisasi/models/user.dart';
 import 'package:eimunisasi/pages/home/utama/vaksinasi/konfirmasi_janji.dart';
+import 'package:eimunisasi/pages/widget/button_custom.dart';
 import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 import 'package:eimunisasi/services/appointment_services.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,7 +24,7 @@ class DaftarVaksinasiPage extends StatefulWidget {
 
 class _DaftarVaksinasiPageState extends State<DaftarVaksinasiPage> {
   String _tanggal = 'Pilih tanggal';
-  JadwalImunisasi selectedRadioTile;
+  JadwalPraktek selectedRadioTile;
   bool isLoading = false;
 
   final kFirstDay = DateTime.now();
@@ -33,25 +34,15 @@ class _DaftarVaksinasiPageState extends State<DaftarVaksinasiPage> {
     super.initState();
   }
 
-  setSelectedRadioTile(JadwalImunisasi val) {
+  setSelectedRadioTile(JadwalPraktek val) {
     setState(() {
       selectedRadioTile = val;
     });
-    print(selectedRadioTile.jam);
   }
 
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<Users>(context);
-    final jadwal = widget.nakes.jadwal;
-    List<String> jadwalPraktek = [];
-    for (var i = 0; i < jadwal.length; i++) {
-      final hari = jadwal.keys.elementAt(i);
-      final jam = jadwal.values.elementAt(i);
-      for (var j = 0; j < jam.length; j++) {
-        jadwalPraktek.add('$hari, ${jam[j]}');
-      }
-    }
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -91,7 +82,9 @@ class _DaftarVaksinasiPageState extends State<DaftarVaksinasiPage> {
                         SizedBox(
                           height: 10,
                         ),
-                        Text(jadwalPraktek.join('\n')),
+                        ...widget.nakes.jadwal.map((jadwal) {
+                          return Text(jadwal.hari + ', ' + jadwal.jam);
+                        }).toList(),
                         SizedBox(
                           height: 10,
                         ),
@@ -126,7 +119,10 @@ class _DaftarVaksinasiPageState extends State<DaftarVaksinasiPage> {
                         ),
                         ListTile(
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
+                              side:
+                                  BorderSide(color: Colors.grey[300], width: 2),
+                              borderRadius: BorderRadius.circular(5)),
+                          dense: true,
                           onTap: () {
                             DatePicker.showDatePicker(
                               context,
@@ -164,67 +160,64 @@ class _DaftarVaksinasiPageState extends State<DaftarVaksinasiPage> {
                           trailing: Icon(
                             Icons.date_range,
                             color: Theme.of(context).primaryColor,
-                            size: 30,
                           ),
                           title: Text(_tanggal),
                         ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: isLoading
-                                ? null
-                                : () {
-                                    if (selectedRadioTile == null ||
-                                        _tanggal == 'Pilih tanggal') {
-                                      snackbarCustom(
-                                              'Lengkapi data terlebih dahulu!')
-                                          .show(context);
-                                      return;
-                                    }
-                                    final appointment = JadwalJanjiModel(
-                                      tanggal: DateTime.parse(_tanggal),
-                                      anak: widget.anak,
-                                      orangtua: user,
-                                      nakes: widget.nakes,
-                                      tujuan: 'Imunisasi',
-                                      desc: selectedRadioTile.hari +
-                                          ', ' +
-                                          selectedRadioTile.jam,
-                                      notes: 'Imunisasi',
-                                    );
-                                    try {
-                                      setState(() {
-                                        isLoading = true;
-                                      });
-                                      AppointmentService(uid: user.uid)
-                                          .setAppointment(appointment)
-                                          .then((value) => Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      KonfirmasiVaksinasiPage(
-                                                    appointment: value,
-                                                  ),
+                        SizedBox(height: 30),
+                        ButtonCustom(
+                          onPressed: isLoading
+                              ? null
+                              : () {
+                                  if (selectedRadioTile == null ||
+                                      _tanggal == 'Pilih tanggal') {
+                                    snackbarCustom(
+                                            'Lengkapi data terlebih dahulu!')
+                                        .show(context);
+                                    return;
+                                  }
+                                  final appointment = AppointmentModel(
+                                    tanggal: DateTime.parse(_tanggal),
+                                    anak: widget.anak,
+                                    orangtua: user,
+                                    nakes: widget.nakes,
+                                    tujuan: 'Imunisasi',
+                                    desc: selectedRadioTile.hari +
+                                        ', ' +
+                                        selectedRadioTile.jam,
+                                    notes: 'Imunisasi',
+                                  );
+                                  try {
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+                                    AppointmentService(uid: user.uid)
+                                        .setAppointment(appointment)
+                                        .then((value) => Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    KonfirmasiVaksinasiPage(
+                                                  appointment: value,
                                                 ),
-                                              ));
-                                    } catch (e) {
-                                      snackbarCustom(e.message.toString())
-                                          .show(context);
-                                    } finally {
-                                      setState(() {
-                                        isLoading = false;
-                                      });
-                                    }
-                                  },
-                            child: isLoading
-                                ? Center(
-                                    child: CircularProgressIndicator(),
-                                  )
-                                : Text('Buat Janji'),
-                          ),
+                                              ),
+                                            ));
+                                  } catch (e) {
+                                    snackbarCustom(e.message.toString())
+                                        .show(context);
+                                  } finally {
+                                    setState(() {
+                                      isLoading = false;
+                                    });
+                                  }
+                                },
+                          child: isLoading
+                              ? Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : Text(
+                                  'Buat Janji',
+                                  style: TextStyle(color: Colors.white),
+                                ),
                         )
                       ],
                     ),

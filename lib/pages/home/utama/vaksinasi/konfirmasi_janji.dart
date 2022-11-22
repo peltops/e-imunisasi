@@ -1,11 +1,12 @@
-import 'package:eimunisasi/models/jadwal_janji.dart';
+import 'package:eimunisasi/models/appointment.dart';
 import 'package:eimunisasi/pages/home/home.dart';
+import 'package:eimunisasi/pages/widget/button_custom.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:intl/intl.dart';
 
 class KonfirmasiVaksinasiPage extends StatefulWidget {
-  final JadwalJanjiModel appointment;
+  final AppointmentModel appointment;
 
   const KonfirmasiVaksinasiPage({Key key, @required this.appointment})
       : super(key: key);
@@ -17,7 +18,6 @@ class KonfirmasiVaksinasiPage extends StatefulWidget {
 class _KonfirmasiVaksinasiPageState extends State<KonfirmasiVaksinasiPage> {
   @override
   Widget build(BuildContext context) {
-    print(widget.appointment);
     final size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
@@ -132,18 +132,18 @@ class _KonfirmasiVaksinasiPageState extends State<KonfirmasiVaksinasiPage> {
                             ]),
                           ],
                         ),
-                        SizedBox(height: 10),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => HomePage()),
-                                  (route) => false);
-                            },
-                            child: Text('Halaman Utama'),
+                        SizedBox(height: 30),
+                        ButtonCustom(
+                          onPressed: () {
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomePage()),
+                                (route) => false);
+                          },
+                          child: Text(
+                            'Halaman Utama',
+                            style: TextStyle(color: Colors.white),
                           ),
                         )
                       ],

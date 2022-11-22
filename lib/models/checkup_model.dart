@@ -33,7 +33,6 @@ class CheckupModel {
     this.deletedAt,
   });
 
-  @override
   List<Object> get props => [
         beratBadan,
         tinggiBadan,

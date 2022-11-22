@@ -108,8 +108,8 @@ class _RegistrationEmailPageState extends State<RegistrationEmailPage> {
                   SizedBox(
                     height: 20.0,
                   ),
-                  buttonCustom(
-                    textChild: !loading
+                  ButtonCustom(
+                    child: !loading
                         ? Text(
                             "Daftar",
                             style:

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 class Anak {
   final String id;
   final String parentId;
@@ -9,8 +7,10 @@ class Anak {
   final DateTime tanggalLahir;
   final String jenisKelamin;
   final String golDarah;
+  final String photoURL;
 
   get umurAnak {
+    // ignore: unrelated_type_equality_checks
     if (this.tanggalLahir == null || this.tanggalLahir == '') {
       return 'Umur belum diisi';
     }
@@ -30,29 +30,32 @@ class Anak {
     this.golDarah,
     this.nama,
     this.tanggalLahir,
+    this.photoURL,
   });
 
   factory Anak.fromMap(Map data) {
     return Anak(
       id: data['id'],
-      parentId: data['parentId'],
+      parentId: data['parent_id'],
       nama: data['nama'],
       nik: data['nik'] ?? '',
       tempatLahir: data['tempat_lahir'] ?? '',
       tanggalLahir: data['tanggal_lahir'].toDate() ?? '',
       jenisKelamin: data['jenis_kelamin'] ?? '',
       golDarah: data['gol_darah'] ?? '',
+      photoURL: data['photo_url'] ?? '',
     );
   }
   Map<String, dynamic> toMap() {
     return {
-      'parentId': parentId,
+      'parent_id': parentId,
       "nama": nama,
       "nik": nik,
       "tempat_lahir": tempatLahir,
       "tanggal_lahir": tanggalLahir,
       "jenis_kelamin": jenisKelamin,
       "gol_darah": golDarah,
+      "photo_url": photoURL,
     };
   }
 
@@ -65,6 +68,7 @@ class Anak {
     DateTime tanggalLahir,
     String jenisKelamin,
     String golDarah,
+    String photoURL,
   }) {
     return Anak(
       id: id ?? this.id,
@@ -75,6 +79,7 @@ class Anak {
       tanggalLahir: tanggalLahir ?? this.tanggalLahir,
       jenisKelamin: jenisKelamin ?? this.jenisKelamin,
       golDarah: golDarah ?? this.golDarah,
+      photoURL: photoURL ?? this.photoURL,
     );
   }
 }

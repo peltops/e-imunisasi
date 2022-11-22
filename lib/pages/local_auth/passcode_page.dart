@@ -1,5 +1,6 @@
 import 'package:eimunisasi/pages/home/home.dart';
 import 'package:eimunisasi/pages/local_auth/confirm_passcode_page.dart';
+import 'package:eimunisasi/pages/widget/button_custom.dart';
 import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 import 'package:eimunisasi/services/local_auth_service.dart';
 import 'package:flutter/material.dart';
@@ -129,15 +130,13 @@ class _NextButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: ElevatedButton(
+      child: ButtonCustom(
         key: const Key('passcodeForm_next_raisedButton'),
-        style: ElevatedButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ),
         onPressed: onPressed,
-        child: const Text('Selanjutnya'),
+        child: const Text(
+          'Selanjutnya',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
     );
   }

@@ -48,7 +48,9 @@ class _ListDaftarRumahSakitState extends State<ListDaftarRumahSakit> {
                                         CrossAxisAlignment.stretch,
                                     children: [
                                       Card(
-                                          color: Theme.of(context).accentColor,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary,
                                           child: Padding(
                                             padding: const EdgeInsets.all(10.0),
                                             child: Text(

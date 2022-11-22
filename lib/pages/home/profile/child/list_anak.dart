@@ -45,25 +45,27 @@ class ListAnak extends StatelessWidget {
                                     itemCount: data.length,
                                     itemBuilder: (context, index) {
                                       return Card(
-                                          child: ListTile(
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => AnakPage(
-                                                anak: data[index],
+                                        child: ListTile(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => AnakPage(
+                                                  anak: data[index],
+                                                ),
                                               ),
-                                            ),
-                                          );
-                                        },
-                                        title: Text(
-                                          data[index].nama,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w700),
+                                            );
+                                          },
+                                          title: Text(
+                                            data[index].nama,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w700),
+                                          ),
+                                          subtitle: Text(data[index].umurAnak),
+                                          trailing: Icon(Icons
+                                              .keyboard_arrow_right_rounded),
                                         ),
-                                        trailing: Icon(
-                                            Icons.keyboard_arrow_right_rounded),
-                                      ));
+                                      );
                                     },
                                   );
                                 }

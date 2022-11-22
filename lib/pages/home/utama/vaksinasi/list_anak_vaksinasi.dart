@@ -36,10 +36,11 @@ class ListAnakVaksinasi extends StatelessWidget {
                               (context, AsyncSnapshot<List<Anak>> snapshot) {
                             if (snapshot.hasData) {
                               final data = snapshot.data;
-                              if (snapshot.data != null) {
+                              if (data != null && data.length > 0) {
                                 return ListView.builder(
                                   itemCount: data.length,
                                   itemBuilder: (context, index) {
+                                    final anak = data[index];
                                     return Card(
                                         child: ListTile(
                                       onTap: () {
@@ -47,16 +48,16 @@ class ListAnakVaksinasi extends StatelessWidget {
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) => ListNakes(
-                                                anak: data[index],
+                                                anak: anak,
                                               ),
                                             ));
                                       },
                                       title: Text(
-                                        data[index].nama,
+                                        anak.nama,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w700),
                                       ),
-                                      subtitle: Text(data[index].umurAnak),
+                                      subtitle: Text(anak.umurAnak),
                                       trailing: Icon(
                                           Icons.keyboard_arrow_right_rounded),
                                     ));

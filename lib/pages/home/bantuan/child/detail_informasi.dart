@@ -35,7 +35,7 @@ class _DetailInformasiPageState extends State<DetailInformasiPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Card(
-                        color: Theme.of(context).accentColor,
+                        color: Theme.of(context).colorScheme.secondary,
                         child: Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: Text(
@@ -49,7 +49,7 @@ class _DetailInformasiPageState extends State<DetailInformasiPage> {
                     Container(
                       width: double.infinity,
                       child: Card(
-                          color: Theme.of(context).accentColor,
+                          color: Theme.of(context).colorScheme.secondary,
                           child: Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: Column(

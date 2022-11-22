@@ -123,8 +123,24 @@ class _DaftarAnakPageState extends State<DaftarAnakPage> {
                                               DatePicker.showDatePicker(context,
                                                   theme: DatePickerTheme(
                                                     doneStyle: TextStyle(
-                                                        color: Theme.of(context)
-                                                            .accentColor),
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .secondary,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontFamily: 'Nunito',
+                                                    ),
+                                                    cancelStyle: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontFamily: 'Nunito',
+                                                      color: Colors.black,
+                                                    ),
+                                                    itemStyle: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontFamily: 'Nunito',
+                                                    ),
                                                   ),
                                                   showTitleActions: true,
                                                   minTime: kFirstDay,
@@ -219,8 +235,8 @@ class _DaftarAnakPageState extends State<DaftarAnakPage> {
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(10.0),
-                                  child: buttonCustom(
-                                    textChild: !loading
+                                  child: ButtonCustom(
+                                    child: !loading
                                         ? Text(
                                             "Simpan",
                                             style: TextStyle(

@@ -1,9 +1,6 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eimunisasi/models/nakes.dart';
 import 'package:eimunisasi/services/calendar_database.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class NakesService extends FirestoreDatabase {
   final _service = FirebaseFirestore.instance;
@@ -13,7 +10,6 @@ class NakesService extends FirestoreDatabase {
     return snapshot.docs.map((e) {
       var data = Map<String, dynamic>.from(e.data());
       data['id'] = e.id;
-      log(data.toString());
       return Nakes.fromMap(data);
     }).toList();
   }

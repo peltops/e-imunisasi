@@ -30,8 +30,8 @@ class Nakes {
   final String id;
   final String clinicID;
   final String email;
-  final Map<String, dynamic> jadwal;
-  final List<JadwalImunisasi> jadwalImunisasi;
+  final List<JadwalPraktek> jadwal;
+  final List<JadwalPraktek> jadwalImunisasi;
   final String kartuKeluarga;
   final String namaLengkap;
   final String nik;
@@ -62,9 +62,11 @@ class Nakes {
       id: data['id'],
       clinicID: data['clinicID'],
       email: data['email'],
-      jadwal: data['jadwal'],
-      jadwalImunisasi: (data['jadwalImunisasi'] as List)
-          .map((e) => JadwalImunisasi.fromMap(e))
+      jadwal: (data['jadwal'] as List ?? [])
+          .map((e) => JadwalPraktek.fromMap(e))
+          .toList(),
+      jadwalImunisasi: (data['jadwalImunisasi'] as List ?? [])
+          .map((e) => JadwalPraktek.fromMap(e))
           .toList(),
       kartuKeluarga: data['kartuKeluarga'],
       namaLengkap: data['namaLengkap'],
@@ -79,7 +81,6 @@ class Nakes {
 
   Map<String, dynamic> toMap() {
     return {
-      "id": id,
       "clinicID": clinicID,
       "email": email,
       "jadwal": jadwal,
@@ -95,17 +96,17 @@ class Nakes {
   }
 }
 
-class JadwalImunisasi {
+class JadwalPraktek {
   final String hari;
   final String jam;
 
-  JadwalImunisasi({
+  JadwalPraktek({
     this.hari,
     this.jam,
   });
 
-  factory JadwalImunisasi.fromMap(Map data) {
-    return JadwalImunisasi(
+  factory JadwalPraktek.fromMap(Map data) {
+    return JadwalPraktek(
       hari: data['hari'],
       jam: data['jam'],
     );

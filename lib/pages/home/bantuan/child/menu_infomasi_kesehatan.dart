@@ -1,5 +1,6 @@
 import 'package:eimunisasi/models/informasi_kesehatan.dart';
 import 'package:eimunisasi/pages/home/bantuan/child/detail_informasi.dart';
+import 'package:eimunisasi/pages/widget/search_bar.dart';
 import 'package:eimunisasi/services/informasi_kesehatan_database.dart';
 import 'package:flutter/material.dart';
 
@@ -31,30 +32,8 @@ class _InformasiKesehatanPageState extends State<InformasiKesehatanPage> {
                 padding: const EdgeInsets.all(10.0),
                 child: Column(
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Container(
-                        color: Colors.grey[100],
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 0.0),
-                          child: Row(
-                            children: <Widget>[
-                              Expanded(
-                                  child: TextFormField(
-                                decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    contentPadding: EdgeInsets.all(0)),
-                              )),
-                              Icon(Icons.search),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
+                    SearchBar(),
+                    SizedBox(height: 10),
                     Expanded(
                       child: StreamBuilder<List<InformasiKesehatanModel>>(
                           stream: InformasiKesehatanDatabase().streamData,

@@ -83,8 +83,8 @@ class _ResetpasswordPageState extends State<ResetpasswordPage> {
                       });
                     },
                   ),
-                  buttonCustom(
-                    textChild: !loading
+                  ButtonCustom(
+                    child: !loading
                         ? Text(
                             "Kirim",
                             style:

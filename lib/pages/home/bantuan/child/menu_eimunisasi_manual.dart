@@ -1,5 +1,6 @@
 import 'package:eimunisasi/models/informasi_aplikasi.dart';
 import 'package:eimunisasi/pages/home/bantuan/child/detail_informasi.dart';
+import 'package:eimunisasi/pages/widget/search_bar.dart';
 import 'package:eimunisasi/services/informasi_aplikasi_database.dart';
 import 'package:flutter/material.dart';
 
@@ -32,30 +33,8 @@ class _EimunisasiManualPageState extends State<EimunisasiManualPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Container(
-                        color: Colors.grey[100],
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 0.0),
-                          child: Row(
-                            children: <Widget>[
-                              Expanded(
-                                  child: TextFormField(
-                                decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    contentPadding: EdgeInsets.all(0)),
-                              )),
-                              Icon(Icons.search),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
+                    SearchBar(),
+                    SizedBox(height: 10),
                     Expanded(
                       child: StreamBuilder<List<InformasiAplikasiModel>>(
                           stream: InformasiAplikasiDatabase().streamData,

@@ -1,4 +1,5 @@
 import 'package:eimunisasi/pages/home/utama/kontak/tenaga_kesehatan/list_daftar_nakes.dart';
+import 'package:eimunisasi/pages/widget/button_custom.dart';
 import 'package:flutter/material.dart';
 
 class DaftarNakes extends StatefulWidget {
@@ -35,7 +36,7 @@ class _DaftarNakesState extends State<DaftarNakes> {
                           crossAxisSpacing: 20,
                           crossAxisCount: 2,
                           children: [
-                            ElevatedButton(
+                            ButtonCustom(
                                 onPressed: () {
                                   Navigator.push(
                                       context,
@@ -45,8 +46,11 @@ class _DaftarNakesState extends State<DaftarNakes> {
                                                 nama: 'Dokter',
                                               )));
                                 },
-                                child: Text('Dokter')),
-                            ElevatedButton(
+                                child: Text(
+                                  'Dokter',
+                                  style: TextStyle(color: Colors.white),
+                                )),
+                            ButtonCustom(
                                 onPressed: () {
                                   Navigator.push(
                                       context,
@@ -56,8 +60,11 @@ class _DaftarNakesState extends State<DaftarNakes> {
                                                 nama: 'Perawat',
                                               )));
                                 },
-                                child: Text('Perawat')),
-                            ElevatedButton(
+                                child: Text(
+                                  'Perawat',
+                                  style: TextStyle(color: Colors.white),
+                                )),
+                            ButtonCustom(
                                 onPressed: () {
                                   Navigator.push(
                                       context,
@@ -67,8 +74,11 @@ class _DaftarNakesState extends State<DaftarNakes> {
                                                 nama: 'Bidan',
                                               )));
                                 },
-                                child: Text('Bidan')),
-                            ElevatedButton(
+                                child: Text(
+                                  'Bidan',
+                                  style: TextStyle(color: Colors.white),
+                                )),
+                            ButtonCustom(
                                 onPressed: () {
                                   Navigator.push(
                                       context,
@@ -78,7 +88,10 @@ class _DaftarNakesState extends State<DaftarNakes> {
                                                 nama: 'Ahli Gizi',
                                               )));
                                 },
-                                child: Text('Ahli Gizi')),
+                                child: Text(
+                                  'Ahli Gizi',
+                                  style: TextStyle(color: Colors.white),
+                                )),
                           ],
                         ),
                       )

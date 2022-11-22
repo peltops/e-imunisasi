@@ -1,6 +1,5 @@
 import 'package:eimunisasi/models/anak.dart';
 import 'package:eimunisasi/pages/home/utama/bukusehat/rekam_medis_pasien/rekam_medis_pasien_screen.dart';
-import 'package:eimunisasi/pages/home/utama/bukusehat/tabel_tumbuh_kembang.dart';
 import 'package:flutter/material.dart';
 import 'package:eimunisasi/services/anak_database.dart';
 
@@ -59,6 +58,7 @@ class ListAnak extends StatelessWidget {
                                         style: TextStyle(
                                             fontWeight: FontWeight.w700),
                                       ),
+                                      subtitle: Text(data[index].umurAnak),
                                       trailing: Icon(
                                           Icons.keyboard_arrow_right_rounded),
                                     ));

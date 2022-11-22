@@ -1,4 +1,5 @@
 import 'package:eimunisasi/pages/home/home.dart';
+import 'package:eimunisasi/pages/widget/button_custom.dart';
 import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 import 'package:eimunisasi/services/local_auth_service.dart';
 import 'package:eimunisasi/utils/dismiss_keyboard.dart';
@@ -54,13 +55,8 @@ class _ConfirmPasscodePageState extends State<ConfirmPasscodePage> {
                   const SizedBox(height: 16),
                   SizedBox(
                     width: double.infinity,
-                    child: ElevatedButton(
+                    child: ButtonCustom(
                       key: const Key('confirmPasscodeForm_next_raisedButton'),
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
                       onPressed: () {
                         if (_formKey.currentState.validate()) {
                           dismissKeyboard(context);
@@ -80,7 +76,10 @@ class _ConfirmPasscodePageState extends State<ConfirmPasscodePage> {
                           }
                         }
                       },
-                      child: const Text('Konfirmasi'),
+                      child: const Text(
+                        'Konfirmasi',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
                 ],

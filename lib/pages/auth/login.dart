@@ -191,8 +191,8 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(
                       height: 16,
                     ),
-                    buttonCustom(
-                      textChild: !loading
+                    ButtonCustom(
+                      child: !loading
                           ? Text(
                               "Masuk",
                               style: TextStyle(
@@ -246,8 +246,8 @@ class _LoginPageState extends State<LoginPage> {
                       },
                     ),
                     SizedBox(height: 10),
-                    buttonCustom(
-                        textChild: Text(
+                    ButtonCustom(
+                        child: Text(
                           "Masuk dengan Email",
                           style: TextStyle(fontSize: 15.0, color: Colors.white),
                         ),

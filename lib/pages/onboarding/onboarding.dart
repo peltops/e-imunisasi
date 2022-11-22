@@ -127,7 +127,7 @@ class _OnboardState extends State<Onboard> {
                           begin: Alignment.centerLeft,
                           end: Alignment.centerRight,
                           colors: [
-                            Theme.of(context).accentColor,
+                            Theme.of(context).colorScheme.secondary,
                             Theme.of(context).primaryColor
                           ])),
                   height: Platform.isIOS ? 70 : 60,

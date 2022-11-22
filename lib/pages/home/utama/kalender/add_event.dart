@@ -59,7 +59,20 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
                             DatePicker.showDatePicker(context,
                                 theme: DatePickerTheme(
                                   doneStyle: TextStyle(
-                                      color: Theme.of(context).accentColor),
+                                    color:
+                                        Theme.of(context).colorScheme.secondary,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Nunito',
+                                  ),
+                                  cancelStyle: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Nunito',
+                                    color: Colors.black,
+                                  ),
+                                  itemStyle: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: 'Nunito',
+                                  ),
                                 ),
                                 showTitleActions: true,
                                 minTime: kFirstDay,
@@ -85,8 +98,8 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
                         SizedBox(
                           height: 20.0,
                         ),
-                        buttonCustom(
-                            textChild: !loading
+                        ButtonCustom(
+                            child: !loading
                                 ? Text(
                                     "Simpan",
                                     style: TextStyle(

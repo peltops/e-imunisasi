@@ -104,7 +104,9 @@ class _KalenderPageState extends State<KalenderPage> {
           child: Container(
             padding: EdgeInsets.all(1.0),
             decoration: BoxDecoration(
-                color: Theme.of(context).accentColor, shape: BoxShape.circle),
+              color: Theme.of(context).colorScheme.secondary,
+              shape: BoxShape.circle,
+            ),
             constraints: BoxConstraints(minWidth: 15.0, minHeight: 15.0),
             child: Center(
               child: Text(
@@ -223,8 +225,9 @@ class _KalenderPageState extends State<KalenderPage> {
                                     ),
                                     CircleAvatar(
                                       foregroundColor: Colors.white,
-                                      backgroundColor:
-                                          Theme.of(context).accentColor,
+                                      backgroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
                                       child: IconButton(
                                           onPressed: () {
                                             setState(() {

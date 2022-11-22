@@ -1,4 +1,5 @@
 import 'package:eimunisasi/pages/home/utama/vaksinasi/list_anak_vaksinasi.dart';
+import 'package:eimunisasi/pages/home/utama/vaksinasi/list_janji.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -44,9 +45,11 @@ class _VaksinasiPageState extends State<VaksinasiPage> {
                           child: ListTile(
                         onTap: () {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ListAnakVaksinasi()));
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ListAnakVaksinasi(),
+                            ),
+                          );
                         },
                         leading: Icon(
                           Icons.medical_services_outlined,
@@ -59,9 +62,11 @@ class _VaksinasiPageState extends State<VaksinasiPage> {
                           child: ListTile(
                         onTap: () {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ListAnakVaksinasi()));
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ListJanjiVaksinasi(),
+                            ),
+                          );
                         },
                         leading: Icon(
                           Icons.list_rounded,

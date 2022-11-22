@@ -1,9 +1,10 @@
-import 'dart:developer';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eimunisasi/models/anak.dart';
 import 'package:eimunisasi/services/calendar_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class AnakService extends FirestoreDatabase {
   final _currentUser = FirebaseAuth.instance.currentUser;
@@ -13,10 +14,13 @@ class AnakService extends FirestoreDatabase {
   Future<Anak> setData(Anak anak) {
     final data = anak.copyWith(parentId: _currentUser.uid);
     return _service.collection('children').add(data.toMap()).then((value) {
-      print(value.id);
       return Future.value(data.copyWith(id: value.id));
     });
   }
+
+  // add new and update avatar
+  Future<void> updatePhoto(String url, String id) =>
+      _service.collection('children').doc(id).update({'photo_url': url});
 
   // update appointment event
   Future<void> updateData(Anak anak) =>
@@ -27,14 +31,25 @@ class AnakService extends FirestoreDatabase {
     return snapshot.docs.map((e) {
       var data = Map<String, dynamic>.from(e.data());
       data['id'] = e.id;
-      log(data.toString());
       return Anak.fromMap(data);
     }).toList();
   }
 
   Stream<List<Anak>> get anakStream => _service
       .collection('children')
-      .where('parentId', isEqualTo: _currentUser.uid)
+      .where('parent_id', isEqualTo: _currentUser.uid)
       .snapshots()
       .map(_listData);
+
+  //Upload Image firebase Storage
+  Future<String> uploadImage(File imageFile) async {
+    String fileName = _currentUser.uid.toString();
+
+    firebase_storage.Reference ref =
+        firebase_storage.FirebaseStorage.instance.ref().child(fileName);
+
+    final result = await ref.putFile(imageFile);
+    final fileUrl = await result.ref.getDownloadURL();
+    return fileUrl;
+  }
 }

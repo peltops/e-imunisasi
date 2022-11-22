@@ -125,8 +125,8 @@ class _LoginPageEmailState extends State<LoginPageEmail> {
                   SizedBox(
                     height: 20.0,
                   ),
-                  buttonCustom(
-                    textChild: !loading
+                  ButtonCustom(
+                    child: !loading
                         ? Text(
                             "Masuk",
                             style:

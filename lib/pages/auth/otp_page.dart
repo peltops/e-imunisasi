@@ -150,8 +150,8 @@ class _OTPPageState extends State<OTPPage> {
                         SizedBox(
                           height: 16,
                         ),
-                        buttonCustom(
-                          textChild: !loading
+                        ButtonCustom(
+                          child: !loading
                               ? Text(
                                   "Masuk",
                                   style: TextStyle(

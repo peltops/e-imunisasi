@@ -3,7 +3,7 @@ import 'package:eimunisasi/models/nakes.dart';
 import 'package:eimunisasi/models/user.dart';
 import 'package:equatable/equatable.dart';
 
-class JadwalJanjiModel extends Equatable {
+class AppointmentModel extends Equatable {
   final String id;
   final DateTime tanggal;
   final Anak anak;
@@ -13,7 +13,7 @@ class JadwalJanjiModel extends Equatable {
   final String desc;
   final String notes;
 
-  const JadwalJanjiModel({
+  const AppointmentModel({
     this.id,
     this.tanggal,
     this.anak,
@@ -24,7 +24,7 @@ class JadwalJanjiModel extends Equatable {
     this.tujuan,
   });
 
-  JadwalJanjiModel copyWith({
+  AppointmentModel copyWith({
     String id,
     DateTime tanggal,
     Anak anak,
@@ -34,7 +34,7 @@ class JadwalJanjiModel extends Equatable {
     String desc,
     String tujuan,
   }) {
-    return JadwalJanjiModel(
+    return AppointmentModel(
       id: id ?? this.id,
       tanggal: tanggal ?? this.tanggal,
       anak: anak ?? this.anak,
@@ -58,8 +58,8 @@ class JadwalJanjiModel extends Equatable {
         tujuan,
       ];
 
-  factory JadwalJanjiModel.fromMap(Map<String, dynamic> map, String docId) {
-    return JadwalJanjiModel(
+  factory AppointmentModel.fromMap(Map<String, dynamic> map, String docId) {
+    return AppointmentModel(
       id: docId,
       tanggal: map['appointment_date'].toDate(),
       notes: map['notes'],

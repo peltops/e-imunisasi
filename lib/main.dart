@@ -117,7 +117,8 @@ class _MyAppState extends State<MyApp> {
               theme: ThemeData(
                 primaryColor: Colors.pink[300],
                 primarySwatch: Colors.pink,
-                accentColor: Colors.pink[400],
+                colorScheme: ColorScheme.fromSwatch().copyWith(
+                    primary: Colors.pink[500], secondary: Colors.pink[300]),
                 fontFamily: 'Nunito',
               ),
               home: Splash(),

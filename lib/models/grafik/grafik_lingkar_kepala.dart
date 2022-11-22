@@ -69,7 +69,7 @@ class _LineChart extends StatelessWidget {
                 return LineTooltipItem(
                   '(${touchedSpot.y})',
                   TextStyle(
-                    color: touchedSpot.bar.gradient?.colors.first ??
+                    color: touchedSpot.bar.gradient?.colors?.first ??
                         touchedSpot.bar.color ??
                         Colors.blueGrey,
                     fontWeight: FontWeight.bold,
