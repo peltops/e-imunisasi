@@ -1,3 +1,4 @@
+import 'package:eimunisasi/core/extension.dart';
 import 'package:eimunisasi/models/anak.dart';
 import 'package:eimunisasi/models/appointment.dart';
 import 'package:eimunisasi/models/nakes.dart';
@@ -83,7 +84,14 @@ class _DaftarVaksinasiPageState extends State<DaftarVaksinasiPage> {
                           height: 10,
                         ),
                         ...widget.nakes.jadwal.map((jadwal) {
-                          return Text(jadwal.hari + ', ' + jadwal.jam);
+                          return Column(
+                            children: [
+                              Text(
+                                jadwal.hari.capitalize() + ', ' + jadwal.jam,
+                              ),
+                              SizedBox(height: 5),
+                            ],
+                          );
                         }).toList(),
                         SizedBox(
                           height: 10,
@@ -103,10 +111,13 @@ class _DaftarVaksinasiPageState extends State<DaftarVaksinasiPage> {
                               return jadwalImunisasi
                                   .map(
                                     (e) => RadioListTile(
+                                      dense: true,
                                       contentPadding: EdgeInsets.all(0),
                                       value: e,
                                       groupValue: selectedRadioTile,
-                                      title: Text(e.hari + ', ' + e.jam),
+                                      title: Text(
+                                        e.hari.capitalize() + ', ' + e.jam,
+                                      ),
                                       onChanged: setSelectedRadioTile,
                                     ),
                                   )

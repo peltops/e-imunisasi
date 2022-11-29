@@ -55,7 +55,7 @@ class _KonfirmasiVaksinasiPageState extends State<KonfirmasiVaksinasiPage> {
                               fontWeight: FontWeight.bold, fontSize: 15),
                         ),
                         Text(
-                          'Janji dengan Nakes telah dibuat. Lihat detal Informasi berikut: ',
+                          'Janji dengan Nakes telah dibuat. Lihat detail Informasi berikut: ',
                           style: TextStyle(color: Colors.red),
                         ),
                         SizedBox(height: 10),

@@ -1,5 +1,4 @@
 import 'package:eimunisasi/pages/home/profile/child/list_anak.dart';
-import 'package:eimunisasi/pages/home/utama/Kontak/kontak.dart';
 import 'package:eimunisasi/pages/home/utama/bukusehat/buku_sehat.dart';
 import 'package:eimunisasi/pages/home/utama/kalender/kalender.dart';
 import 'package:eimunisasi/pages/home/utama/vaksinasi/vaksinasi.dart';
@@ -25,7 +24,6 @@ class _MainPageState extends State<MainPage> {
     // final FirebaseAuth _auth = FirebaseAuth.instance;
     final isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
-    print(MediaQuery.of(context).orientation);
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.pink[300],

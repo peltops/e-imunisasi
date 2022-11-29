@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eimunisasi/models/anak.dart';
 import 'package:eimunisasi/models/checkup_model.dart';
 import 'package:eimunisasi/pages/home/utama/bukusehat/rekam_medis_pasien/tabbar_diagnosa/tabbar_diagnosa_screen.dart';
@@ -37,11 +38,24 @@ class RekamMedisPasienScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       ClipOval(
-                          child: SizedBox(
-                        height: 80,
-                        child:
-                            Image.network('https://picsum.photos/250?image=9'),
-                      )),
+                        child: SizedBox(
+                          height: 80,
+                          width: 80,
+                          child: CachedNetworkImage(
+                            imageUrl: anak.photoURL,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                            errorWidget: (context, url, error) => FittedBox(
+                              child: Icon(
+                                Icons.supervised_user_circle_sharp,
+                                color: Colors.red,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                       const SizedBox(
                         width: 10,
                       ),
