@@ -1,3 +1,4 @@
+import 'package:eimunisasi/pages/home/profile/child/list_anak.dart';
 import 'package:eimunisasi/pages/home/utama/Kontak/kontak.dart';
 import 'package:eimunisasi/pages/home/utama/bukusehat/buku_sehat.dart';
 import 'package:eimunisasi/pages/home/utama/kalender/kalender.dart';
@@ -22,6 +23,9 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     // final FirebaseAuth _auth = FirebaseAuth.instance;
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+    print(MediaQuery.of(context).orientation);
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.pink[300],
@@ -38,17 +42,19 @@ class _MainPageState extends State<MainPage> {
             padding: EdgeInsets.all(20),
             child: Column(
               children: [
-                Container(
-                  width: double.infinity,
-                  height: MediaQuery.of(context).size.height / 4,
-                  child: Card(
-                      elevation: 0,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: SvgPicture.asset(
-                            'assets/images/undraw_baby_ja7a.svg'),
-                      )),
-                ),
+                isLandscape
+                    ? SizedBox()
+                    : Container(
+                        width: double.infinity,
+                        height: MediaQuery.of(context).size.height / 4,
+                        child: Card(
+                            elevation: 0,
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: SvgPicture.asset(
+                                  'assets/images/undraw_baby_ja7a.svg'),
+                            )),
+                      ),
                 Expanded(
                     child: Card(
                   elevation: 0,
@@ -56,51 +62,56 @@ class _MainPageState extends State<MainPage> {
                       mainAxisSpacing: 20,
                       crossAxisSpacing: 20,
                       padding: EdgeInsets.all(20),
-                      crossAxisCount: 2,
+                      crossAxisCount: isLandscape ? 4 : 2,
                       children: [
                         TombolMenu(
-                                icon: Icons.calendar_today,
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              KalenderPage()));
-                                },
-                                label: 'Kalender')
-                            .tombolMenuCustom(),
+                          icon: Icons.calendar_today,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => KalenderPage(),
+                              ),
+                            );
+                          },
+                          label: 'Kalender',
+                        ),
                         TombolMenu(
-                                icon: Icons.medical_services_rounded,
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              VaksinasiPage()));
-                                },
-                                label: 'Vaksinasi')
-                            .tombolMenuCustom(),
+                          icon: Icons.child_friendly_outlined,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ListAnak(),
+                              ),
+                            );
+                          },
+                          label: 'Anak',
+                        ),
                         TombolMenu(
-                                icon: Icons.my_library_books_rounded,
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              BukuSehatPage()));
-                                },
-                                label: 'Buku Sehat')
-                            .tombolMenuCustom(),
+                          icon: Icons.medical_services_rounded,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => VaksinasiPage(),
+                              ),
+                            );
+                          },
+                          label: 'Vaksinasi',
+                        ),
                         TombolMenu(
-                                icon: Icons.contact_support_rounded,
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => KontakPage()));
-                                },
-                                label: 'Kontak')
-                            .tombolMenuCustom(),
+                          icon: Icons.my_library_books_rounded,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => BukuSehatPage(),
+                              ),
+                            );
+                          },
+                          label: 'Buku Sehat',
+                        ),
                       ]),
                 )),
               ],
@@ -110,39 +121,47 @@ class _MainPageState extends State<MainPage> {
   }
 }
 
-class TombolMenu {
-  Function onTap;
-  IconData icon;
-  String label;
-  TombolMenu({this.icon, this.label, this.onTap});
+class TombolMenu extends StatelessWidget {
+  final Function onTap;
+  final IconData icon;
+  final String label;
+  TombolMenu({
+    Key key,
+    this.icon,
+    this.label,
+    this.onTap,
+  }) : super(key: key);
 
-  tombolMenuCustom() => GestureDetector(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: Column(
-            children: [
-              Flexible(
-                child: Container(
-                  width: double.infinity,
-                  height: 100,
-                  decoration: BoxDecoration(
-                      color: Colors.pink[400],
-                      borderRadius: BorderRadius.circular(20)),
-                  child: Icon(
-                    icon,
-                    color: Colors.white,
-                    size: 50,
-                  ),
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Column(
+          children: [
+            Flexible(
+              child: Container(
+                width: double.infinity,
+                height: 100,
+                decoration: BoxDecoration(
+                    color: Colors.pink[400],
+                    borderRadius: BorderRadius.circular(20)),
+                child: Icon(
+                  icon,
+                  color: Colors.white,
+                  size: 50,
                 ),
               ),
-              SizedBox(height: 5),
-              Text(
-                label,
-                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
-              )
-            ],
-          ),
+            ),
+            SizedBox(height: 5),
+            Text(
+              label,
+              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
+            )
+          ],
         ),
-      );
+      ),
+    );
+  }
 }

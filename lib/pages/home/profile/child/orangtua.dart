@@ -107,303 +107,284 @@ class _OrangtuaPageState extends State<OrangtuaPage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Expanded(
-                          child: Container(
-                              width: double.infinity,
-                              child: Card(
-                                child: SingleChildScrollView(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 5.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                        child: Container(
+                          width: double.infinity,
+                          child: Card(
+                            child: SingleChildScrollView(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 5.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _PhotoProfile(url: user.avatarURL),
+                                    const SizedBox(height: 10),
+                                    Text(
+                                      'Profil Orangtua',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20),
+                                    ),
+                                    TextFormCustom(
+                                      initialValue: user.momName,
+                                      label:
+                                          'Nama Lengkap (Sesuai Akte Lahir/KTP)',
+                                      onChanged: (val) {
+                                        _namaIbuCtrl.text = val;
+                                      },
+                                    ),
+                                    Row(
                                       children: [
-                                        _PhotoProfile(url: user.avatarURL),
-                                        const SizedBox(height: 10),
-                                        Text(
-                                          'Profil Orangtua',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20),
-                                        ),
-                                        TextFormCustom(
-                                          initialValue: user.momName,
-                                          label:
-                                              'Nama Lengkap (Sesuai Akte Lahir/KTP)',
-                                          onChanged: (val) {
-                                            _namaIbuCtrl.text = val;
-                                          },
-                                        ),
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: TextFormCustom(
-                                                initialValue: user.tempatLahir,
-                                                label: 'Tempat Lahir',
-                                                onChanged: (val) {
-                                                  _tempatLahirCtrl.text = val;
-                                                },
-                                              ),
-                                            ),
-                                            SizedBox(width: 10),
-                                            Expanded(
-                                              child: TextFormCustom(
-                                                onTap: () =>
-                                                    DatePicker.showDatePicker(
-                                                  context,
-                                                  theme: DatePickerTheme(
-                                                    doneStyle: TextStyle(
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .secondary,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontFamily: 'Nunito',
-                                                    ),
-                                                    cancelStyle: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontFamily: 'Nunito',
-                                                      color: Colors.black,
-                                                    ),
-                                                    itemStyle: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontFamily: 'Nunito',
-                                                    ),
-                                                  ),
-                                                  showTitleActions: true,
-                                                  minTime: kFirstDay,
-                                                  maxTime: kLastDay,
-                                                  onChanged: (val) {
-                                                    String formattedDate =
-                                                        DateFormat('dd-MM-yyyy')
-                                                            .format(val);
-                                                    setState(() {
-                                                      _tanggalLahirCtrl.text =
-                                                          formattedDate
-                                                              .toString();
-                                                    });
-                                                  },
-                                                  onConfirm: (val) {
-                                                    String formattedDate =
-                                                        DateFormat('dd-MM-yyyy')
-                                                            .format(val);
-                                                    setState(() {
-                                                      _tanggalLahirCtrl.text =
-                                                          formattedDate
-                                                              .toString();
-                                                    });
-                                                  },
-                                                  currentTime:
-                                                      user.tanggalLahir ??
-                                                          DateTime.now(),
-                                                  locale: LocaleType.id,
-                                                ),
-                                                readOnly: true,
-                                                label: 'Tanggal Lahir',
-                                                hintText: _tanggalLahirCtrl
-                                                        .text.isNotEmpty
-                                                    ? _tanggalLahirCtrl.text
-                                                    : tanggalLahir,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        TextFormCustom(
-                                          keyboardType: TextInputType.number,
-                                          initialValue: user.noKTP,
-                                          label: 'No NIK',
-                                          onChanged: (val) {
-                                            _nomorKtpCtrl.text = val;
-                                          },
-                                        ),
-                                        TextFormCustom(
-                                          keyboardType: TextInputType.number,
-                                          initialValue: user.noKK,
-                                          label: 'No KK',
-                                          onChanged: (val) {
-                                            _nomorKkCtrl.text = val;
-                                          },
-                                        ),
-                                        FormBuilderDropdown(
-                                          onChanged: (val) {
-                                            _pekerjaanIbuCtrl.text = val;
-                                          },
-                                          name: 'Pekerjaan',
-                                          decoration: InputDecoration(
-                                            fillColor: Color(0xfff3f3f4),
-                                            border: InputBorder.none,
-                                            filled: true,
-                                            labelText: 'Pekerjaan',
-                                            labelStyle:
-                                                TextStyle(color: Colors.black),
-                                          ),
-                                          initialValue: user.pekerjaanIbu,
-                                          hint: Text('Pilih Pekerjaan'),
-                                          validator:
-                                              FormBuilderValidators.compose([
-                                            FormBuilderValidators.required(
-                                                context)
-                                          ]),
-                                          items: pilihanPekerjaan
-                                              .map((val) => DropdownMenuItem(
-                                                    value: val,
-                                                    child: Text('$val'),
-                                                  ))
-                                              .toList(),
-                                        ),
-                                        SizedBox(height: 5),
-                                        FormBuilderDropdown(
-                                          onChanged: (val) {
-                                            _golDarahIbuCtrl.text = val;
-                                          },
-                                          name: 'Golongan Darah',
-                                          decoration: InputDecoration(
-                                            fillColor: Color(0xfff3f3f4),
-                                            border: InputBorder.none,
-                                            filled: true,
-                                            labelText: 'Golongan Darah',
-                                            labelStyle:
-                                                TextStyle(color: Colors.black),
-                                          ),
-                                          initialValue: user.golDarahIbu,
-                                          hint: Text('Pilih golongan darah'),
-                                          validator:
-                                              FormBuilderValidators.compose([
-                                            FormBuilderValidators.required(
-                                                context)
-                                          ]),
-                                          items: pilihanGolDarah
-                                              .map((val) => DropdownMenuItem(
-                                                    value: val,
-                                                    child: Text('$val'),
-                                                  ))
-                                              .toList(),
-                                        ),
-                                        const SizedBox(height: 10),
-                                        Text(
-                                          'Informasi Akun',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20),
-                                        ),
-                                        if (_currentUser.email != null)
-                                          TextFormCustom(
-                                            readOnly: true,
-                                            initialValue: _currentUser.email,
-                                            label: 'Email',
+                                        Expanded(
+                                          child: TextFormCustom(
+                                            initialValue: user.tempatLahir,
+                                            label: 'Tempat Lahir',
                                             onChanged: (val) {
-                                              _emailCtrl.text = val;
+                                              _tempatLahirCtrl.text = val;
                                             },
                                           ),
-                                        if (_currentUser.phoneNumber != null)
-                                          TextFormCustom(
-                                            readOnly: true,
-                                            initialValue:
-                                                _currentUser.phoneNumber,
-                                            label: 'No.handphone Ibu',
-                                            onChanged: (val) {
-                                              _nomorIbuCtrl.text = val;
-                                            },
-                                          ),
-                                        ButtonCustom(
-                                          child: !loading
-                                              ? Text(
-                                                  "Simpan",
-                                                  style: TextStyle(
-                                                      fontSize: 15.0,
-                                                      color: Colors.white),
-                                                )
-                                              : SizedBox(
-                                                  height: 18,
-                                                  width: 18,
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                    valueColor:
-                                                        AlwaysStoppedAnimation<
-                                                                Color>(
-                                                            Colors.white),
-                                                  ),
+                                        ),
+                                        SizedBox(width: 10),
+                                        Expanded(
+                                          child: TextFormCustom(
+                                            onTap: () =>
+                                                DatePicker.showDatePicker(
+                                              context,
+                                              theme: DatePickerTheme(
+                                                doneStyle: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .secondary,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontFamily: 'Nunito',
                                                 ),
-                                          onPressed: !loading
-                                              ? () async {
-                                                  DateTime tempDate =
-                                                      _tanggalLahirCtrl
-                                                              .text.isNotEmpty
-                                                          ? new DateFormat(
-                                                                  "dd-MM-yyyy")
-                                                              .parse(
-                                                                  _tanggalLahirCtrl
-                                                                      .text)
-                                                          : user.tanggalLahir;
-                                                  dismissKeyboard(context);
-                                                  loading = true;
-                                                  await UserService()
-                                                      .updateUser(
-                                                        Users(
-                                                          alamat:
-                                                              _alamatCtrl.text,
-                                                          dadName: _namaAyahCtrl
-                                                              .text,
-                                                          momName:
-                                                              _namaIbuCtrl.text,
-                                                          nomorhpAyah:
-                                                              _nomorAyahCtrl
-                                                                  .text,
-                                                          golDarahAyah:
-                                                              _golDarahAyahCtrl
-                                                                  .text,
-                                                          pekerjaanAyah:
-                                                              _pekerjaanAyahCtrl
-                                                                  .text,
-                                                          nomorhpIbu:
-                                                              _nomorIbuCtrl
-                                                                  .text,
-                                                          golDarahIbu:
-                                                              _golDarahIbuCtrl
-                                                                  .text,
-                                                          pekerjaanIbu:
-                                                              _pekerjaanIbuCtrl
-                                                                  .text,
-                                                          avatarURL:
-                                                              user.avatarURL,
-                                                          tanggalLahir:
-                                                              tempDate,
-                                                          tempatLahir:
-                                                              _tempatLahirCtrl
-                                                                  .text,
-                                                          noKK:
-                                                              _nomorKkCtrl.text,
-                                                          noKTP: _nomorKtpCtrl
-                                                              .text,
-                                                        ),
-                                                      )
-                                                      .then((value) {
-                                                        snackbarCustom(
-                                                                'Data berhasil diperbarui')
-                                                            .show(context);
-                                                        Navigator.pop(context);
-                                                      })
-                                                      .catchError((onError) =>
-                                                          snackbarCustom(
-                                                                  'Terjadi kesalahan: $onError')
-                                                              .show(context))
-                                                      .whenComplete(
-                                                          () => setState(() {
-                                                                loading = false;
-                                                              }));
-                                                  setState(() {
-                                                    loading = false;
-                                                  });
-                                                }
-                                              : null,
-                                        )
+                                                cancelStyle: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontFamily: 'Nunito',
+                                                  color: Colors.black,
+                                                ),
+                                                itemStyle: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontFamily: 'Nunito',
+                                                ),
+                                              ),
+                                              showTitleActions: true,
+                                              minTime: kFirstDay,
+                                              maxTime: kLastDay,
+                                              onChanged: (val) {
+                                                String formattedDate =
+                                                    DateFormat('dd-MM-yyyy')
+                                                        .format(val);
+                                                setState(() {
+                                                  _tanggalLahirCtrl.text =
+                                                      formattedDate.toString();
+                                                });
+                                              },
+                                              onConfirm: (val) {
+                                                String formattedDate =
+                                                    DateFormat('dd-MM-yyyy')
+                                                        .format(val);
+                                                setState(() {
+                                                  _tanggalLahirCtrl.text =
+                                                      formattedDate.toString();
+                                                });
+                                              },
+                                              currentTime: user.tanggalLahir ??
+                                                  DateTime.now(),
+                                              locale: LocaleType.id,
+                                            ),
+                                            readOnly: true,
+                                            label: 'Tanggal Lahir',
+                                            hintText: _tanggalLahirCtrl
+                                                    .text.isNotEmpty
+                                                ? _tanggalLahirCtrl.text
+                                                : tanggalLahir,
+                                          ),
+                                        ),
                                       ],
                                     ),
-                                  ),
+                                    TextFormCustom(
+                                      keyboardType: TextInputType.number,
+                                      initialValue: user.noKTP,
+                                      label: 'No NIK',
+                                      onChanged: (val) {
+                                        _nomorKtpCtrl.text = val;
+                                      },
+                                    ),
+                                    TextFormCustom(
+                                      keyboardType: TextInputType.number,
+                                      initialValue: user.noKK,
+                                      label: 'No KK',
+                                      onChanged: (val) {
+                                        _nomorKkCtrl.text = val;
+                                      },
+                                    ),
+                                    FormBuilderDropdown(
+                                      onChanged: (val) {
+                                        _pekerjaanIbuCtrl.text = val;
+                                      },
+                                      name: 'Pekerjaan',
+                                      decoration: InputDecoration(
+                                        fillColor: Color(0xfff3f3f4),
+                                        border: InputBorder.none,
+                                        filled: true,
+                                        labelText: 'Pekerjaan',
+                                        labelStyle:
+                                            TextStyle(color: Colors.black),
+                                      ),
+                                      initialValue: user.pekerjaanIbu,
+                                      hint: Text('Pilih Pekerjaan'),
+                                      validator: FormBuilderValidators.compose([
+                                        FormBuilderValidators.required(context)
+                                      ]),
+                                      items: pilihanPekerjaan
+                                          .map((val) => DropdownMenuItem(
+                                                value: val,
+                                                child: Text('$val'),
+                                              ))
+                                          .toList(),
+                                    ),
+                                    SizedBox(height: 5),
+                                    FormBuilderDropdown(
+                                      onChanged: (val) {
+                                        _golDarahIbuCtrl.text = val;
+                                      },
+                                      name: 'Golongan Darah',
+                                      decoration: InputDecoration(
+                                        fillColor: Color(0xfff3f3f4),
+                                        border: InputBorder.none,
+                                        filled: true,
+                                        labelText: 'Golongan Darah',
+                                        labelStyle:
+                                            TextStyle(color: Colors.black),
+                                      ),
+                                      initialValue: user.golDarahIbu,
+                                      hint: Text('Pilih golongan darah'),
+                                      validator: FormBuilderValidators.compose([
+                                        FormBuilderValidators.required(context)
+                                      ]),
+                                      items: pilihanGolDarah
+                                          .map((val) => DropdownMenuItem(
+                                                value: val,
+                                                child: Text('$val'),
+                                              ))
+                                          .toList(),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Text(
+                                      'Informasi Akun',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20),
+                                    ),
+                                    if (_currentUser.email != null)
+                                      TextFormCustom(
+                                        readOnly: true,
+                                        initialValue: _currentUser.email,
+                                        label: 'Email',
+                                        onChanged: (val) {
+                                          _emailCtrl.text = val;
+                                        },
+                                      ),
+                                    if (_currentUser.phoneNumber != null)
+                                      TextFormCustom(
+                                        readOnly: true,
+                                        initialValue: _currentUser.phoneNumber,
+                                        label: 'No.handphone Ibu',
+                                        onChanged: (val) {
+                                          _nomorIbuCtrl.text = val;
+                                        },
+                                      ),
+                                    SizedBox(height: 10),
+                                    ButtonCustom(
+                                      child: !loading
+                                          ? Text(
+                                              "Simpan",
+                                              style: TextStyle(
+                                                  fontSize: 15.0,
+                                                  color: Colors.white),
+                                            )
+                                          : SizedBox(
+                                              height: 18,
+                                              width: 18,
+                                              child: CircularProgressIndicator(
+                                                valueColor:
+                                                    AlwaysStoppedAnimation<
+                                                        Color>(Colors.white),
+                                              ),
+                                            ),
+                                      onPressed: !loading
+                                          ? () async {
+                                              DateTime tempDate =
+                                                  _tanggalLahirCtrl
+                                                          .text.isNotEmpty
+                                                      ? new DateFormat(
+                                                              "dd-MM-yyyy")
+                                                          .parse(
+                                                              _tanggalLahirCtrl
+                                                                  .text)
+                                                      : user.tanggalLahir;
+                                              dismissKeyboard(context);
+                                              loading = true;
+                                              await UserService()
+                                                  .updateUser(
+                                                    Users(
+                                                      alamat: _alamatCtrl.text,
+                                                      dadName:
+                                                          _namaAyahCtrl.text,
+                                                      momName:
+                                                          _namaIbuCtrl.text,
+                                                      nomorhpAyah:
+                                                          _nomorAyahCtrl.text,
+                                                      golDarahAyah:
+                                                          _golDarahAyahCtrl
+                                                              .text,
+                                                      pekerjaanAyah:
+                                                          _pekerjaanAyahCtrl
+                                                              .text,
+                                                      nomorhpIbu:
+                                                          _nomorIbuCtrl.text,
+                                                      golDarahIbu:
+                                                          _golDarahIbuCtrl.text,
+                                                      pekerjaanIbu:
+                                                          _pekerjaanIbuCtrl
+                                                              .text,
+                                                      avatarURL: user.avatarURL,
+                                                      tanggalLahir: tempDate,
+                                                      tempatLahir:
+                                                          _tempatLahirCtrl.text,
+                                                      noKK: _nomorKkCtrl.text,
+                                                      noKTP: _nomorKtpCtrl.text,
+                                                    ),
+                                                  )
+                                                  .then((value) {
+                                                    snackbarCustom(
+                                                            'Data berhasil diperbarui')
+                                                        .show(context);
+                                                    Navigator.pop(context);
+                                                  })
+                                                  .catchError((onError) =>
+                                                      snackbarCustom(
+                                                              'Terjadi kesalahan: $onError')
+                                                          .show(context))
+                                                  .whenComplete(
+                                                      () => setState(() {
+                                                            loading = false;
+                                                          }));
+                                              setState(() {
+                                                loading = false;
+                                              });
+                                            }
+                                          : null,
+                                    ),
+                                    SizedBox(height: 10),
+                                  ],
                                 ),
-                              )))
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),

@@ -47,22 +47,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: ListTile(
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => ListAnak()));
-                },
-                title: Text(
-                  'Anak',
-                  style: TextStyle(fontWeight: FontWeight.w700),
-                ),
-                trailing: Icon(Icons.keyboard_arrow_right_rounded),
-              )),
-              Card(
-                  child: ListTile(
-                onTap: () {
-                  Navigator.push(context,
                       MaterialPageRoute(builder: (context) => OrangtuaPage()));
                 },
                 title: Text(
-                  'Orangtua',
+                  'Profil',
                   style: TextStyle(fontWeight: FontWeight.w700),
                 ),
                 trailing: Icon(Icons.keyboard_arrow_right_rounded),
