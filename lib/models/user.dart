@@ -54,8 +54,13 @@ class Users {
       avatarURL: data['avatarURL'] ?? '',
       verified: data['verified'] ?? false,
       tempatLahir: data['tempatLahir'] ?? '',
-      tanggalLahir:
-          (data['tanggalLahir'] as Timestamp).toDate() ?? DateTime.now(),
+      tanggalLahir: () {
+        if (data['tanggalLahir'] is Timestamp) {
+          return (data['tanggalLahir'] as Timestamp).toDate();
+        } else {
+          return null;
+        }
+      }(),
       noKK: data['noKK'] ?? '',
       noKTP: data['noKTP'] ?? '',
     );

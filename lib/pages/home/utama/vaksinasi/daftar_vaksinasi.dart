@@ -30,10 +30,6 @@ class _DaftarVaksinasiPageState extends State<DaftarVaksinasiPage> {
 
   final kFirstDay = DateTime.now();
   final kLastDay = DateTime(DateTime.now().year + 1);
-  @override
-  void initState() {
-    super.initState();
-  }
 
   setSelectedRadioTile(JadwalPraktek val) {
     setState(() {
@@ -179,6 +175,9 @@ class _DaftarVaksinasiPageState extends State<DaftarVaksinasiPage> {
                           onPressed: isLoading
                               ? null
                               : () {
+                                  setState(() {
+                                    isLoading = true;
+                                  });
                                   if (selectedRadioTile == null ||
                                       _tanggal == 'Pilih tanggal') {
                                     snackbarCustom(
@@ -198,9 +197,6 @@ class _DaftarVaksinasiPageState extends State<DaftarVaksinasiPage> {
                                     notes: 'Imunisasi',
                                   );
                                   try {
-                                    setState(() {
-                                      isLoading = true;
-                                    });
                                     AppointmentService(uid: user.uid)
                                         .setAppointment(appointment)
                                         .then((value) => Navigator.push(
