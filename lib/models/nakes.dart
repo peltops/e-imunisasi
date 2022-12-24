@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class NakesModel {
   final String nama;
   final String telepon;
@@ -74,7 +76,13 @@ class Nakes {
       noTelpon: data['noTelpon'],
       photoURL: data['photoURL'],
       profesi: data['profesi'],
-      tanggalLahir: data['tanggalLahir'].toDate(),
+      tanggalLahir: () {
+        if (data['tanggalLahir'] is Timestamp) {
+          return (data['tanggalLahir'] as Timestamp).toDate();
+        } else {
+          return null;
+        }
+      }(),
       tempatLahir: data['tempatLahir'],
     );
   }
