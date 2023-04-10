@@ -26,7 +26,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   //Email and Pass state
   bool loading = false;
-  String phoneNumber, verId, countryCode, momName, smsCode, email, error;
+  String? phoneNumber, verId, countryCode, momName, smsCode, email, error;
   bool codeOTPSent = false;
   @override
   void dispose() {
@@ -34,7 +34,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 
   // siminfo
-  String _isoCountryCode;
+  String? _isoCountryCode;
 
   Future<void> getSimInfo() async {
     String isoCountryCode = await SimInfo.getIsoCountryCode;
@@ -62,19 +62,19 @@ class _RegistrationPageState extends State<RegistrationPage> {
       snackbarCustom('Terjadi masalah: ${exception.message.toString()}');
     };
     final PhoneCodeSent codeSent =
-        (String verificationId, [int forceResendingToken]) {
+        (String verificationId, [int? forceResendingToken]) {
       setState(() {
         verId = verificationId;
         codeOTPSent = true;
         loading = false;
         loading = false;
       });
-      var phone = phoneNumber;
+      var phone = phoneNumber!;
 
       if (phone[0] == '0') {
         phone = phone.substring(1);
       }
-      phone = countryCode + phone;
+      phone = countryCode! + phone;
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
               builder: (context) => OTPPage(
@@ -175,7 +175,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             RequiredValidator(errorText: 'Masukan No. Ponsel!'),
                             MaxLengthValidator(13,
                                 errorText: 'No. Ponsel terlalu panjang'),
-                          ]),
+                          ]) as Function?,
                           onChanged: (val) {
                             setState(() {
                               phoneNumber = val;
@@ -205,16 +205,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           ),
                     onPressed: !loading
                         ? () async {
-                            if (_formKey.currentState.validate()) {
+                            if (_formKey.currentState!.validate()) {
                               dismissKeyboard(context);
                               setState(() {
                                 loading = true;
                               });
-                              var phone = phoneNumber;
+                              var phone = phoneNumber!;
                               if (phone[0] == '0') {
                                 phone = phone.substring(1);
                               }
-                              var codePhoneNumber = countryCode + phone;
+                              var codePhoneNumber = countryCode! + phone;
                               _auth
                                   .checkUserExists(codePhoneNumber)
                                   .then((value) {

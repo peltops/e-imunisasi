@@ -1,7 +1,7 @@
 class RumahSakitModel {
-  final String nama;
-  final String telepon;
-  final String alamat;
+  final String? nama;
+  final String? telepon;
+  final String? alamat;
 
   RumahSakitModel({
     this.nama,

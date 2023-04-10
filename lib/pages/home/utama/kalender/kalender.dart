@@ -19,7 +19,7 @@ class KalenderPage extends StatefulWidget {
 }
 
 class _KalenderPageState extends State<KalenderPage> {
-  List<KalenderModel> allEvents;
+  List<KalenderModel>? allEvents;
   confirmDeleteDialog(BuildContext context, dynamic event) {
     // set up the buttons
     Widget cancelButton = TextButton(
@@ -53,9 +53,9 @@ class _KalenderPageState extends State<KalenderPage> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime _onPageChangeDate = DateTime.now();
-  DateTime _selectedDay;
-  LinkedHashMap<DateTime, List<KalenderModel>> _groupedEvents;
-  List<dynamic> _selectedEvents;
+  DateTime? _selectedDay;
+  late LinkedHashMap<DateTime, List<KalenderModel>> _groupedEvents;
+  late List<dynamic> _selectedEvents;
   final kFirstDay = DateTime(DateTime.now().year - 5);
   final kLastDay = DateTime(DateTime.now().year + 5);
 
@@ -71,7 +71,7 @@ class _KalenderPageState extends State<KalenderPage> {
 
   @override
   void dispose() {
-    allEvents.asMap().forEach((i, v) {
+    allEvents!.asMap().forEach((i, v) {
       addActivityHive(activity: v.activity, date: v.date);
     });
     // Hive.close();
@@ -86,9 +86,9 @@ class _KalenderPageState extends State<KalenderPage> {
     _groupedEvents = LinkedHashMap(equals: isSameDay, hashCode: getHashCode);
     allEvents.forEach((event) {
       DateTime date =
-          DateTime.utc(event.date.year, event.date.month, event.date.day, 12);
+          DateTime.utc(event.date!.year, event.date!.month, event.date!.day, 12);
       if (_groupedEvents[date] == null) _groupedEvents[date] = [];
-      _groupedEvents[date].add(event);
+      _groupedEvents[date]!.add(event);
     });
   }
 
@@ -155,10 +155,10 @@ class _KalenderPageState extends State<KalenderPage> {
                 }
                 if (snapshot.hasData) {
                   allEvents = snapshot.data;
-                  _groupEvents(allEvents);
+                  _groupEvents(allEvents!);
 
-                  DateTime selectedDate = _selectedDay;
-                  _selectedEvents = _groupedEvents[selectedDate] ?? [];
+                  DateTime? selectedDate = _selectedDay;
+                  _selectedEvents = _groupedEvents[selectedDate!] ?? [];
 
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -277,17 +277,17 @@ class _KalenderPageState extends State<KalenderPage> {
                                       ),
                                     ),
                                   ],
-                                  rows: allEvents
+                                  rows: allEvents!
                                       .where((e) =>
-                                          e.date.month ==
+                                          e.date!.month ==
                                               _onPageChangeDate.month &&
-                                          e.date.year == _onPageChangeDate.year)
+                                          e.date!.year == _onPageChangeDate.year)
                                       .map(
                                         (e) => DataRow(
                                           cells: <DataCell>[
                                             DataCell(
                                               Text(DateFormat('dd-MM-yyyy')
-                                                  .format(e.date)
+                                                  .format(e.date!)
                                                   .toString()),
                                             ),
                                             DataCell(Row(
@@ -297,15 +297,15 @@ class _KalenderPageState extends State<KalenderPage> {
                                               children: [
                                                 Flexible(
                                                   child: Text(
-                                                    e.activity,
+                                                    e.activity!,
                                                     maxLines: 2,
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                   ),
                                                 ),
-                                                !e.readOnly
+                                                !e.readOnly!
                                                     ? PopupMenuButton(
-                                                        onSelected: (item) =>
+                                                        onSelected: (dynamic item) =>
                                                             selectedItem(
                                                                 context,
                                                                 item,
@@ -348,7 +348,7 @@ class _KalenderPageState extends State<KalenderPage> {
     );
   }
 
-  Future addActivityHive({@required String activity, @required DateTime date}) {
+  Future addActivityHive({required String? activity, required DateTime? date}) {
     final calendarsActivity = CalendarsHive()
       ..activity = activity
       ..date = date;

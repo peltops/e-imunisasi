@@ -11,7 +11,7 @@ class Onboard extends StatefulWidget {
 class _OnboardState extends State<Onboard> {
   List<SliderModel> mySLides = [];
   int slideIndex = 0;
-  PageController controller;
+  PageController? controller;
 
   Widget _buildPageIndicator(bool isCurrentPage) {
     return Container(
@@ -95,7 +95,7 @@ class _OnboardState extends State<Onboard> {
                     ),
                     TextButton(
                       onPressed: () {
-                        controller.animateToPage(slideIndex + 1,
+                        controller!.animateToPage(slideIndex + 1,
                             duration: Duration(milliseconds: 500),
                             curve: Curves.linear);
                       },
@@ -146,7 +146,7 @@ class _OnboardState extends State<Onboard> {
 
 // ignore: must_be_immutable
 class SlideTile extends StatelessWidget {
-  String imagePath, title, desc;
+  String? imagePath, title, desc;
 
   SlideTile({this.imagePath, this.title, this.desc});
 
@@ -158,19 +158,19 @@ class SlideTile extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Image.asset(imagePath),
+          Image.asset(imagePath!),
           SizedBox(
             height: 40,
           ),
           Text(
-            title,
+            title!,
             textAlign: TextAlign.center,
             style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
           ),
           SizedBox(
             height: 20,
           ),
-          Text(desc,
+          Text(desc!,
               textAlign: TextAlign.center,
               style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14))
         ],

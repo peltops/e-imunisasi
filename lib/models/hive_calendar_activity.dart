@@ -4,8 +4,8 @@ part 'hive_calendar_activity.g.dart';
 @HiveType(typeId: 0)
 class CalendarsHive extends HiveObject {
   @HiveField(0)
-  DateTime date;
+  DateTime? date;
 
   @HiveField(1)
-  String activity;
+  String? activity;
 }

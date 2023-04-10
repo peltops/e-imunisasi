@@ -1,7 +1,7 @@
 class KlinikModel {
-  final String nama;
-  final String phone;
-  final String alamat;
+  final String? nama;
+  final String? phone;
+  final String? alamat;
 
   KlinikModel({
     this.nama,

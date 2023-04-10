@@ -5,7 +5,7 @@ import 'package:eimunisasi/services/anak_database.dart';
 
 class ListAnakVaksinasi extends StatelessWidget {
   final page;
-  const ListAnakVaksinasi({Key key, this.page}) : super(key: key);
+  const ListAnakVaksinasi({Key? key, this.page}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +53,7 @@ class ListAnakVaksinasi extends StatelessWidget {
                                             ));
                                       },
                                       title: Text(
-                                        anak.nama,
+                                        anak.nama!,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w700),
                                       ),

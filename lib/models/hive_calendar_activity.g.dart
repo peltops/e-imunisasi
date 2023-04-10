@@ -17,8 +17,8 @@ class CalendarsHiveAdapter extends TypeAdapter<CalendarsHive> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return CalendarsHive()
-      ..date = fields[0] as DateTime
-      ..activity = fields[1] as String;
+      ..date = fields[0] as DateTime?
+      ..activity = fields[1] as String?;
   }
 
   @override

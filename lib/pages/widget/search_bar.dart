@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SearchBar extends StatelessWidget {
-  final Function(String) onChanged;
-  const SearchBar({Key key, this.onChanged}) : super(key: key);
+  final Function(String)? onChanged;
+  const SearchBar({Key? key, this.onChanged}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

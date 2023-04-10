@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 class ButtonCustom extends StatelessWidget {
   final Widget child;
-  final Function onPressed;
+  final Function? onPressed;
   const ButtonCustom({
-    Key key,
-    @required this.child,
-    @required this.onPressed,
+    Key? key,
+    required this.child,
+    required this.onPressed,
   }) : super(key: key);
 
   @override
@@ -25,9 +25,9 @@ class ButtonCustom extends StatelessWidget {
             gradient: LinearGradient(
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
-                colors: [Colors.pink[300], Colors.pink[400]])),
+                colors: [Colors.pink[300]!, Colors.pink[400]!])),
         child: TextButton(
-          onPressed: onPressed,
+          onPressed: onPressed as void Function()?,
           child: child,
         ));
   }

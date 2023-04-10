@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class ListDaftarRumahSakit extends StatefulWidget {
   final nama;
 
-  const ListDaftarRumahSakit({Key key, this.nama = 'Rumah Sakit'})
+  const ListDaftarRumahSakit({Key? key, this.nama = 'Rumah Sakit'})
       : super(key: key);
   @override
   _ListDaftarRumahSakitState createState() => _ListDaftarRumahSakitState();
@@ -36,7 +36,7 @@ class _ListDaftarRumahSakitState extends State<ListDaftarRumahSakit> {
                       stream: RumahSakitDatabase().streamData,
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
-                          var data = snapshot.data;
+                          var data = snapshot.data!;
                           return Column(
                             children: [
                               Flexible(
@@ -54,7 +54,7 @@ class _ListDaftarRumahSakitState extends State<ListDaftarRumahSakit> {
                                           child: Padding(
                                             padding: const EdgeInsets.all(10.0),
                                             child: Text(
-                                              data[index].nama,
+                                              data[index].nama!,
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.white,
@@ -66,14 +66,14 @@ class _ListDaftarRumahSakitState extends State<ListDaftarRumahSakit> {
                                           Icons.phone,
                                           color: Theme.of(context).primaryColor,
                                         ),
-                                        title: Text(data[index].telepon),
+                                        title: Text(data[index].telepon!),
                                       ),
                                       ListTile(
                                         leading: Icon(
                                           Icons.maps_home_work_rounded,
                                           color: Theme.of(context).primaryColor,
                                         ),
-                                        title: Text(data[index].alamat),
+                                        title: Text(data[index].alamat!),
                                       ),
                                     ],
                                   ),

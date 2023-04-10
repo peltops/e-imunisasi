@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 
 class ListJanjiVaksinasi extends StatelessWidget {
   final page;
-  const ListJanjiVaksinasi({Key key, this.page}) : super(key: key);
+  const ListJanjiVaksinasi({Key? key, this.page}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -58,15 +58,15 @@ class ListJanjiVaksinasi extends StatelessWidget {
                                         ));
                                   },
                                   title: Text(
-                                    appointment.anak.nama +
-                                        ' (${appointment.anak.umurAnak})',
+                                    appointment.anak!.nama! +
+                                        ' (${appointment.anak!.umurAnak})',
                                     style: TextStyle(
                                       fontWeight: FontWeight.w700,
                                     ),
                                   ),
                                   subtitle: Text(
                                     DateFormat('dd MMMM yyyy')
-                                        .format(appointment.tanggal),
+                                        .format(appointment.tanggal!),
                                     style: TextStyle(
                                       fontWeight: FontWeight.w700,
                                     ),

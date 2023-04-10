@@ -16,8 +16,8 @@ import 'package:intl/intl.dart';
 class AnakPage extends StatefulWidget {
   final Anak anak;
   const AnakPage({
-    Key key,
-    @required this.anak,
+    Key? key,
+    required this.anak,
   }) : super(key: key);
 
   @override
@@ -25,7 +25,7 @@ class AnakPage extends StatefulWidget {
 }
 
 class _AnakPageState extends State<AnakPage> {
-  TextEditingController _namaCtrl,
+  TextEditingController? _namaCtrl,
       _nikCtrl,
       _tempatLahirCtrl,
       _tanggalLahirCtrl,
@@ -100,10 +100,10 @@ class _AnakPageState extends State<AnakPage> {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 5.0),
                                 child: TextFormCustom(
-                                  initialValue: _namaCtrl.text,
+                                  initialValue: _namaCtrl!.text,
                                   label: 'Nama Lengkap',
                                   onChanged: (val) {
-                                    _namaCtrl.text = val;
+                                    _namaCtrl!.text = val;
                                   },
                                 ),
                               ),
@@ -111,11 +111,11 @@ class _AnakPageState extends State<AnakPage> {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 5.0),
                                 child: TextFormCustom(
-                                  initialValue: _nikCtrl.text,
+                                  initialValue: _nikCtrl!.text,
                                   keyboardType: TextInputType.number,
                                   label: 'NIK',
                                   onChanged: (val) {
-                                    _nikCtrl.text = val;
+                                    _nikCtrl!.text = val;
                                   },
                                 ),
                               ),
@@ -126,10 +126,10 @@ class _AnakPageState extends State<AnakPage> {
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 5.0),
                                       child: TextFormCustom(
-                                        initialValue: _tempatLahirCtrl.text,
+                                        initialValue: _tempatLahirCtrl!.text,
                                         label: 'Tempat Lahir',
                                         onChanged: (val) {
-                                          _tempatLahirCtrl.text = val;
+                                          _tempatLahirCtrl!.text = val;
                                         },
                                       ),
                                     ),
@@ -167,7 +167,7 @@ class _AnakPageState extends State<AnakPage> {
                                               DateFormat('dd-MM-yyyy')
                                                   .format(val);
                                           setState(() {
-                                            _tanggalLahirCtrl.text =
+                                            _tanggalLahirCtrl!.text =
                                                 formattedDate.toString();
                                           });
                                         },
@@ -185,8 +185,8 @@ class _AnakPageState extends State<AnakPage> {
                               Padding(
                                 padding: const EdgeInsets.all(5.0),
                                 child: FormBuilderDropdown(
-                                  onChanged: (val) {
-                                    _jenisKelaminCtrl.text = val;
+                                  onChanged: (dynamic val) {
+                                    _jenisKelaminCtrl!.text = val;
                                   },
                                   name: 'Jenis kelamin',
                                   decoration: InputDecoration(
@@ -196,7 +196,7 @@ class _AnakPageState extends State<AnakPage> {
                                     labelText: 'Jenis Kelamin',
                                     labelStyle: TextStyle(color: Colors.black),
                                   ),
-                                  initialValue: _jenisKelaminCtrl.text,
+                                  initialValue: _jenisKelaminCtrl!.text,
                                   hint: Text(
                                     'Pilih jenis kelamin',
                                   ),
@@ -214,8 +214,8 @@ class _AnakPageState extends State<AnakPage> {
                               Padding(
                                 padding: const EdgeInsets.all(5.0),
                                 child: FormBuilderDropdown(
-                                  onChanged: (val) {
-                                    _golDarahCtrl.text = val;
+                                  onChanged: (dynamic val) {
+                                    _golDarahCtrl!.text = val;
                                   },
                                   name: 'Golongan Darah',
                                   decoration: InputDecoration(
@@ -225,7 +225,7 @@ class _AnakPageState extends State<AnakPage> {
                                     labelText: 'Golongan Darah',
                                     labelStyle: TextStyle(color: Colors.black),
                                   ),
-                                  initialValue: _golDarahCtrl.text,
+                                  initialValue: _golDarahCtrl!.text,
                                   hint: Text('Pilih golongan darah'),
                                   validator: FormBuilderValidators.compose([
                                     FormBuilderValidators.required(context)
@@ -264,7 +264,7 @@ class _AnakPageState extends State<AnakPage> {
                                           });
                                           DateTime tempDate = new DateFormat(
                                                   "dd-MM-yyyy")
-                                              .parse(_tanggalLahirCtrl.text);
+                                              .parse(_tanggalLahirCtrl!.text);
                                           dismissKeyboard(context);
                                           try {
                                             AnakService()
@@ -273,14 +273,14 @@ class _AnakPageState extends State<AnakPage> {
                                                     id: widget.anak.id,
                                                     parentId:
                                                         widget.anak.parentId,
-                                                    nik: _nikCtrl.text,
+                                                    nik: _nikCtrl!.text,
                                                     tempatLahir:
-                                                        _tempatLahirCtrl.text,
+                                                        _tempatLahirCtrl!.text,
                                                     jenisKelamin:
-                                                        _jenisKelaminCtrl.text,
+                                                        _jenisKelaminCtrl!.text,
                                                     golDarah:
-                                                        _golDarahCtrl.text,
-                                                    nama: _namaCtrl.text,
+                                                        _golDarahCtrl!.text,
+                                                    nama: _namaCtrl!.text,
                                                     tanggalLahir: tempDate,
                                                     photoURL:
                                                         widget.anak.photoURL,
@@ -322,9 +322,9 @@ class _AnakPageState extends State<AnakPage> {
 }
 
 class _PhotoProfile extends StatelessWidget {
-  final String id;
-  final String url;
-  const _PhotoProfile({Key key, @required this.url, @required this.id})
+  final String? id;
+  final String? url;
+  const _PhotoProfile({Key? key, required this.url, required this.id})
       : super(key: key);
 
   @override
@@ -333,7 +333,7 @@ class _PhotoProfile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: Column(
         children: [
-          url == '' || url.isEmpty
+          url == '' || url!.isEmpty
               ? CircleAvatar(
                   radius: 50.0,
                   foregroundColor: Colors.white,
@@ -376,7 +376,7 @@ class _PhotoProfile extends StatelessWidget {
                           radius: 50,
                           backgroundColor: Colors.transparent,
                           backgroundImage:
-                              CachedNetworkImageProvider(url, scale: 0.1),
+                              CachedNetworkImageProvider(url!, scale: 0.1),
                         ),
                       ),
                       Align(

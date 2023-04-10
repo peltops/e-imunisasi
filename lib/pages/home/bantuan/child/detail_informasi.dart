@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 class DetailInformasiPage extends StatefulWidget {
   final data;
   const DetailInformasiPage({
-    Key key,
-    @required this.data,
+    Key? key,
+    required this.data,
   }) : super(key: key);
   @override
   _DetailInformasiPageState createState() => _DetailInformasiPageState();

@@ -1,8 +1,8 @@
 class InformasiAplikasiModel {
-  final String penulis;
-  final String deskripsi;
-  final String judul;
-  final DateTime createdAt;
+  final String? penulis;
+  final String? deskripsi;
+  final String? judul;
+  final DateTime? createdAt;
 
   InformasiAplikasiModel({
     this.penulis,

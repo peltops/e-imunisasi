@@ -16,7 +16,7 @@ import 'package:sim_info/sim_info.dart';
 // import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 class LoginPage extends StatefulWidget {
-  final Function toggleView;
+  final Function? toggleView;
   LoginPage({this.toggleView});
 
   @override
@@ -29,10 +29,10 @@ class _LoginPageState extends State<LoginPage> {
   bool loading = false;
   String error = '';
   final _formKey = GlobalKey<FormState>();
-  String countryCode;
+  late String countryCode;
 
 // siminfo
-  String _isoCountryCode;
+  String? _isoCountryCode;
 
   Future<void> getSimInfo() async {
     String isoCountryCode = await SimInfo.getIsoCountryCode;
@@ -59,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
       });
     };
     final PhoneCodeSent codeSent =
-        (String verificationId, [int forceResendingToken]) {
+        (String verificationId, [int? forceResendingToken]) {
       setState(() {
         loading = false;
       });
@@ -182,7 +182,7 @@ class _LoginPageState extends State<LoginPage> {
                                   errorText: 'Masukan No. Ponsel!'),
                               MaxLengthValidator(13,
                                   errorText: 'No. Ponsel terlalu panjang'),
-                            ]),
+                            ]) as Function?,
                             controller: _phoneController,
                           ),
                         ),
@@ -208,7 +208,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                       onPressed: () {
                         dismissKeyboard(context);
-                        if (_formKey.currentState.validate()) {
+                        if (_formKey.currentState!.validate()) {
                           var phone = _phoneController.text.trim();
                           if (phone[0] == '0') {
                             phone = phone.substring(1);

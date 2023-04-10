@@ -1,20 +1,20 @@
 class Anak {
-  final String id;
-  final String parentId;
-  final String nama;
-  final String nik;
-  final String tempatLahir;
-  final DateTime tanggalLahir;
-  final String jenisKelamin;
-  final String golDarah;
-  final String photoURL;
+  final String? id;
+  final String? parentId;
+  final String? nama;
+  final String? nik;
+  final String? tempatLahir;
+  final DateTime? tanggalLahir;
+  final String? jenisKelamin;
+  final String? golDarah;
+  final String? photoURL;
 
   get umurAnak {
     // ignore: unrelated_type_equality_checks
     if (this.tanggalLahir == null || this.tanggalLahir == '') {
       return 'Umur belum diisi';
     }
-    Duration dur = DateTime.now().difference(this.tanggalLahir);
+    Duration dur = DateTime.now().difference(this.tanggalLahir!);
     String tahun = (dur.inDays / 365).floor().toString();
     String bulan = ((dur.inDays % 365) / 30).floor().toString();
 
@@ -40,7 +40,7 @@ class Anak {
       nama: data['nama'],
       nik: data['nik'] ?? '',
       tempatLahir: data['tempat_lahir'] ?? '',
-      tanggalLahir: data['tanggal_lahir'].toDate() ?? '',
+      tanggalLahir: data['tanggal_lahir'].toDate() ?? '' as DateTime?,
       jenisKelamin: data['jenis_kelamin'] ?? '',
       golDarah: data['gol_darah'] ?? '',
       photoURL: data['photo_url'] ?? '',
@@ -60,15 +60,15 @@ class Anak {
   }
 
   Anak copyWith({
-    String id,
-    String parentId,
-    String nama,
-    String nik,
-    String tempatLahir,
-    DateTime tanggalLahir,
-    String jenisKelamin,
-    String golDarah,
-    String photoURL,
+    String? id,
+    String? parentId,
+    String? nama,
+    String? nik,
+    String? tempatLahir,
+    DateTime? tanggalLahir,
+    String? jenisKelamin,
+    String? golDarah,
+    String? photoURL,
   }) {
     return Anak(
       id: id ?? this.id,

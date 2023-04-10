@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class ListDaftarNakes extends StatefulWidget {
   final nama;
 
-  const ListDaftarNakes({Key key, @required this.nama}) : super(key: key);
+  const ListDaftarNakes({Key? key, required this.nama}) : super(key: key);
   @override
   _ListDaftarNakesState createState() => _ListDaftarNakesState();
 }
@@ -36,7 +36,7 @@ class _ListDaftarNakesState extends State<ListDaftarNakes> {
                       stream: NakesDatabase().nakesStream,
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
-                          var data = snapshot.data;
+                          var data = snapshot.data!;
                           return Column(
                             children: [
                               SearchBar(),
@@ -55,7 +55,7 @@ class _ListDaftarNakesState extends State<ListDaftarNakes> {
                                           child: Padding(
                                             padding: const EdgeInsets.all(10.0),
                                             child: Text(
-                                              data[index].nama,
+                                              data[index].nama!,
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.white,
@@ -67,14 +67,14 @@ class _ListDaftarNakesState extends State<ListDaftarNakes> {
                                           Icons.phone,
                                           color: Theme.of(context).primaryColor,
                                         ),
-                                        title: Text(data[index].telepon),
+                                        title: Text(data[index].telepon!),
                                       ),
                                       ListTile(
                                         leading: Icon(
                                           Icons.medical_services_rounded,
                                           color: Theme.of(context).primaryColor,
                                         ),
-                                        title: Text(data[index].spesialis),
+                                        title: Text(data[index].spesialis!),
                                       )
                                     ],
                                   ),

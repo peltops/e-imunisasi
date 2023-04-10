@@ -11,12 +11,12 @@ class AuthService {
   final LocalAuthService _localAuth = LocalAuthService();
 
   //create user obj on firebaseuser
-  Users _userFromFirebaseUser(User user) {
+  Users? _userFromFirebaseUser(User? user) {
     return user != null ? Users(uid: user.uid, email: user.email) : null;
   }
 
   //auth change user stream
-  Stream<Users> get userActive {
+  Stream<Users?> get userActive {
     return _auth.authStateChanges().map(_userFromFirebaseUser);
   }
 
@@ -27,10 +27,10 @@ class AuthService {
         .verifyPhoneNumber(
             phoneNumber: phone,
             timeout: Duration(seconds: 60),
-            verificationCompleted: null,
+            verificationCompleted: (AuthCredential credential) async {},
             verificationFailed: verificationFailed,
             codeSent: codeSent,
-            codeAutoRetrievalTimeout: null)
+            codeAutoRetrievalTimeout: (String verificationId) {})
         .catchError((e) => throw e);
   }
 
@@ -54,12 +54,12 @@ class AuthService {
     try {
       await _auth.signInWithCredential(credential).then((result) {
         Users _newUser = Users(
-            uid: result.user.uid,
-            nomorhpIbu: result.user.phoneNumber,
+            uid: result.user!.uid,
+            nomorhpIbu: result.user!.phoneNumber,
             golDarahAyah: '-',
             golDarahIbu: '-');
         //update the user in firestore
-        _updateUserFirestore(_newUser, result.user);
+        _updateUserFirestore(_newUser, result.user!);
       });
     } on FirebaseAuthException catch (e) {
       throw e;
@@ -84,21 +84,21 @@ class AuthService {
 
   //register with email
   Future signUp(String email, String password,
-      {String momName, String nomorhpIbu}) async {
+      {String? momName, String? nomorhpIbu}) async {
     try {
       await _auth
           .createUserWithEmailAndPassword(email: email, password: password)
           .then((result) {
         Users _newUser = Users(
-            uid: result.user.uid,
-            email: result.user.email,
+            uid: result.user!.uid,
+            email: result.user!.email,
             golDarahAyah: '-',
             golDarahIbu: '-',
-            verified: result.user.emailVerified);
+            verified: result.user!.emailVerified);
         // send verification to user email
-        result.user.sendEmailVerification();
+        result.user!.sendEmailVerification();
         //update the user in firestore
-        _updateUserFirestore(_newUser, result.user);
+        _updateUserFirestore(_newUser, result.user!);
       });
     } catch (e) {
       throw e;

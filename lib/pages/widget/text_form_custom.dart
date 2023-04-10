@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class TextFormCustom extends StatelessWidget {
-  final IconData labelIcon;
-  final String labelIconText;
-  final String label;
-  final String hintText;
+  final IconData? labelIcon;
+  final String? labelIconText;
+  final String? label;
+  final String? hintText;
   final bool obscureText;
-  final Widget icon;
-  final Function validator;
-  final Function onTap;
+  final Widget? icon;
+  final Function? validator;
+  final Function? onTap;
   final bool readOnly;
-  final String initialValue;
-  final TextEditingController controller;
-  final TextInputType keyboardType;
-  final Function onChanged;
+  final String? initialValue;
+  final TextEditingController? controller;
+  final TextInputType? keyboardType;
+  final Function? onChanged;
   TextFormCustom({
     this.labelIcon,
     this.labelIconText,
@@ -39,7 +39,7 @@ class TextFormCustom extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    label,
+                    label!,
                     style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
@@ -54,7 +54,7 @@ class TextFormCustom extends StatelessWidget {
                           ),
                           itemBuilder: (context) => [
                             PopupMenuItem<int>(
-                                value: 0, child: Text(labelIconText)),
+                                value: 0, child: Text(labelIconText!)),
                           ],
                         )
                       : Container(),
@@ -69,7 +69,7 @@ class TextFormCustom extends StatelessWidget {
         TextFormField(
           initialValue: initialValue,
           readOnly: readOnly,
-          onTap: onTap,
+          onTap: onTap as void Function()?,
           keyboardType: keyboardType,
           decoration: InputDecoration(
             suffixIcon: icon,
@@ -78,8 +78,8 @@ class TextFormCustom extends StatelessWidget {
             filled: true,
             hintText: hintText,
           ),
-          validator: validator,
-          onChanged: onChanged,
+          validator: validator as String? Function(String?)?,
+          onChanged: onChanged as void Function(String)?,
           obscureText: obscureText,
           controller: controller,
         ),

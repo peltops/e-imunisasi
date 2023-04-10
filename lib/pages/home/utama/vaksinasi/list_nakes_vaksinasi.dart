@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 class ListNakes extends StatelessWidget {
   final Anak anak;
-  const ListNakes({Key key, @required this.anak}) : super(key: key);
+  const ListNakes({Key? key, required this.anak}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -60,11 +60,11 @@ class ListNakes extends StatelessWidget {
                                         ));
                                   },
                                   title: Text(
-                                    nakes.namaLengkap,
+                                    nakes.namaLengkap!,
                                     style:
                                         TextStyle(fontWeight: FontWeight.w700),
                                   ),
-                                  subtitle: Text(nakes.profesi),
+                                  subtitle: Text(nakes.profesi!),
                                   trailing:
                                       Icon(Icons.keyboard_arrow_right_rounded),
                                 ));

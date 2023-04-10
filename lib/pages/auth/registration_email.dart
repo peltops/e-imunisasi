@@ -78,7 +78,7 @@ class _RegistrationEmailPageState extends State<RegistrationEmailPage> {
                     validator: MultiValidator([
                       EmailValidator(errorText: 'Masukan email yang valid'),
                       RequiredValidator(errorText: 'Masukan email'),
-                    ]),
+                    ]) as Function?,
                     onChanged: (val) {
                       setState(() {
                         email = val;
@@ -98,7 +98,7 @@ class _RegistrationEmailPageState extends State<RegistrationEmailPage> {
                       RequiredValidator(errorText: 'Masukan password'),
                       MinLengthValidator(8,
                           errorText: 'Password minimal 8 karakter'),
-                    ]),
+                    ]) as Function?,
                     onChanged: (val) {
                       setState(() {
                         password = val;
@@ -125,7 +125,7 @@ class _RegistrationEmailPageState extends State<RegistrationEmailPage> {
                           ),
                     onPressed: !loading
                         ? () async {
-                            if (_formKey.currentState.validate()) {
+                            if (_formKey.currentState!.validate()) {
                               dismissKeyboard(context);
                               setState(() {
                                 loading = true;
@@ -143,7 +143,7 @@ class _RegistrationEmailPageState extends State<RegistrationEmailPage> {
                                       .show(context);
                                 });
                               } catch (e) {
-                                snackbarCustom(e.message.toString())
+                                snackbarCustom("Email sudah terdaftar!")
                                     .show(context);
                               } finally {
                                 setState(() {

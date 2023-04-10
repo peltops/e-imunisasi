@@ -4,14 +4,14 @@ import 'package:eimunisasi/models/user.dart';
 import 'package:equatable/equatable.dart';
 
 class AppointmentModel extends Equatable {
-  final String id;
-  final DateTime tanggal;
-  final Anak anak;
-  final Users orangtua;
-  final Nakes nakes;
-  final String tujuan;
-  final String desc;
-  final String notes;
+  final String? id;
+  final DateTime? tanggal;
+  final Anak? anak;
+  final Users? orangtua;
+  final Nakes? nakes;
+  final String? tujuan;
+  final String? desc;
+  final String? notes;
 
   const AppointmentModel({
     this.id,
@@ -25,14 +25,14 @@ class AppointmentModel extends Equatable {
   });
 
   AppointmentModel copyWith({
-    String id,
-    DateTime tanggal,
-    Anak anak,
-    Users orangtua,
-    Nakes nakes,
-    String notes,
-    String desc,
-    String tujuan,
+    String? id,
+    DateTime? tanggal,
+    Anak? anak,
+    Users? orangtua,
+    Nakes? nakes,
+    String? notes,
+    String? desc,
+    String? tujuan,
   }) {
     return AppointmentModel(
       id: id ?? this.id,
@@ -47,7 +47,7 @@ class AppointmentModel extends Equatable {
   }
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
         id,
         tanggal,
         anak,
@@ -72,10 +72,10 @@ class AppointmentModel extends Equatable {
     return {
       'appointment_date': tanggal,
       'appointment_desc': desc,
-      'medic_id': nakes.id,
+      'medic_id': nakes!.id,
       'notes': notes,
-      'parent_id': orangtua.uid,
-      'patient_id': anak.id,
+      'parent_id': orangtua!.uid,
+      'patient_id': anak!.id,
       'purpose': tujuan,
     };
   }

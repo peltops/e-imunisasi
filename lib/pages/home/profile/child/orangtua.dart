@@ -13,7 +13,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
 
 class OrangtuaPage extends StatefulWidget {
-  const OrangtuaPage({Key key}) : super(key: key);
+  const OrangtuaPage({Key? key}) : super(key: key);
 
   @override
   _OrangtuaPageState createState() => _OrangtuaPageState();
@@ -76,7 +76,7 @@ class _OrangtuaPageState extends State<OrangtuaPage> {
           stream: UserService().userStream,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              Users user = snapshot.data;
+              Users user = snapshot.data!;
               _namaAyahCtrl.text = user.dadName ?? '';
               _namaIbuCtrl.text = user.momName ?? '';
               _pekerjaanAyahCtrl.text = user.pekerjaanAyah ?? '';
@@ -86,7 +86,7 @@ class _OrangtuaPageState extends State<OrangtuaPage> {
               _nomorAyahCtrl.text = user.nomorhpAyah ?? '';
               _nomorIbuCtrl.text = user.nomorhpIbu ?? '';
               _alamatCtrl.text = user.alamat ?? '';
-              _emailCtrl.text = _currentUser.email ?? '';
+              _emailCtrl.text = _currentUser!.email ?? '';
               _tempatLahirCtrl.text = user.tempatLahir ?? '';
               // _tanggalLahirCtrl.text = user.tanggalLahir != null
               //     ? DateFormat('dd-MM-yyyy').format(user.tanggalLahir)
@@ -97,7 +97,7 @@ class _OrangtuaPageState extends State<OrangtuaPage> {
                 pilihanPekerjaan.add(user.pekerjaanIbu);
               }
               final tanggalLahir = user.tanggalLahir != null
-                  ? DateFormat('dd-MM-yyyy').format(user.tanggalLahir)
+                  ? DateFormat('dd-MM-yyyy').format(user.tanggalLahir!)
                   : 'Pilih Tanggal Lahir';
               return Container(
                 color: Colors.pink[100],
@@ -220,7 +220,7 @@ class _OrangtuaPageState extends State<OrangtuaPage> {
                                       },
                                     ),
                                     FormBuilderDropdown(
-                                      onChanged: (val) {
+                                      onChanged: (dynamic val) {
                                         _pekerjaanIbuCtrl.text = val;
                                       },
                                       name: 'Pekerjaan',
@@ -246,7 +246,7 @@ class _OrangtuaPageState extends State<OrangtuaPage> {
                                     ),
                                     SizedBox(height: 5),
                                     FormBuilderDropdown(
-                                      onChanged: (val) {
+                                      onChanged: (dynamic val) {
                                         _golDarahIbuCtrl.text = val;
                                       },
                                       name: 'Golongan Darah',
@@ -315,7 +315,7 @@ class _OrangtuaPageState extends State<OrangtuaPage> {
                                             ),
                                       onPressed: !loading
                                           ? () async {
-                                              DateTime tempDate =
+                                              DateTime? tempDate =
                                                   _tanggalLahirCtrl
                                                           .text.isNotEmpty
                                                       ? new DateFormat(
@@ -403,17 +403,17 @@ class _OrangtuaPageState extends State<OrangtuaPage> {
 }
 
 class _PhotoProfile extends StatelessWidget {
-  final String url;
-  const _PhotoProfile({Key key, @required this.url}) : super(key: key);
+  final String? url;
+  const _PhotoProfile({Key? key, required this.url}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final _currentUser = FirebaseAuth.instance.currentUser;
+    final _currentUser = FirebaseAuth.instance.currentUser!;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: Column(
         children: [
-          url == null || url.isEmpty
+          url == null || url!.isEmpty
               ? CircleAvatar(
                   foregroundColor: Colors.white,
                   radius: 50.0,
@@ -456,7 +456,7 @@ class _PhotoProfile extends StatelessWidget {
                           radius: 50,
                           backgroundColor: Colors.transparent,
                           backgroundImage:
-                              CachedNetworkImageProvider(url, scale: 0.1),
+                              CachedNetworkImageProvider(url!, scale: 0.1),
                         ),
                       ),
                       Align(

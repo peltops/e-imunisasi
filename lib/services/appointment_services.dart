@@ -6,8 +6,8 @@ import 'package:eimunisasi/models/user.dart';
 import 'package:flutter/material.dart';
 
 class AppointmentService {
-  AppointmentService({@required this.uid});
-  final String uid;
+  AppointmentService({required this.uid});
+  final String? uid;
 
   final _service = FirebaseFirestore.instance;
 
@@ -48,19 +48,19 @@ class AppointmentService {
           .collection('children')
           .doc(element.data()['patient_id'])
           .get();
-      anak.data()['id'] = anak.id;
+      anak.data()!['id'] = anak.id;
       final orangtua = await _service.collection('users').doc(uid).get();
-      orangtua.data()['uid'] = orangtua.id;
+      orangtua.data()!['uid'] = orangtua.id;
       final nakes = await _service
           .collection('users_medis')
           .doc(element.data()['medic_id'])
           .get();
-      nakes.data()['id'] = nakes.id;
+      nakes.data()!['id'] = nakes.id;
 
       dataJadwal = dataJadwal.copyWith(
-        anak: Anak.fromMap(anak.data()),
-        orangtua: Users.fromMap(orangtua.data()),
-        nakes: Nakes.fromMap(nakes.data()),
+        anak: Anak.fromMap(anak.data()!),
+        orangtua: Users.fromMap(orangtua.data()!),
+        nakes: Nakes.fromMap(nakes.data()!),
       );
       result.add(dataJadwal);
     }
@@ -70,7 +70,7 @@ class AppointmentService {
   // Stream List appointment
   List<AppointmentModel> _listAppointment(QuerySnapshot snapshot) {
     return snapshot.docs.map((e) {
-      var data = Map<String, dynamic>.from(e.data());
+      var data = Map<String, dynamic>.from(e.data() as Map<dynamic, dynamic>);
       return AppointmentModel.fromMap(data, e.id);
     }).toList();
   }

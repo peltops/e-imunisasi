@@ -1,23 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Users {
-  final String uid;
-  final String momName;
-  final String dadName;
-  final String nomorhpAyah;
-  final String nomorhpIbu;
-  final String email;
-  final String golDarahAyah;
-  final String golDarahIbu;
-  final String pekerjaanAyah;
-  final String pekerjaanIbu;
-  final String alamat;
-  final String avatarURL;
-  final bool verified;
-  final String tempatLahir;
-  final DateTime tanggalLahir;
-  final String noKK;
-  final String noKTP;
+  final String? uid;
+  final String? momName;
+  final String? dadName;
+  final String? nomorhpAyah;
+  final String? nomorhpIbu;
+  final String? email;
+  final String? golDarahAyah;
+  final String? golDarahIbu;
+  final String? pekerjaanAyah;
+  final String? pekerjaanIbu;
+  final String? alamat;
+  final String? avatarURL;
+  final bool? verified;
+  final String? tempatLahir;
+  final DateTime? tanggalLahir;
+  final String? noKK;
+  final String? noKTP;
   Users({
     this.golDarahAyah,
     this.golDarahIbu,
@@ -88,19 +88,19 @@ class Users {
 }
 
 class UserData {
-  final String uid;
-  final String email;
-  final String avatarURL;
-  final String nama;
-  final String nik;
-  final String tgllahir;
-  final String namaAyah;
-  final String pekerjaanAyah;
-  final String namaIbu;
-  final String pekerjaanIbu;
-  final String alamat;
-  final String unitKerja;
-  final String noTlp;
+  final String? uid;
+  final String? email;
+  final String? avatarURL;
+  final String? nama;
+  final String? nik;
+  final String? tgllahir;
+  final String? namaAyah;
+  final String? pekerjaanAyah;
+  final String? namaIbu;
+  final String? pekerjaanIbu;
+  final String? alamat;
+  final String? unitKerja;
+  final String? noTlp;
 
   UserData(
       {this.uid,
@@ -119,10 +119,10 @@ class UserData {
 }
 
 class GetAllUser {
-  final String nama;
-  final String tgllahir;
-  final String email;
-  final String documentID;
+  final String? nama;
+  final String? tgllahir;
+  final String? email;
+  final String? documentID;
 
   GetAllUser({this.nama, this.tgllahir, this.email, this.documentID});
   Map<String, dynamic> toMap() {
@@ -135,16 +135,16 @@ class GetAllUser {
 }
 
 class DataTumbuh {
-  final String idMedis;
-  final String idPeserta;
-  final String nama;
-  final String email;
-  final String tgllahir;
-  final String beratBadan;
-  final String tinggiBadan;
-  final String lingkarBadan;
-  final DateTime takeDate;
-  final String documentID;
+  final String? idMedis;
+  final String? idPeserta;
+  final String? nama;
+  final String? email;
+  final String? tgllahir;
+  final String? beratBadan;
+  final String? tinggiBadan;
+  final String? lingkarBadan;
+  final DateTime? takeDate;
+  final String? documentID;
 
   DataTumbuh(
       {this.idPeserta,
@@ -173,15 +173,15 @@ class DataTumbuh {
 }
 
 class DataRiwayatImunisasi {
-  final String idMedis;
-  final String idPeserta;
-  final String nama;
-  final String email;
-  final String tgllahir;
-  final String jenisVaksin;
-  final String namaMedis;
-  final DateTime takeDate;
-  final String documentID;
+  final String? idMedis;
+  final String? idPeserta;
+  final String? nama;
+  final String? email;
+  final String? tgllahir;
+  final String? jenisVaksin;
+  final String? namaMedis;
+  final DateTime? takeDate;
+  final String? documentID;
 
   DataRiwayatImunisasi(
       {this.idPeserta,

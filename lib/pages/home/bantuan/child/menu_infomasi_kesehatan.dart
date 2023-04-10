@@ -5,7 +5,7 @@ import 'package:eimunisasi/services/informasi_kesehatan_database.dart';
 import 'package:flutter/material.dart';
 
 class InformasiKesehatanPage extends StatefulWidget {
-  const InformasiKesehatanPage({Key key}) : super(key: key);
+  const InformasiKesehatanPage({Key? key}) : super(key: key);
   @override
   _InformasiKesehatanPageState createState() => _InformasiKesehatanPageState();
 }
@@ -39,7 +39,7 @@ class _InformasiKesehatanPageState extends State<InformasiKesehatanPage> {
                           stream: InformasiKesehatanDatabase().streamData,
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
-                              var data = snapshot.data;
+                              var data = snapshot.data!;
                               return ListView.builder(
                                   itemCount: data.length,
                                   itemBuilder: (context, index) {
@@ -52,7 +52,7 @@ class _InformasiKesehatanPageState extends State<InformasiKesehatanPage> {
                                                       DetailInformasiPage(
                                                           data: data[index])));
                                         },
-                                        title: Text(data[index].judul),
+                                        title: Text(data[index].judul!),
                                       ),
                                     );
                                   });

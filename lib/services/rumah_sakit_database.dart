@@ -3,7 +3,7 @@ import 'package:eimunisasi/models/rumah_sakit.dart';
 
 class RumahSakitDatabase {
   RumahSakitDatabase({this.uid});
-  final String uid;
+  final String? uid;
 
   final _service = FirebaseFirestore.instance;
 
@@ -22,7 +22,7 @@ class RumahSakitDatabase {
   // Stream List event Calender
   List<RumahSakitModel> _listData(QuerySnapshot snapshot) {
     return snapshot.docs.map((e) {
-      var data = Map<String, dynamic>.from(e.data());
+      var data = Map<String, dynamic>.from(e.data() as Map<dynamic, dynamic>);
       return RumahSakitModel.fromMap(data);
     }).toList();
   }

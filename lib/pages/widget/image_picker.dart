@@ -14,7 +14,7 @@ class ModalPickerImage {
               snackbarCustom('Terjadi kesalahan: $onError').show(context));
 
   _imgFromCamera(context) async {
-    XFile image = await ImagePicker()
+    XFile? image = await ImagePicker()
         .pickImage(source: ImageSource.camera, imageQuality: 50);
     if (image != null) {
       File imagePath = File(image.path);
@@ -24,7 +24,7 @@ class ModalPickerImage {
   }
 
   _imgFromGallery(context) async {
-    XFile image = await ImagePicker()
+    XFile? image = await ImagePicker()
         .pickImage(source: ImageSource.gallery, imageQuality: 50);
     if (image != null) {
       File imagePath = File(image.path);

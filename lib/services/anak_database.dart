@@ -10,16 +10,18 @@ class AnakService extends FirestoreDatabase {
   final _currentUser = FirebaseAuth.instance.currentUser;
   final _service = FirebaseFirestore.instance;
 
+  AnakService() : super(uid: FirebaseAuth.instance.currentUser!.uid);
+
   // add appointment event
   Future<Anak> setData(Anak anak) {
-    final data = anak.copyWith(parentId: _currentUser.uid);
+    final data = anak.copyWith(parentId: _currentUser!.uid);
     return _service.collection('children').add(data.toMap()).then((value) {
       return Future.value(data.copyWith(id: value.id));
     });
   }
 
   // add new and update avatar
-  Future<void> updatePhoto(String url, String id) =>
+  Future<void> updatePhoto(String url, String? id) =>
       _service.collection('children').doc(id).update({'photo_url': url});
 
   // update appointment event
@@ -29,7 +31,7 @@ class AnakService extends FirestoreDatabase {
 // Stream List Nakes
   List<Anak> _listData(QuerySnapshot snapshot) {
     return snapshot.docs.map((e) {
-      var data = Map<String, dynamic>.from(e.data());
+      var data = Map<String, dynamic>.from(e.data() as Map<dynamic, dynamic>);
       data['id'] = e.id;
       return Anak.fromMap(data);
     }).toList();
@@ -37,13 +39,13 @@ class AnakService extends FirestoreDatabase {
 
   Stream<List<Anak>> get anakStream => _service
       .collection('children')
-      .where('parent_id', isEqualTo: _currentUser.uid)
+      .where('parent_id', isEqualTo: _currentUser!.uid)
       .snapshots()
       .map(_listData);
 
   //Upload Image firebase Storage
   Future<String> uploadImage(File imageFile) async {
-    String fileName = _currentUser.uid.toString();
+    String fileName = _currentUser!.uid.toString();
 
     firebase_storage.Reference ref =
         firebase_storage.FirebaseStorage.instance.ref().child(fileName);

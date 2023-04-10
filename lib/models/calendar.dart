@@ -1,9 +1,9 @@
 class KalenderModel {
-  final String uid;
-  final DateTime date;
-  final String activity;
-  final String documentID;
-  final bool readOnly;
+  final String? uid;
+  final DateTime? date;
+  final String? activity;
+  final String? documentID;
+  final bool? readOnly;
 
   KalenderModel(
       {this.uid,

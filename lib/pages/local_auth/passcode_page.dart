@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
 class PasscodePage extends StatefulWidget {
-  const PasscodePage({Key key}) : super(key: key);
+  const PasscodePage({Key? key}) : super(key: key);
 
   @override
   _PasscodePageState createState() => _PasscodePageState();
@@ -70,7 +70,7 @@ class _PasscodePageState extends State<PasscodePage> {
                           // pattern number 4 digit
                           PatternValidator(r'^[0-9]{4}$',
                               errorText: 'PIN harus berupa angka'),
-                        ]),
+                        ]) as String? Function(String?)?,
                         decoration: InputDecoration(
                           labelText: 'PIN',
                           helperText: 'Masukkan 4-digit PIN',
@@ -92,7 +92,7 @@ class _PasscodePageState extends State<PasscodePage> {
                   _NextButton(
                     onPressed: () {
                       if (isSavedPasscode) {
-                        if (_formKey.currentState.validate()) {
+                        if (_formKey.currentState!.validate()) {
                           if (_passcodeController.text == passcode) {
                             Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(
@@ -124,8 +124,8 @@ class _PasscodePageState extends State<PasscodePage> {
 }
 
 class _NextButton extends StatelessWidget {
-  final Function onPressed;
-  const _NextButton({Key key, this.onPressed}) : super(key: key);
+  final Function? onPressed;
+  const _NextButton({Key? key, this.onPressed}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return SizedBox(

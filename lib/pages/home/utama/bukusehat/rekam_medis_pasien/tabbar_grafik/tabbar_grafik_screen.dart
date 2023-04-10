@@ -6,12 +6,12 @@ import 'package:eimunisasi/models/grafik/grafik_tinggi_badan.dart';
 import 'package:flutter/material.dart';
 
 class TabbarGrafikScreen extends StatelessWidget {
-  final List<CheckupModel> pemeriksaan;
-  final Anak anak;
+  final List<CheckupModel>? pemeriksaan;
+  final Anak? anak;
   const TabbarGrafikScreen({
-    Key key,
+    Key? key,
     this.pemeriksaan,
-    @required this.anak,
+    required this.anak,
   }) : super(key: key);
 
   @override
@@ -38,19 +38,19 @@ class TabbarGrafikScreen extends StatelessWidget {
           Expanded(
             child: TabBarView(
               physics: const NeverScrollableScrollPhysics(),
-              children: pemeriksaan.length > 0
+              children: pemeriksaan!.length > 0
                   ? [
                       GrafikBeratBadan(
                         listData: pemeriksaan,
-                        isBoy: anak.jenisKelamin != 'Perempuan',
+                        isBoy: anak!.jenisKelamin != 'Perempuan',
                       ),
                       GrafikTinggiBadan(
                         listData: pemeriksaan,
-                        isBoy: anak.jenisKelamin != 'Perempuan',
+                        isBoy: anak!.jenisKelamin != 'Perempuan',
                       ),
                       GrafikLingkarKepala(
                         listData: pemeriksaan,
-                        isBoy: anak.jenisKelamin != 'Perempuan',
+                        isBoy: anak!.jenisKelamin != 'Perempuan',
                       ),
                     ]
                   : [

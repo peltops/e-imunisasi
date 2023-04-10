@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 class ConfirmPasscodePage extends StatefulWidget {
   final String passcode;
-  const ConfirmPasscodePage({Key key, @required this.passcode})
+  const ConfirmPasscodePage({Key? key, required this.passcode})
       : super(key: key);
 
   @override
@@ -58,7 +58,7 @@ class _ConfirmPasscodePageState extends State<ConfirmPasscodePage> {
                     child: ButtonCustom(
                       key: const Key('confirmPasscodeForm_next_raisedButton'),
                       onPressed: () {
-                        if (_formKey.currentState.validate()) {
+                        if (_formKey.currentState!.validate()) {
                           dismissKeyboard(context);
                           if (_passcodeController.value.text ==
                               widget.passcode) {

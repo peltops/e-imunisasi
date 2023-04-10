@@ -51,9 +51,9 @@ class _HomePageState extends State<HomePage> {
             return Consumer<NotificationService>(builder: (context, model, _) {
               final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
               calendarsActivity.asMap().forEach((i, val) {
-                if (val.date.isAfter(now)) {
+                if (val.date!.isAfter(now)) {
                   model.sheduledNotification(i, 'Pengingat jadwal',
-                      'Aktivitas: ' + val.activity, val.date);
+                      'Aktivitas: ' + val.activity!, val.date!);
                 }
               });
               return _widgetOptions[_selectedIndex];

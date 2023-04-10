@@ -32,7 +32,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<Users>.value(
+    return StreamProvider<Users?>.value(
       value: AuthService().userActive,
       builder: (context, snapshot) {
         return MultiProvider(

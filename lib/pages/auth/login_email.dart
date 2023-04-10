@@ -13,7 +13,7 @@ import 'package:form_field_validator/form_field_validator.dart';
 // import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 class LoginPageEmail extends StatefulWidget {
-  final Function toggleView;
+  final Function? toggleView;
   LoginPageEmail({this.toggleView});
 
   @override
@@ -81,7 +81,7 @@ class _LoginPageEmailState extends State<LoginPageEmail> {
                     validator: MultiValidator([
                       EmailValidator(errorText: 'Masukan email yang valid'),
                       RequiredValidator(errorText: 'Masukan email'),
-                    ]),
+                    ]) as Function?,
                     onChanged: (val) {
                       setState(() {
                         email = val;
@@ -142,7 +142,7 @@ class _LoginPageEmailState extends State<LoginPageEmail> {
                           ),
                     onPressed: !loading
                         ? () async {
-                            if (_formKey.currentState.validate()) {
+                            if (_formKey.currentState!.validate()) {
                               dismissKeyboard(context);
                               setState(() {
                                 loading = true;
@@ -154,7 +154,7 @@ class _LoginPageEmailState extends State<LoginPageEmail> {
                                             builder: (context) => Wrapper()),
                                         (route) => false));
                               } catch (e) {
-                                snackbarCustom(e.message.toString())
+                                snackbarCustom("Email atau password salah")
                                     .show(context);
                               } finally {
                                 setState(() {

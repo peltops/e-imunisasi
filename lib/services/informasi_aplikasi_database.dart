@@ -3,7 +3,7 @@ import 'package:eimunisasi/models/informasi_aplikasi.dart';
 
 class InformasiAplikasiDatabase {
   InformasiAplikasiDatabase({this.uid});
-  final String uid;
+  final String? uid;
 
   final _service = FirebaseFirestore.instance;
 
@@ -22,7 +22,7 @@ class InformasiAplikasiDatabase {
   // Stream List event Calender
   List<InformasiAplikasiModel> _listData(QuerySnapshot snapshot) {
     return snapshot.docs.map((e) {
-      var data = Map<String, dynamic>.from(e.data());
+      var data = Map<String, dynamic>.from(e.data() as Map<dynamic, dynamic>);
       return InformasiAplikasiModel.fromMap(data);
     }).toList();
   }

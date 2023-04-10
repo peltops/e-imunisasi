@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:eimunisasi/services/anak_database.dart';
 
 class ListAnak extends StatelessWidget {
-  const ListAnak({Key key}) : super(key: key);
+  const ListAnak({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class ListAnak extends StatelessWidget {
                                 final data = snapshot.data;
 
                                 if (snapshot.data != null) {
-                                  indexAnak = data.length;
+                                  indexAnak = data!.length;
                                   return ListView.builder(
                                     itemCount: data.length,
                                     itemBuilder: (context, index) {
@@ -57,7 +57,7 @@ class ListAnak extends StatelessWidget {
                                             );
                                           },
                                           title: Text(
-                                            data[index].nama,
+                                            data[index].nama!,
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w700),
                                           ),

@@ -3,7 +3,7 @@ import 'package:eimunisasi/models/nakes.dart';
 
 class NakesDatabase {
   NakesDatabase({this.uid});
-  final String uid;
+  final String? uid;
 
   final _service = FirebaseFirestore.instance;
 
@@ -22,7 +22,7 @@ class NakesDatabase {
   // Stream List event Calender
   List<NakesModel> _listData(QuerySnapshot snapshot) {
     return snapshot.docs.map((e) {
-      var data = Map<String, dynamic>.from(e.data());
+      var data = Map<String, dynamic>.from(e.data() as Map<dynamic, dynamic>);
       return NakesModel.fromMap(data);
     }).toList();
   }

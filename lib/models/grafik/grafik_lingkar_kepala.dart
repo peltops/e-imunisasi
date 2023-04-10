@@ -5,23 +5,23 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class _LineChart extends StatelessWidget {
-  final double minX;
-  final double maxX;
-  final double minY;
-  final double maxY;
+  final double? minX;
+  final double? maxX;
+  final double? minY;
+  final double? maxY;
   final bool isBoy;
-  final List<CheckupModel> listData;
+  final List<CheckupModel>? listData;
   const _LineChart({
-    @required this.isShowingMainData,
-    @required this.minX,
-    @required this.maxX,
+    required this.isShowingMainData,
+    required this.minX,
+    required this.maxX,
     this.minY,
     this.maxY,
-    @required this.isBoy,
-    @required this.listData,
+    required this.isBoy,
+    required this.listData,
   });
 
-  final bool isShowingMainData;
+  final bool? isShowingMainData;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class _LineChart extends StatelessWidget {
   LineChartData get sampleData2 => LineChartData(
         minX: minX,
         maxX: maxX,
-        maxY: maxY != null ? (maxY + maxY * 0.1) : null,
+        maxY: maxY != null ? (maxY! + maxY! * 0.1) : null,
         clipData: FlClipData.all(),
         lineTouchData: lineTouchData2,
         gridData: gridData,
@@ -270,18 +270,18 @@ class _LineChart extends StatelessWidget {
         dotData: FlDotData(show: true),
         belowBarData: BarAreaData(show: false),
         spots: (isBoy ?? true)
-            ? LineDataLingkarKepalaBoyModel().listDataPasienLine(listData)
-            : LineDataLingkarKepalaGirlModel().listDataPasienLine(listData),
+            ? LineDataLingkarKepalaBoyModel().listDataPasienLine(listData!)
+            : LineDataLingkarKepalaGirlModel().listDataPasienLine(listData!),
       );
 }
 
 class GrafikLingkarKepala extends StatefulWidget {
-  final List<CheckupModel> listData;
+  final List<CheckupModel>? listData;
   final bool isBoy;
   const GrafikLingkarKepala({
-    Key key,
-    @required this.listData,
-    @required this.isBoy,
+    Key? key,
+    required this.listData,
+    required this.isBoy,
   }) : super(key: key);
 
   @override
@@ -289,9 +289,9 @@ class GrafikLingkarKepala extends StatefulWidget {
 }
 
 class GrafikLingkarKepalaState extends State<GrafikLingkarKepala> {
-  bool isShowingMainData;
-  double minX;
-  double maxX;
+  bool? isShowingMainData;
+  double? minX;
+  double? maxX;
   bool isZoomIn = false;
 
   @override
@@ -332,11 +332,11 @@ class GrafikLingkarKepalaState extends State<GrafikLingkarKepala> {
 
               if (primDelta != 0) {
                 if (primDelta.isNegative) {
-                  minX += maxX * 0.005;
-                  maxX += maxX * 0.005;
+                  minX = minX! + (maxX! * 0.005);
+                  maxX = maxX! + (maxX! * 0.005);
                 } else {
-                  minX -= maxX * 0.005;
-                  maxX -= maxX * 0.005;
+                  minX = minX! - (maxX! * 0.005);
+                  maxX = maxX! - (maxX! * 0.005);
                 }
               }
             });

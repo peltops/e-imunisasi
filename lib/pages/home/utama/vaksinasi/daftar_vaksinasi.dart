@@ -16,8 +16,7 @@ import 'package:provider/provider.dart';
 class DaftarVaksinasiPage extends StatefulWidget {
   final Anak anak;
   final Nakes nakes;
-  const DaftarVaksinasiPage(
-      {Key key, @required this.anak, @required this.nakes})
+  const DaftarVaksinasiPage({Key? key, required this.anak, required this.nakes})
       : super(key: key);
   @override
   _DaftarVaksinasiPageState createState() => _DaftarVaksinasiPageState();
@@ -25,13 +24,13 @@ class DaftarVaksinasiPage extends StatefulWidget {
 
 class _DaftarVaksinasiPageState extends State<DaftarVaksinasiPage> {
   String _tanggal = 'Pilih tanggal';
-  JadwalPraktek selectedRadioTile;
+  JadwalPraktek? selectedRadioTile;
   bool isLoading = false;
 
   final kFirstDay = DateTime.now();
   final kLastDay = DateTime(DateTime.now().year + 1);
 
-  setSelectedRadioTile(JadwalPraktek val) {
+  setSelectedRadioTile(JadwalPraktek? val) {
     setState(() {
       selectedRadioTile = val;
     });
@@ -64,7 +63,7 @@ class _DaftarVaksinasiPageState extends State<DaftarVaksinasiPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Nama Nakes: ' + widget.nakes.namaLengkap,
+                          'Nama Nakes: ' + widget.nakes.namaLengkap!,
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 15),
                         ),
@@ -79,11 +78,11 @@ class _DaftarVaksinasiPageState extends State<DaftarVaksinasiPage> {
                         SizedBox(
                           height: 10,
                         ),
-                        ...widget.nakes.jadwal.map((jadwal) {
+                        ...widget.nakes.jadwal!.map((jadwal) {
                           return Column(
                             children: [
                               Text(
-                                jadwal.hari.capitalize() + ', ' + jadwal.jam,
+                                jadwal.hari!.capitalize() + ', ' + jadwal.jam!,
                               ),
                               SizedBox(height: 5),
                             ],
@@ -112,22 +111,22 @@ class _DaftarVaksinasiPageState extends State<DaftarVaksinasiPage> {
                                       value: e,
                                       groupValue: selectedRadioTile,
                                       title: Text(
-                                        e.hari.capitalize() + ', ' + e.jam,
+                                        e.hari!.capitalize() + ', ' + e.jam!,
                                       ),
                                       onChanged: setSelectedRadioTile,
                                     ),
                                   )
                                   .toList();
                             }
-                          }(),
+                          }() as List<Widget>,
                         ),
                         SizedBox(
                           height: 10,
                         ),
                         ListTile(
                           shape: RoundedRectangleBorder(
-                              side:
-                                  BorderSide(color: Colors.grey[300], width: 2),
+                              side: BorderSide(
+                                  color: Colors.grey[300]!, width: 2),
                               borderRadius: BorderRadius.circular(5)),
                           dense: true,
                           onTap: () {
@@ -191,9 +190,9 @@ class _DaftarVaksinasiPageState extends State<DaftarVaksinasiPage> {
                                     orangtua: user,
                                     nakes: widget.nakes,
                                     tujuan: 'Imunisasi',
-                                    desc: selectedRadioTile.hari +
+                                    desc: selectedRadioTile!.hari! +
                                         ', ' +
-                                        selectedRadioTile.jam,
+                                        selectedRadioTile!.jam!,
                                     notes: 'Imunisasi',
                                   );
                                   try {
@@ -209,7 +208,7 @@ class _DaftarVaksinasiPageState extends State<DaftarVaksinasiPage> {
                                               ),
                                             ));
                                   } catch (e) {
-                                    snackbarCustom(e.message.toString())
+                                    snackbarCustom("Gagal membuat janji")
                                         .show(context);
                                   } finally {
                                     setState(() {

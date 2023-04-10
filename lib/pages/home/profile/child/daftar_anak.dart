@@ -18,8 +18,8 @@ import 'package:provider/provider.dart';
 class DaftarAnakPage extends StatefulWidget {
   final indexAnak;
   const DaftarAnakPage({
-    Key key,
-    @required this.indexAnak,
+    Key? key,
+    required this.indexAnak,
   }) : super(key: key);
 
   @override
@@ -27,7 +27,7 @@ class DaftarAnakPage extends StatefulWidget {
 }
 
 class _DaftarAnakPageState extends State<DaftarAnakPage> {
-  TextEditingController _namaCtrl,
+  TextEditingController? _namaCtrl,
       _nikCtrl,
       _tempatLahirCtrl,
       _tanggalLahirCtrl,
@@ -85,7 +85,7 @@ class _DaftarAnakPageState extends State<DaftarAnakPage> {
                                   child: TextFormCustom(
                                     label: 'Nama Lengkap',
                                     onChanged: (val) {
-                                      _namaCtrl.text = val;
+                                      _namaCtrl!.text = val;
                                     },
                                   ),
                                 ),
@@ -96,7 +96,7 @@ class _DaftarAnakPageState extends State<DaftarAnakPage> {
                                     keyboardType: TextInputType.number,
                                     label: 'NIK',
                                     onChanged: (val) {
-                                      _nikCtrl.text = val;
+                                      _nikCtrl!.text = val;
                                     },
                                   ),
                                 ),
@@ -109,7 +109,7 @@ class _DaftarAnakPageState extends State<DaftarAnakPage> {
                                         child: TextFormCustom(
                                           label: 'Tempat Lahir',
                                           onChanged: (val) {
-                                            _tempatLahirCtrl.text = val;
+                                            _tempatLahirCtrl!.text = val;
                                           },
                                         ),
                                       ),
@@ -150,7 +150,7 @@ class _DaftarAnakPageState extends State<DaftarAnakPage> {
                                                 DateFormat('dd-MM-yyyy')
                                                     .format(val);
                                             setState(() {
-                                              _tanggalLahirCtrl.text =
+                                              _tanggalLahirCtrl!.text =
                                                   formattedDate.toString();
                                             });
                                           }, onConfirm: (val) {
@@ -158,7 +158,7 @@ class _DaftarAnakPageState extends State<DaftarAnakPage> {
                                                 DateFormat('dd-MM-yyyy')
                                                     .format(val);
                                             setState(() {
-                                              _tanggalLahirCtrl.text =
+                                              _tanggalLahirCtrl!.text =
                                                   formattedDate.toString();
                                             });
                                           },
@@ -175,8 +175,8 @@ class _DaftarAnakPageState extends State<DaftarAnakPage> {
                                 Padding(
                                   padding: const EdgeInsets.all(5.0),
                                   child: FormBuilderDropdown(
-                                    onChanged: (val) {
-                                      _jenisKelaminCtrl.text = val;
+                                    onChanged: (dynamic val) {
+                                      _jenisKelaminCtrl!.text = val;
                                     },
 
                                     name: 'Jenis kelamin',
@@ -207,8 +207,8 @@ class _DaftarAnakPageState extends State<DaftarAnakPage> {
                                 Padding(
                                   padding: const EdgeInsets.all(5.0),
                                   child: FormBuilderDropdown(
-                                    onChanged: (val) {
-                                      _golDarahCtrl.text = val;
+                                    onChanged: (dynamic val) {
+                                      _golDarahCtrl!.text = val;
                                     },
                                     name: 'Golongan Darah',
                                     decoration: InputDecoration(
@@ -257,26 +257,26 @@ class _DaftarAnakPageState extends State<DaftarAnakPage> {
                                             dismissKeyboard(context);
                                             DateTime tempDate = new DateFormat(
                                                     "dd-MM-yyyy")
-                                                .parse(_tanggalLahirCtrl.text);
+                                                .parse(_tanggalLahirCtrl!.text);
                                             setState(() {
                                               loading = true;
                                             });
                                             try {
                                               AnakService().setData(
                                                 Anak(
-                                                  nik: _nikCtrl.text,
+                                                  nik: _nikCtrl!.text,
                                                   tempatLahir:
-                                                      _tempatLahirCtrl.text,
+                                                      _tempatLahirCtrl!.text,
                                                   jenisKelamin:
-                                                      _jenisKelaminCtrl.text,
-                                                  golDarah: _golDarahCtrl.text,
-                                                  nama: _namaCtrl.text,
+                                                      _jenisKelaminCtrl!.text,
+                                                  golDarah: _golDarahCtrl!.text,
+                                                  nama: _namaCtrl!.text,
                                                   tanggalLahir: tempDate,
                                                 ),
                                               );
                                               JadwalImunisasi()
                                                   .jadwalImunisai(user.uid,
-                                                      tempDate, _namaCtrl.text)
+                                                      tempDate, _namaCtrl!.text)
                                                   .forEach((e) =>
                                                       FirestoreDatabase(
                                                               uid: user.uid)

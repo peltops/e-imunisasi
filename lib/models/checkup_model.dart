@@ -1,20 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CheckupModel {
-  final int beratBadan;
-  final int tinggiBadan;
-  final int lingkarKepala;
-  final String jenisVaksin;
-  final String riwayatKeluhan;
-  final String diagnosa;
-  final String tindakan;
-  final String id;
-  final String idOrangTuaPasien;
-  final String idPasien;
-  final String idDokter;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final DateTime deletedAt;
+  final int? beratBadan;
+  final int? tinggiBadan;
+  final int? lingkarKepala;
+  final String? jenisVaksin;
+  final String? riwayatKeluhan;
+  final String? diagnosa;
+  final String? tindakan;
+  final String? id;
+  final String? idOrangTuaPasien;
+  final String? idPasien;
+  final String? idDokter;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  final DateTime? deletedAt;
 
   const CheckupModel({
     this.beratBadan,
@@ -33,7 +33,7 @@ class CheckupModel {
     this.deletedAt,
   });
 
-  List<Object> get props => [
+  List<Object?> get props => [
         beratBadan,
         tinggiBadan,
         lingkarKepala,

@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class TabbarVaksinScreen extends StatelessWidget {
-  final List<CheckupModel> pemeriksaan;
-  const TabbarVaksinScreen({Key key, this.pemeriksaan}) : super(key: key);
+  final List<CheckupModel>? pemeriksaan;
+  const TabbarVaksinScreen({Key? key, this.pemeriksaan}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return pemeriksaan.length == 0
+    return pemeriksaan!.length == 0
         ? Center(child: Text('Belum ada data'))
         : SingleChildScrollView(
             scrollDirection: Axis.vertical,
@@ -25,7 +25,7 @@ class TabbarVaksinScreen extends StatelessWidget {
                   DataColumn(label: Text('Vaksin')),
                 ],
                 rows: [
-                  ...pemeriksaan.map((data) {
+                  ...pemeriksaan!.map((data) {
                     return DataRow(cells: [
                       DataCell(Text(DateFormat('dd/MM/yyyy')
                           .format(data.createdAt ?? DateTime.now()))),

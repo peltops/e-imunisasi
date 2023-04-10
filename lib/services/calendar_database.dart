@@ -3,8 +3,8 @@ import 'package:eimunisasi/models/calendar.dart';
 import 'package:flutter/material.dart';
 
 class FirestoreDatabase {
-  FirestoreDatabase({@required this.uid});
-  final String uid;
+  FirestoreDatabase({required this.uid});
+  final String? uid;
 
   final _service = FirebaseFirestore.instance;
 
@@ -23,7 +23,7 @@ class FirestoreDatabase {
   // Stream List event Calender
   List<KalenderModel> _listEventKalender(QuerySnapshot snapshot) {
     return snapshot.docs.map((e) {
-      var data = Map<String, dynamic>.from(e.data());
+      var data = Map<String, dynamic>.from(e.data() as Map<dynamic, dynamic>);
       return KalenderModel.fromMap(data, e);
     }).toList();
   }

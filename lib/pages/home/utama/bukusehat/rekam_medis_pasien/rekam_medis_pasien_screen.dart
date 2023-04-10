@@ -10,8 +10,8 @@ import 'package:eimunisasi/services/checkups_services.dart';
 import 'package:flutter/material.dart';
 
 class RekamMedisPasienScreen extends StatelessWidget {
-  final Anak anak;
-  const RekamMedisPasienScreen({Key key, this.anak}) : super(key: key);
+  final Anak? anak;
+  const RekamMedisPasienScreen({Key? key, this.anak}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class RekamMedisPasienScreen extends StatelessWidget {
                           height: 80,
                           width: 80,
                           child: CachedNetworkImage(
-                            imageUrl: anak.photoURL,
+                            imageUrl: anak!.photoURL!,
                             fit: BoxFit.cover,
                             placeholder: (context, url) => Center(
                               child: CircularProgressIndicator(),
@@ -67,11 +67,11 @@ class RekamMedisPasienScreen extends StatelessWidget {
                             height: 10,
                           ),
                           Text(
-                            anak.nama,
+                            anak!.nama!,
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.w700),
                           ),
-                          Text(anak.umurAnak)
+                          Text(anak!.umurAnak)
                         ],
                       ),
                     ],
@@ -79,9 +79,9 @@ class RekamMedisPasienScreen extends StatelessWidget {
                 )),
           ),
           StreamBuilder<List<CheckupModel>>(
-              stream: CheckupsServices().checkupsStream(anak.nik),
+              stream: CheckupsServices().checkupsStream(anak!.nik),
               builder: (context, snapshot) {
-                var data = <CheckupModel>[];
+                List<CheckupModel>? data = <CheckupModel>[];
                 if (snapshot.hasData) {
                   data = snapshot.data;
                 } else {

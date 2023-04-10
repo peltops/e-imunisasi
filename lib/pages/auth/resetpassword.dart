@@ -76,7 +76,7 @@ class _ResetpasswordPageState extends State<ResetpasswordPage> {
                     validator: MultiValidator([
                       EmailValidator(errorText: 'Masukan email yang valid'),
                       RequiredValidator(errorText: 'Masukan email'),
-                    ]),
+                    ]) as Function?,
                     onChanged: (val) {
                       setState(() {
                         email = val;
@@ -100,7 +100,7 @@ class _ResetpasswordPageState extends State<ResetpasswordPage> {
                           ),
                     onPressed: !loading
                         ? () async {
-                            if (_formKey.currentState.validate()) {
+                            if (_formKey.currentState!.validate()) {
                               dismissKeyboard(context);
                               setState(() {
                                 loading = true;
@@ -112,7 +112,7 @@ class _ResetpasswordPageState extends State<ResetpasswordPage> {
                                       'Link sudah dikirim. Silahkan cek email $email.';
                                 });
                               } catch (e) {
-                                snackbarCustom(e.message.toString())
+                                snackbarCustom("Gagal mengirim email")
                                     .show(context);
                               } finally {
                                 setState(() {

@@ -17,10 +17,10 @@ class OTPPage extends StatefulWidget {
   final verId;
   final description;
   const OTPPage({
-    Key key,
-    @required this.phoneNumber,
-    @required this.verId,
-    @required this.description,
+    Key? key,
+    required this.phoneNumber,
+    required this.verId,
+    required this.description,
   }) : super(key: key);
 
   @override
@@ -34,7 +34,7 @@ class _OTPPageState extends State<OTPPage> {
   bool newCode = false;
   bool loading = false;
   String error = '';
-  Timer timer;
+  late Timer timer;
 
   void startTimer() {
     timer = Timer.periodic(Duration(seconds: 1), (_) {
@@ -76,7 +76,7 @@ class _OTPPageState extends State<OTPPage> {
       });
     };
     final PhoneCodeSent codeSent =
-        (String verificationId, [int forceResendingToken]) {
+        (String verificationId, [int? forceResendingToken]) {
       setState(() {
         loading = false;
       });
@@ -141,7 +141,7 @@ class _OTPPageState extends State<OTPPage> {
                                       errorText: 'Masukan Kode OTP 6 Digit'),
                                   MaxLengthValidator(6,
                                       errorText: 'Masukan Kode OTP 6 Digit'),
-                                ]),
+                                ]) as Function?,
                                 controller: _codeController,
                               ),
                             ),
@@ -168,7 +168,7 @@ class _OTPPageState extends State<OTPPage> {
                           onPressed: () {
                             dismissKeyboard(context);
                             final code = _codeController.text.trim();
-                            if (_formKey.currentState.validate()) {
+                            if (_formKey.currentState!.validate()) {
                               setState(() {
                                 loading = true;
                               });

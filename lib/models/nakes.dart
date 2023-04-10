@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class NakesModel {
-  final String nama;
-  final String telepon;
-  final String spesialis;
+  final String? nama;
+  final String? telepon;
+  final String? spesialis;
 
   NakesModel({
     this.nama,
@@ -29,19 +29,19 @@ class NakesModel {
 
 class Nakes {
   // Document ID	clinicID	email	jadwal	kartuKeluarga	namaLengkap	nik	noTelpon	photoURL profesi	tanggalLahir	tempatLahir
-  final String id;
-  final String clinicID;
-  final String email;
-  final List<JadwalPraktek> jadwal;
-  final List<JadwalPraktek> jadwalImunisasi;
-  final String kartuKeluarga;
-  final String namaLengkap;
-  final String nik;
-  final String noTelpon;
-  final String photoURL;
-  final String profesi;
-  final DateTime tanggalLahir;
-  final String tempatLahir;
+  final String? id;
+  final String? clinicID;
+  final String? email;
+  final List<JadwalPraktek>? jadwal;
+  final List<JadwalPraktek>? jadwalImunisasi;
+  final String? kartuKeluarga;
+  final String? namaLengkap;
+  final String? nik;
+  final String? noTelpon;
+  final String? photoURL;
+  final String? profesi;
+  final DateTime? tanggalLahir;
+  final String? tempatLahir;
 
   Nakes({
     this.id,
@@ -64,10 +64,10 @@ class Nakes {
       id: data['id'],
       clinicID: data['clinicID'],
       email: data['email'],
-      jadwal: (data['jadwal'] as List ?? [])
+      jadwal: (data['jadwal'] as List? ?? [])
           .map((e) => JadwalPraktek.fromMap(e))
           .toList(),
-      jadwalImunisasi: (data['jadwalImunisasi'] as List ?? [])
+      jadwalImunisasi: (data['jadwalImunisasi'] as List? ?? [])
           .map((e) => JadwalPraktek.fromMap(e))
           .toList(),
       kartuKeluarga: data['kartuKeluarga'],
@@ -105,8 +105,8 @@ class Nakes {
 }
 
 class JadwalPraktek {
-  final String hari;
-  final String jam;
+  final String? hari;
+  final String? jam;
 
   JadwalPraktek({
     this.hari,

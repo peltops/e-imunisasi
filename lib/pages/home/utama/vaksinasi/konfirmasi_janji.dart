@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 class KonfirmasiVaksinasiPage extends StatefulWidget {
   final AppointmentModel appointment;
 
-  const KonfirmasiVaksinasiPage({Key key, @required this.appointment})
+  const KonfirmasiVaksinasiPage({Key? key, required this.appointment})
       : super(key: key);
   @override
   _KonfirmasiVaksinasiPageState createState() =>
@@ -44,7 +44,7 @@ class _KonfirmasiVaksinasiPageState extends State<KonfirmasiVaksinasiPage> {
                       children: [
                         Center(
                           child: QrImage(
-                            data: widget.appointment.id,
+                            data: widget.appointment.id!,
                             size: size.width * 0.5,
                           ),
                         ),
@@ -70,13 +70,13 @@ class _KonfirmasiVaksinasiPageState extends State<KonfirmasiVaksinasiPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  widget.appointment.anak.nama,
+                                  widget.appointment.anak!.nama!,
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15),
                                 ),
                                 Text(
-                                  widget.appointment.anak.umurAnak,
+                                  widget.appointment.anak!.umurAnak,
                                 ),
                               ],
                             ),
@@ -94,13 +94,13 @@ class _KonfirmasiVaksinasiPageState extends State<KonfirmasiVaksinasiPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  widget.appointment.nakes.namaLengkap,
+                                  widget.appointment.nakes!.namaLengkap!,
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15),
                                 ),
                                 Text(
-                                  widget.appointment.nakes.profesi,
+                                  widget.appointment.nakes!.profesi!,
                                 ),
                               ],
                             ),
@@ -117,7 +117,7 @@ class _KonfirmasiVaksinasiPageState extends State<KonfirmasiVaksinasiPage> {
                               ),
                               Text(
                                 DateFormat('dd MMMM yyyy')
-                                    .format(widget.appointment.tanggal),
+                                    .format(widget.appointment.tanggal!),
                               ),
                             ]),
                             TableRow(children: [
@@ -127,7 +127,7 @@ class _KonfirmasiVaksinasiPageState extends State<KonfirmasiVaksinasiPage> {
                                     fontWeight: FontWeight.bold, fontSize: 15),
                               ),
                               Text(
-                                widget.appointment.desc.split(', ')[1],
+                                widget.appointment.desc!.split(', ')[1],
                               ),
                             ]),
                           ],

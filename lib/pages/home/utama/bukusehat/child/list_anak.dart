@@ -5,7 +5,7 @@ import 'package:eimunisasi/services/anak_database.dart';
 
 class ListAnak extends StatelessWidget {
   final page;
-  const ListAnak({Key key, this.page}) : super(key: key);
+  const ListAnak({Key? key, this.page}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class ListAnak extends StatelessWidget {
                               final data = snapshot.data;
                               if (snapshot.data != null) {
                                 return ListView.builder(
-                                  itemCount: data.length,
+                                  itemCount: data!.length,
                                   itemBuilder: (context, index) {
                                     return Card(
                                         child: ListTile(
@@ -54,7 +54,7 @@ class ListAnak extends StatelessWidget {
                                         );
                                       },
                                       title: Text(
-                                        data[index].nama,
+                                        data[index].nama!,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w700),
                                       ),

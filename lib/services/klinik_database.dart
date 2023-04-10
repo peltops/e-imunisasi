@@ -3,7 +3,7 @@ import 'package:eimunisasi/models/klinik.dart';
 
 class KlinikDatabase {
   KlinikDatabase({this.uid});
-  final String uid;
+  final String? uid;
 
   final _service = FirebaseFirestore.instance;
 
@@ -22,7 +22,7 @@ class KlinikDatabase {
   // Stream List event Calender
   List<KlinikModel> _listData(QuerySnapshot snapshot) {
     return snapshot.docs.map((e) {
-      var data = Map<String, dynamic>.from(e.data());
+      var data = Map<String, dynamic>.from(e.data() as Map<dynamic, dynamic>);
       return KlinikModel.fromMap(data);
     }).toList();
   }

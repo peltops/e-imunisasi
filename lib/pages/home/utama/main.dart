@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class MainPage extends StatefulWidget {
-  const MainPage({Key key}) : super(key: key);
+  const MainPage({Key? key}) : super(key: key);
 
   @override
   _MainPageState createState() => _MainPageState();
@@ -120,11 +120,11 @@ class _MainPageState extends State<MainPage> {
 }
 
 class TombolMenu extends StatelessWidget {
-  final Function onTap;
-  final IconData icon;
-  final String label;
+  final Function? onTap;
+  final IconData? icon;
+  final String? label;
   TombolMenu({
-    Key key,
+    Key? key,
     this.icon,
     this.label,
     this.onTap,
@@ -133,7 +133,7 @@ class TombolMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: onTap as void Function()?,
       child: Padding(
         padding: const EdgeInsets.all(5.0),
         child: Column(
@@ -154,7 +154,7 @@ class TombolMenu extends StatelessWidget {
             ),
             SizedBox(height: 5),
             Text(
-              label,
+              label!,
               style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
             )
           ],

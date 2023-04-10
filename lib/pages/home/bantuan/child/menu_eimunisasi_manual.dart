@@ -5,7 +5,7 @@ import 'package:eimunisasi/services/informasi_aplikasi_database.dart';
 import 'package:flutter/material.dart';
 
 class EimunisasiManualPage extends StatefulWidget {
-  const EimunisasiManualPage({Key key}) : super(key: key);
+  const EimunisasiManualPage({Key? key}) : super(key: key);
   @override
   _EimunisasiManualPageState createState() => _EimunisasiManualPageState();
 }
@@ -40,7 +40,7 @@ class _EimunisasiManualPageState extends State<EimunisasiManualPage> {
                           stream: InformasiAplikasiDatabase().streamData,
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
-                              var data = snapshot.data;
+                              var data = snapshot.data!;
                               return ListView.builder(
                                   itemCount: data.length,
                                   itemBuilder: (context, index) {
@@ -53,7 +53,7 @@ class _EimunisasiManualPageState extends State<EimunisasiManualPage> {
                                                       DetailInformasiPage(
                                                           data: data[index])));
                                         },
-                                        title: Text(data[index].judul),
+                                        title: Text(data[index].judul!),
                                       ),
                                     );
                                   });

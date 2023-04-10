@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key key}) : super(key: key);
+  const ProfilePage({Key? key}) : super(key: key);
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -90,13 +90,13 @@ class _ProfilePageState extends State<ProfilePage> {
 }
 
 class TombolMenu {
-  Function onTap;
-  IconData icon;
-  String label;
+  Function? onTap;
+  IconData? icon;
+  String? label;
   TombolMenu({this.icon, this.label, this.onTap});
 
   tombolMenuCustom() => GestureDetector(
-        onTap: onTap,
+        onTap: onTap as void Function()?,
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
@@ -115,7 +115,7 @@ class TombolMenu {
               ),
               SizedBox(height: 5),
               Text(
-                label,
+                label!,
                 style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
               )
             ],

@@ -10,25 +10,30 @@ class UserService extends FirestoreDatabase {
   final _currentUser = FirebaseAuth.instance.currentUser;
   final _service = FirebaseFirestore.instance;
 
+  UserService() : super(uid: FirebaseAuth.instance.currentUser!.uid);
+
   // add new and update avatar
   Future<void> updateUserAvatar(String url) => _service
       .collection('users')
-      .doc(_currentUser.uid)
+      .doc(_currentUser!.uid)
       .update({'avatarURL': url});
 
   // add new and update anak
-  Future<void> updateUser(Users users) =>
-      _service.collection('users').doc(_currentUser.uid).update(users.toJson());
+  Future<void> updateUser(Users users) => _service
+      .collection('users')
+      .doc(_currentUser!.uid)
+      .update(users.toJson());
 
   Users _userSnapshot(DocumentSnapshot snapshot) {
-    var data = Map<String, dynamic>.from(snapshot.data());
+    var data =
+        Map<String, dynamic>.from(snapshot.data() as Map<dynamic, dynamic>);
     return Users.fromMap(data);
   }
 
   // stream user
   Stream<Users> get userStream => _service
       .collection('users')
-      .doc(_currentUser.uid)
+      .doc(_currentUser!.uid)
       .snapshots()
       .map(_userSnapshot);
 
@@ -36,12 +41,12 @@ class UserService extends FirestoreDatabase {
   Stream<DocumentSnapshot<Map<String, dynamic>>> get documentStream =>
       FirebaseFirestore.instance
           .collection('anak')
-          .doc(_currentUser.uid)
+          .doc(_currentUser!.uid)
           .snapshots();
 
   //Upload Image firebase Storage
   Future<String> uploadImage(File imageFile) async {
-    String fileName = _currentUser.uid.toString();
+    String fileName = _currentUser!.uid.toString();
 
     firebase_storage.Reference ref =
         firebase_storage.FirebaseStorage.instance.ref().child(fileName);

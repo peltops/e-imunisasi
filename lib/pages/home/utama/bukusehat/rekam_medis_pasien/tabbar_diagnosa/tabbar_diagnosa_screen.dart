@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class TabbarDiagnosaScreen extends StatelessWidget {
-  final List<CheckupModel> pemeriksaan;
-  const TabbarDiagnosaScreen({Key key, this.pemeriksaan}) : super(key: key);
+  final List<CheckupModel>? pemeriksaan;
+  const TabbarDiagnosaScreen({Key? key, this.pemeriksaan}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return pemeriksaan.length == 0
+    return pemeriksaan!.length == 0
         ? Center(child: Text('Belum ada data'))
         : SingleChildScrollView(
             child: Column(
               children: [
-                ...List.generate(pemeriksaan.length, (index) {
-                  final data = pemeriksaan[index];
+                ...List.generate(pemeriksaan!.length, (index) {
+                  final data = pemeriksaan![index];
                   return Card(
                     child: Column(
                       children: [

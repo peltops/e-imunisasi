@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class TabbarTabelScreen extends StatelessWidget {
-  final List<CheckupModel> pemeriksaan;
-  const TabbarTabelScreen({Key key, this.pemeriksaan}) : super(key: key);
+  final List<CheckupModel>? pemeriksaan;
+  const TabbarTabelScreen({Key? key, this.pemeriksaan}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final List<DataRow> listBodyTable =
-        List.generate(pemeriksaan.length, (index) {
-      final data = pemeriksaan[index];
+        List.generate(pemeriksaan!.length, (index) {
+      final data = pemeriksaan![index];
       return DataRow(cells: [
         DataCell(Text(
             DateFormat('dd/MM/yyyy').format(data.createdAt ?? DateTime.now()))),
@@ -20,7 +20,7 @@ class TabbarTabelScreen extends StatelessWidget {
       ]);
     });
 
-    return pemeriksaan.length == 0
+    return pemeriksaan!.length == 0
         ? Center(child: Text('Belum ada data'))
         : SingleChildScrollView(
             scrollDirection: Axis.horizontal,

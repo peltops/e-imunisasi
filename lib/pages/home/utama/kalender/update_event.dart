@@ -15,9 +15,9 @@ import 'package:provider/provider.dart';
 
 class UpdateEventCalendar extends StatefulWidget {
   final docID;
-  final KalenderModel data;
+  final KalenderModel? data;
 
-  const UpdateEventCalendar({Key key, this.docID, this.data}) : super(key: key);
+  const UpdateEventCalendar({Key? key, this.docID, this.data}) : super(key: key);
   @override
   _UpdateEventCalendarState createState() => _UpdateEventCalendarState();
 }
@@ -28,14 +28,14 @@ class _UpdateEventCalendarState extends State<UpdateEventCalendar> {
   bool loading = false;
   final kFirstDay = DateTime(DateTime.now().year - 1);
   final kLastDay = DateTime(DateTime.now().year + 1);
-  TextEditingController _dateTimeCtrl;
-  TextEditingController _activityCtrl;
+  TextEditingController? _dateTimeCtrl;
+  late TextEditingController _activityCtrl;
 
   @override
   void initState() {
     _dateTimeCtrl =
-        TextEditingController(text: widget.data.date.toString().split(' ')[0]);
-    _activityCtrl = TextEditingController(text: widget.data.activity);
+        TextEditingController(text: widget.data!.date.toString().split(' ')[0]);
+    _activityCtrl = TextEditingController(text: widget.data!.activity);
 
     super.initState();
   }
@@ -70,7 +70,7 @@ class _UpdateEventCalendarState extends State<UpdateEventCalendar> {
                         TextFormCustom(
                           onTap: () {
                             DateTime tempDate = new DateFormat("yyyy-MM-dd")
-                                .parse(_dateTimeCtrl.text);
+                                .parse(_dateTimeCtrl!.text);
                             DatePicker.showDatePicker(context,
                                 theme: DatePickerTheme(
                                   doneStyle: TextStyle(
@@ -95,7 +95,7 @@ class _UpdateEventCalendarState extends State<UpdateEventCalendar> {
                               String formattedDate =
                                   DateFormat('yyyy-MM-dd').format(val);
                               setState(() {
-                                _dateTimeCtrl.text = formattedDate.toString();
+                                _dateTimeCtrl!.text = formattedDate.toString();
                               });
                             }, currentTime: tempDate, locale: LocaleType.id);
                           },
@@ -132,7 +132,7 @@ class _UpdateEventCalendarState extends State<UpdateEventCalendar> {
                                     dismissKeyboard(context);
                                     DateTime tempDate =
                                         new DateFormat("yyyy-MM-dd")
-                                            .parse(_dateTimeCtrl.text);
+                                            .parse(_dateTimeCtrl!.text);
                                     setState(() {
                                       loading = true;
                                     });
