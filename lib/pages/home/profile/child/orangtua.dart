@@ -20,7 +20,7 @@ class OrangtuaPage extends StatefulWidget {
 }
 
 class _OrangtuaPageState extends State<OrangtuaPage> {
-  TextEditingController _namaAyahCtrl,
+  late TextEditingController _namaAyahCtrl,
       _namaIbuCtrl,
       _pekerjaanAyahCtrl,
       _pekerjaanIbuCtrl,
@@ -94,7 +94,7 @@ class _OrangtuaPageState extends State<OrangtuaPage> {
               _nomorKkCtrl.text = user.noKK ?? '';
               _nomorKtpCtrl.text = user.noKTP ?? '';
               if (!pilihanPekerjaan.contains(user.pekerjaanIbu)) {
-                pilihanPekerjaan.add(user.pekerjaanIbu);
+                pilihanPekerjaan.add(user.pekerjaanIbu ?? '');
               }
               final tanggalLahir = user.tanggalLahir != null
                   ? DateFormat('dd-MM-yyyy').format(user.tanggalLahir!)

@@ -302,7 +302,7 @@ class _AnakPageState extends State<AnakPage> {
                                                           loading = false;
                                                         }));
                                           } catch (e) {
-                                            snackbarCustom(e.message.toString())
+                                            snackbarCustom("Terjadi kesalahan")
                                                 .show(context);
                                           }
                                         }

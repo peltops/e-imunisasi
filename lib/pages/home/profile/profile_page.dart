@@ -70,7 +70,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               (route) => false);
                           snackbarCustom('Berhasil keluar');
                         } catch (e) {
-                          snackbarCustom(e.message.toString());
+                          snackbarCustom("Gagal keluar");
                         }
                       },
                       title: Text('Logout',

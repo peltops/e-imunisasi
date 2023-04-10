@@ -285,7 +285,8 @@ class _DaftarAnakPageState extends State<DaftarAnakPage> {
                                               Navigator.pop(context);
                                             } catch (e) {
                                               snackbarCustom(
-                                                      'Terjadi kesalahan: ' + e)
+                                                      'Terjadi kesalahan: ' +
+                                                          e.toString())
                                                   .show(context);
                                             } finally {
                                               setState(() {
