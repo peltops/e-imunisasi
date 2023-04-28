@@ -12,6 +12,7 @@ import 'package:eimunisasi/utils/dismiss_keyboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -193,9 +194,8 @@ class _DaftarAnakPageState extends State<DaftarAnakPage> {
                                     hint: Text(
                                       'Pilih jenis kelamin',
                                     ),
-                                    validator: FormBuilderValidators.compose([
-                                      FormBuilderValidators.required(context)
-                                    ]),
+                                    validator: FormBuilderValidators.compose(
+                                        [FormBuilderValidators.required()]),
                                     items: pilihanJenisKelamin
                                         .map((val) => DropdownMenuItem(
                                               value: val,
@@ -222,9 +222,8 @@ class _DaftarAnakPageState extends State<DaftarAnakPage> {
                                     // initialValue: 'Male',
                                     allowClear: true,
                                     hint: Text('Pilih golongan darah'),
-                                    validator: FormBuilderValidators.compose([
-                                      FormBuilderValidators.required(context)
-                                    ]),
+                                    validator: FormBuilderValidators.compose(
+                                        [FormBuilderValidators.required()]),
                                     items: pilihanGolDarah
                                         .map((val) => DropdownMenuItem(
                                               value: val,

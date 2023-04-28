@@ -64,7 +64,7 @@ class ListNakes extends StatelessWidget {
                                     style:
                                         TextStyle(fontWeight: FontWeight.w700),
                                   ),
-                                  subtitle: Text(nakes.profesi!),
+                                  subtitle: Text(nakes.profesi ?? ""),
                                   trailing:
                                       Icon(Icons.keyboard_arrow_right_rounded),
                                 ));

@@ -16,22 +16,22 @@ class NotificationService extends ChangeNotifier {
     AndroidInitializationSettings androidInitializationSettings =
         AndroidInitializationSettings("ic_launcher");
 
-    IOSInitializationSettings iosInitializationSettings =
-        IOSInitializationSettings();
+    final DarwinInitializationSettings initializationSettingsDarwin =
+        DarwinInitializationSettings();
 
     final InitializationSettings initializationSettings =
         InitializationSettings(
             android: androidInitializationSettings,
-            iOS: iosInitializationSettings);
+            iOS: initializationSettingsDarwin);
 
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
   //Instant Notifications
   Future instantNofitication() async {
-    var android = AndroidNotificationDetails("id", "channel", "description");
+    var android = AndroidNotificationDetails("id", "channel");
 
-    var ios = IOSNotificationDetails();
+    var ios = DarwinNotificationDetails();
 
     var platform = new NotificationDetails(android: android, iOS: ios);
 
@@ -50,8 +50,11 @@ class NotificationService extends ChangeNotifier {
         htmlFormatContent: true,
         htmlFormatContentTitle: true);
 
-    var android = AndroidNotificationDetails("id", "channel", "description",
-        styleInformation: bigPicture);
+    var android = AndroidNotificationDetails(
+      "id",
+      "channel",
+      styleInformation: bigPicture,
+    );
 
     var platform = new NotificationDetails(android: android);
 
@@ -62,13 +65,18 @@ class NotificationService extends ChangeNotifier {
 
   //Stylish Notification
   Future stylishNotification() async {
-    var android = AndroidNotificationDetails("id", "channel", "description",
-        color: Colors.deepOrange,
-        enableLights: true,
-        enableVibration: true,
-        largeIcon: DrawableResourceAndroidBitmap("ic_launcher"),
-        styleInformation: MediaStyleInformation(
-            htmlFormatContent: true, htmlFormatTitle: true));
+    var android = AndroidNotificationDetails(
+      "id",
+      "channel",
+      color: Colors.deepOrange,
+      enableLights: true,
+      enableVibration: true,
+      largeIcon: DrawableResourceAndroidBitmap("ic_launcher"),
+      styleInformation: MediaStyleInformation(
+        htmlFormatContent: true,
+        htmlFormatTitle: true,
+      ),
+    );
 
     var platform = new NotificationDetails(android: android);
 
@@ -83,12 +91,11 @@ class NotificationService extends ChangeNotifier {
     var android = AndroidNotificationDetails(
       "id",
       "channel",
-      "description",
       enableLights: true,
       enableVibration: true,
     );
 
-    var ios = IOSNotificationDetails();
+    var ios = DarwinNotificationDetails();
 
     var platform = new NotificationDetails(android: android, iOS: ios);
     await _flutterLocalNotificationsPlugin.zonedSchedule(

@@ -178,7 +178,7 @@ class _LineChart extends StatelessWidget {
         isStrokeCapRound: true,
         dotData: FlDotData(show: false),
         belowBarData: BarAreaData(show: false),
-        spots: (isBoy ?? true)
+        spots: (isBoy)
             ? LineDataBeratBadanBoyModel().listDataLine1()
             : LineDataBeratBadanGirlModel().listDataLine1(),
       );
@@ -191,7 +191,7 @@ class _LineChart extends StatelessWidget {
         isStrokeCapRound: true,
         dotData: FlDotData(show: false),
         belowBarData: BarAreaData(show: false),
-        spots: (isBoy ?? true)
+        spots: (isBoy)
             ? LineDataBeratBadanBoyModel().listDataLine2()
             : LineDataBeratBadanGirlModel().listDataLine2(),
       );
@@ -204,7 +204,7 @@ class _LineChart extends StatelessWidget {
         isStrokeCapRound: true,
         dotData: FlDotData(show: false),
         belowBarData: BarAreaData(show: false),
-        spots: (isBoy ?? true)
+        spots: (isBoy)
             ? LineDataBeratBadanBoyModel().listDataLine3()
             : LineDataBeratBadanGirlModel().listDataLine3(),
       );
@@ -217,7 +217,7 @@ class _LineChart extends StatelessWidget {
         isStrokeCapRound: true,
         dotData: FlDotData(show: false),
         belowBarData: BarAreaData(show: false),
-        spots: (isBoy ?? true)
+        spots: (isBoy)
             ? LineDataBeratBadanBoyModel().listDataLine4()
             : LineDataBeratBadanGirlModel().listDataLine4(),
       );
@@ -230,7 +230,7 @@ class _LineChart extends StatelessWidget {
         isStrokeCapRound: true,
         dotData: FlDotData(show: false),
         belowBarData: BarAreaData(show: false),
-        spots: (isBoy ?? true)
+        spots: (isBoy)
             ? LineDataBeratBadanBoyModel().listDataLine5()
             : LineDataBeratBadanGirlModel().listDataLine5(),
       );
@@ -243,7 +243,7 @@ class _LineChart extends StatelessWidget {
         isStrokeCapRound: true,
         dotData: FlDotData(show: false),
         belowBarData: BarAreaData(show: false),
-        spots: (isBoy ?? true)
+        spots: (isBoy)
             ? LineDataBeratBadanBoyModel().listDataLine6()
             : LineDataBeratBadanGirlModel().listDataLine6(),
       );

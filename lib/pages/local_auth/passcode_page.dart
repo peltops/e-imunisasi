@@ -70,7 +70,7 @@ class _PasscodePageState extends State<PasscodePage> {
                           // pattern number 4 digit
                           PatternValidator(r'^[0-9]{4}$',
                               errorText: 'PIN harus berupa angka'),
-                        ]) as String? Function(String?)?,
+                        ]),
                         decoration: InputDecoration(
                           labelText: 'PIN',
                           helperText: 'Masukkan 4-digit PIN',

@@ -5,9 +5,7 @@ import 'package:eimunisasi/pages/widget/text_form_custom.dart';
 import 'package:eimunisasi/pages/wrapper.dart';
 import 'package:eimunisasi/services/auth.dart';
 import 'package:eimunisasi/utils/dismiss_keyboard.dart';
-import 'package:snack/snack.dart';
 import 'package:flutter/material.dart';
-import 'package:keyboard_avoider/keyboard_avoider.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
 // import 'package:flutter_signin_button/flutter_signin_button.dart';
@@ -58,8 +56,8 @@ class _LoginPageEmailState extends State<LoginPageEmail> {
             child: SingleChildScrollView(
                 child: Form(
               key: _formKey,
-              child: KeyboardAvoider(
-                child: Column(children: [
+              child: Column(
+                children: [
                   Text("Masuk dengan alamat email",
                       textAlign: TextAlign.start,
                       style: TextStyle(
@@ -81,7 +79,7 @@ class _LoginPageEmailState extends State<LoginPageEmail> {
                     validator: MultiValidator([
                       EmailValidator(errorText: 'Masukan email yang valid'),
                       RequiredValidator(errorText: 'Masukan email'),
-                    ]) as Function?,
+                    ]),
                     onChanged: (val) {
                       setState(() {
                         email = val;
@@ -165,7 +163,7 @@ class _LoginPageEmailState extends State<LoginPageEmail> {
                           }
                         : null,
                   ),
-                ]),
+                ],
               ),
             )),
           )),

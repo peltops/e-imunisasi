@@ -8,7 +8,6 @@ import 'package:eimunisasi/utils/dismiss_keyboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:keyboard_avoider/keyboard_avoider.dart';
 
 import '../wrapper.dart';
 
@@ -91,170 +90,171 @@ class _OTPPageState extends State<OTPPage> {
         elevation: 0.0,
       ),
       resizeToAvoidBottomInset: false,
-      body: KeyboardAvoider(
-        child: Container(
-          color: Colors.pink[100],
-          child: Card(
+      body: Container(
+        color: Colors.pink[100],
+        child: Card(
             margin: EdgeInsets.symmetric(vertical: 35, horizontal: 15),
             child: Center(
-                child: Container(
-              padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 30.0),
-              child: SingleChildScrollView(
-                  child: Form(
-                key: _formKey,
-                child: KeyboardAvoider(
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Masukan Kode OTP 6 Digit",
-                            style:
-                                TextStyle(fontSize: 20, color: Colors.black)),
-                        SizedBox(
-                          height: 15.0,
-                        ),
-                        error.isNotEmpty
-                            ? Text(
-                                error,
-                                style: TextStyle(
-                                    color: Colors.red, fontSize: 15.0),
-                              )
-                            : Container(),
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            widget.phoneNumber,
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        SizedBox(height: 5.0),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
+              child: Container(
+                  padding:
+                      EdgeInsets.symmetric(vertical: 0.0, horizontal: 30.0),
+                  child: SingleChildScrollView(
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Expanded(
-                              child: TextFormCustom(
-                                keyboardType: TextInputType.phone,
-                                hintText: '000000',
-                                validator: MultiValidator([
-                                  RequiredValidator(
-                                      errorText: 'Masukan Kode OTP 6 Digit'),
-                                  MinLengthValidator(6,
-                                      errorText: 'Masukan Kode OTP 6 Digit'),
-                                  MaxLengthValidator(6,
-                                      errorText: 'Masukan Kode OTP 6 Digit'),
-                                ]) as Function?,
-                                controller: _codeController,
+                            Text("Masukan Kode OTP 6 Digit",
+                                style: TextStyle(
+                                    fontSize: 20, color: Colors.black)),
+                            SizedBox(
+                              height: 15.0,
+                            ),
+                            error.isNotEmpty
+                                ? Text(
+                                    error,
+                                    style: TextStyle(
+                                        color: Colors.red, fontSize: 15.0),
+                                  )
+                                : Container(),
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                widget.phoneNumber,
+                                style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                             ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        ButtonCustom(
-                          child: !loading
-                              ? Text(
-                                  "Masuk",
-                                  style: TextStyle(
-                                      fontSize: 15.0, color: Colors.white),
-                                )
-                              : SizedBox(
-                                  height: 18,
-                                  width: 18,
-                                  child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.white),
+                            SizedBox(height: 5.0),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: TextFormCustom(
+                                    keyboardType: TextInputType.phone,
+                                    hintText: '000000',
+                                    validator: MultiValidator([
+                                      RequiredValidator(
+                                          errorText:
+                                              'Masukan Kode OTP 6 Digit'),
+                                      MinLengthValidator(6,
+                                          errorText:
+                                              'Masukan Kode OTP 6 Digit'),
+                                      MaxLengthValidator(6,
+                                          errorText:
+                                              'Masukan Kode OTP 6 Digit'),
+                                    ]),
+                                    controller: _codeController,
                                   ),
                                 ),
-                          onPressed: () {
-                            dismissKeyboard(context);
-                            final code = _codeController.text.trim();
-                            if (_formKey.currentState!.validate()) {
-                              setState(() {
-                                loading = true;
-                              });
-                              if (widget.description == 'register') {
-                                _auth
-                                    .signUpWithOTP(
-                                        code, widget.verId, widget.phoneNumber)
-                                    .then((_) {
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                      MaterialPageRoute(
-                                          builder: (context) => Wrapper()),
-                                      (route) => false);
-                                }).catchError((e) {
-                                  snackbarCustom(e.message).show(context);
-                                }).whenComplete(
-                                        () => setState(() => loading = false));
-                              } else if (widget.description == 'login') {
-                                _auth
-                                    .signInWithOTP(
-                                        code, widget.verId, widget.phoneNumber)
-                                    .then((_) {
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                      MaterialPageRoute(
-                                          builder: (context) => Wrapper()),
-                                      (route) => false);
-                                }).catchError((e) {
-                                  snackbarCustom(e.message).show(context);
-                                }).whenComplete(
-                                        () => setState(() => loading = false));
-                              }
-                            }
-                          },
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text("Belum Menerima Kode?"),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        !newCode && seconds > 0
-                            ? Row(
-                                children: [
-                                  SizedBox(
-                                    height: 18,
-                                    width: 18,
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text("Tunggu $seconds ..."),
-                                ],
-                              )
-                            : InkWell(
-                                child: Text("Minta kode baru!",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold)),
-                                onTap: () {
+                              ],
+                            ),
+                            SizedBox(
+                              height: 16,
+                            ),
+                            ButtonCustom(
+                              child: !loading
+                                  ? Text(
+                                      "Masuk",
+                                      style: TextStyle(
+                                          fontSize: 15.0, color: Colors.white),
+                                    )
+                                  : SizedBox(
+                                      height: 18,
+                                      width: 18,
+                                      child: CircularProgressIndicator(
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                Colors.white),
+                                      ),
+                                    ),
+                              onPressed: () {
+                                dismissKeyboard(context);
+                                final code = _codeController.text.trim();
+                                if (_formKey.currentState!.validate()) {
                                   setState(() {
-                                    seconds = maxSeconds;
-                                    newCode = false;
+                                    loading = true;
                                   });
-                                  startTimer();
-                                  try {
-                                    _auth.verifyPhoneNumber(
-                                      widget.phoneNumber,
-                                      context,
-                                      codeSent,
-                                      verificationfailed,
-                                    );
-                                  } catch (e) {
-                                    setState(() {
-                                      loading = false;
-                                    });
-                                    snackbarCustom(
-                                        'Terjadi masalah: ${e.toString()}');
+                                  if (widget.description == 'register') {
+                                    _auth
+                                        .signUpWithOTP(code, widget.verId,
+                                            widget.phoneNumber)
+                                        .then((_) {
+                                      Navigator.of(context).pushAndRemoveUntil(
+                                          MaterialPageRoute(
+                                              builder: (context) => Wrapper()),
+                                          (route) => false);
+                                    }).catchError((e) {
+                                      snackbarCustom(e.message).show(context);
+                                    }).whenComplete(() =>
+                                            setState(() => loading = false));
+                                  } else if (widget.description == 'login') {
+                                    _auth
+                                        .signInWithOTP(code, widget.verId,
+                                            widget.phoneNumber)
+                                        .then((_) {
+                                      Navigator.of(context).pushAndRemoveUntil(
+                                          MaterialPageRoute(
+                                              builder: (context) => Wrapper()),
+                                          (route) => false);
+                                    }).catchError((e) {
+                                      snackbarCustom(e.message).show(context);
+                                    }).whenComplete(() =>
+                                            setState(() => loading = false));
                                   }
-                                },
-                              )
-                      ]),
-                ),
-              )),
+                                }
+                              },
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text("Belum Menerima Kode?"),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            !newCode && seconds > 0
+                                ? Row(
+                                    children: [
+                                      SizedBox(
+                                        height: 18,
+                                        width: 18,
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text("Tunggu $seconds ..."),
+                                    ],
+                                  )
+                                : InkWell(
+                                    child: Text("Minta kode baru!",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold)),
+                                    onTap: () {
+                                      setState(() {
+                                        seconds = maxSeconds;
+                                        newCode = false;
+                                      });
+                                      startTimer();
+                                      try {
+                                        _auth.verifyPhoneNumber(
+                                          widget.phoneNumber,
+                                          context,
+                                          codeSent,
+                                          verificationfailed,
+                                        );
+                                      } catch (e) {
+                                        setState(() {
+                                          loading = false;
+                                        });
+                                        snackbarCustom(
+                                            'Terjadi masalah: ${e.toString()}');
+                                      }
+                                    },
+                                  )
+                          ]),
+                    ),
+                  )),
             )),
-          ),
-        ),
       ),
     );
   }
