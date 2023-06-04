@@ -43,7 +43,7 @@ class _KonfirmasiVaksinasiPageState extends State<KonfirmasiVaksinasiPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Center(
-                          child: QrImage(
+                          child: QrImageView(
                             data: widget.appointment.id!,
                             size: size.width * 0.5,
                           ),
