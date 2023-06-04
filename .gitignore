@@ -50,3 +50,7 @@ app.*.map.json
 
 # fvm
 .fvm/flutter_sdk
+# google services
+/android/app/google-services.json
+/ios/Runner/GoogleService-Info.plist
+/lib/generated_plugin_registrant.dart
