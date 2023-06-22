@@ -12,21 +12,21 @@ part 'authentication_state.dart';
 @Singleton()
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
-  final AuthRepository _authRepository;
-  final SplashRepository _splashRepository;
+  final AuthRepository authRepository;
+  final SplashRepository splashRepository;
 
-  AuthenticationBloc({
-    required AuthRepository authRepository,
-    required SplashRepository splashRepository,
-  })  : _authRepository = authRepository,
-        _splashRepository = splashRepository,
-        super(Uninitialized()) {
-    Future.delayed(const Duration(seconds: 3), () {
-      add(AppStarted());
-    });
+  AuthenticationBloc(this.authRepository, this.splashRepository)
+      : super(Uninitialized()) {
+    _splash();
     on<AppStarted>(_onAppStarted);
     on<LoggedIn>(_onLoggedIn);
     on<LoggedOut>(_onLoggedOut);
+  }
+
+  void _splash() async {
+    Future.delayed(const Duration(seconds: 3), () {
+      add(AppStarted());
+    });
   }
 
   void _onAppStarted(
@@ -34,12 +34,12 @@ class AuthenticationBloc
     print('AppStarted');
     emit(Loading());
     try {
-      final isSignedIn = await _authRepository.isSignedIn();
+      final isSignedIn = await authRepository.isSignedIn();
       if (isSignedIn) {
-        final data = await _authRepository.getUser();
+        final data = await authRepository.getUser();
         emit(Authenticated(user: data));
       } else {
-        final isSeenOnboarding = await _splashRepository.isSeen();
+        final isSeenOnboarding = await splashRepository.isSeen();
         emit(Unauthenticated(isSeenOnboarding: isSeenOnboarding));
       }
     } catch (_) {
@@ -49,13 +49,13 @@ class AuthenticationBloc
 
   void _onLoggedIn(LoggedIn event, Emitter<AuthenticationState> emit) async {
     emit(Loading());
-    final data = await _authRepository.getUser();
+    final data = await authRepository.getUser();
     emit(Authenticated(user: data));
   }
 
   void _onLoggedOut(LoggedOut event, Emitter<AuthenticationState> emit) async {
     emit(Loading());
-    await _authRepository.signOut().then((value) {
+    await authRepository.signOut().then((_) {
       emit(Unauthenticated());
     }).catchError((error) {
       log(

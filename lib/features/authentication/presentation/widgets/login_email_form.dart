@@ -1,3 +1,4 @@
+import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
 import '../../../../app.dart';
@@ -20,13 +21,8 @@ class LoginEmailForm extends StatelessWidget {
     return BlocListener<LoginCubit, LoginState>(
       listener: (context, state) {
         if (state.status.isSubmissionFailure) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Text(state.errorMessage ?? 'Otentikasi gagal!'),
-              ),
-            );
+          snackbarCustom(state.errorMessage ?? 'Otentikasi gagal!')
+              .show(context);
         } else if (state.status.isSubmissionSuccess) {
           context.read<AuthenticationBloc>().add(LoggedIn());
           Navigator.pushReplacement(context,

@@ -13,7 +13,10 @@ part 'local_auth_state.dart';
 
 @Injectable()
 class LocalAuthCubit extends Cubit<LocalAuthState> {
-  LocalAuthCubit() : super(const LocalAuthState());
+  final SharedPreferences sharedPreferences;
+  LocalAuthCubit(
+    this.sharedPreferences,
+  ) : super(const LocalAuthState());
 
   void passcodeChanged(String value) {
     final code = Passcode.dirty(value);
@@ -34,32 +37,38 @@ class LocalAuthCubit extends Cubit<LocalAuthState> {
     );
   }
 
-  void setPasscode(int passcode) async {
-    // if (!state.status.isValidated) return;
+  void _setPasscode(int passcode) async {
+    if (!state.status.isValidated) return;
     emit(state.copyWith(status: FormzStatus.submissionInProgress));
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     try {
-      sharedPreferences.setInt('passCode', passcode);
+      await sharedPreferences.setInt('passCode', passcode);
       final code = Passcode.dirty(passcode.toString());
-      emit(state.copyWith(
-          passcode: code, status: FormzStatus.submissionSuccess));
+      emit(
+        state.copyWith(passcode: code, status: FormzStatus.submissionSuccess),
+      );
     } catch (e) {
-      emit(state.copyWith(
-          errorMessage: e.toString(), status: FormzStatus.submissionFailure));
+      emit(
+        state.copyWith(
+          errorMessage: 'Gagal menyimpan passcode',
+          status: FormzStatus.submissionFailure,
+        ),
+      );
     }
   }
 
   void getPasscode() async {
     emit(state.copyWith(status: FormzStatus.submissionInProgress));
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     try {
       int? passcode = sharedPreferences.getInt('passCode');
       debugPrint("**************" + passcode.toString());
       final code = Passcode.dirty(passcode.toString());
       emit(state.copyWith(savedPasscode: code, status: FormzStatus.valid));
     } catch (e) {
-      emit(state.copyWith(
-          errorMessage: e.toString(), status: FormzStatus.submissionFailure));
+      emit(
+        state.copyWith(
+            errorMessage: 'Gagal mendapatkan passcode',
+            status: FormzStatus.submissionFailure),
+      );
     }
   }
 
@@ -70,7 +79,6 @@ class LocalAuthCubit extends Cubit<LocalAuthState> {
           status: FormzStatus.submissionFailure));
     }
     emit(state.copyWith(status: FormzStatus.submissionInProgress));
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     try {
       int? savedPasscode = sharedPreferences.getInt('passCode');
       debugPrint("**************" + savedPasscode.toString());
@@ -91,27 +99,25 @@ class LocalAuthCubit extends Cubit<LocalAuthState> {
 
   void confirmPasscode() async {
     emit(state.copyWith(status: FormzStatus.submissionInProgress));
-    try {
-      final String passcode = state.passcode.value;
-      final String confirmPasscode = state.confirmPasscode;
-      if (passcode == confirmPasscode) {
-        setPasscode(int.parse(passcode));
-      } else {
-        emit(state.copyWith(
-            errorMessage: "Passcode Salah",
-            status: FormzStatus.submissionFailure));
-      }
-    } catch (e) {
-      emit(state.copyWith(
-          errorMessage: e.toString(), status: FormzStatus.submissionFailure));
+
+    final String passcode = state.passcode.value;
+    final String confirmPasscode = state.confirmPasscode;
+    if (passcode == confirmPasscode) {
+      _setPasscode(int.parse(passcode));
+    } else {
+      emit(
+        state.copyWith(
+          errorMessage: "Passcode Salah",
+          status: FormzStatus.submissionFailure,
+        ),
+      );
     }
   }
 
   void destroyPasscode() async {
     emit(state.copyWith(status: FormzStatus.submissionInProgress));
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     try {
-      sharedPreferences.remove('passCode');
+      await sharedPreferences.remove('passCode');
       emit(state.copyWith(status: FormzStatus.submissionSuccess));
     } catch (e) {
       emit(state.copyWith(

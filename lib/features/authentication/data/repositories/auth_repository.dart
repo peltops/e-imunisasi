@@ -12,23 +12,21 @@ import '../../../../models/user.dart';
 
 @Injectable()
 class AuthRepository {
-  final FirebaseFirestore _firestore;
-  final FirebaseAuth _firebaseAuth;
+  final FirebaseFirestore firestore;
+  final FirebaseAuth firebaseAuth;
 
-  AuthRepository(FirebaseAuth firebaseAuth, FirebaseFirestore firestore)
-      : _firebaseAuth = firebaseAuth,
-        _firestore = firestore;
+  AuthRepository(this.firestore, this.firebaseAuth);
 
   Future<void> logInWithEmailAndPassword(
       {required String email, required String password}) {
-    return _firebaseAuth.signInWithEmailAndPassword(
+    return firebaseAuth.signInWithEmailAndPassword(
       email: email,
       password: password,
     );
   }
 
   Future<void> forgetEmailPassword({required String email}) {
-    return _firebaseAuth.sendPasswordResetEmail(
+    return firebaseAuth.sendPasswordResetEmail(
       email: email,
     );
   }
@@ -39,7 +37,7 @@ class AuthRepository {
     required void Function(FirebaseAuthException) verificationFailed,
     required void Function(PhoneAuthCredential) verificationCompleted,
   }) {
-    return _firebaseAuth.verifyPhoneNumber(
+    return firebaseAuth.verifyPhoneNumber(
       phoneNumber: phone,
       timeout: const Duration(seconds: 60),
       verificationFailed: verificationFailed,
@@ -49,16 +47,15 @@ class AuthRepository {
     );
   }
 
-  // signin with credential
   Future<UserCredential> signInWithCredential(PhoneAuthCredential credential) {
-    return _firebaseAuth.signInWithCredential(credential);
+    return firebaseAuth.signInWithCredential(credential);
   }
 
   Future<UserCredential> signUpWithOTP(smsCode, verId) async {
     AuthCredential credential =
         PhoneAuthProvider.credential(verificationId: verId, smsCode: smsCode);
     try {
-      return await _firebaseAuth.signInWithCredential(credential);
+      return await firebaseAuth.signInWithCredential(credential);
     } catch (e) {
       rethrow;
     }
@@ -66,7 +63,7 @@ class AuthRepository {
 
   Future<UserCredential> signUpWithEmailAndPassword(
       {required String email, required String password}) async {
-    return await _firebaseAuth.createUserWithEmailAndPassword(
+    return await firebaseAuth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
@@ -76,7 +73,7 @@ class AuthRepository {
     required Users user,
   }) async {
     final DocumentReference reference =
-        _firestore.collection('users').doc(user.uid);
+        firestore.collection('users').doc(user.uid);
     return await reference.set(user.toJson());
   }
 
@@ -91,18 +88,18 @@ class AuthRepository {
   }
 
   Future<void> signOut() async {
-    return _firebaseAuth.signOut();
+    return firebaseAuth.signOut();
   }
 
   Future<bool> isSignedIn() async {
-    final currentUser = _firebaseAuth.currentUser;
+    final currentUser = firebaseAuth.currentUser;
     return currentUser != null;
   }
 
   Future<Users?> getUser() async {
-    final user = await _firestore
+    final user = await firestore
         .collection('users')
-        .doc(_firebaseAuth.currentUser!.uid)
+        .doc(firebaseAuth.currentUser?.uid)
         .get();
     if (user.exists) {
       Users userResult = Users.fromMap(user.data() ?? {});
@@ -112,13 +109,28 @@ class AuthRepository {
     }
   }
 
-  // add new and update avatar
+  Future<bool> isPhoneNumberExist(String phoneNumber) async {
+    final user = await firestore
+        .collection('users')
+        .where('nomorhpIbu', isEqualTo: phoneNumber)
+        .limit(1)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      if (querySnapshot.docs.isNotEmpty) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    return user;
+  }
+
   Future<void> updateUserAvatar(String url) async {
     try {
-      await _firebaseAuth.currentUser?.updatePhotoURL(url);
-      await _firestore
+      await firebaseAuth.currentUser?.updatePhotoURL(url);
+      await firestore
           .collection('users_medis')
-          .doc(_firebaseAuth.currentUser?.uid)
+          .doc(firebaseAuth.currentUser?.uid)
           .update({'photoURL': url});
     } catch (e) {
       log(e.toString());
@@ -126,9 +138,8 @@ class AuthRepository {
     }
   }
 
-  //Upload Image firebase Storage
   Future<String> uploadImage(File imageFile) async {
-    final fileName = _firebaseAuth.currentUser?.uid ?? 'user';
+    final fileName = firebaseAuth.currentUser?.uid ?? 'user';
 
     firebase_storage.Reference ref =
         firebase_storage.FirebaseStorage.instance.ref().child(fileName);

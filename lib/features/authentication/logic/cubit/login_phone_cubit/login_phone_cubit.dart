@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:eimunisasi/utils/string_extension.dart';
 import 'package:injectable/injectable.dart';
 import '../../../../../models/user.dart';
 import '../../../data/models/country_code.dart';
@@ -45,17 +46,27 @@ class LoginPhoneCubit extends Cubit<LoginPhoneState> {
     emit(state.copyWith(verId: value, status: FormzStatus.pure));
   }
 
-  Future<void> sendOTPCode() async {
-    String phoneNumber = state.phone.value;
+  void sendOTPCode() async {
+    final phoneNumber =
+        state.countryCode.value + state.phone.value.removeZeroAtFirst();
     if (!state.phone.valid) return;
     emit(state.copyWith(status: FormzStatus.submissionInProgress));
-    if (phoneNumber.startsWith('0')) {
-      // remove the first character
-      phoneNumber = phoneNumber.substring(1);
+    final isPhoneNumberExist = await _authRepository.isPhoneNumberExist(
+      phoneNumber,
+    );
+    if (!isPhoneNumberExist) {
+      emit(
+        state.copyWith(
+          status: FormzStatus.submissionFailure,
+          errorMessage:
+              'Nomor HP belum terdaftar, silahkan daftar terlebih dahulu',
+        ),
+      );
+      return;
     }
     try {
       await _authRepository.verifyPhoneNumber(
-        phone: state.countryCode.value + phoneNumber,
+        phone: phoneNumber,
         codeSent: (String verId, int? token) {
           emit(state.copyWith(status: FormzStatus.pure, verId: verId));
         },
@@ -64,19 +75,9 @@ class LoginPhoneCubit extends Cubit<LoginPhoneState> {
               status: FormzStatus.submissionFailure, errorMessage: e.message));
         },
         verificationCompleted: (PhoneAuthCredential credential) async {
-          final userResult = await _authRepository.signInWithCredential(
+          await _authRepository.signInWithCredential(
             credential,
           );
-          final userModel = Users(
-            uid: userResult.user?.uid,
-            nomorhpIbu: userResult.user?.phoneNumber,
-          );
-          final isUserExist = await _authRepository.isUserExist();
-          if (!isUserExist) {
-            await _authRepository.insertUserToDatabase(
-              user: userModel,
-            );
-          }
           emit(state.copyWith(status: FormzStatus.submissionSuccess));
         },
       );
@@ -87,29 +88,38 @@ class LoginPhoneCubit extends Cubit<LoginPhoneState> {
     }
   }
 
-  Future<void> logInWithOTP({required String verId}) async {
+  void logInWithOTP() async {
     if (state.otpCode.invalid) return;
     emit(state.copyWith(status: FormzStatus.submissionInProgress));
     try {
-      final userResult = await _authRepository.signUpWithOTP(
-        state.otpCode.value,
-        verId,
+      final isPhoneNumberExist = await _authRepository.isPhoneNumberExist(
+        state.phone.value,
       );
 
-      final userModel = Users(
-        uid: userResult.user?.uid,
-        nomorhpIbu: userResult.user?.phoneNumber,
+      final userResult = await _authRepository.signUpWithOTP(
+        state.otpCode.value,
+        state.verId,
       );
-      final isUserExist = await _authRepository.isUserExist();
-      if (!isUserExist) {
-        await _authRepository.insertUserToDatabase(
-          user: userModel,
+
+      if (!isPhoneNumberExist) {
+        final _newUser = Users(
+          uid: userResult.user?.uid,
+          email: userResult.user?.email,
+          nomorhpIbu: userResult.user?.phoneNumber,
+          golDarahAyah: '-',
+          golDarahIbu: '-',
+          verified: userResult.user?.emailVerified,
         );
+        await _authRepository.insertUserToDatabase(user: _newUser);
       }
       emit(state.copyWith(status: FormzStatus.submissionSuccess));
     } on FirebaseAuthException catch (e) {
-      emit(state.copyWith(
-          status: FormzStatus.submissionFailure, errorMessage: e.message));
+      emit(
+        state.copyWith(
+          status: FormzStatus.submissionFailure,
+          errorMessage: e.message,
+        ),
+      );
     }
   }
 }

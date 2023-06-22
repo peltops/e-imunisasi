@@ -1,6 +1,4 @@
 import 'package:country_code_picker/country_code_picker.dart';
-import 'package:eimunisasi/pages/auth/otp_page.dart';
-import 'package:eimunisasi/pages/auth/registration_email.dart';
 import 'package:eimunisasi/pages/widget/button_custom.dart';
 import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 import 'package:eimunisasi/pages/widget/text_form_custom.dart';
@@ -61,14 +59,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
         phone = phone.substring(1);
       }
       phone = countryCode! + phone;
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-              builder: (context) => OTPPage(
-                    phoneNumber: phone,
-                    verId: verificationId,
-                    description: 'register',
-                  )),
-          (route) => false);
+      // Navigator.of(context).pushAndRemoveUntil(
+      //     MaterialPageRoute(
+      //         builder: (context) => OTPPage(
+      //               phoneNumber: phone,
+      //               verId: verificationId,
+      //               description: 'register',
+      //             )),
+      //     (route) => false);
     };
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -232,17 +230,17 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               : null,
                         ),
                         SizedBox(height: 10),
-                        ButtonCustom(
-                            child: Text(
-                              "Daftar dengan Email",
-                              style: TextStyle(
-                                  fontSize: 15.0, color: Colors.white),
-                            ),
-                            onPressed: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        RegistrationEmailPage()))),
+                        // ButtonCustom(
+                        //     child: Text(
+                        //       "Daftar dengan Email",
+                        //       style: TextStyle(
+                        //           fontSize: 15.0, color: Colors.white),
+                        //     ),
+                        //     onPressed: () => Navigator.push(
+                        //         context,
+                        //         MaterialPageRoute(
+                        //             builder: (context) =>
+                        //                 RegistrationEmailPage()))),
                       ]),
                     ),
                   )),

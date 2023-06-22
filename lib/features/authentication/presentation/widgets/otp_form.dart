@@ -68,13 +68,8 @@ class _OTPFormState extends State<OTPForm> {
     return BlocListener<LoginPhoneCubit, LoginPhoneState>(
       listener: (context, state) {
         if (state.status.isSubmissionFailure) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Text(state.errorMessage ?? 'Authentication Failure'),
-              ),
-            );
+          snackbarCustom(state.errorMessage ?? 'Otentikasi gagal!')
+              .show(context);
         } else if (state.status.isSubmissionSuccess) {
           BlocProvider.of<AuthenticationBloc>(context).add(LoggedIn());
           Navigator.pushReplacement(context,
@@ -181,7 +176,7 @@ class _LoginButton extends StatelessWidget {
           ),
           onPressed: () {
             if (state.otpCode.valid) {
-              context.read<LoginPhoneCubit>().logInWithOTP(verId: state.verId!);
+              context.read<LoginPhoneCubit>().logInWithOTP();
             } else
               snackbarCustom("Kode OTP tidak valid").show(context);
           },

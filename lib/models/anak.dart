@@ -1,3 +1,5 @@
+import 'package:eimunisasi/utils/datetime_extension.dart';
+
 class Anak {
   final String? id;
   final String? parentId;
@@ -10,11 +12,9 @@ class Anak {
   final String? photoURL;
 
   get umurAnak {
-    // ignore: unrelated_type_equality_checks
-    if (this.tanggalLahir == null || this.tanggalLahir == '') {
-      return 'Umur belum diisi';
-    }
-    Duration dur = DateTime.now().difference(this.tanggalLahir!);
+    if (this.tanggalLahir.isNull) return 'Umur belum diisi';
+
+    Duration dur = DateTime.now().difference(this.tanggalLahir.orNow);
     String tahun = (dur.inDays / 365).floor().toString();
     String bulan = ((dur.inDays % 365) / 30).floor().toString();
 

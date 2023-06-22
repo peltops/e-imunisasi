@@ -1,3 +1,5 @@
+import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
+
 import '../../../bottom_navbar/presentation/screens/bottom_navbar.dart';
 import '../../logic/cubit/local_auth_cubit/local_auth_cubit.dart';
 import 'package:flutter/material.dart';
@@ -11,13 +13,7 @@ class ConfirmPasscodeForm extends StatelessWidget {
     return BlocListener<LocalAuthCubit, LocalAuthState>(
       listener: (context, state) {
         if (state.status.isSubmissionFailure) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Text(state.errorMessage ?? 'Gagal'),
-              ),
-            );
+          snackbarCustom(state.errorMessage ?? 'Gagal').show(context);
         }
       },
       child: Center(
@@ -76,13 +72,7 @@ class _NextButton extends StatelessWidget {
               ),
               (route) => false);
         } else if (state.status.isSubmissionFailure) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Text(state.errorMessage ?? 'Gagal'),
-              ),
-            );
+          snackbarCustom(state.errorMessage ?? 'Gagal').show(context);
         }
       },
       child: BlocBuilder<LocalAuthCubit, LocalAuthState>(

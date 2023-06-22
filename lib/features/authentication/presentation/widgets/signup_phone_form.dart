@@ -1,29 +1,29 @@
 import 'package:country_code_picker/country_code_picker.dart';
-import 'package:eimunisasi/features/authentication/presentation/screens/auth/register_phone_screen.dart';
-import 'package:eimunisasi/injection.dart';
+import 'package:eimunisasi/features/authentication/logic/cubit/signup_cubit/signup_cubit.dart';
 import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 import 'package:eimunisasi/utils/string_extension.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import '../../../../injection.dart';
 import '../../../../pages/widget/button_custom.dart';
 import '../../../../pages/widget/text_form_custom.dart';
 import '../../../../utils/dismiss_keyboard.dart';
-import '../../logic/cubit/login_phone_cubit/login_phone_cubit.dart';
-import '../screens/auth/login_email_screen.dart';
-import '../screens/auth/otp_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 
-class LoginPhoneForm extends StatelessWidget {
-  const LoginPhoneForm({Key? key}) : super(key: key);
+import '../../logic/cubit/login_phone_cubit/login_phone_cubit.dart';
+import '../screens/auth/otp_screen.dart';
+
+class SignUpPhoneForm extends StatelessWidget {
+  const SignUpPhoneForm({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return BlocListener<LoginPhoneCubit, LoginPhoneState>(
+    return BlocListener<SignUpCubit, SignUpState>(
       listener: (context, state) {
         if (state.status.isSubmissionFailure) {
           snackbarCustom(state.errorMessage ?? 'Authentication Failure')
               .show(context);
-        } else if (state.verId != null) {
+        } else if (state.verId.isNotNullOrEmpty) {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               builder: (_) => BlocProvider(
@@ -42,13 +42,8 @@ class LoginPhoneForm extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Image.asset(
-                'assets/images/logo.png',
-                width: 80,
-              ),
-              SizedBox(height: 30.0),
               Text(
-                "Silahkan Masuk",
+                "Daftarkan Akun",
                 textAlign: TextAlign.start,
                 style: TextStyle(
                   fontSize: 22,
@@ -56,38 +51,33 @@ class LoginPhoneForm extends StatelessWidget {
                   color: Colors.black,
                 ),
               ),
-              const SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Pengguna baru?",
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black)),
+                  Text(
+                    "Sudah punya akun?",
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black,
+                    ),
+                  ),
                   InkWell(
-                    child: Text(' Buat akun',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                            color: Theme.of(context).primaryColor)),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => RegisterPhoneScreen(),
-                        ),
-                      );
-                    },
+                    child: Text(
+                      ' Masuk',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: Theme.of(context).primaryColor),
+                    ),
+                    onTap: () => Navigator.pop(context),
                   ),
                 ],
               ),
               const SizedBox(height: 16),
               _PhoneInput(),
               const SizedBox(height: 16),
-              _LoginButton(),
-              const SizedBox(height: 16),
-              _LoginWithEmailButton(),
+              _SignUpButton(),
             ],
           ),
         ),
@@ -99,7 +89,7 @@ class LoginPhoneForm extends StatelessWidget {
 class _PhoneInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LoginPhoneCubit, LoginPhoneState>(
+    return BlocBuilder<SignUpCubit, SignUpState>(
       builder: (context, state) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,10 +99,10 @@ class _PhoneInput extends StatelessWidget {
               children: [
                 CountryCodePicker(
                   onInit: (countryCode) => context
-                      .read<LoginPhoneCubit>()
+                      .read<SignUpCubit>()
                       .countryCodeChanged(countryCode?.dialCode ?? '+62'),
                   onChanged: (countryCode) => context
-                      .read<LoginPhoneCubit>()
+                      .read<SignUpCubit>()
                       .countryCodeChanged(countryCode.dialCode.orEmpty),
                   initialSelection: 'ID',
                   showCountryOnly: false,
@@ -121,7 +111,7 @@ class _PhoneInput extends StatelessWidget {
                 ),
                 Expanded(
                   child: TextFormCustom(
-                    label: "Nomor Ponsel",
+                    label: "Nomor Ponsel Orang tua/Wali",
                     keyboardType: TextInputType.phone,
                     hintText: 'Contoh: 876543210',
                     validator: MultiValidator([
@@ -130,21 +120,14 @@ class _PhoneInput extends StatelessWidget {
                           errorText: 'No. Ponsel terlalu panjang'),
                     ]),
                     onChanged: (phone) =>
-                        context.read<LoginPhoneCubit>().phoneChanged(phone),
+                        context.read<SignUpCubit>().phoneChanged(phone),
+                    errorText: state.phone.invalid
+                        ? 'Format salah! Contoh: 876543210'
+                        : null,
                   ),
                 ),
               ],
             ),
-            () {
-              if (state.phone.invalid) {
-                return Text(
-                  'Format salah! Contoh: 876543210',
-                  style: TextStyle(color: Colors.red[600]),
-                );
-              } else {
-                return Container();
-              }
-            }()
           ],
         );
       },
@@ -152,10 +135,10 @@ class _PhoneInput extends StatelessWidget {
   }
 }
 
-class _LoginButton extends StatelessWidget {
+class _SignUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LoginPhoneCubit, LoginPhoneState>(
+    return BlocBuilder<SignUpCubit, SignUpState>(
       builder: (context, state) {
         return ButtonCustom(
           child: Text(
@@ -167,32 +150,11 @@ class _LoginButton extends StatelessWidget {
               ? () {
                   dismissKeyboard(context);
                   state.phone.valid
-                      ? context.read<LoginPhoneCubit>().sendOTPCode()
+                      ? context.read<SignUpCubit>().sendOTPCode()
                       : snackbarCustom("Silahkan masukan nomor ponsel!")
                           .show(context);
                 }
               : null,
-        );
-      },
-    );
-  }
-}
-
-class _LoginWithEmailButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<LoginPhoneCubit, LoginPhoneState>(
-      builder: (context, state) {
-        return ButtonCustom(
-          child: Text(
-            "Masuk dengan Email",
-            style: TextStyle(fontSize: 15.0, color: Colors.white),
-          ),
-          onPressed: state.status.isSubmissionInProgress
-              ? null
-              : () => Navigator.push(context, MaterialPageRoute(builder: (_) {
-                    return LoginEmailScreen();
-                  })),
         );
       },
     );

@@ -1,3 +1,4 @@
+import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
 import '../../../../pages/widget/button_custom.dart';
@@ -18,12 +19,8 @@ class SignUpForm extends StatelessWidget {
           Navigator.of(context).pop();
           Navigator.of(context).pop();
         } else if (state.status.isSubmissionFailure) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                  content: Text(state.errorMessage ?? 'Pendaftaran gagal!')),
-            );
+          snackbarCustom(state.errorMessage ?? 'Pendaftaran gagal!')
+              .show(context);
         }
       },
       child: Align(
@@ -108,7 +105,7 @@ class _SignUpButton extends StatelessWidget {
             style: TextStyle(fontSize: 15.0, color: Colors.white),
           ),
           onPressed: state.status.isValidated
-              ? () => context.read<SignUpCubit>().signUpFormSubmitted()
+              ? () => context.read<SignUpCubit>().sendOTPCode()
               : null,
         );
       },

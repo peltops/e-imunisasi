@@ -1,3 +1,4 @@
+import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
 import '../../../../pages/widget/button_custom.dart';
@@ -15,23 +16,12 @@ class ResetEmailPasswordForm extends StatelessWidget {
     return BlocListener<ResetPasswordCubit, ResetPasswordState>(
       listener: (context, state) {
         if (state.status.isSubmissionFailure) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Text(state.errorMessage ?? 'Reset gagal!'),
-              ),
-            );
+          snackbarCustom(state.errorMessage ?? 'Reset gagal!').show(context);
         } else if (state.status.isSubmissionSuccess) {
           Navigator.of(context).pop();
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Text(state.errorMessage ??
-                    'Berhasil! Silahkan cek email anda. ${state.email.value}'),
-              ),
-            );
+          snackbarCustom(
+            'Berhasil! Silahkan cek email anda. ${state.email.value}',
+          ).show(context);
         }
       },
       child: Align(
