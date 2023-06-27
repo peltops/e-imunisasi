@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,8 +14,11 @@ import '../../../../models/user.dart';
 class AuthRepository {
   final FirebaseFirestore firestore;
   final FirebaseAuth firebaseAuth;
+  final FirebaseStorage firebaseStorage;
+  final SharedPreferences sharedPreferences;
 
-  AuthRepository(this.firestore, this.firebaseAuth);
+  AuthRepository(this.firestore, this.firebaseAuth, this.firebaseStorage,
+      this.sharedPreferences);
 
   Future<void> logInWithEmailAndPassword(
       {required String email, required String password}) {
@@ -51,16 +54,6 @@ class AuthRepository {
     return firebaseAuth.signInWithCredential(credential);
   }
 
-  Future<UserCredential> signUpWithOTP(smsCode, verId) async {
-    AuthCredential credential =
-        PhoneAuthProvider.credential(verificationId: verId, smsCode: smsCode);
-    try {
-      return await firebaseAuth.signInWithCredential(credential);
-    } catch (e) {
-      rethrow;
-    }
-  }
-
   Future<UserCredential> signUpWithEmailAndPassword(
       {required String email, required String password}) async {
     return await firebaseAuth.createUserWithEmailAndPassword(
@@ -75,16 +68,6 @@ class AuthRepository {
     final DocumentReference reference =
         firestore.collection('users').doc(user.uid);
     return await reference.set(user.toJson());
-  }
-
-  Future<bool> isUserExist() async {
-    final isSignedIn = await this.isSignedIn();
-    final getUser = await this.getUser();
-    final isUserExist = getUser != null;
-    if (isSignedIn && isUserExist) {
-      return true;
-    }
-    return false;
   }
 
   Future<void> signOut() async {
@@ -129,7 +112,7 @@ class AuthRepository {
     try {
       await firebaseAuth.currentUser?.updatePhotoURL(url);
       await firestore
-          .collection('users_medis')
+          .collection('users')
           .doc(firebaseAuth.currentUser?.uid)
           .update({'photoURL': url});
     } catch (e) {
@@ -141,16 +124,14 @@ class AuthRepository {
   Future<String> uploadImage(File imageFile) async {
     final fileName = firebaseAuth.currentUser?.uid ?? 'user';
 
-    firebase_storage.Reference ref =
-        firebase_storage.FirebaseStorage.instance.ref().child(fileName);
+    final ref = firebaseStorage.ref().child(fileName);
 
     final result = await ref.putFile(imageFile);
     final fileUrl = await result.ref.getDownloadURL();
     return fileUrl;
   }
 
-  Future destroyPasscode() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  Future<bool> destroyPasscode() async {
     return sharedPreferences.remove('passCode');
   }
 }
