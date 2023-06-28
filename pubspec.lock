@@ -393,6 +393,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "11.2.1"
+  firebase_storage_mocks:
+    dependency: "direct dev"
+    description:
+      name: firebase_storage_mocks
+      sha256: "45035bb69e0e00dd840240ed8296da2e92e36617eadc8522c12052bcf53068d3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.6.1"
   firebase_storage_platform_interface:
     dependency: transitive
     description:

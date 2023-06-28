@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eimunisasi/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage_mocks/firebase_storage_mocks.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,7 +15,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 @GenerateMocks([
   FirebaseAuth,
   FirebaseFirestore,
-  FirebaseStorage,
   CollectionReference,
   DocumentReference,
   DocumentSnapshot,
@@ -132,59 +132,39 @@ void main() {
     });
   });
 
-  // group('verifyPhoneNumber', () {
-  //   late String phone;
-  //   late void Function(String, int?) codeSent;
-  //   late void Function(FirebaseAuthException) verificationFailed;
-  //   late void Function(PhoneAuthCredential) verificationCompleted;
+  group('verifyPhoneNumber', () {
+    late String phone;
+    late void Function(String, int?) codeSent;
+    late void Function(FirebaseAuthException) verificationFailed;
+    late void Function(PhoneAuthCredential) verificationCompleted;
 
-  //   setUp(() {
-  //     phone = '+6281234567890';
-  //     codeSent = (String verificationId, int? forceResendingToken) {};
-  //     verificationFailed = (FirebaseAuthException e) {};
-  //     verificationCompleted = (PhoneAuthCredential credential) {};
-  //   });
-  //   test('verifyPhoneNumber calls verifyPhoneNumber with correct arguments',
-  //       () async {
-  //     await authRepository.verifyPhoneNumber(
-  //       phone: phone,
-  //       codeSent: codeSent,
-  //       verificationFailed: verificationFailed,
-  //       verificationCompleted: verificationCompleted,
-  //     );
-  //     verify(
-  //       firebaseAuth.verifyPhoneNumber(
-  //         phoneNumber: phone,
-  //         timeout: const Duration(seconds: 60),
-  //         verificationFailed: verificationFailed,
-  //         codeSent: codeSent,
-  //         codeAutoRetrievalTimeout: (String verificationId) {},
-  //         verificationCompleted: verificationCompleted,
-  //       ),
-  //     ).called(1);
-  //   });
-  //   test('verifyPhoneNumber throws an exception if verifyPhoneNumber throws',
-  //       () async {
-  //     when(firebaseAuth.verifyPhoneNumber(
-  //       phoneNumber: phone,
-  //       timeout: const Duration(seconds: 60),
-  //       verificationFailed: verificationFailed,
-  //       codeSent: codeSent,
-  //       codeAutoRetrievalTimeout: (String verificationId) {},
-  //       verificationCompleted: verificationCompleted,
-  //     )).thenThrow(FirebaseAuthException(code: 'invalid-phone-number'));
+    setUp(() {
+      phone = '+6281234567890';
+      codeSent = (String verificationId, int? forceResendingToken) {};
+      verificationFailed = (FirebaseAuthException e) {};
+      verificationCompleted = (PhoneAuthCredential credential) {};
+    });
+    test('verifyPhoneNumber calls verifyPhoneNumber with correct arguments',
+        () async {
+      when(firebaseAuth.verifyPhoneNumber(
+        phoneNumber: phone,
+        timeout: const Duration(seconds: 60),
+        verificationFailed: verificationFailed,
+        codeSent: codeSent,
+        codeAutoRetrievalTimeout: (String verificationId) {},
+        verificationCompleted: verificationCompleted,
+      )).thenAnswer((_) => Future.value());
 
-  //     expect(
-  //       () => authRepository.verifyPhoneNumber(
-  //         phone: phone,
-  //         codeSent: codeSent,
-  //         verificationFailed: verificationFailed,
-  //         verificationCompleted: verificationCompleted,
-  //       ),
-  //       throwsA(isA<FirebaseAuthException>()),
-  //     );
-  //   });
-  // });
+      final result = authRepository.verifyPhoneNumber(
+        phone: phone,
+        codeSent: codeSent,
+        verificationFailed: verificationFailed,
+        verificationCompleted: verificationCompleted,
+      );
+
+      expect(result, isA<Future<void>>());
+    });
+  });
 
   group('signInWithCredential', () {
     late PhoneAuthCredential credential;
@@ -509,47 +489,36 @@ void main() {
 
   group('uploadImage', () {
     late User firebaseUser;
+    late FirebaseStorage mockitoStorage;
     late Reference reference;
     late Reference referenceChild;
     late Reference referencePutFile;
     late TaskSnapshot taskSnapshot;
     late UploadTask uploadTask;
     late File file;
+    late String uid;
 
     setUp(() {
       firebaseUser = MockUser();
+      mockitoStorage = MockFirebaseStorage();
       reference = MockReference();
-      referenceChild = MockReference();
-      referencePutFile = MockReference();
-      taskSnapshot = MockTaskSnapshot();
-      uploadTask = MockUploadTask();
       file = MockFile();
+      uid = "firebaseUser321#";
     });
 
     test('uploadImage success', () async {
+      when(firebaseUser.uid).thenReturn(uid);
+      when(file.path).thenReturn('urlpath');
       when(firebaseAuth.currentUser).thenReturn(firebaseUser);
+      final filename = firebaseUser.uid;
 
-      when(firebaseStorage.ref()).thenReturn(reference);
-      when(reference.child(firebaseUser.uid)).thenReturn(referenceChild);
-
-      when(referenceChild.putFile(file)).thenAnswer((_) => uploadTask);
-      when(uploadTask.whenComplete(() {}))
-          .thenAnswer((_) => Future.value(taskSnapshot));
-      // when(uploadTask.snapshot).thenReturn(taskSnapshot);
-      when(taskSnapshot.ref).thenReturn(reference);
-      when(reference.getDownloadURL()).thenAnswer(
-        (_) => Future.value('resultUrl'),
-      );
+      final storageRef = firebaseStorage.ref().child(filename);
+      final resultPutFile = await storageRef.putFile(file);
+      final url = await resultPutFile.ref.getDownloadURL();
 
       final result = await authRepository.uploadImage(file);
 
-      // verify(firebaseAuth.currentUser).called(1);
-      // verify(firebaseStorage.ref()).called(1);
-      // verify(reference.child(firebaseUser.uid)).called(1);
-      // verify(reference.putFile(File('urlpath'))).called(1);
-      // verify(taskSnapshot.ref.getDownloadURL()).called(1);
-
-      expect(result, 'resultUrl');
+      expect(result, contains(url));
     });
   });
 
@@ -564,14 +533,13 @@ void main() {
     });
 
     test('destroyPasscode throws an exception if remove throws', () async {
-      when(sharedPreferences.remove('passCode')).thenThrow(Exception('error'));
-
-      final result = await authRepository.destroyPasscode();
-
-      expect(
-        result,
-        false,
+      when(sharedPreferences.remove('passCode')).thenThrow(
+        Exception('error'),
       );
+
+      final result = authRepository.destroyPasscode();
+
+      expect(result, throwsA(isA<Exception>()));
     });
   });
 }
