@@ -17,7 +17,7 @@ class SignUpForm extends StatelessWidget {
       listener: (context, state) {
         if (state.status.isSubmissionSuccess) {
           Navigator.of(context).pop();
-          Navigator.of(context).pop();
+          snackbarCustom('Pendaftaran berhasil, Silahkan login').show(context);
         } else if (state.status.isSubmissionFailure) {
           snackbarCustom(state.errorMessage ?? 'Pendaftaran gagal!')
               .show(context);
@@ -105,7 +105,7 @@ class _SignUpButton extends StatelessWidget {
             style: TextStyle(fontSize: 15.0, color: Colors.white),
           ),
           onPressed: state.status.isValidated
-              ? () => context.read<SignUpCubit>().sendOTPCode()
+              ? () => context.read<SignUpCubit>().signUpFormSubmitted()
               : null,
         );
       },

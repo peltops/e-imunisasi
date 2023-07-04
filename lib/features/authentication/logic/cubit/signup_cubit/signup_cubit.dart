@@ -62,6 +62,29 @@ class SignUpCubit extends Cubit<SignUpState> {
     emit(state.copyWith(isShowPassword: !state.isShowPassword));
   }
 
+  Future<void> signUpFormSubmitted() async {
+    if (!state.status.isValidated) return;
+    emit(state.copyWith(status: FormzStatus.submissionInProgress));
+    try {
+      final userResult = await _authRepository.signUpWithEmailAndPassword(
+        email: state.email.value,
+        password: state.password.value,
+      );
+      final _newUser = Users(
+        uid: userResult.user?.uid,
+        email: userResult.user?.email,
+        nomorhpIbu: userResult.user?.phoneNumber,
+        golDarahAyah: '-',
+        golDarahIbu: '-',
+        verified: userResult.user?.emailVerified,
+      );
+      await _authRepository.insertUserToDatabase(user: _newUser);
+      emit(state.copyWith(status: FormzStatus.submissionSuccess));
+    } catch (_) {
+      emit(state.copyWith(status: FormzStatus.submissionFailure));
+    }
+  }
+
   void sendOTPCode() async {
     final phoneNumber =
         state.countryCode.value + state.phone.value.removeZeroAtFirst();
