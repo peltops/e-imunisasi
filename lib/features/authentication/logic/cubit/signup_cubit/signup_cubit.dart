@@ -88,22 +88,23 @@ class SignUpCubit extends Cubit<SignUpState> {
   void sendOTPCode() async {
     final phoneNumber =
         state.countryCode.value + state.phone.value.removeZeroAtFirst();
-    if (!state.phone.valid) return;
-    emit(state.copyWith(status: FormzStatus.submissionInProgress));
+    if (state.phone.invalid || state.countryCode.invalid) return;
 
-    final isPhoneNumberExist = await _authRepository.isPhoneNumberExist(
-      phoneNumber,
-    );
-    if (isPhoneNumberExist) {
-      emit(
-        state.copyWith(
-          status: FormzStatus.submissionFailure,
-          errorMessage: 'Nomor HP sudah terdaftar, silahkan login',
-        ),
-      );
-      return;
-    }
     try {
+      emit(state.copyWith(status: FormzStatus.submissionInProgress));
+
+      final isPhoneNumberExist = await _authRepository.isPhoneNumberExist(
+        phoneNumber,
+      );
+      if (isPhoneNumberExist) {
+        emit(
+          state.copyWith(
+            status: FormzStatus.submissionFailure,
+            errorMessage: 'Nomor HP sudah terdaftar, silahkan login',
+          ),
+        );
+        return;
+      }
       await _authRepository.verifyPhoneNumber(
         phone: phoneNumber,
         codeSent: (String verId, int? token) {
