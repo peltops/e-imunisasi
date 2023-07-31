@@ -20,7 +20,7 @@ class AuthRepository {
   AuthRepository(this.firestore, this.firebaseAuth, this.firebaseStorage,
       this.sharedPreferences);
 
-  Future<void> logInWithEmailAndPassword(
+  Future<UserCredential> logInWithEmailAndPassword(
       {required String email, required String password}) {
     return firebaseAuth.signInWithEmailAndPassword(
       email: email,
@@ -50,8 +50,13 @@ class AuthRepository {
     );
   }
 
-  Future<UserCredential> signInWithCredential(PhoneAuthCredential credential) {
-    return firebaseAuth.signInWithCredential(credential);
+  Future<UserCredential> signInWithCredential(
+      {required String verificationId, required String otp}) async {
+    final phoneAuthCredential = PhoneAuthProvider.credential(
+      verificationId: verificationId,
+      smsCode: otp,
+    );
+    return firebaseAuth.signInWithCredential(phoneAuthCredential);
   }
 
   Future<UserCredential> signUpWithEmailAndPassword(
@@ -110,6 +115,9 @@ class AuthRepository {
 
   Future<void> updateUserAvatar(String url) async {
     try {
+      if (firebaseAuth.currentUser == null) {
+        throw Exception('User not found');
+      }
       await firebaseAuth.currentUser?.updatePhotoURL(url);
       await firestore
           .collection('users')

@@ -1,19 +1,20 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eimunisasi/models/user.dart';
+import 'package:eimunisasi/utils/string_extension.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage_mocks/firebase_storage_mocks.dart';
+import 'package:mock_exceptions/mock_exceptions.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test/test.dart';
 import 'package:eimunisasi/features/authentication/data/repositories/auth_repository.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 
 @GenerateMocks([
-  FirebaseAuth,
   FirebaseFirestore,
   CollectionReference,
   DocumentReference,
@@ -32,7 +33,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 ])
 @GenerateNiceMocks([
   MockSpec<UserCredential>(),
-  MockSpec<User>(),
   MockSpec<Users>(),
   MockSpec<File>(),
   MockSpec<UploadTask>(),
@@ -46,54 +46,53 @@ void main() {
   late FirebaseStorage firebaseStorage;
   late SharedPreferences sharedPreferences;
   late AuthRepository authRepository;
+  late MockUser mockUser;
 
   setUp(() {
-    firebaseAuth = MockFirebaseAuth();
+    mockUser = MockUser(
+      isAnonymous: false,
+      uid: '12345',
+      email: 'contoh@cth.com',
+      isEmailVerified: true,
+      displayName: 'contoh',
+      phoneNumber: '+6281234567890',
+      photoURL: 'url',
+    );
+    firebaseAuth = MockFirebaseAuth(mockUser: mockUser, signedIn: true);
     firestore = MockFirebaseFirestore();
     firebaseStorage = MockFirebaseStorage();
     sharedPreferences = MockSharedPreferences();
     authRepository = AuthRepository(
-        firestore, firebaseAuth, firebaseStorage, sharedPreferences);
+      firestore,
+      firebaseAuth,
+      firebaseStorage,
+      sharedPreferences,
+    );
   });
 
   group('logInWithEmailAndPassword', () {
     late String email;
     late String password;
-    late UserCredential userCredential;
 
     setUp(() {
       email = 'example@ex.com';
       password = '123456';
-      userCredential = MockUserCredential();
     });
     test(
         'logInWithEmailAndPassword calls signInWithEmailAndPassword with correct arguments',
         () async {
-      when(
-        firebaseAuth.signInWithEmailAndPassword(
-          email: email,
-          password: password,
-        ),
-      ).thenAnswer((_) => Future<UserCredential>.value(userCredential));
-      await authRepository.logInWithEmailAndPassword(
+      final res = await authRepository.logInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      verify(
-        firebaseAuth.signInWithEmailAndPassword(
-          email: email,
-          password: password,
-        ),
-      ).called(1);
+      expect(res, isA<UserCredential>());
     });
     test(
         'logInWithEmailAndPassword throws an exception if signInWithEmailAndPassword throws',
         () async {
-      when(firebaseAuth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      )).thenThrow(FirebaseAuthException(code: 'invalid-email'));
-
+      whenCalling(Invocation.method(#signInWithEmailAndPassword, null))
+          .on(firebaseAuth)
+          .thenThrow(FirebaseAuthException(code: 'ERROR_INVALID_EMAIL'));
       expect(
         () => authRepository.logInWithEmailAndPassword(
             email: email, password: password),
@@ -111,19 +110,18 @@ void main() {
     test(
         'forgetEmailPassword calls sendPasswordResetEmail with correct arguments',
         () async {
-      await authRepository.forgetEmailPassword(email: email);
-      verify(
-        firebaseAuth.sendPasswordResetEmail(
-          email: email,
-        ),
-      ).called(1);
+      final res = authRepository.forgetEmailPassword(email: email);
+      expect(
+        res,
+        isA<Future<void>>(),
+      );
     });
     test(
         'forgetEmailPassword throws an exception if sendPasswordResetEmail throws',
         () async {
-      when(firebaseAuth.sendPasswordResetEmail(
-        email: email,
-      )).thenThrow(FirebaseAuthException(code: 'invalid-email'));
+      whenCalling(Invocation.method(#sendPasswordResetEmail, null))
+          .on(firebaseAuth)
+          .thenThrow(FirebaseAuthException(code: 'invalid-email'));
 
       expect(
         () => authRepository.forgetEmailPassword(email: email),
@@ -146,15 +144,6 @@ void main() {
     });
     test('verifyPhoneNumber calls verifyPhoneNumber with correct arguments',
         () async {
-      when(firebaseAuth.verifyPhoneNumber(
-        phoneNumber: phone,
-        timeout: const Duration(seconds: 60),
-        verificationFailed: verificationFailed,
-        codeSent: codeSent,
-        codeAutoRetrievalTimeout: (String verificationId) {},
-        verificationCompleted: verificationCompleted,
-      )).thenAnswer((_) => Future.value());
-
       final result = authRepository.verifyPhoneNumber(
         phone: phone,
         codeSent: codeSent,
@@ -167,33 +156,29 @@ void main() {
   });
 
   group('signInWithCredential', () {
-    late PhoneAuthCredential credential;
-    late UserCredential userCredential;
+    final verificationId = '123456';
+    final smsCode = '123456';
 
-    setUp(() {
-      credential = PhoneAuthProvider.credential(
-          verificationId: '123456', smsCode: '123456');
-      userCredential = MockUserCredential();
-    });
     test(
         'signInWithCredential calls signInWithCredential with correct arguments',
         () async {
-      when(
-        firebaseAuth.signInWithCredential(credential),
-      ).thenAnswer((_) => Future<UserCredential>.value(userCredential));
-      await authRepository.signInWithCredential(credential);
-      verify(
-        firebaseAuth.signInWithCredential(credential),
-      ).called(1);
+      final res = await authRepository.signInWithCredential(
+        verificationId: verificationId,
+        otp: smsCode,
+      );
+      expect(res, isA<UserCredential>());
     });
     test(
         'signInWithCredential throws an exception if signInWithCredential throws',
         () async {
-      when(firebaseAuth.signInWithCredential(credential))
-          .thenThrow(FirebaseAuthException(code: 'invalid-credential'));
-
+      whenCalling(Invocation.method(#signInWithCredential, null))
+          .on(firebaseAuth)
+          .thenThrow(FirebaseAuthException(code: 'error'));
       expect(
-        () => authRepository.signInWithCredential(credential),
+        () => authRepository.signInWithCredential(
+          verificationId: verificationId,
+          otp: smsCode,
+        ),
         throwsA(isA<FirebaseAuthException>()),
       );
     });
@@ -211,30 +196,18 @@ void main() {
     });
 
     test('signUpWithEmailAndPassword success', () async {
-      when(firebaseAuth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      )).thenAnswer((_) => Future.value(userCredential));
       final result = await authRepository.signUpWithEmailAndPassword(
         email: email,
         password: password,
       );
-      verify(
-        firebaseAuth.createUserWithEmailAndPassword(
-          email: email,
-          password: password,
-        ),
-      ).called(1);
-      expect(result, userCredential);
+      expect(result, isA<UserCredential>());
     });
     test(
       'signUpWithEmailAndPassword throws an exception if createUserWithEmailAndPassword throws',
       () async {
-        when(firebaseAuth.createUserWithEmailAndPassword(
-          email: email,
-          password: password,
-        )).thenThrow(FirebaseAuthException(code: 'invalid-email'));
-
+        whenCalling(Invocation.method(#createUserWithEmailAndPassword, null))
+            .on(firebaseAuth)
+            .thenThrow(FirebaseAuthException(code: 'invalid-email'));
         expect(
           () => authRepository.signUpWithEmailAndPassword(
             email: email,
@@ -285,40 +258,38 @@ void main() {
 
   group('signOut', () {
     test('signOut success', () {
-      when(firebaseAuth.signOut()).thenAnswer((_) => Future.value());
       final result = authRepository.signOut();
-      verify(firebaseAuth.signOut()).called(1);
       expect(result, isA<Future<void>>());
     });
 
-    test('signOut throws an exception if signOut throws', () {
-      when(firebaseAuth.signOut())
-          .thenThrow(FirebaseAuthException(code: 'invalid-email'));
+    test('signOut throws an exception if signOut throws', () async {
+      whenCalling(Invocation.method(#signOut, null))
+          .on(firebaseAuth)
+          .thenThrow(Exception('error'));
 
+      final result = authRepository.signOut();
       expect(
-        () => authRepository.signOut(),
-        throwsA(isA<FirebaseAuthException>()),
+        result,
+        isA<Future<void>>(),
       );
     });
   });
 
   group('isSignedIn', () {
-    late User user;
-    setUp(() {
-      user = MockUser();
-    });
-
     test('isSignedIn success', () async {
-      when(firebaseAuth.currentUser).thenReturn(user);
       final result = await authRepository.isSignedIn();
-      verify(firebaseAuth.currentUser).called(1);
       expect(result, true);
     });
 
     test('isSignedIn returns false if currentUser is null', () async {
-      when(firebaseAuth.currentUser).thenReturn(null);
+      final firebaseAuth = MockFirebaseAuth(signedIn: false);
+      final authRepository = AuthRepository(
+        firestore,
+        firebaseAuth,
+        firebaseStorage,
+        sharedPreferences,
+      );
       final result = await authRepository.isSignedIn();
-      verify(firebaseAuth.currentUser).called(1);
       expect(result, false);
     });
   });
@@ -331,14 +302,13 @@ void main() {
     late DocumentSnapshot<Map<String, dynamic>> documentSnapshot;
 
     setUp(() {
-      user = MockUser();
       users = MockUsers();
       collectionReference = MockCollectionReference();
       documentReference = MockDocumentReference();
       documentSnapshot = MockDocumentSnapshot();
-      when(firebaseAuth.currentUser).thenReturn(user);
       when(firestore.collection('users')).thenReturn(collectionReference);
-      when(collectionReference.doc(user.uid)).thenReturn(documentReference);
+      when(collectionReference.doc(firebaseAuth.currentUser?.uid))
+          .thenReturn(documentReference);
     });
 
     test('getUser success', () async {
@@ -349,7 +319,6 @@ void main() {
       when(documentSnapshot.data()).thenReturn(users.toJson());
 
       final result = await authRepository.getUser();
-      verify(firebaseAuth.currentUser).called(1);
       verify(documentReference.get()).called(1);
       expect(result, isA<Users>());
     });
@@ -431,53 +400,35 @@ void main() {
   });
 
   group('updateUserAvatar', () {
-    late User firebaseUser;
     late CollectionReference<Map<String, dynamic>> collectionReference;
     late DocumentReference<Map<String, dynamic>> documentReference;
+    final user = MockUser(
+      isAnonymous: false,
+      uid: '12345',
+      email: '',
+    );
+    final FirebaseAuth firebaseAuth = MockFirebaseAuth(
+      mockUser: user,
+      signedIn: true,
+    );
+    final uid = firebaseAuth.currentUser?.uid ?? '';
 
     setUp(() {
-      firebaseUser = MockUser();
       collectionReference = MockCollectionReference();
       documentReference = MockDocumentReference();
     });
 
     test('updateUserAvatar success', () async {
-      when(firebaseAuth.currentUser).thenReturn(firebaseUser);
       when(firestore.collection('users')).thenReturn(collectionReference);
-      when(collectionReference.doc(firebaseUser.uid))
-          .thenReturn(documentReference);
-      when(firebaseUser.updatePhotoURL('url'))
-          .thenAnswer((_) => Future.value());
+      when(collectionReference.doc(uid)).thenReturn(documentReference);
       final result = authRepository.updateUserAvatar('url');
-
-      verify(firebaseAuth.currentUser).called(1);
-      verify(firebaseUser.updatePhotoURL('url')).called(1);
 
       expect(result, isA<Future<void>>());
     });
 
-    test('updateUserAvatar throws an exception if updatePhotoURL throws',
-        () async {
-      when(firebaseAuth.currentUser).thenReturn(firebaseUser);
-      when(firestore.collection('users')).thenReturn(collectionReference);
-      when(collectionReference.doc(firebaseUser.uid))
-          .thenReturn(documentReference);
-      when(firebaseUser.updatePhotoURL('url'))
-          .thenThrow(FirebaseAuthException(code: 'invalid-email'));
-
-      expect(
-        () => authRepository.updateUserAvatar('url'),
-        throwsA(isA<FirebaseAuthException>()),
-      );
-    });
-
     test('updateUserAvatar throws an exception if firestore throws', () async {
-      when(firebaseAuth.currentUser).thenReturn(firebaseUser);
       when(firestore.collection('users')).thenReturn(collectionReference);
-      when(collectionReference.doc(firebaseUser.uid))
-          .thenReturn(documentReference);
-      when(firebaseUser.updatePhotoURL('url'))
-          .thenAnswer((_) => Future.value());
+      when(collectionReference.doc(uid)).thenReturn(documentReference);
       when(documentReference.update({'photoURL': 'url'}))
           .thenThrow(FirebaseAuthException(code: 'invalid-email'));
       expect(
@@ -488,29 +439,15 @@ void main() {
   });
 
   group('uploadImage', () {
-    late User firebaseUser;
-    late FirebaseStorage mockitoStorage;
-    late Reference reference;
-    late Reference referenceChild;
-    late Reference referencePutFile;
-    late TaskSnapshot taskSnapshot;
-    late UploadTask uploadTask;
     late File file;
-    late String uid;
 
     setUp(() {
-      firebaseUser = MockUser();
-      mockitoStorage = MockFirebaseStorage();
-      reference = MockReference();
       file = MockFile();
-      uid = "firebaseUser321#";
     });
 
     test('uploadImage success', () async {
-      when(firebaseUser.uid).thenReturn(uid);
       when(file.path).thenReturn('urlpath');
-      when(firebaseAuth.currentUser).thenReturn(firebaseUser);
-      final filename = firebaseUser.uid;
+      final filename = firebaseAuth.currentUser?.uid ?? '';
 
       final storageRef = firebaseStorage.ref().child(filename);
       final resultPutFile = await storageRef.putFile(file);

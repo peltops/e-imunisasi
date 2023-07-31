@@ -49,22 +49,23 @@ class LoginPhoneCubit extends Cubit<LoginPhoneState> {
   void sendOTPCode() async {
     final phoneNumber =
         state.countryCode.value + state.phone.value.removeZeroAtFirst();
-    if (!state.phone.valid) return;
-    emit(state.copyWith(status: FormzStatus.submissionInProgress));
-    final isPhoneNumberExist = await _authRepository.isPhoneNumberExist(
-      phoneNumber,
-    );
-    if (!isPhoneNumberExist) {
-      emit(
-        state.copyWith(
-          status: FormzStatus.submissionFailure,
-          errorMessage:
-              'Nomor HP belum terdaftar, silahkan daftar terlebih dahulu',
-        ),
-      );
-      return;
-    }
+    if (state.phone.invalid || state.countryCode.invalid) return;
+
     try {
+      emit(state.copyWith(status: FormzStatus.submissionInProgress));
+      final isPhoneNumberExist = await _authRepository.isPhoneNumberExist(
+        phoneNumber,
+      );
+      if (!isPhoneNumberExist) {
+        emit(
+          state.copyWith(
+            status: FormzStatus.submissionFailure,
+            errorMessage:
+                'Nomor HP belum terdaftar, silahkan daftar terlebih dahulu',
+          ),
+        );
+        return;
+      }
       await _authRepository.verifyPhoneNumber(
         phone: phoneNumber,
         codeSent: (String verId, int? token) {
@@ -76,7 +77,8 @@ class LoginPhoneCubit extends Cubit<LoginPhoneState> {
         },
         verificationCompleted: (PhoneAuthCredential credential) async {
           await _authRepository.signInWithCredential(
-            credential,
+            verificationId: state.verId.orEmpty,
+            otp: state.otpCode.value,
           );
           emit(state.copyWith(status: FormzStatus.submissionSuccess));
         },
@@ -89,7 +91,7 @@ class LoginPhoneCubit extends Cubit<LoginPhoneState> {
   }
 
   void logInWithOTP() async {
-    if (state.otpCode.invalid) return;
+    if (state.otpCode.invalid || state.phone.invalid) return;
     emit(state.copyWith(status: FormzStatus.submissionInProgress));
     try {
       final isPhoneNumberExist = await _authRepository.isPhoneNumberExist(
@@ -99,8 +101,10 @@ class LoginPhoneCubit extends Cubit<LoginPhoneState> {
         verificationId: state.verId.orEmpty,
         smsCode: state.otpCode.value,
       );
-      final userResult =
-          await _authRepository.signInWithCredential(phoneAuthCredential);
+      final userResult = await _authRepository.signInWithCredential(
+        verificationId: state.verId.orEmpty,
+        otp: state.otpCode.value,
+      );
 
       if (!isPhoneNumberExist) {
         final _newUser = Users(

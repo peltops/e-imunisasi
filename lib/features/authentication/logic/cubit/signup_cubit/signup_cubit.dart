@@ -120,7 +120,8 @@ class SignUpCubit extends Cubit<SignUpState> {
         },
         verificationCompleted: (PhoneAuthCredential credential) async {
           await _authRepository.signInWithCredential(
-            credential,
+            verificationId: credential.verificationId.orEmpty,
+            otp: credential.smsCode.orEmpty,
           );
           emit(state.copyWith(status: FormzStatus.submissionSuccess));
         },
