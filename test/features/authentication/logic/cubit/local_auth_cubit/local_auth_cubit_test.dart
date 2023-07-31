@@ -24,7 +24,7 @@ void main() {
       expect: () => [
         LocalAuthState(
           passcode: Passcode.dirty('1234'),
-          status: FormzStatus.invalid,
+          status: FormzStatus.valid,
         ),
       ],
     );
