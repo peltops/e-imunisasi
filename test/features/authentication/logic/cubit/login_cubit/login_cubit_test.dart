@@ -9,13 +9,15 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 import 'package:eimunisasi/features/authentication/logic/cubit/login_cubit/login_cubit.dart';
 
-@GenerateMocks([AuthRepository])
+@GenerateMocks([AuthRepository, UserCredential])
 import 'login_cubit_test.mocks.dart';
 
 void main() {
   late AuthRepository authRepository;
+  late UserCredential userCredential;
   setUp(() {
     authRepository = MockAuthRepository();
+    userCredential = MockUserCredential();
   });
   group('emailChanged', () {
     blocTest<LoginCubit, LoginState>(
@@ -105,7 +107,7 @@ void main() {
             email: 'example@example.com',
             password: 'Admin123',
           ),
-        ).thenAnswer((_) async => {});
+        ).thenAnswer((_) async => Future.value(userCredential));
         return LoginCubit(authRepository);
       },
       seed: () => LoginState(
