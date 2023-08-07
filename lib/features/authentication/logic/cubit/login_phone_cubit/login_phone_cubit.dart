@@ -97,10 +97,6 @@ class LoginPhoneCubit extends Cubit<LoginPhoneState> {
       final isPhoneNumberExist = await _authRepository.isPhoneNumberExist(
         state.phone.value,
       );
-      final phoneAuthCredential = PhoneAuthProvider.credential(
-        verificationId: state.verId.orEmpty,
-        smsCode: state.otpCode.value,
-      );
       final userResult = await _authRepository.signInWithCredential(
         verificationId: state.verId.orEmpty,
         otp: state.otpCode.value,
