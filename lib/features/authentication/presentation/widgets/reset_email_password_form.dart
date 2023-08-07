@@ -1,3 +1,4 @@
+import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
@@ -29,7 +30,7 @@ class ResetEmailPasswordForm extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text("Reset Password Email"),
+            const Text(AppConstant.RESET_PASSWORD_EMAIL_LABEL),
             const SizedBox(height: 16),
             _EmailInput(),
             const SizedBox(height: 8),
@@ -73,7 +74,7 @@ class _ResetButton extends StatelessWidget {
         return ButtonCustom(
           loading: state.status.isSubmissionInProgress,
           child: Text(
-            "Kirim Link Reset Password ",
+            AppConstant.RESET_PASSWORD_LINK_ACTION,
             style: TextStyle(fontSize: 15.0, color: Colors.white),
           ),
           onPressed: state.status.isValidated

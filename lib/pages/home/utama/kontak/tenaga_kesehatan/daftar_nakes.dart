@@ -1,3 +1,4 @@
+import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/pages/home/utama/kontak/tenaga_kesehatan/list_daftar_nakes.dart';
 import 'package:eimunisasi/pages/widget/button_custom.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,7 @@ class _DaftarNakesState extends State<DaftarNakes> {
           backgroundColor: Colors.pink[300],
           elevation: 0.0,
           title: Text(
-            "Pilih Tenaga kesehatan",
+            AppConstant.CHOICE_HEALTH_OFFICER,
             style: TextStyle(fontWeight: FontWeight.w700),
           ),
         ),
@@ -43,11 +44,11 @@ class _DaftarNakesState extends State<DaftarNakes> {
                                       MaterialPageRoute(
                                           builder: (BuildContext context) =>
                                               ListDaftarNakes(
-                                                nama: 'Dokter',
+                                                nama: AppConstant.DOCTOR,
                                               )));
                                 },
                                 child: Text(
-                                  'Dokter',
+                                  AppConstant.DOCTOR,
                                   style: TextStyle(color: Colors.white),
                                 )),
                             ButtonCustom(
@@ -57,11 +58,11 @@ class _DaftarNakesState extends State<DaftarNakes> {
                                       MaterialPageRoute(
                                           builder: (BuildContext context) =>
                                               ListDaftarNakes(
-                                                nama: 'Perawat',
+                                                nama: AppConstant.NURSE,
                                               )));
                                 },
                                 child: Text(
-                                  'Perawat',
+                                  AppConstant.NURSE,
                                   style: TextStyle(color: Colors.white),
                                 )),
                             ButtonCustom(
@@ -71,11 +72,11 @@ class _DaftarNakesState extends State<DaftarNakes> {
                                       MaterialPageRoute(
                                           builder: (BuildContext context) =>
                                               ListDaftarNakes(
-                                                nama: 'Bidan',
+                                                nama: AppConstant.MIDWIFE,
                                               )));
                                 },
                                 child: Text(
-                                  'Bidan',
+                                  AppConstant.MIDWIFE,
                                   style: TextStyle(color: Colors.white),
                                 )),
                             ButtonCustom(
@@ -85,11 +86,11 @@ class _DaftarNakesState extends State<DaftarNakes> {
                                       MaterialPageRoute(
                                           builder: (BuildContext context) =>
                                               ListDaftarNakes(
-                                                nama: 'Ahli Gizi',
+                                                nama: AppConstant.NUTRITIONIST,
                                               )));
                                 },
                                 child: Text(
-                                  'Ahli Gizi',
+                                  AppConstant.NUTRITIONIST,
                                   style: TextStyle(color: Colors.white),
                                 )),
                           ],

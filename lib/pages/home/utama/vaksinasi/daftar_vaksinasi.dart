@@ -1,4 +1,5 @@
 import 'package:eimunisasi/core/extension.dart';
+import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/models/anak.dart';
 import 'package:eimunisasi/models/appointment.dart';
 import 'package:eimunisasi/models/nakes.dart';
@@ -45,7 +46,7 @@ class _DaftarVaksinasiPageState extends State<DaftarVaksinasiPage> {
           backgroundColor: Colors.pink[300],
           elevation: 0.0,
           title: Text(
-            "Buat janji",
+            AppConstant.MAKE_APPOINTMENT,
             style: TextStyle(fontWeight: FontWeight.w700),
           ),
         ),
@@ -208,7 +209,8 @@ class _DaftarVaksinasiPageState extends State<DaftarVaksinasiPage> {
                                               ),
                                             ));
                                   } catch (e) {
-                                    snackbarCustom("Gagal membuat janji")
+                                    snackbarCustom(
+                                            AppConstant.MAKE_APPOINTMENT_FAILED)
                                         .show(context);
                                   } finally {
                                     setState(() {

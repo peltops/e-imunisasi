@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/features/authentication/logic/bloc/authentication_bloc/authentication_bloc.dart';
 import 'package:eimunisasi/injection.dart';
 import 'package:eimunisasi/models/onboarding.dart';
@@ -87,7 +88,7 @@ class _OnboardScreenState extends State<OnboardScreen> {
                           handleStart();
                         },
                         child: Text(
-                          "Lewati",
+                          AppConstant.SKIP,
                           style: TextStyle(
                               color: Theme.of(context).primaryColor,
                               fontWeight: FontWeight.w600),
@@ -110,7 +111,7 @@ class _OnboardScreenState extends State<OnboardScreen> {
                               curve: Curves.linear);
                         },
                         child: Text(
-                          "Selanjutnya",
+                          AppConstant.NEXT,
                           style: TextStyle(
                               color: Theme.of(context).primaryColor,
                               fontWeight: FontWeight.w600),
@@ -155,7 +156,7 @@ class ButtonStart extends StatelessWidget {
         height: Platform.isIOS ? 70 : 60,
         alignment: Alignment.center,
         child: Text(
-          "Ayo Mulai",
+          AppConstant.START,
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
         ),
       ),

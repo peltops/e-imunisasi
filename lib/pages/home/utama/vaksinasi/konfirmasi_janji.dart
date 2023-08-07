@@ -1,3 +1,4 @@
+import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/models/appointment.dart';
 import 'package:eimunisasi/pages/home/home.dart';
 import 'package:eimunisasi/pages/widget/button_custom.dart';
@@ -25,7 +26,7 @@ class _KonfirmasiVaksinasiPageState extends State<KonfirmasiVaksinasiPage> {
           backgroundColor: Colors.pink[300],
           elevation: 0.0,
           title: Text(
-            "Janji",
+            AppConstant.APPOINTMENT,
             style: TextStyle(fontWeight: FontWeight.w700),
           ),
         ),

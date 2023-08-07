@@ -1,3 +1,4 @@
+import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
@@ -34,7 +35,7 @@ class LoginEmailForm extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text("Silahkan Login dengan Email Anda"),
+            const Text(AppConstant.LOGIN_WITH_EMAIL),
             const SizedBox(height: 16),
             _EmailInput(),
             const SizedBox(height: 8),
@@ -108,7 +109,7 @@ class _LoginButton extends StatelessWidget {
         return ButtonCustom(
           loading: state.status.isSubmissionInProgress,
           child: Text(
-            "Masuk ",
+            '${AppConstant.LOGIN} ',
             style: TextStyle(fontSize: 15.0, color: Colors.white),
           ),
           onPressed: state.status.isValidated

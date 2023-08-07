@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/utils/string_extension.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:injectable/injectable.dart';
@@ -100,7 +101,7 @@ class SignUpCubit extends Cubit<SignUpState> {
         emit(
           state.copyWith(
             status: FormzStatus.submissionFailure,
-            errorMessage: 'Nomor HP sudah terdaftar, silahkan login',
+            errorMessage: AppConstant.PHONE_NUMBER_EXIST_ERROR,
           ),
         );
         return;

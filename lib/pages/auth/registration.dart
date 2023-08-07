@@ -1,4 +1,5 @@
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/pages/widget/button_custom.dart';
 import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 import 'package:eimunisasi/pages/widget/text_form_custom.dart';
@@ -89,7 +90,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     child: Form(
                       key: _formKey,
                       child: Column(children: [
-                        Text("Daftarkan Akun",
+                        Text(AppConstant.SIGN_UP_ACTION,
                             textAlign: TextAlign.start,
                             style: TextStyle(
                                 fontSize: 22,
@@ -98,13 +99,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text("Sudah punya akun?",
+                            Text(AppConstant.ALREADY_HAVE_ACCOUNT_QUESTION,
                                 style: TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.w700,
                                     color: Colors.black)),
                             InkWell(
-                                child: Text(' Masuk',
+                                child: Text(' ${AppConstant.LOGIN}',
                                     style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w700,
@@ -176,7 +177,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         ButtonCustom(
                           child: !loading
                               ? Text(
-                                  "Daftar",
+                                  AppConstant.SIGN_UP,
                                   style: TextStyle(
                                       fontSize: 15.0, color: Colors.white),
                                 )

@@ -1,3 +1,4 @@
+import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
@@ -28,7 +29,7 @@ class SignUpForm extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text("Daftar dengan Email Anda"),
+            const Text(AppConstant.SIGN_UP_WITH_EMAIL),
             const SizedBox(height: 16),
             _EmailInput(),
             const SizedBox(height: 8),
@@ -101,7 +102,7 @@ class _SignUpButton extends StatelessWidget {
         return ButtonCustom(
           loading: state.status.isSubmissionInProgress,
           child: Text(
-            "Daftar ",
+            '${AppConstant.SIGN_UP} ',
             style: TextStyle(fontSize: 15.0, color: Colors.white),
           ),
           onPressed: state.status.isValidated

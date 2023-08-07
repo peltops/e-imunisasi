@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/models/anak.dart';
 import 'package:eimunisasi/pages/widget/button_custom.dart';
 import 'package:eimunisasi/pages/widget/image_picker.dart';
@@ -242,7 +243,7 @@ class _AnakPageState extends State<AnakPage> {
                                 child: ButtonCustom(
                                   child: !loading
                                       ? Text(
-                                          "Simpan",
+                                          AppConstant.SAVE,
                                           style: TextStyle(
                                               fontSize: 15.0,
                                               color: Colors.white),
@@ -286,22 +287,24 @@ class _AnakPageState extends State<AnakPage> {
                                                   ),
                                                 )
                                                 .then((value) {
-                                                  snackbarCustom(
-                                                          'Data anak berhasil diperbarui')
+                                                  snackbarCustom(AppConstant
+                                                          .CHILD_SUCCESSFULLY_UPDATED)
                                                       .show(context);
 
                                                   Navigator.pop(context);
                                                 })
                                                 .catchError((onError) =>
+                                                    // ignore: invalid_return_type_for_catch_error
                                                     snackbarCustom(
-                                                            'Terjadi kesalahan: $onError')
+                                                            '${AppConstant.ERROR_OCCURRED}: $onError')
                                                         .show(context))
                                                 .whenComplete(
                                                     () => setState(() {
                                                           loading = false;
                                                         }));
                                           } catch (e) {
-                                            snackbarCustom("Terjadi kesalahan")
+                                            snackbarCustom(
+                                                    AppConstant.ERROR_OCCURRED)
                                                 .show(context);
                                           }
                                         }

@@ -1,4 +1,5 @@
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/features/authentication/logic/cubit/signup_cubit/signup_cubit.dart';
 import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 import 'package:eimunisasi/utils/string_extension.dart';
@@ -43,7 +44,7 @@ class SignUpPhoneForm extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                "Daftarkan Akun",
+                AppConstant.SIGN_UP_ACTION,
                 textAlign: TextAlign.start,
                 style: TextStyle(
                   fontSize: 22,
@@ -55,7 +56,7 @@ class SignUpPhoneForm extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Sudah punya akun?",
+                    AppConstant.ALREADY_HAVE_ACCOUNT_QUESTION,
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
@@ -64,7 +65,7 @@ class SignUpPhoneForm extends StatelessWidget {
                   ),
                   InkWell(
                     child: Text(
-                      ' Masuk',
+                      ' ${AppConstant.LOGIN}',
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
@@ -111,18 +112,19 @@ class _PhoneInput extends StatelessWidget {
                 ),
                 Expanded(
                   child: TextFormCustom(
-                    label: "Nomor Ponsel Orang tua/Wali",
+                    label: AppConstant.PHONE_NUMBER_PARENT_LABEL,
                     keyboardType: TextInputType.phone,
                     hintText: 'Contoh: 876543210',
                     validator: MultiValidator([
-                      RequiredValidator(errorText: 'Masukan No. Ponsel!'),
+                      RequiredValidator(
+                          errorText: AppConstant.PHONE_NUMBER_EMPTY_ERROR),
                       MaxLengthValidator(13,
-                          errorText: 'No. Ponsel terlalu panjang'),
+                          errorText: AppConstant.PHONE_NUMBER_TOO_LONG_ERROR),
                     ]),
                     onChanged: (phone) =>
                         context.read<SignUpCubit>().phoneChanged(phone),
                     errorText: state.phone.invalid
-                        ? 'Format salah! Contoh: 876543210'
+                        ? AppConstant.PHONE_NUMBER_INVALID_ERROR
                         : null,
                   ),
                 ),
@@ -142,7 +144,7 @@ class _SignUpButton extends StatelessWidget {
       builder: (context, state) {
         return ButtonCustom(
           child: Text(
-            "Masuk",
+            AppConstant.LOGIN,
             style: TextStyle(fontSize: 15.0, color: Colors.white),
           ),
           loading: state.status.isSubmissionInProgress,
@@ -151,7 +153,7 @@ class _SignUpButton extends StatelessWidget {
                   dismissKeyboard(context);
                   state.phone.valid
                       ? context.read<SignUpCubit>().sendOTPCode()
-                      : snackbarCustom("Silahkan masukan nomor ponsel!")
+                      : snackbarCustom(AppConstant.PLEASE_ENTER_PHONE_NUMBER)
                           .show(context);
                 }
               : null,

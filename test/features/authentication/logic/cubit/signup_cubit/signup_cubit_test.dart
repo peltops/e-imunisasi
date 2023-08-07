@@ -1,4 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/features/authentication/data/models/country_code.dart';
 import 'package:eimunisasi/features/authentication/data/models/email.dart';
 import 'package:eimunisasi/features/authentication/data/models/password.dart';
@@ -389,7 +390,7 @@ void main() {
           countryCode: CountryCode.dirty(countryCode),
           phone: Phone.dirty(phone),
           status: FormzStatus.submissionFailure,
-          errorMessage: 'Nomor HP sudah terdaftar, silahkan login',
+          errorMessage: AppConstant.PHONE_NUMBER_EXIST_ERROR,
         ),
       ],
     );

@@ -1,5 +1,6 @@
 import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 
+import '../../../../core/utils/constant.dart';
 import '../../../bottom_navbar/presentation/screens/bottom_navbar.dart';
 import '../../logic/cubit/local_auth_cubit/local_auth_cubit.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,7 @@ class ConfirmPasscodeForm extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text("Konfirmasi PIN!"),
+              const Text(AppConstant.PIN_CONFIRM_LABEL),
               const SizedBox(height: 16),
               _PasscodeInput(),
               const SizedBox(height: 16),

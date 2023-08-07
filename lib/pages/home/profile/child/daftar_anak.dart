@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/models/anak.dart';
 import 'package:eimunisasi/models/list_imunisasi.dart';
 import 'package:eimunisasi/models/user.dart';
@@ -237,7 +238,7 @@ class _DaftarAnakPageState extends State<DaftarAnakPage> {
                                   child: ButtonCustom(
                                     child: !loading
                                         ? Text(
-                                            "Simpan",
+                                            AppConstant.SAVE,
                                             style: TextStyle(
                                                 fontSize: 15.0,
                                                 color: Colors.white),

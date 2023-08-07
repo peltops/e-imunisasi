@@ -1,4 +1,5 @@
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/features/authentication/presentation/screens/auth/register_phone_screen.dart';
 import 'package:eimunisasi/injection.dart';
 import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
@@ -48,7 +49,7 @@ class LoginPhoneForm extends StatelessWidget {
               ),
               SizedBox(height: 30.0),
               Text(
-                "Silahkan Masuk",
+                AppConstant.PLEASE_LOGIN,
                 textAlign: TextAlign.start,
                 style: TextStyle(
                   fontSize: 22,
@@ -60,7 +61,7 @@ class LoginPhoneForm extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Pengguna baru?",
+                  Text(AppConstant.NEW_USER_QUESTION,
                       style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w700,
@@ -121,7 +122,7 @@ class _PhoneInput extends StatelessWidget {
                 ),
                 Expanded(
                   child: TextFormCustom(
-                    label: "Nomor Ponsel",
+                    label: AppConstant.PHONE_NUMBER_LABEL,
                     keyboardType: TextInputType.phone,
                     hintText: 'Contoh: 876543210',
                     validator: MultiValidator([
@@ -159,7 +160,7 @@ class _LoginButton extends StatelessWidget {
       builder: (context, state) {
         return ButtonCustom(
           child: Text(
-            "Masuk",
+            AppConstant.LOGIN,
             style: TextStyle(fontSize: 15.0, color: Colors.white),
           ),
           loading: state.status.isSubmissionInProgress,
@@ -168,7 +169,7 @@ class _LoginButton extends StatelessWidget {
                   dismissKeyboard(context);
                   state.phone.valid
                       ? context.read<LoginPhoneCubit>().sendOTPCode()
-                      : snackbarCustom("Silahkan masukan nomor ponsel!")
+                      : snackbarCustom(AppConstant.PLEASE_ENTER_PHONE_NUMBER)
                           .show(context);
                 }
               : null,
@@ -185,7 +186,7 @@ class _LoginWithEmailButton extends StatelessWidget {
       builder: (context, state) {
         return ButtonCustom(
           child: Text(
-            "Masuk dengan Email",
+            AppConstant.LOGIN_WITH_EMAIL,
             style: TextStyle(fontSize: 15.0, color: Colors.white),
           ),
           onPressed: state.status.isSubmissionInProgress

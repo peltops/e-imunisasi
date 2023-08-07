@@ -1,3 +1,4 @@
+import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 
 import '../../../../pages/widget/button_custom.dart';
@@ -44,8 +45,8 @@ class _TextHeader extends StatelessWidget {
     return BlocBuilder<LocalAuthCubit, LocalAuthState>(
       builder: (context, state) {
         return Text(state.savedPasscode.invalid
-            ? "Silahkan Atur PIN Anda!"
-            : "Silahkan Masukkan PIN Anda!");
+            ? AppConstant.PLEASE_SET_PASSCODE
+            : AppConstant.PLEASE_ENTER_PASSCODE);
       },
     );
   }
@@ -76,7 +77,7 @@ class _PasscodeInput extends StatelessWidget {
                 ? const Align(
                     alignment: Alignment.topLeft,
                     child: Text(
-                      "*Ini berguna sebagai kunci keamanan tambahan.",
+                      AppConstant.PASSCODE_FORM_HINT,
                       style: TextStyle(fontSize: 12, color: Colors.red),
                     ))
                 : Container(),
@@ -108,7 +109,7 @@ class _NextButton extends StatelessWidget {
           return ButtonCustom(
             loading: state.status.isSubmissionInProgress,
             child: Text(
-              "Selanjutnya",
+              AppConstant.NEXT,
               style: TextStyle(fontSize: 15.0, color: Colors.white),
             ),
             onPressed: () {

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/pages/widget/button_custom.dart';
 import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 
@@ -79,7 +80,7 @@ class _OTPFormState extends State<OTPForm> {
       child: Column(
         children: [
           const Text(
-            "Masukan Kode OTP 6 Digit",
+            AppConstant.ENTER_OTP,
             style: TextStyle(
                 fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
           ),
@@ -91,7 +92,7 @@ class _OTPFormState extends State<OTPForm> {
             child: BlocBuilder<LoginPhoneCubit, LoginPhoneState>(
               builder: (context, state) {
                 return Text(
-                    "Nomor Handphone: ${state.countryCode.value + state.phone.value}",
+                    "${AppConstant.HANDPHONE_LABEL}: ${state.countryCode.value + state.phone.value}",
                     style: const TextStyle(fontSize: 15, color: Colors.black));
               },
             ),
@@ -101,7 +102,7 @@ class _OTPFormState extends State<OTPForm> {
           const SizedBox(height: 16),
           const _LoginButton(),
           const SizedBox(height: 16),
-          const Text("Belum Menerima Kode?"),
+          const Text(AppConstant.OTP_DONT_RECEIVE_QUESTION),
           const SizedBox(height: 10),
           !newCode && seconds > 0
               ? Row(
@@ -114,13 +115,13 @@ class _OTPFormState extends State<OTPForm> {
                     const SizedBox(
                       width: 10,
                     ),
-                    Text("Tunggu $seconds ..."),
+                    Text("${AppConstant.WAIT} $seconds ..."),
                   ],
                 )
               : BlocBuilder<LoginPhoneCubit, LoginPhoneState>(
                   builder: (context, state) {
                     return InkWell(
-                      child: const Text("Minta kode baru!",
+                      child: const Text(AppConstant.ASK_NEW_CODE,
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onTap: () {
                         reloadCodeSent(state.phone.value);
@@ -171,14 +172,14 @@ class _LoginButton extends StatelessWidget {
         return ButtonCustom(
           loading: state.status.isSubmissionInProgress,
           child: Text(
-            "Verifikasi",
+            AppConstant.VERIFY,
             style: TextStyle(fontSize: 15.0, color: Colors.white),
           ),
           onPressed: () {
             if (state.otpCode.valid) {
               context.read<LoginPhoneCubit>().logInWithOTP();
             } else
-              snackbarCustom("Kode OTP tidak valid").show(context);
+              snackbarCustom(AppConstant.OTP_NOT_VALID).show(context);
           },
         );
       },

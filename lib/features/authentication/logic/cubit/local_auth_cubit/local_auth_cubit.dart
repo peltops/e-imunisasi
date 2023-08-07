@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
+import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:formz/formz.dart';
@@ -86,7 +87,7 @@ class LocalAuthCubit extends Cubit<LocalAuthState> {
         emit(state.copyWith(status: FormzStatus.submissionSuccess));
       } else {
         emit(state.copyWith(
-            errorMessage: "Password Salah",
+            errorMessage: AppConstant.WRONG_PASSWORD,
             status: FormzStatus.submissionFailure));
       }
     } catch (e) {
@@ -107,7 +108,7 @@ class LocalAuthCubit extends Cubit<LocalAuthState> {
     } else {
       emit(
         state.copyWith(
-          errorMessage: "Passcode Salah",
+          errorMessage: AppConstant.WRONG_PASSCODE,
           status: FormzStatus.submissionFailure,
         ),
       );

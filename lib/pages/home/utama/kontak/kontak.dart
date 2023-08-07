@@ -1,3 +1,4 @@
+import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/pages/home/utama/kontak/klinik/list_daftar_klinik.dart';
 import 'package:eimunisasi/pages/home/utama/kontak/tenaga_kesehatan/daftar_nakes.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ class _KontakPageState extends State<KontakPage> {
           backgroundColor: Colors.pink[300],
           elevation: 0.0,
           title: Text(
-            "Kontak",
+            AppConstant.CONTACT,
             style: TextStyle(fontWeight: FontWeight.w700),
           ),
         ),
