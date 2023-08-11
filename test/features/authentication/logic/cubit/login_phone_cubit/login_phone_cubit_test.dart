@@ -25,6 +25,8 @@ import 'package:mockito/mockito.dart';
 ])
 import 'login_phone_cubit_test.mocks.dart';
 
+// INFO: Pay attention to Mock Objects because it is shared between unit tests
+
 void main() {
   late AuthRepository authRepository;
 
