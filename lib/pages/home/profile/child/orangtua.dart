@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:eimunisasi/app.dart';
 import 'package:eimunisasi/models/user.dart';
 import 'package:eimunisasi/pages/widget/button_custom.dart';
 import 'package:eimunisasi/pages/widget/image_picker.dart';
@@ -12,6 +13,8 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:intl/intl.dart';
+
+import '../../../../core/utils/constant.dart';
 
 class OrangtuaPage extends StatefulWidget {
   const OrangtuaPage({Key? key}) : super(key: key);
@@ -298,7 +301,7 @@ class _OrangtuaPageState extends State<OrangtuaPage> {
                                     ButtonCustom(
                                       child: !loading
                                           ? Text(
-                                              "Simpan",
+                                              AppConstant.SAVE,
                                               style: TextStyle(
                                                   fontSize: 15.0,
                                                   color: Colors.white),
@@ -492,17 +495,18 @@ class _PhotoProfile extends StatelessWidget {
                             try {
                               await _currentUser.sendEmailVerification();
                               snackbarCustom(
-                                      "Berhasil, cek email ${_currentUser.email}")
+                                      "${AppConstant.EMAIL_VERIFICATION_SENT} ${_currentUser.email}")
                                   .show(context);
                             } on FirebaseException catch (e) {
                               snackbarCustom(e.message).show(context);
                             } catch (e) {
-                              snackbarCustom("Terjadi kesalahan: \n $e")
+                              snackbarCustom(
+                                      "${AppConstant.ERROR_OCCURRED} \n $e")
                                   .show(context);
                             }
                           },
                           child: Text(
-                            'Belum Terverifikasi (Verifikasi sekarang)',
+                            AppConstant.EMAIL_NOT_VERIFIED,
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         )

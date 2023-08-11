@@ -1,3 +1,4 @@
+import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/pages/home/utama/vaksinasi/list_anak_vaksinasi.dart';
 import 'package:eimunisasi/pages/home/utama/vaksinasi/list_janji.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ class _VaksinasiPageState extends State<VaksinasiPage> {
           backgroundColor: Colors.pink[300],
           elevation: 0.0,
           title: Text(
-            "Vaksinasi",
+            AppConstant.VACCINATION,
             style: TextStyle(fontWeight: FontWeight.w700),
           ),
         ),

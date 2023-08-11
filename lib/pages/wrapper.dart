@@ -1,5 +1,5 @@
+import 'package:eimunisasi/features/authentication/presentation/screens/auth/login_phone_screen.dart';
 import 'package:eimunisasi/models/user.dart';
-import 'package:eimunisasi/pages/auth/login.dart';
 import 'package:eimunisasi/pages/local_auth/passcode_page.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +10,7 @@ class Wrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = Provider.of<Users?>(context);
     if (user == null) {
-      return LoginPage();
+      return LoginPhoneScreen();
     } else {
       return PasscodePage();
     }

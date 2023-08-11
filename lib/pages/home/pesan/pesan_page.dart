@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../../../core/utils/constant.dart';
+
 class PesanPage extends StatefulWidget {
   @override
   _PesanPageState createState() => _PesanPageState();
@@ -15,7 +17,7 @@ class _PesanPageState extends State<PesanPage> {
           backgroundColor: Colors.pink[300],
           elevation: 0.0,
           title: Text(
-            "Pesan",
+            AppConstant.MESSAGE_LABEL,
             style: TextStyle(fontWeight: FontWeight.w700),
           ),
         ),

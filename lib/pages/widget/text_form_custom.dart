@@ -15,6 +15,7 @@ class TextFormCustom extends StatelessWidget {
   final TextEditingController? controller;
   final TextInputType? keyboardType;
   final Function? onChanged;
+  final String? errorText;
   TextFormCustom({
     this.labelIcon,
     this.labelIconText,
@@ -29,6 +30,7 @@ class TextFormCustom extends StatelessWidget {
     this.obscureText = false,
     this.initialValue,
     this.controller,
+    this.errorText,
   });
   @override
   Widget build(BuildContext context) {
@@ -61,11 +63,7 @@ class TextFormCustom extends StatelessWidget {
                 ],
               )
             : Container(),
-        (label != null)
-            ? SizedBox(
-                height: 5.0,
-              )
-            : Container(),
+        (label != null) ? SizedBox(height: 5.0) : Container(),
         TextFormField(
           initialValue: initialValue,
           readOnly: readOnly,
@@ -83,9 +81,14 @@ class TextFormCustom extends StatelessWidget {
           obscureText: obscureText,
           controller: controller,
         ),
-        (label != null)
-            ? SizedBox(
-                height: 5.0,
+        (label != null) ? SizedBox(height: 5.0) : Container(),
+        (errorText != null)
+            ? Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  errorText!,
+                  style: TextStyle(color: Colors.red),
+                ),
               )
             : Container(),
       ],

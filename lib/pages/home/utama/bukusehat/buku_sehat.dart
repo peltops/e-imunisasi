@@ -1,3 +1,4 @@
+import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/pages/home/utama/bukusehat/child/list_anak.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -16,7 +17,7 @@ class _BukuSehatPageState extends State<BukuSehatPage> {
           backgroundColor: Colors.pink[300],
           elevation: 0.0,
           title: Text(
-            "Buku Sehat",
+            AppConstant.HEALTH_BOOK_LABEL,
             style: TextStyle(fontWeight: FontWeight.w700),
           ),
         ),

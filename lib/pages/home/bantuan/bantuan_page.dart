@@ -1,3 +1,4 @@
+import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/pages/home/bantuan/child/menu_eimunisasi_manual.dart';
 import 'package:eimunisasi/pages/home/bantuan/child/menu_infomasi_kesehatan.dart';
 import 'package:eimunisasi/pages/home/bantuan/child/menu_rumah_sakit.dart';
@@ -18,7 +19,7 @@ class _BantuanPageState extends State<BantuanPage> {
           backgroundColor: Colors.pink[300],
           elevation: 0.0,
           title: Text(
-            "Bantuan",
+            AppConstant.SUPPORT_LABEL,
             style: TextStyle(fontWeight: FontWeight.w700),
           ),
         ),

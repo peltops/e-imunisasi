@@ -5,6 +5,8 @@ import 'package:eimunisasi/services/local_auth_service.dart';
 import 'package:eimunisasi/utils/dismiss_keyboard.dart';
 import 'package:flutter/material.dart';
 
+import '../../core/utils/constant.dart';
+
 class ConfirmPasscodePage extends StatefulWidget {
   final String passcode;
   const ConfirmPasscodePage({Key? key, required this.passcode})
@@ -34,7 +36,7 @@ class _ConfirmPasscodePageState extends State<ConfirmPasscodePage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text("Konfirmasi PIN!"),
+                  const Text(AppConstant.PIN_CONFIRM_LABEL),
                   const SizedBox(height: 16),
                   TextField(
                     maxLength: 4,
@@ -44,11 +46,11 @@ class _ConfirmPasscodePageState extends State<ConfirmPasscodePage> {
                     keyboardType: TextInputType.number,
                     obscureText: true,
                     decoration: InputDecoration(
-                      labelText: 'Masukkan kembali PIN',
-                      helperText: 'Konfirmasi 4-digit PIN',
+                      labelText: AppConstant.RE_ENTER_PIN,
+                      helperText: AppConstant.CONFIRMATION_PIN,
                       // ignore: unrelated_type_equality_checks
                       errorText: _passcodeController.value != widget.passcode
-                          ? 'PIN Tidak Sama!'
+                          ? AppConstant.PIN_NOT_MATCH
                           : null,
                     ),
                   ),
@@ -72,12 +74,13 @@ class _ConfirmPasscodePageState extends State<ConfirmPasscodePage> {
                                           (route) => false),
                                 );
                           } else {
-                            snackbarCustom('PIN Tidak Sama!').show(context);
+                            snackbarCustom(AppConstant.PIN_NOT_MATCH)
+                                .show(context);
                           }
                         }
                       },
                       child: const Text(
-                        'Konfirmasi',
+                        AppConstant.CONFIRMATION,
                         style: TextStyle(color: Colors.white),
                       ),
                     ),

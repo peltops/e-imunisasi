@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
 
-class Users {
+class Users extends Equatable {
   final String? uid;
   final String? momName;
   final String? dadName;
@@ -85,6 +86,27 @@ class Users {
         "noKK": noKK,
         "noKTP": noKTP,
       };
+
+  @override
+  List<Object?> get props => [
+        uid,
+        email,
+        momName,
+        dadName,
+        nomorhpAyah,
+        nomorhpIbu,
+        golDarahAyah,
+        golDarahIbu,
+        pekerjaanAyah,
+        pekerjaanIbu,
+        alamat,
+        avatarURL,
+        verified,
+        tempatLahir,
+        tanggalLahir,
+        noKK,
+        noKTP,
+      ];
 }
 
 class UserData {

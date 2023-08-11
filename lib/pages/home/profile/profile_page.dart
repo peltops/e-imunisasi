@@ -1,3 +1,4 @@
+import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/pages/home/profile/child/orangtua.dart';
 import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 import 'package:eimunisasi/pages/wrapper.dart';
@@ -68,12 +69,12 @@ class _ProfilePageState extends State<ProfilePage> {
                               MaterialPageRoute(
                                   builder: (context) => Wrapper()),
                               (route) => false);
-                          snackbarCustom('Berhasil keluar');
+                          snackbarCustom(AppConstant.LOGOUT_SUCCEED);
                         } catch (e) {
-                          snackbarCustom("Gagal keluar");
+                          snackbarCustom(AppConstant.LOGOUT_FAILED);
                         }
                       },
-                      title: Text('Logout',
+                      title: Text(AppConstant.LOGOUT_LABEL,
                           style: TextStyle(
                               fontWeight: FontWeight.w700,
                               color: Colors.white)),

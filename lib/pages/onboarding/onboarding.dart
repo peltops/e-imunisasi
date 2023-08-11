@@ -1,17 +1,24 @@
 import 'dart:io';
+import 'package:eimunisasi/core/utils/constant.dart';
+import 'package:eimunisasi/features/authentication/logic/bloc/authentication_bloc/authentication_bloc.dart';
+import 'package:eimunisasi/injection.dart';
 import 'package:eimunisasi/models/onboarding.dart';
-import 'package:eimunisasi/pages/auth/login.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class Onboard extends StatefulWidget {
+import '../../app.dart';
+
+class OnboardScreen extends StatefulWidget {
   @override
-  _OnboardState createState() => _OnboardState();
+  _OnboardScreenState createState() => _OnboardScreenState();
 }
 
-class _OnboardState extends State<Onboard> {
+class _OnboardScreenState extends State<OnboardScreen> {
   List<SliderModel> mySLides = [];
   int slideIndex = 0;
   PageController? controller;
+  SharedPreferences? prefs;
 
   Widget _buildPageIndicator(bool isCurrentPage) {
     return Container(
@@ -30,6 +37,13 @@ class _OnboardState extends State<Onboard> {
     super.initState();
     mySLides = getSlides();
     controller = new PageController();
+    prefs = getIt<SharedPreferences>();
+  }
+
+  void handleStart() {
+    prefs?.setBool('isSplashSeen', true);
+    print("isSplashSeen ${prefs?.getBool('isSplashSeen')}");
+    context.read<AuthenticationBloc>().add(AppStarted());
   }
 
   @override
@@ -39,106 +53,112 @@ class _OnboardState extends State<Onboard> {
           gradient: LinearGradient(
               colors: [const Color(0xff3C8CE7), const Color(0xff00EAFF)])),
       child: Scaffold(
-        backgroundColor: Colors.white,
-        body: Container(
-          height: MediaQuery.of(context).size.height - 100,
-          child: PageView(
-            controller: controller,
-            onPageChanged: (index) {
-              setState(() {
-                slideIndex = index;
-              });
-            },
-            children: <Widget>[
-              SlideTile(
-                imagePath: mySLides[0].getImageAssetPath(),
-                title: mySLides[0].getTitle(),
-                desc: mySLides[0].getDesc(),
-              ),
-              SlideTile(
-                imagePath: mySLides[1].getImageAssetPath(),
-                title: mySLides[1].getTitle(),
-                desc: mySLides[1].getDesc(),
-              ),
-            ],
+          backgroundColor: Colors.white,
+          body: Container(
+            height: MediaQuery.of(context).size.height - 100,
+            child: PageView(
+              controller: controller,
+              onPageChanged: (index) {
+                setState(() {
+                  slideIndex = index;
+                });
+              },
+              children: <Widget>[
+                SlideTile(
+                  imagePath: mySLides[0].getImageAssetPath(),
+                  title: mySLides[0].getTitle(),
+                  desc: mySLides[0].getDesc(),
+                ),
+                SlideTile(
+                  imagePath: mySLides[1].getImageAssetPath(),
+                  title: mySLides[1].getTitle(),
+                  desc: mySLides[1].getDesc(),
+                ),
+              ],
+            ),
           ),
-        ),
-        bottomSheet: slideIndex != 1
-            ? Container(
-                margin: EdgeInsets.symmetric(vertical: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginPage()));
-                      },
-                      child: Text(
-                        "Lewati",
-                        style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                            fontWeight: FontWeight.w600),
+          bottomSheet: slideIndex != 1
+              ? Container(
+                  margin: EdgeInsets.symmetric(vertical: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      TextButton(
+                        onPressed: () {
+                          handleStart();
+                        },
+                        child: Text(
+                          AppConstant.SKIP,
+                          style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontWeight: FontWeight.w600),
+                        ),
                       ),
-                    ),
-                    Container(
-                      child: Row(
-                        children: [
-                          for (int i = 0; i < 2; i++)
-                            i == slideIndex
-                                ? _buildPageIndicator(true)
-                                : _buildPageIndicator(false),
-                        ],
+                      Container(
+                        child: Row(
+                          children: [
+                            for (int i = 0; i < 2; i++)
+                              i == slideIndex
+                                  ? _buildPageIndicator(true)
+                                  : _buildPageIndicator(false),
+                          ],
+                        ),
                       ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        controller!.animateToPage(slideIndex + 1,
-                            duration: Duration(milliseconds: 500),
-                            curve: Curves.linear);
-                      },
-                      child: Text(
-                        "Selanjutnya",
-                        style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                            fontWeight: FontWeight.w600),
+                      TextButton(
+                        onPressed: () {
+                          controller?.animateToPage(slideIndex + 1,
+                              duration: Duration(milliseconds: 500),
+                              curve: Curves.linear);
+                        },
+                        child: Text(
+                          AppConstant.NEXT,
+                          style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontWeight: FontWeight.w600),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              )
-            : InkWell(
-                onTap: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => LoginPage()));
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                      boxShadow: <BoxShadow>[
-                        BoxShadow(
-                            color: Colors.grey.shade200,
-                            offset: Offset(4, 2),
-                            blurRadius: 5,
-                            spreadRadius: 2)
-                      ],
-                      gradient: LinearGradient(
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                          colors: [
-                            Theme.of(context).colorScheme.secondary,
-                            Theme.of(context).primaryColor
-                          ])),
-                  height: Platform.isIOS ? 70 : 60,
-                  alignment: Alignment.center,
-                  child: Text(
-                    "Ayo Mulai",
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.w600),
+                    ],
                   ),
-                ),
-              ),
+                )
+              : ButtonStart(
+                  onTap: () {
+                    handleStart();
+                  },
+                )),
+    );
+  }
+}
+
+class ButtonStart extends StatelessWidget {
+  final void Function()? onTap;
+  const ButtonStart({Key? key, this.onTap}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                  color: Colors.grey.shade200,
+                  offset: Offset(4, 2),
+                  blurRadius: 5,
+                  spreadRadius: 2)
+            ],
+            gradient: LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: [
+                  Theme.of(context).colorScheme.secondary,
+                  Theme.of(context).primaryColor
+                ])),
+        height: Platform.isIOS ? 70 : 60,
+        alignment: Alignment.center,
+        child: Text(
+          AppConstant.START,
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+        ),
       ),
     );
   }

@@ -72,10 +72,10 @@ class AppointmentModel extends Equatable {
     return {
       'appointment_date': tanggal,
       'appointment_desc': desc,
-      'medic_id': nakes!.id,
+      'medic_id': nakes?.id,
       'notes': notes,
-      'parent_id': orangtua!.uid,
-      'patient_id': anak!.id,
+      'parent_id': orangtua?.uid,
+      'patient_id': anak?.id,
       'purpose': tujuan,
     };
   }

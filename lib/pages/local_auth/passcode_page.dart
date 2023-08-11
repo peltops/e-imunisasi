@@ -1,3 +1,4 @@
+import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/pages/home/home.dart';
 import 'package:eimunisasi/pages/local_auth/confirm_passcode_page.dart';
 import 'package:eimunisasi/pages/widget/button_custom.dart';
@@ -49,11 +50,9 @@ class _PasscodePageState extends State<PasscodePage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    isSavedPasscode
-                        ? "Silahkan Masukkan PIN Anda!"
-                        : "Silahkan Atur PIN Anda!",
-                  ),
+                  Text(isSavedPasscode
+                      ? AppConstant.PLEASE_ENTER_PASSCODE
+                      : AppConstant.PLEASE_SET_PASSCODE),
                   const SizedBox(height: 16),
                   Column(
                     children: [
@@ -64,16 +63,19 @@ class _PasscodePageState extends State<PasscodePage> {
                         keyboardType: TextInputType.number,
                         obscureText: true,
                         validator: MultiValidator([
-                          RequiredValidator(errorText: 'Masukan PIN'),
+                          RequiredValidator(
+                              errorText: AppConstant.PIN_REQUIRED),
                           LengthRangeValidator(
-                              min: 4, max: 4, errorText: 'PIN 4 digit'),
+                              min: 4,
+                              max: 4,
+                              errorText: AppConstant.PIN_LENGTH),
                           // pattern number 4 digit
                           PatternValidator(r'^[0-9]{4}$',
-                              errorText: 'PIN harus berupa angka'),
+                              errorText: AppConstant.PIN_NUMBER),
                         ]),
                         decoration: InputDecoration(
-                          labelText: 'PIN',
-                          helperText: 'Masukkan 4-digit PIN',
+                          labelText: AppConstant.PIN,
+                          helperText: AppConstant.ENTER_FOUR_DIGIT_PIN,
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -81,7 +83,7 @@ class _PasscodePageState extends State<PasscodePage> {
                           ? const Align(
                               alignment: Alignment.topLeft,
                               child: Text(
-                                "*Ini berguna sebagai kunci keamanan tambahan.",
+                                AppConstant.PASSCODE_FORM_HINT,
                                 style:
                                     TextStyle(fontSize: 12, color: Colors.red),
                               ))
@@ -99,7 +101,7 @@ class _PasscodePageState extends State<PasscodePage> {
                                     builder: (context) => HomePage()),
                                 (route) => false);
                           } else {
-                            snackbarCustom('PIN Salah!').show(context);
+                            snackbarCustom(AppConstant.WRONG_PIN).show(context);
                           }
                         }
                       } else {

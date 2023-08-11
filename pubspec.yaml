@@ -56,15 +56,29 @@ dependencies:
   country_code_picker: ^3.0.0
   fl_chart: ^0.61.0
   math_expressions: ^2.3.0
-  cached_network_image: any
+  cached_network_image: ^3.2.3
   shimmer: ^2.0.0
   qr_flutter: ^4.0.0
+  bloc: ^8.1.2
+  flutter_bloc: ^8.1.3
+  equatable: ^2.0.3
+  formz: ^0.4.0
+  get_it: ^7.6.0
+  injectable: ^2.1.1
+  keyboard_dismisser: ^2.0.0
+  font_awesome_flutter: ^10.1.0
 
 dev_dependencies:
   change_app_package_name: ^1.0.0
   firebase_core_platform_interface: ^4.5.1
   hive_generator: ^2.0.0
   build_runner: ^2.0.6
+  injectable_generator:
+  bloc_test: ^9.1.3
+  mockito: ^5.0.15
+  firebase_storage_mocks: ^0.6.1
+  firebase_auth_mocks: ^0.12.0
+  mock_exceptions: ^0.8.2
   flutter_test:
     sdk: flutter
 
@@ -80,7 +94,6 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - packages/country_code_picker/flags/
     - assets/images/
     # - assets/images/illustrasi1.png
     # - assets/images/illustrasi2.png

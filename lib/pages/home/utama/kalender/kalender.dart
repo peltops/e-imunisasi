@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/models/hive_calendar_activity.dart';
 import 'package:eimunisasi/pages/home/utama/kalender/add_event.dart';
 import 'package:eimunisasi/pages/home/utama/kalender/update_event.dart';
@@ -23,19 +24,19 @@ class _KalenderPageState extends State<KalenderPage> {
   confirmDeleteDialog(BuildContext context, dynamic event) {
     // set up the buttons
     Widget cancelButton = TextButton(
-      child: Text("No"),
+      child: Text(AppConstant.NO),
       onPressed: () {
         Navigator.pop(context);
       },
     );
     Widget continueButton = TextButton(
-      child: Text("Yes"),
+      child: Text(AppConstant.YES),
       onPressed: () async {},
     );
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Konfirmasi"),
-      content: Text("Apakah anda yakin akan menghapus ${event.title}?"),
+      title: Text(AppConstant.CONFIRMATION),
+      content: Text(AppConstant.DELETE_CONFIRMATION_QUESTION),
       actions: [
         cancelButton,
         continueButton,
@@ -85,8 +86,8 @@ class _KalenderPageState extends State<KalenderPage> {
   _groupEvents(List<KalenderModel> allEvents) {
     _groupedEvents = LinkedHashMap(equals: isSameDay, hashCode: getHashCode);
     allEvents.forEach((event) {
-      DateTime date =
-          DateTime.utc(event.date!.year, event.date!.month, event.date!.day, 12);
+      DateTime date = DateTime.utc(
+          event.date!.year, event.date!.month, event.date!.day, 12);
       if (_groupedEvents[date] == null) _groupedEvents[date] = [];
       _groupedEvents[date]!.add(event);
     });
@@ -134,7 +135,7 @@ class _KalenderPageState extends State<KalenderPage> {
         backgroundColor: Colors.pink[300],
         elevation: 0.0,
         title: Text(
-          "Kalender",
+          AppConstant.CALENDAR_LABEL,
           style: TextStyle(fontWeight: FontWeight.w700),
         ),
         actions: [
@@ -281,7 +282,8 @@ class _KalenderPageState extends State<KalenderPage> {
                                       .where((e) =>
                                           e.date!.month ==
                                               _onPageChangeDate.month &&
-                                          e.date!.year == _onPageChangeDate.year)
+                                          e.date!.year ==
+                                              _onPageChangeDate.year)
                                       .map(
                                         (e) => DataRow(
                                           cells: <DataCell>[
@@ -305,7 +307,8 @@ class _KalenderPageState extends State<KalenderPage> {
                                                 ),
                                                 !e.readOnly!
                                                     ? PopupMenuButton(
-                                                        onSelected: (dynamic item) =>
+                                                        onSelected: (dynamic
+                                                                item) =>
                                                             selectedItem(
                                                                 context,
                                                                 item,
@@ -322,12 +325,14 @@ class _KalenderPageState extends State<KalenderPage> {
                                                             (context) => [
                                                           PopupMenuItem<int>(
                                                               value: 0,
-                                                              child:
-                                                                  Text("Ubah")),
+                                                              child: Text(
+                                                                  AppConstant
+                                                                      .EDIT)),
                                                           PopupMenuItem<int>(
                                                               value: 1,
                                                               child: Text(
-                                                                  "Hapus")),
+                                                                  AppConstant
+                                                                      .DELETE)),
                                                         ],
                                                       )
                                                     : Container(),

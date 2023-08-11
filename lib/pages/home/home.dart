@@ -3,6 +3,8 @@ import 'package:eimunisasi/pages/home/utama/main.dart';
 import 'package:eimunisasi/pages/home/pesan/pesan_page.dart';
 import 'package:eimunisasi/pages/home/profile/profile_page.dart';
 import 'package:eimunisasi/services/notifications.dart';
+import 'package:eimunisasi/utils/datetime_extension.dart';
+import 'package:eimunisasi/utils/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:hive/hive.dart';
@@ -51,9 +53,13 @@ class _HomePageState extends State<HomePage> {
             return Consumer<NotificationService>(builder: (context, model, _) {
               final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
               calendarsActivity.asMap().forEach((i, val) {
-                if (val.date!.isAfter(now)) {
-                  model.sheduledNotification(i, 'Pengingat jadwal',
-                      'Aktivitas: ' + val.activity!, val.date!);
+                if (val.date.orNow.isAfter(now)) {
+                  model.sheduledNotification(
+                    i,
+                    'Pengingat jadwal',
+                    'Aktivitas: ' + val.activity.orEmpty,
+                    val.date.orNow,
+                  );
                 }
               });
               return _widgetOptions[_selectedIndex];

@@ -50,3 +50,9 @@ app.*.map.json
 
 # fvm
 .fvm/flutter_sdk
+
+# generate by build runner
+*.freezed.dart
+*.g.dart
+*.mocks.dart
+*.config.dart

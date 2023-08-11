@@ -1,3 +1,4 @@
+import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/models/calendar.dart';
 import 'package:eimunisasi/models/user.dart';
 import 'package:eimunisasi/pages/widget/button_custom.dart';
@@ -116,7 +117,7 @@ class _UpdateEventCalendarState extends State<UpdateEventCalendar> {
                           ButtonCustom(
                               child: !loading
                                   ? Text(
-                                      "Simpan",
+                                      AppConstant.SAVE,
                                       style: TextStyle(
                                           fontSize: 15.0, color: Colors.white),
                                     )
