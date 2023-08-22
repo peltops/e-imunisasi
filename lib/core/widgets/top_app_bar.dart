@@ -1,14 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// AppBar(
-//         backgroundColor: Colors.pink[300],
-//         elevation: 0,
-//         title: Text(
-//           'Profil',
-//           style: TextStyle(fontWeight: FontWeight.w700),
-//         ),
-//         centerTitle: true,
-//       ),
 
 class AppBarPeltops extends StatelessWidget implements PreferredSizeWidget {
   const AppBarPeltops({
