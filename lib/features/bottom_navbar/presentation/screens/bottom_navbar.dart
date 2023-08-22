@@ -1,13 +1,16 @@
 import 'package:eimunisasi/pages/home/bantuan/bantuan_page.dart';
-import 'package:eimunisasi/pages/home/profile/profile_page.dart';
 import 'package:eimunisasi/pages/home/utama/main.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../../../core/utils/constant.dart';
 import '../../../../pages/home/pesan/pesan_page.dart';
+import '../../../../pages/widget/snackbar_custom.dart';
+import '../../../../pages/wrapper.dart';
 import '../../../authentication/logic/bloc/authentication_bloc/authentication_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../profile/presentation/screens/profile_screen.dart';
 import '../../logic/buttom_navbar/bottom_navbar_cubit.dart';
 
 class BottomNavbarWrapper extends StatelessWidget {
@@ -18,7 +21,13 @@ class BottomNavbarWrapper extends StatelessWidget {
     return BlocListener<AuthenticationBloc, AuthenticationState>(
       listener: (context, state) {
         if (state is Unauthenticated) {
-          Navigator.of(context).pushReplacementNamed('/');
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (context) => Wrapper(),
+            ),
+            (route) => false,
+          );
+          snackbarCustom(AppConstant.LOGOUT_SUCCEED);
         }
       },
       child: BlocProvider(
