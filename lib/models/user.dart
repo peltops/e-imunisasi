@@ -86,6 +86,45 @@ class Users extends Equatable {
         "noKK": noKK,
         "noKTP": noKTP,
       };
+  Users copyWith({
+    String? uid,
+    String? email,
+    String? momName,
+    String? dadName,
+    String? nomorhpAyah,
+    String? nomorhpIbu,
+    String? golDarahAyah,
+    String? golDarahIbu,
+    String? pekerjaanAyah,
+    String? pekerjaanIbu,
+    String? alamat,
+    String? avatarURL,
+    bool? verified,
+    String? tempatLahir,
+    DateTime? tanggalLahir,
+    String? noKK,
+    String? noKTP,
+  }) {
+    return Users(
+      uid: uid ?? this.uid,
+      email: email ?? this.email,
+      momName: momName ?? this.momName,
+      dadName: dadName ?? this.dadName,
+      nomorhpAyah: nomorhpAyah ?? this.nomorhpAyah,
+      nomorhpIbu: nomorhpIbu ?? this.nomorhpIbu,
+      golDarahAyah: golDarahAyah ?? this.golDarahAyah,
+      golDarahIbu: golDarahIbu ?? this.golDarahIbu,
+      pekerjaanAyah: pekerjaanAyah ?? this.pekerjaanAyah,
+      pekerjaanIbu: pekerjaanIbu ?? this.pekerjaanIbu,
+      alamat: alamat ?? this.alamat,
+      avatarURL: avatarURL ?? this.avatarURL,
+      verified: verified ?? this.verified,
+      tempatLahir: tempatLahir ?? this.tempatLahir,
+      tanggalLahir: tanggalLahir ?? this.tanggalLahir,
+      noKK: noKK ?? this.noKK,
+      noKTP: noKTP ?? this.noKTP,
+    );
+  }
 
   @override
   List<Object?> get props => [

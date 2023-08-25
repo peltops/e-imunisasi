@@ -15,17 +15,23 @@ class ProfileState extends Equatable {
 
   ProfileState copyWith({
     Users? user,
-    FormzStatus? status,
+    FormzStatus? statusGet,
+    FormzStatus? statusUpdate,
     String? errorMessage,
   }) {
     return ProfileState(
       user: user ?? this.user,
-      statusGet: status ?? this.statusGet,
-      statusUpdate: status ?? this.statusUpdate,
+      statusGet: statusGet ?? this.statusGet,
+      statusUpdate: statusUpdate ?? this.statusUpdate,
       errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [
+        user,
+        statusGet,
+        statusUpdate,
+        errorMessage,
+      ];
 }

@@ -14,7 +14,7 @@ class DropdownPeltops extends StatelessWidget {
     required this.listItem,
     this.name,
   }) : super(key: key);
-  final Function(Object?)? onChanged;
+  final Function(String?)? onChanged;
   final String? name;
   final String label;
   final String initialValue;

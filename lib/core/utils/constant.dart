@@ -101,4 +101,5 @@ class AppConstant {
   static const String TITLE_INFO_ACCOUNT = 'Informasi Akun';
   static const String LABEL_EMAIL = 'Email';
   static const String LABEL_MOM_PHONE_NUMBER = 'No.handphone Ibu';
+  static const String TRY_AGAIN = 'Coba Lagi';
 }
