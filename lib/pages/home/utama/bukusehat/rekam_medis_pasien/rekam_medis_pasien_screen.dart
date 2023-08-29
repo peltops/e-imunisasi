@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:eimunisasi/models/anak.dart';
+import 'package:eimunisasi/features/profile/data/models/anak.dart';
 import 'package:eimunisasi/models/checkup_model.dart';
 import 'package:eimunisasi/pages/home/utama/bukusehat/rekam_medis_pasien/tabbar_diagnosa/tabbar_diagnosa_screen.dart';
 import 'package:eimunisasi/pages/home/utama/bukusehat/rekam_medis_pasien/tabbar_grafik/tabbar_grafik_screen.dart';

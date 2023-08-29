@@ -8,7 +8,7 @@ import 'package:eimunisasi/services/notifications.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:eimunisasi/models/calendar.dart';
-import 'package:eimunisasi/models/user.dart';
+import 'package:eimunisasi/features/authentication/data/models/user.dart';
 import 'package:eimunisasi/services/calendar_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

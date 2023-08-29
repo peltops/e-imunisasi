@@ -1,6 +1,6 @@
 import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/models/calendar.dart';
-import 'package:eimunisasi/models/user.dart';
+import 'package:eimunisasi/features/authentication/data/models/user.dart';
 import 'package:eimunisasi/pages/widget/button_custom.dart';
 import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 import 'package:eimunisasi/pages/widget/text_form_custom.dart';

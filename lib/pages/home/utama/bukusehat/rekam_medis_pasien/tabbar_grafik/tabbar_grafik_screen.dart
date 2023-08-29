@@ -1,4 +1,4 @@
-import 'package:eimunisasi/models/anak.dart';
+import 'package:eimunisasi/features/profile/data/models/anak.dart';
 import 'package:eimunisasi/models/checkup_model.dart';
 import 'package:eimunisasi/models/grafik/grafik_berat_badan.dart';
 import 'package:eimunisasi/models/grafik/grafik_lingkar_kepala.dart';

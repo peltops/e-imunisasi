@@ -7,7 +7,7 @@ import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../../../models/user.dart';
+import '../../../authentication/data/models/user.dart';
 import '../../../authentication/data/repositories/auth_repository.dart';
 
 part 'profile_event.dart';

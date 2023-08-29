@@ -1,4 +1,4 @@
-import 'package:eimunisasi/models/anak.dart';
+import 'package:eimunisasi/features/profile/data/models/anak.dart';
 import 'package:eimunisasi/pages/home/utama/bukusehat/rekam_medis_pasien/rekam_medis_pasien_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:eimunisasi/services/anak_database.dart';

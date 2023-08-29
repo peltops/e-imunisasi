@@ -1,4 +1,4 @@
-import 'package:eimunisasi/models/anak.dart';
+import 'package:eimunisasi/features/profile/data/models/anak.dart';
 import 'package:eimunisasi/pages/home/utama/vaksinasi/list_nakes_vaksinasi.dart';
 import 'package:flutter/material.dart';
 import 'package:eimunisasi/services/anak_database.dart';

@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:eimunisasi/features/splash/data/repositories/splash_repository.dart';
 import 'package:injectable/injectable.dart';
-import '../../../../../models/user.dart';
+import '../../../data/models/user.dart';
 import '../../../data/repositories/auth_repository.dart';
 import 'package:equatable/equatable.dart';
 part 'authentication_event.dart';

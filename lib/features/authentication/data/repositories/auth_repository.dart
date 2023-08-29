@@ -8,7 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../../models/user.dart';
+import '../models/user.dart';
 
 @Injectable()
 class AuthRepository {

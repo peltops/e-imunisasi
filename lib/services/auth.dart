@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eimunisasi/models/user.dart';
+import 'package:eimunisasi/features/authentication/data/models/user.dart';
 import 'package:eimunisasi/services/local_auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

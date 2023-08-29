@@ -1,9 +1,9 @@
 import 'package:eimunisasi/core/extension.dart';
 import 'package:eimunisasi/core/utils/constant.dart';
-import 'package:eimunisasi/models/anak.dart';
+import 'package:eimunisasi/features/profile/data/models/anak.dart';
 import 'package:eimunisasi/models/appointment.dart';
 import 'package:eimunisasi/models/nakes.dart';
-import 'package:eimunisasi/models/user.dart';
+import 'package:eimunisasi/features/authentication/data/models/user.dart';
 import 'package:eimunisasi/pages/home/utama/vaksinasi/konfirmasi_janji.dart';
 import 'package:eimunisasi/pages/widget/button_custom.dart';
 import 'package:eimunisasi/pages/widget/snackbar_custom.dart';

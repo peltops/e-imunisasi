@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eimunisasi/core/utils/constant.dart';
-import 'package:eimunisasi/models/anak.dart';
+import 'package:eimunisasi/features/profile/data/models/anak.dart';
 import 'package:eimunisasi/pages/widget/button_custom.dart';
 import 'package:eimunisasi/pages/widget/image_picker.dart';
 import 'package:eimunisasi/pages/widget/snackbar_custom.dart';

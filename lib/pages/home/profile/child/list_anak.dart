@@ -1,4 +1,4 @@
-import 'package:eimunisasi/models/anak.dart';
+import 'package:eimunisasi/features/profile/data/models/anak.dart';
 import 'package:eimunisasi/pages/home/profile/child/anak.dart';
 import 'package:eimunisasi/pages/home/profile/child/daftar_anak.dart';
 import 'package:flutter/material.dart';
