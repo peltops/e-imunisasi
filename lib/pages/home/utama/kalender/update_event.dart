@@ -1,13 +1,14 @@
 import 'package:eimunisasi/core/utils/constant.dart';
-import 'package:eimunisasi/models/calendar.dart';
 import 'package:eimunisasi/features/authentication/data/models/user.dart';
+import 'package:eimunisasi/models/calendar.dart';
 import 'package:eimunisasi/pages/widget/button_custom.dart';
 import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 import 'package:eimunisasi/pages/widget/text_form_custom.dart';
 import 'package:eimunisasi/services/calendar_database.dart';
 import 'package:eimunisasi/utils/dismiss_keyboard.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart'
+    as LibPicker;
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -19,12 +20,14 @@ class UpdateEventCalendar extends StatefulWidget {
 
   const UpdateEventCalendar({Key? key, this.docID, this.data})
       : super(key: key);
+
   @override
   _UpdateEventCalendarState createState() => _UpdateEventCalendarState();
 }
 
 class _UpdateEventCalendarState extends State<UpdateEventCalendar> {
   final _formKey = GlobalKey<FormState>();
+
   //Email and Pass state
   bool loading = false;
   final kFirstDay = DateTime(DateTime.now().year - 1);
@@ -71,8 +74,8 @@ class _UpdateEventCalendarState extends State<UpdateEventCalendar> {
                             onTap: () {
                               DateTime tempDate = new DateFormat("yyyy-MM-dd")
                                   .parse(_dateTimeCtrl!.text);
-                              DatePicker.showDatePicker(context,
-                                  theme: DatePickerTheme(
+                              LibPicker.DatePicker.showDatePicker(context,
+                                  theme: LibPicker.DatePickerTheme(
                                     doneStyle: TextStyle(
                                       color: Theme.of(context)
                                           .colorScheme
@@ -99,7 +102,9 @@ class _UpdateEventCalendarState extends State<UpdateEventCalendar> {
                                   _dateTimeCtrl!.text =
                                       formattedDate.toString();
                                 });
-                              }, currentTime: tempDate, locale: LocaleType.id);
+                              },
+                                  currentTime: tempDate,
+                                  locale: LibPicker.LocaleType.id);
                             },
                             label: 'Tanggal',
                             readOnly: true,
@@ -148,15 +153,14 @@ class _UpdateEventCalendarState extends State<UpdateEventCalendar> {
                                                       .add(Duration(hours: 6))),
                                               widget.docID)
                                           .then((value) {
-                                            snackbarCustom(
-                                                    'Data berhasil diubah')
-                                                .show(context);
-                                            Navigator.pop(context);
-                                          })
-                                          .catchError((onError) => snackbarCustom(
-                                                  'Terjadi kesalahan: $onError')
-                                              .show(context))
-                                          .whenComplete(() => setState(() {
+                                        snackbarCustom('Data berhasil diubah')
+                                            .show(context);
+                                        Navigator.pop(context);
+                                      }).catchError((onError) {
+                                        snackbarCustom(
+                                                'Terjadi kesalahan: $onError')
+                                            .show(context);
+                                      }).whenComplete(() => setState(() {
                                                 loading = false;
                                               }));
                                     }

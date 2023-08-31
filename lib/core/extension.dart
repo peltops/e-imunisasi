@@ -6,11 +6,11 @@ extension StringExtension on String {
   }
 
   bool get isNullOrEmpty {
-    return this == null || this.isEmpty;
+    return this.isEmpty;
   }
 
   bool get isNotNullOrEmpty {
-    return this != null && this.isNotEmpty;
+    return this.isNotEmpty;
   }
 }
 

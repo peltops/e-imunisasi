@@ -39,7 +39,7 @@ class _ListDaftarNakesState extends State<ListDaftarNakes> {
                           var data = snapshot.data!;
                           return Column(
                             children: [
-                              SearchBar(),
+                              SearchBarPeltops(),
                               Flexible(
                                   child: ListView.builder(
                                 itemCount: data.length,

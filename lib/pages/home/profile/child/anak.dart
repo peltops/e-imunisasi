@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eimunisasi/core/utils/constant.dart';
@@ -10,7 +9,7 @@ import 'package:eimunisasi/pages/widget/text_form_custom.dart';
 import 'package:eimunisasi/services/anak_database.dart';
 import 'package:eimunisasi/utils/dismiss_keyboard.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart' as LibPicker;
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:intl/intl.dart';
@@ -142,8 +141,8 @@ class _AnakPageState extends State<AnakPage> {
                                           horizontal: 5.0),
                                       child: TextFormCustom(
                                         onTap: () =>
-                                            DatePicker.showDatePicker(context,
-                                                theme: DatePickerTheme(
+                                            LibPicker.DatePicker.showDatePicker(context,
+                                                theme: LibPicker.DatePickerTheme(
                                                   doneStyle: TextStyle(
                                                     color: Theme.of(context)
                                                         .colorScheme
@@ -175,7 +174,7 @@ class _AnakPageState extends State<AnakPage> {
                                         },
                                                 currentTime:
                                                     widget.anak.tanggalLahir,
-                                                locale: LocaleType.id),
+                                                locale: LibPicker.LocaleType.id),
                                         readOnly: true,
                                         label: 'Tanggal Lahir',
                                         controller: _tanggalLahirCtrl,
@@ -197,11 +196,10 @@ class _AnakPageState extends State<AnakPage> {
                                     filled: true,
                                     labelText: 'Jenis Kelamin',
                                     labelStyle: TextStyle(color: Colors.black),
-                                  ),
-                                  initialValue: _jenisKelaminCtrl!.text,
-                                  hint: Text(
+                                    hintText: 
                                     'Pilih jenis kelamin',
                                   ),
+                                  initialValue: _jenisKelaminCtrl!.text,
                                   validator: FormBuilderValidators.compose(
                                       [FormBuilderValidators.required()]),
                                   items: pilihanJenisKelamin
@@ -225,9 +223,9 @@ class _AnakPageState extends State<AnakPage> {
                                     filled: true,
                                     labelText: 'Golongan Darah',
                                     labelStyle: TextStyle(color: Colors.black),
+                                    hintText: 'Pilih golongan darah'
                                   ),
                                   initialValue: _golDarahCtrl!.text,
-                                  hint: Text('Pilih golongan darah'),
                                   validator: FormBuilderValidators.compose(
                                       [FormBuilderValidators.required()]),
                                   items: pilihanGolDarah

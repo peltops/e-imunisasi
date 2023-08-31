@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/features/profile/data/models/anak.dart';
@@ -11,7 +10,7 @@ import 'package:eimunisasi/services/anak_database.dart';
 import 'package:eimunisasi/services/calendar_database.dart';
 import 'package:eimunisasi/utils/dismiss_keyboard.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart' as LibPicker;
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:intl/intl.dart';
@@ -122,8 +121,8 @@ class _DaftarAnakPageState extends State<DaftarAnakPage> {
                                             horizontal: 5.0),
                                         child: TextFormCustom(
                                           onTap: () =>
-                                              DatePicker.showDatePicker(context,
-                                                  theme: DatePickerTheme(
+                                              LibPicker.DatePicker.showDatePicker(context,
+                                                  theme: LibPicker.DatePickerTheme(
                                                     doneStyle: TextStyle(
                                                       color: Theme.of(context)
                                                           .colorScheme
@@ -165,7 +164,7 @@ class _DaftarAnakPageState extends State<DaftarAnakPage> {
                                             });
                                           },
                                                   currentTime: DateTime.now(),
-                                                  locale: LocaleType.id),
+                                                  locale: LibPicker.LocaleType.id),
                                           readOnly: true,
                                           label: 'Tanggal Lahir',
                                           controller: _tanggalLahirCtrl,
@@ -180,7 +179,6 @@ class _DaftarAnakPageState extends State<DaftarAnakPage> {
                                     onChanged: (dynamic val) {
                                       _jenisKelaminCtrl!.text = val;
                                     },
-
                                     name: 'Jenis kelamin',
                                     decoration: InputDecoration(
                                       fillColor: Color(0xfff3f3f4),
@@ -189,11 +187,7 @@ class _DaftarAnakPageState extends State<DaftarAnakPage> {
                                       labelText: 'Jenis Kelamin',
                                       labelStyle:
                                           TextStyle(color: Colors.black),
-                                    ),
-                                    // initialValue: 'Male',
-                                    allowClear: true,
-                                    hint: Text(
-                                      'Pilih jenis kelamin',
+                                      hintText: 'Pilih jenis kelamin',
                                     ),
                                     validator: FormBuilderValidators.compose(
                                         [FormBuilderValidators.required()]),
@@ -219,10 +213,8 @@ class _DaftarAnakPageState extends State<DaftarAnakPage> {
                                       labelText: 'Golongan Darah',
                                       labelStyle:
                                           TextStyle(color: Colors.black),
+                                      hintText: 'Pilih golongan darah',
                                     ),
-                                    // initialValue: 'Male',
-                                    allowClear: true,
-                                    hint: Text('Pilih golongan darah'),
                                     validator: FormBuilderValidators.compose(
                                         [FormBuilderValidators.required()]),
                                     items: pilihanGolDarah

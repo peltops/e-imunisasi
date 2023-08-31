@@ -39,7 +39,7 @@ class _ListDaftarKlinikState extends State<ListDaftarKlinik> {
                           var data = snapshot.data!;
                           return Column(
                             children: [
-                              SearchBar(),
+                              SearchBarPeltops(),
                               Flexible(
                                   child: ListView.builder(
                                 itemCount: data.length,

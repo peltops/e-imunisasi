@@ -8,9 +8,8 @@ import 'package:eimunisasi/pages/home/utama/vaksinasi/konfirmasi_janji.dart';
 import 'package:eimunisasi/pages/widget/button_custom.dart';
 import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 import 'package:eimunisasi/services/appointment_services.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart' as LibPicker;
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -131,9 +130,9 @@ class _DaftarVaksinasiPageState extends State<DaftarVaksinasiPage> {
                               borderRadius: BorderRadius.circular(5)),
                           dense: true,
                           onTap: () {
-                            DatePicker.showDatePicker(
+                            LibPicker.DatePicker.showDatePicker(
                               context,
-                              theme: DatePickerTheme(
+                              theme: LibPicker.DatePickerTheme(
                                 doneStyle: TextStyle(
                                   color:
                                       Theme.of(context).colorScheme.secondary,
@@ -161,7 +160,7 @@ class _DaftarVaksinasiPageState extends State<DaftarVaksinasiPage> {
                                 });
                               },
                               currentTime: DateTime.now(),
-                              locale: LocaleType.id,
+                              locale: LibPicker.LocaleType.id,
                             );
                           },
                           trailing: Icon(

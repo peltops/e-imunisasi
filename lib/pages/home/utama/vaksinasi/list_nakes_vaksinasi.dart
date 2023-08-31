@@ -31,7 +31,7 @@ class ListNakes extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(5.0),
-                  child: SearchBar(),
+                  child: SearchBarPeltops(),
                 ),
                 Expanded(
                   child: Container(

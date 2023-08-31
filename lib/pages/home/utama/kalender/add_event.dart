@@ -1,13 +1,14 @@
 import 'package:eimunisasi/core/utils/constant.dart';
-import 'package:eimunisasi/models/calendar.dart';
 import 'package:eimunisasi/features/authentication/data/models/user.dart';
+import 'package:eimunisasi/models/calendar.dart';
 import 'package:eimunisasi/pages/widget/button_custom.dart';
 import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 import 'package:eimunisasi/pages/widget/text_form_custom.dart';
 import 'package:eimunisasi/services/calendar_database.dart';
 import 'package:eimunisasi/utils/dismiss_keyboard.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart'
+    as LibPicker;
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -55,8 +56,8 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
                           SizedBox(height: 5.0),
                           TextFormCustom(
                             onTap: () {
-                              DatePicker.showDatePicker(context,
-                                  theme: DatePickerTheme(
+                              LibPicker.DatePicker.showDatePicker(context,
+                                  theme: LibPicker.DatePickerTheme(
                                     doneStyle: TextStyle(
                                       color: Theme.of(context)
                                           .colorScheme
@@ -84,7 +85,7 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
                                 });
                               },
                                   currentTime: DateTime.now(),
-                                  locale: LocaleType.id);
+                                  locale: LibPicker.LocaleType.id);
                             },
                             label: 'Tanggal',
                             readOnly: true,
@@ -130,15 +131,14 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
                                               date: tempDate
                                                   .add(Duration(hours: 6))))
                                           .then((value) {
-                                            snackbarCustom(
-                                                    'Data berhasil ditambah')
-                                                .show(context);
-                                            Navigator.pop(context);
-                                          })
-                                          .catchError((onError) => snackbarCustom(
-                                                  'Terjadi kesalahan: $onError')
-                                              .show(context))
-                                          .whenComplete(() => setState(() {
+                                        snackbarCustom('Data berhasil ditambah')
+                                            .show(context);
+                                        Navigator.pop(context);
+                                      }).catchError((onError) {
+                                        snackbarCustom(
+                                                'Terjadi kesalahan: $onError')
+                                            .show(context);
+                                      }).whenComplete(() => setState(() {
                                                 loading = false;
                                               }));
                                     }

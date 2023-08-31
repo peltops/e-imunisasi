@@ -110,10 +110,7 @@ void main() {
     "AuthenticationBloc LoggedOut Failed",
     build: () {
       when(mockAuthRepository.signOut()).thenAnswer(
-        (_) async => {
-          throw Exception(),
-        },
-      );
+        (_) async => throw Exception(),);
       when(mockAuthRepository.getUser()).thenAnswer(
         (_) async => Users(
           uid: '1234',

@@ -69,7 +69,7 @@ class _LineChart extends StatelessWidget {
                 return LineTooltipItem(
                   '(${touchedSpot.y})',
                   TextStyle(
-                    color: touchedSpot.bar.gradient?.colors?.first ??
+                    color: touchedSpot.bar.gradient?.colors.first ??
                         touchedSpot.bar.color ??
                         Colors.blueGrey,
                     fontWeight: FontWeight.bold,
@@ -178,7 +178,7 @@ class _LineChart extends StatelessWidget {
         isStrokeCapRound: true,
         dotData: FlDotData(show: false),
         belowBarData: BarAreaData(show: false),
-        spots: (isBoy ?? true)
+        spots: (isBoy)
             ? LineDataLingkarKepalaBoyModel().listDataLine1()
             : LineDataLingkarKepalaGirlModel().listDataLine1(),
       );
@@ -191,7 +191,7 @@ class _LineChart extends StatelessWidget {
         isStrokeCapRound: true,
         dotData: FlDotData(show: false),
         belowBarData: BarAreaData(show: false),
-        spots: (isBoy ?? true)
+        spots: (isBoy)
             ? LineDataLingkarKepalaBoyModel().listDataLine2()
             : LineDataLingkarKepalaGirlModel().listDataLine2(),
       );
@@ -204,7 +204,7 @@ class _LineChart extends StatelessWidget {
         isStrokeCapRound: true,
         dotData: FlDotData(show: false),
         belowBarData: BarAreaData(show: false),
-        spots: (isBoy ?? true)
+        spots: (isBoy)
             ? LineDataLingkarKepalaBoyModel().listDataLine3()
             : LineDataLingkarKepalaGirlModel().listDataLine3(),
       );
@@ -217,7 +217,7 @@ class _LineChart extends StatelessWidget {
         isStrokeCapRound: true,
         dotData: FlDotData(show: false),
         belowBarData: BarAreaData(show: false),
-        spots: (isBoy ?? true)
+        spots: (isBoy)
             ? LineDataLingkarKepalaBoyModel().listDataLine4()
             : LineDataLingkarKepalaGirlModel().listDataLine4(),
       );
@@ -230,7 +230,7 @@ class _LineChart extends StatelessWidget {
         isStrokeCapRound: true,
         dotData: FlDotData(show: false),
         belowBarData: BarAreaData(show: false),
-        spots: (isBoy ?? true)
+        spots: (isBoy)
             ? LineDataLingkarKepalaBoyModel().listDataLine5()
             : LineDataLingkarKepalaGirlModel().listDataLine5(),
       );
@@ -243,7 +243,7 @@ class _LineChart extends StatelessWidget {
         isStrokeCapRound: true,
         dotData: FlDotData(show: false),
         belowBarData: BarAreaData(show: false),
-        spots: (isBoy ?? true)
+        spots: (isBoy)
             ? LineDataLingkarKepalaBoyModel().listDataLine6()
             : LineDataLingkarKepalaGirlModel().listDataLine6(),
       );
@@ -256,7 +256,7 @@ class _LineChart extends StatelessWidget {
         isStrokeCapRound: true,
         dotData: FlDotData(show: false),
         belowBarData: BarAreaData(show: false),
-        spots: (isBoy ?? true)
+        spots: (isBoy)
             ? LineDataLingkarKepalaBoyModel().listDataLine7()
             : LineDataLingkarKepalaGirlModel().listDataLine7(),
       );
@@ -269,7 +269,7 @@ class _LineChart extends StatelessWidget {
         isStrokeCapRound: true,
         dotData: FlDotData(show: true),
         belowBarData: BarAreaData(show: false),
-        spots: (isBoy ?? true)
+        spots: (isBoy)
             ? LineDataLingkarKepalaBoyModel().listDataPasienLine(listData!)
             : LineDataLingkarKepalaGirlModel().listDataPasienLine(listData!),
       );

@@ -33,7 +33,7 @@ class _EimunisasiManualPageState extends State<EimunisasiManualPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SearchBar(),
+                    SearchBarPeltops(),
                     SizedBox(height: 10),
                     Expanded(
                       child: StreamBuilder<List<InformasiAplikasiModel>>(

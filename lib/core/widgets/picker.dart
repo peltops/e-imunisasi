@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart' as LibPicker;
 
 class Picker {
-  static DatePickerTheme dateTheme(BuildContext context) {
-    return DatePickerTheme(
+  static LibPicker.DatePickerTheme dateTheme(BuildContext context) {
+    return LibPicker.DatePickerTheme(
       doneStyle: TextStyle(
         color: Theme.of(context).colorScheme.secondary,
         fontWeight: FontWeight.bold,
@@ -28,12 +28,12 @@ class Picker {
     DateTime? maxTime,
     bool showTitleActions = true,
     DateTime? currentTime,
-    LocaleType? locale = LocaleType.id,
+        LibPicker.LocaleType? locale = LibPicker.LocaleType.id,
   }) async {
     final currentTimeDefault = DateTime.now();
     final minTimeDefault = DateTime(currentTimeDefault.year - 5);
     final maxTimeDefault = currentTimeDefault;
-    return DatePicker.showDatePicker(
+    return LibPicker.DatePicker.showDatePicker(
       context,
       theme: dateTheme(context),
       showTitleActions: true,
