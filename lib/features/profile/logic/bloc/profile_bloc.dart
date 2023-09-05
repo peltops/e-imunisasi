@@ -1,8 +1,6 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
-import 'package:eimunisasi/utils/dismiss_keyboard.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 import 'package:injectable/injectable.dart';
@@ -15,15 +13,17 @@ part 'profile_state.dart';
 
 @Injectable()
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
+  final AuthRepository _authRepository;
+
   ProfileBloc(this._authRepository) : super(ProfileState()) {
     on<ProfileGetEvent>(_onProfileGetEvent);
     on<ProfileUpdateEvent>(_onProfileUpdateEvent);
     on<ProfileUpdateAvatarEvent>(_onProfileUpdateAvatarEvent);
+    
     on<OnChangeNameEvent>((event, emit) {
       emit(
         state.copyWith(
           user: state.user?.copyWith(momName: event.name),
-          statusUpdate: FormzStatus.pure,
         ),
       );
     });
@@ -77,8 +77,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     });
   }
 
-  final AuthRepository _authRepository;
-
   void _onProfileGetEvent(
     ProfileGetEvent event,
     Emitter<ProfileState> emit,
@@ -103,7 +101,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       if (state.user == null) {
         emit(state.copyWith(
           statusUpdate: FormzStatus.submissionFailure,
-          errorMessage: 'User is null',
+          errorMessage: 'User tidak ditemukan',
         ));
         return;
       }
