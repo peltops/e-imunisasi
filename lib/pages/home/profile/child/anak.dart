@@ -9,10 +9,11 @@ import 'package:eimunisasi/pages/widget/text_form_custom.dart';
 import 'package:eimunisasi/services/anak_database.dart';
 import 'package:eimunisasi/utils/dismiss_keyboard.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart' as LibPicker;
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:intl/intl.dart';
+
+import '../../../../core/widgets/picker.dart';
 
 class AnakPage extends StatefulWidget {
   final Anak anak;
@@ -53,8 +54,6 @@ class _AnakPageState extends State<AnakPage> {
   bool loading = false;
   @override
   Widget build(BuildContext context) {
-    final kFirstDay = DateTime(DateTime.now().year - 5);
-    final kLastDay = DateTime.now();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.pink[300],
@@ -140,41 +139,18 @@ class _AnakPageState extends State<AnakPage> {
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 5.0),
                                       child: TextFormCustom(
-                                        onTap: () =>
-                                            LibPicker.DatePicker.showDatePicker(context,
-                                                theme: LibPicker.DatePickerTheme(
-                                                  doneStyle: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .secondary,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontFamily: 'Nunito',
-                                                  ),
-                                                  cancelStyle: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontFamily: 'Nunito',
-                                                    color: Colors.black,
-                                                  ),
-                                                  itemStyle: TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    fontFamily: 'Nunito',
-                                                  ),
-                                                ),
-                                                showTitleActions: true,
-                                                minTime: kFirstDay,
-                                                maxTime: kLastDay,
-                                                onConfirm: (val) {
-                                          String formattedDate =
-                                              DateFormat('dd-MM-yyyy')
-                                                  .format(val);
-                                          setState(() {
-                                            _tanggalLahirCtrl!.text =
-                                                formattedDate.toString();
-                                          });
+                                        onTap: () async {
+                                          final date = await Picker.pickDate(context);
+                                          if (date != null) {
+                                            String formattedDate =
+                                                DateFormat('dd-MM-yyyy')
+                                                    .format(date);
+                                            setState(() {
+                                              _tanggalLahirCtrl!.text =
+                                                  formattedDate.toString();
+                                            });
+                                          }
                                         },
-                                                currentTime:
-                                                    widget.anak.tanggalLahir,
-                                                locale: LibPicker.LocaleType.id),
                                         readOnly: true,
                                         label: 'Tanggal Lahir',
                                         controller: _tanggalLahirCtrl,

@@ -10,13 +10,13 @@ import 'package:timezone/data/latest.dart' as tz;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await configureDependencies();
   await Firebase.initializeApp();
   await Hive.initFlutter();
   Hive.registerAdapter(CalendarsHiveAdapter());
   await Hive.openBox<CalendarsHive>('calendar_activity');
   NotificationService().initialize();
   tz.initializeTimeZones();
-  await configureDependencies();
   Bloc.observer = AppBlocObserver();
   runApp(App());
 }

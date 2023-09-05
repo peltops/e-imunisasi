@@ -1,8 +1,8 @@
-
 import 'package:eimunisasi/core/utils/constant.dart';
+import 'package:eimunisasi/core/widgets/picker.dart';
+import 'package:eimunisasi/features/authentication/data/models/user.dart';
 import 'package:eimunisasi/features/profile/data/models/anak.dart';
 import 'package:eimunisasi/models/list_imunisasi.dart';
-import 'package:eimunisasi/features/authentication/data/models/user.dart';
 import 'package:eimunisasi/pages/widget/button_custom.dart';
 import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 import 'package:eimunisasi/pages/widget/text_form_custom.dart';
@@ -10,7 +10,6 @@ import 'package:eimunisasi/services/anak_database.dart';
 import 'package:eimunisasi/services/calendar_database.dart';
 import 'package:eimunisasi/utils/dismiss_keyboard.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart' as LibPicker;
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:intl/intl.dart';
@@ -18,6 +17,7 @@ import 'package:provider/provider.dart';
 
 class DaftarAnakPage extends StatefulWidget {
   final indexAnak;
+
   const DaftarAnakPage({
     Key? key,
     required this.indexAnak,
@@ -36,6 +36,7 @@ class _DaftarAnakPageState extends State<DaftarAnakPage> {
       _golDarahCtrl;
 
   final _formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     _tanggalLahirCtrl = TextEditingController(text: '');
@@ -50,11 +51,10 @@ class _DaftarAnakPageState extends State<DaftarAnakPage> {
   var pilihanJenisKelamin = ['Laki-laki', 'Perempuan', 'Lainnya'];
   var pilihanGolDarah = ['-', 'A', 'AB', 'B', 'O'];
   bool loading = false;
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<Users>(context);
-    final kFirstDay = DateTime(DateTime.now().year - 5);
-    final kLastDay = DateTime.now();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.pink[300],
@@ -120,54 +120,20 @@ class _DaftarAnakPageState extends State<DaftarAnakPage> {
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 5.0),
                                         child: TextFormCustom(
-                                          onTap: () =>
-                                              LibPicker.DatePicker.showDatePicker(context,
-                                                  theme: LibPicker.DatePickerTheme(
-                                                    doneStyle: TextStyle(
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .secondary,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontFamily: 'Nunito',
-                                                    ),
-                                                    cancelStyle: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontFamily: 'Nunito',
-                                                      color: Colors.black,
-                                                    ),
-                                                    itemStyle: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontFamily: 'Nunito',
-                                                    ),
-                                                  ),
-                                                  showTitleActions: true,
-                                                  minTime: kFirstDay,
-                                                  maxTime: kLastDay,
-                                                  onChanged: (val) {
+                                          readOnly: true,
+                                          label: 'Tanggal Lahir',
+                                          controller: _tanggalLahirCtrl,
+                                          onTap: () async {
+                                            final date =
+                                                await Picker.pickDate(context);
                                             String formattedDate =
                                                 DateFormat('dd-MM-yyyy')
-                                                    .format(val);
-                                            setState(() {
-                                              _tanggalLahirCtrl!.text =
-                                                  formattedDate.toString();
-                                            });
-                                          }, onConfirm: (val) {
-                                            String formattedDate =
-                                                DateFormat('dd-MM-yyyy')
-                                                    .format(val);
+                                                    .format(date!);
                                             setState(() {
                                               _tanggalLahirCtrl!.text =
                                                   formattedDate.toString();
                                             });
                                           },
-                                                  currentTime: DateTime.now(),
-                                                  locale: LibPicker.LocaleType.id),
-                                          readOnly: true,
-                                          label: 'Tanggal Lahir',
-                                          controller: _tanggalLahirCtrl,
                                         ),
                                       ),
                                     ),

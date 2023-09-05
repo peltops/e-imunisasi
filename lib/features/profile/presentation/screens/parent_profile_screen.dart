@@ -83,13 +83,11 @@ class ParentProfileScreen extends StatelessWidget {
                           HorizontalSpacer(),
                           Expanded(
                             child: TextFormCustom(
-                              onTap: () {
-                                Picker.pickDate(
-                                  context,
-                                  (date) => {
-                                    bloc.add(OnChangeDateOfBirthEvent(date))
-                                  },
-                                );
+                              onTap: () async {
+                                final date = await Picker.pickDate(context);
+                                if (date != null) {
+                                  bloc.add(OnChangeDateOfBirthEvent(date));
+                                }
                               },
                               readOnly: true,
                               label: AppConstant.LABEL_DATE_OF_BIRTH,
@@ -178,6 +176,7 @@ class ParentProfileScreen extends StatelessWidget {
 
 class _SaveButton extends StatelessWidget {
   const _SaveButton({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ProfileBloc, ProfileState>(
@@ -197,6 +196,7 @@ class _SaveButton extends StatelessWidget {
 
 class _PhotoProfile extends StatelessWidget {
   final String? url;
+
   const _PhotoProfile({Key? key, required this.url}) : super(key: key);
 
   @override

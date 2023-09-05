@@ -40,7 +40,6 @@ dependencies:
   snack: ^2.0.0
   form_field_validator: ^1.1.0
   table_calendar: ^3.0.0
-  flutter_datetime_picker: ^1.5.1
   url_launcher: ^6.0.6
   flutter_svg: ^2.0.5
   hive: ^2.0.4

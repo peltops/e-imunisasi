@@ -7,10 +7,10 @@ import 'package:eimunisasi/pages/widget/text_form_custom.dart';
 import 'package:eimunisasi/services/calendar_database.dart';
 import 'package:eimunisasi/utils/dismiss_keyboard.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart'
-    as LibPicker;
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+
+import '../../../../core/widgets/picker.dart';
 
 // import 'package:flutter_signin_button/flutter_signin_button.dart';
 
@@ -71,40 +71,49 @@ class _UpdateEventCalendarState extends State<UpdateEventCalendar> {
                         child: Column(children: [
                           SizedBox(height: 5.0),
                           TextFormCustom(
-                            onTap: () {
-                              DateTime tempDate = new DateFormat("yyyy-MM-dd")
-                                  .parse(_dateTimeCtrl!.text);
-                              LibPicker.DatePicker.showDatePicker(context,
-                                  theme: LibPicker.DatePickerTheme(
-                                    doneStyle: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'Nunito',
-                                    ),
-                                    cancelStyle: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'Nunito',
-                                      color: Colors.black,
-                                    ),
-                                    itemStyle: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontFamily: 'Nunito',
-                                    ),
-                                  ),
-                                  showTitleActions: true,
-                                  minTime: kFirstDay,
-                                  maxTime: kLastDay, onConfirm: (val) {
+                            onTap: () async {
+                              // DateTime tempDate = new DateFormat("yyyy-MM-dd")
+                              //     .parse(_dateTimeCtrl!.text);
+                              // LibPicker.DatePicker.showDatePicker(context,
+                              //     theme: LibPicker.DatePickerTheme(
+                              //       doneStyle: TextStyle(
+                              //         color: Theme.of(context)
+                              //             .colorScheme
+                              //             .secondary,
+                              //         fontWeight: FontWeight.bold,
+                              //         fontFamily: 'Nunito',
+                              //       ),
+                              //       cancelStyle: TextStyle(
+                              //         fontWeight: FontWeight.bold,
+                              //         fontFamily: 'Nunito',
+                              //         color: Colors.black,
+                              //       ),
+                              //       itemStyle: TextStyle(
+                              //         fontWeight: FontWeight.w500,
+                              //         fontFamily: 'Nunito',
+                              //       ),
+                              //     ),
+                              //     showTitleActions: true,
+                              //     minTime: kFirstDay,
+                              //     maxTime: kLastDay, onConfirm: (val) {
+                              //   String formattedDate =
+                              //       DateFormat('yyyy-MM-dd').format(val);
+                              //   setState(() {
+                              //     _dateTimeCtrl!.text =
+                              //         formattedDate.toString();
+                              //   });
+                              // },
+                              //     currentTime: tempDate,
+                              //     locale: LibPicker.LocaleType.id);
+                              final date = await Picker.pickDate(context);
+                              if (date != null) {
                                 String formattedDate =
-                                    DateFormat('yyyy-MM-dd').format(val);
+                                    DateFormat('yyyy-MM-dd').format(date);
                                 setState(() {
                                   _dateTimeCtrl!.text =
                                       formattedDate.toString();
                                 });
-                              },
-                                  currentTime: tempDate,
-                                  locale: LibPicker.LocaleType.id);
+                              }
                             },
                             label: 'Tanggal',
                             readOnly: true,
