@@ -475,4 +475,34 @@ void main() {
       expect(result, throwsA(isA<Exception>()));
     });
   });
+
+  group('verifyEmail', () {
+    late FirebaseAuth firebaseAuth;
+    late AuthRepository authRepository;
+    setUp(() {
+      firebaseAuth = MockFirebaseAuth(mockUser: mockUser, signedIn: true);
+      authRepository = AuthRepository(
+        firestore,
+        firebaseAuth,
+        firebaseStorage,
+        sharedPreferences,
+      );
+    });
+
+    test('verifyEmail success', () async {
+      final result = authRepository.verifyEmail();
+      expect(result, isA<Future<void>>());
+    });
+
+    test('verifyEmail throws an exception if sendEmailVerification throws',
+        () async {
+      whenCalling(Invocation.method(#sendEmailVerification, null))
+          .on(firebaseAuth)
+          .thenThrow(Exception('error'));
+
+      final result = authRepository.verifyEmail();
+
+      expect(result, isA<Future<void>>());
+    });
+  });
 }
