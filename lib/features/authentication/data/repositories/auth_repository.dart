@@ -139,6 +139,18 @@ class AuthRepository {
     return fileUrl;
   }
 
+  Future<void> verifyEmail() async {
+    try {
+      if (firebaseAuth.currentUser == null) {
+        throw Exception('User not found');
+      }
+      await firebaseAuth.currentUser?.sendEmailVerification();
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
   Future<bool> destroyPasscode() async {
     return sharedPreferences.remove('passCode');
   }

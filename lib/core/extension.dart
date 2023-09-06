@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 extension StringExtension on String {
   String capitalize() {
@@ -24,5 +25,15 @@ extension Navigate on BuildContext {
         builder: (context) => widget,
       ),
     );
+  }
+}
+
+extension DateTimeExtension on DateTime? {
+  /// default format is dd-MM-yyyy
+  String formattedDate({String? format}) {
+    if (this == null) return emptyString;
+    return format != null
+        ? DateFormat(format).format(this!)
+        : DateFormat('dd-MM-yyyy').format(this!);
   }
 }

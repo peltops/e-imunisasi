@@ -4,7 +4,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:eimunisasi/core/utils/list_constant.dart';
 import 'package:eimunisasi/features/authentication/data/models/user.dart';
 import 'package:eimunisasi/features/authentication/data/repositories/auth_repository.dart';
-import 'package:eimunisasi/features/profile/logic/bloc/profile_bloc.dart';
+import 'package:eimunisasi/features/profile/logic/blocs/parentBloc/profile_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -222,19 +222,6 @@ void main() {
     );
   });
 
-  // void _onProfileUpdateAvatarEvent(
-  //     ProfileUpdateAvatarEvent event,
-  //     Emitter<ProfileState> emit,
-  //     ) async {
-  //   emit(state.copyWith(statusUpdate: FormzStatus.submissionInProgress));
-  //   try {
-  //     final url = await _authRepository.uploadImage(event.file);
-  //     await _authRepository.updateUserAvatar(url);
-  //     emit(state.copyWith(statusUpdate: FormzStatus.submissionSuccess));
-  //   } catch (e) {
-  //     emit(state.copyWith(statusUpdate: FormzStatus.submissionFailure));
-  //   }
-  // }
   group("ProfileUpdateAvatarEvent", (){
     late AuthRepository mockAuthRepository;
 
@@ -254,10 +241,10 @@ void main() {
       act: (bloc) => bloc.add(ProfileUpdateAvatarEvent(file)),
       expect: () => [
         ProfileState(
-          statusUpdate: FormzStatus.submissionInProgress,
+          statusUpdateAvatar: FormzStatus.submissionInProgress,
         ),
         ProfileState(
-          statusUpdate: FormzStatus.submissionSuccess,
+          statusUpdateAvatar: FormzStatus.submissionSuccess,
         )
       ],
     );
@@ -270,10 +257,10 @@ void main() {
       act: (bloc) => bloc.add(ProfileUpdateAvatarEvent(file)),
       expect: () => [
         ProfileState(
-          statusUpdate: FormzStatus.submissionInProgress,
+          statusUpdateAvatar: FormzStatus.submissionInProgress,
         ),
         ProfileState(
-          statusUpdate: FormzStatus.submissionFailure,
+          statusUpdateAvatar: FormzStatus.submissionFailure,
         )
       ],
     );
@@ -287,6 +274,45 @@ void main() {
       act: (bloc) => bloc.add(ProfileUpdateAvatarEvent(file)),
       expect: () => [
         ProfileState(
+          statusUpdateAvatar: FormzStatus.submissionInProgress,
+        ),
+        ProfileState(
+          statusUpdateAvatar: FormzStatus.submissionFailure,
+        )
+      ],
+    );
+  });
+
+  group('VerifyEmailEvent', (){
+    late AuthRepository mockAuthRepository;
+    setUp(() {
+      mockAuthRepository = MockAuthRepository();
+    });
+
+    blocTest<ProfileBloc,ProfileState>("success",
+      build: () {
+        when(mockAuthRepository.verifyEmail()).thenAnswer((_) async => true);
+        return ProfileBloc(mockAuthRepository);
+      },
+      act: (bloc) => bloc.add(VerifyEmailEvent()),
+      expect: () => [
+        ProfileState(
+          statusUpdate: FormzStatus.submissionInProgress,
+        ),
+        ProfileState(
+          statusUpdate: FormzStatus.submissionSuccess,
+        )
+      ],
+    );
+
+    blocTest<ProfileBloc,ProfileState>("failed",
+      build: () {
+        when(mockAuthRepository.verifyEmail()).thenThrow(Exception());
+        return ProfileBloc(mockAuthRepository);
+      },
+      act: (bloc) => bloc.add(VerifyEmailEvent()),
+      expect: () => [
+        ProfileState(
           statusUpdate: FormzStatus.submissionInProgress,
         ),
         ProfileState(
@@ -295,5 +321,4 @@ void main() {
       ],
     );
   });
-
 }

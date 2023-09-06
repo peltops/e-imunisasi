@@ -53,7 +53,8 @@ class AppConstant {
       'Data anak berhasil diperbarui!';
   static const String ERROR_OCCURRED = 'Terjadi kesalahan!';
   static const String EMAIL_VERIFICATION_SENT = 'Berhasil! Silahkan cek email';
-  static const String EMAIL_NOT_VERIFIED =
+  static const String VERIFIED = '(Terverifikasi)';
+  static const String NOT_VERIFIED =
       'Belum Terverifikasi (Verifikasi sekarang)';
   static const String HEALTH_BOOK_LABEL = 'Buku Sehat';
   static const String YES = 'Ya';
@@ -97,6 +98,7 @@ class AppConstant {
   static const String LABEL_JOB = 'Pekerjaan';
   static const String LABEL_CHOICE_JOB = 'Pilih Pekerjaan';
   static const String LABEL_BLOOD_TYPE = 'Golongan Darah';
+  static const String LABEL_GENDER = 'Jenis Kelamin';
   static const String LABEL_CHOICE_BLOOD_TYPE = 'Pilih Golongan Darah';
   static const String TITLE_INFO_ACCOUNT = 'Informasi Akun';
   static const String LABEL_EMAIL = 'Email';

@@ -5,8 +5,8 @@ import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../../authentication/data/models/user.dart';
-import '../../../authentication/data/repositories/auth_repository.dart';
+import '../../../../authentication/data/models/user.dart';
+import '../../../../authentication/data/repositories/auth_repository.dart';
 
 part 'profile_event.dart';
 part 'profile_state.dart';
@@ -19,6 +19,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     on<ProfileGetEvent>(_onProfileGetEvent);
     on<ProfileUpdateEvent>(_onProfileUpdateEvent);
     on<ProfileUpdateAvatarEvent>(_onProfileUpdateAvatarEvent);
+    on<VerifyEmailEvent>(_onVerifyEmailEvent);
     
     on<OnChangeNameEvent>((event, emit) {
       emit(
@@ -116,10 +117,23 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     ProfileUpdateAvatarEvent event,
     Emitter<ProfileState> emit,
   ) async {
-    emit(state.copyWith(statusUpdate: FormzStatus.submissionInProgress));
+    emit(state.copyWith(statusUpdateAvatar: FormzStatus.submissionInProgress));
     try {
       final url = await _authRepository.uploadImage(event.file);
       await _authRepository.updateUserAvatar(url);
+      emit(state.copyWith(statusUpdateAvatar: FormzStatus.submissionSuccess));
+    } catch (e) {
+      emit(state.copyWith(statusUpdateAvatar: FormzStatus.submissionFailure));
+    }
+  }
+
+  void _onVerifyEmailEvent(
+    VerifyEmailEvent event,
+    Emitter<ProfileState> emit,
+  ) async {
+    emit(state.copyWith(statusUpdate: FormzStatus.submissionInProgress));
+    try {
+      await _authRepository.verifyEmail();
       emit(state.copyWith(statusUpdate: FormzStatus.submissionSuccess));
     } catch (e) {
       emit(state.copyWith(statusUpdate: FormzStatus.submissionFailure));
