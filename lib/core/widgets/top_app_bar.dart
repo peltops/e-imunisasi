@@ -18,7 +18,7 @@ class AppBarPeltops extends StatelessWidget implements PreferredSizeWidget {
     this.toolbarOpacity = 1.0,
     this.bottomOpacity = 1.0,
     this.automaticallyImplyLeading = true,
-  })  : preferredSize = const Size.fromHeight(kToolbarHeight + 10),
+  })  : preferredSize = const Size.fromHeight(kToolbarHeight),
         super(key: key);
 
   final String title;

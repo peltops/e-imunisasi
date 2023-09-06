@@ -52,11 +52,12 @@ class ParentProfileScreen extends StatelessWidget {
                 return LoadingScreen();
               }
               if (state.statusGet.isSubmissionSuccess) {
-                return Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: AppPadding.paddingM),
-                  child: Container(
+                return Card(
+                  margin: EdgeInsets.all(AppPadding.paddingM),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: AppPadding.paddingM),
                     child: ListView(
+                      physics:const BouncingScrollPhysics(),
                       children: [
                         VerticalSpacer(),
                         _PhotoProfile(url: state.user?.avatarURL),
