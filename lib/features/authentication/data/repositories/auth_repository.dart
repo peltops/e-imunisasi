@@ -122,7 +122,7 @@ class AuthRepository {
       await firestore
           .collection('users')
           .doc(firebaseAuth.currentUser?.uid)
-          .update({'photoURL': url});
+          .update({'avatarURL': url});
     } catch (e) {
       log(e.toString());
       rethrow;

@@ -205,9 +205,10 @@ class _PhotoProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _currentUser = FirebaseAuth.instance.currentUser!;
+    final _currentUser = FirebaseAuth.instance.currentUser;
     final bloc = context.read<ProfileBloc>();
-    final isVerified = _currentUser.email != null && _currentUser.emailVerified;
+    final url = _currentUser?.photoURL ?? this.url;
+    final isVerified = _currentUser?.email != null && _currentUser?.emailVerified == true;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: Column(
@@ -224,7 +225,7 @@ class _PhotoProfile extends StatelessWidget {
                 url: url,
                 onPressedCamera: () async {
                   ModalPickerImage.showPicker(context, (file) {
-                    bloc.add(ProfileUpdatePhotoEvent(file));
+                    bloc.add(ProfileUpdateAvatarEvent(file));
                   });
                 },
               );

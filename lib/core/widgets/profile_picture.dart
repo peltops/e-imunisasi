@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:eimunisasi/core/extension.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePictureFromUrl extends StatelessWidget {
@@ -10,7 +11,7 @@ class ProfilePictureFromUrl extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isUrlSafe = url != null || url != '' || url != 'null';
+    final isUrlSafe = Uri.tryParse(url ?? emptyString)?.isAbsolute ?? false;
     const placeholder =
         'https://i.pinimg.com/originals/d2/4d/db/d24ddb8271b8ea9b4bbf4b67df8cbc01.gif';
     return CircleAvatar(
@@ -27,7 +28,18 @@ class ProfilePictureFromUrl extends StatelessWidget {
               child: CircleAvatar(
                 radius: 50,
                 backgroundColor: Colors.transparent,
-                backgroundImage: CachedNetworkImageProvider(url!, scale: 0.1),
+                backgroundImage:
+                    CachedNetworkImageProvider(url ?? emptyString, scale: 0.1),
+              ),
+            ),
+          ],
+          if (!isUrlSafe) ...[
+            Align(
+              alignment: Alignment.center,
+              child: Icon(
+                Icons.photo_outlined,
+                size: 50,
+                color: Colors.grey,
               ),
             ),
           ],

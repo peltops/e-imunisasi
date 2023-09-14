@@ -88,15 +88,6 @@ class OnChangeBloodTypeEvent extends ProfileEvent {
   List<Object> get props => [bloodType];
 }
 
-class ProfileUpdatePhotoEvent extends ProfileEvent {
-  final File photo;
-
-  ProfileUpdatePhotoEvent(this.photo);
-
-  @override
-  List<Object> get props => [photo];
-}
-
 class VerifyEmailEvent extends ProfileEvent {
   VerifyEmailEvent();
 

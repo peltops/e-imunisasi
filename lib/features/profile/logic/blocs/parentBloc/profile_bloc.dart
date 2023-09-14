@@ -122,6 +122,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       final url = await _authRepository.uploadImage(event.file);
       await _authRepository.updateUserAvatar(url);
       emit(state.copyWith(statusUpdateAvatar: FormzStatus.submissionSuccess));
+      add(ProfileGetEvent());
     } catch (e) {
       emit(state.copyWith(statusUpdateAvatar: FormzStatus.submissionFailure));
     }
