@@ -12,24 +12,23 @@ class ProfilePictureFromUrl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isUrlSafe = Uri.tryParse(url ?? emptyString)?.isAbsolute ?? false;
-    const placeholder =
-        'https://i.pinimg.com/originals/d2/4d/db/d24ddb8271b8ea9b4bbf4b67df8cbc01.gif';
     return CircleAvatar(
       radius: 50.0,
       backgroundColor: isUrlSafe ? Colors.transparent : Colors.white,
-      backgroundImage: isUrlSafe
-          ? CachedNetworkImageProvider(placeholder, scale: 0.1)
-          : null,
       child: Stack(
         children: [
           if (isUrlSafe) ...[
             Align(
               alignment: Alignment.center,
-              child: CircleAvatar(
-                radius: 50,
-                backgroundColor: Colors.transparent,
-                backgroundImage:
-                    CachedNetworkImageProvider(url ?? emptyString, scale: 0.1),
+              child: CachedNetworkImage(
+                imageUrl: url ?? emptyString,
+                placeholder: (context, url) => CircularProgressIndicator.adaptive(),
+                errorWidget: (context, url, error) => Icon(Icons.error),
+                imageBuilder: (context, imageProvider) => CircleAvatar(
+                  radius: 50,
+                  backgroundColor: Colors.transparent,
+                  backgroundImage: imageProvider,
+                )
               ),
             ),
           ],

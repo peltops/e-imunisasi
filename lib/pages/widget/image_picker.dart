@@ -39,12 +39,11 @@ class ModalPickerImage {
                 ListTile(
                     leading: Icon(Icons.photo_library),
                     title: Text('Photo Library'),
-                    onTap: () {
-                      _imgFromGallery(context).then((file) {
-                        if (file != null) {
-                          callback(file);
-                        }
-                      });
+                    onTap: () async {
+                      final file = await _imgFromGallery(context);
+                      if (file != null) {
+                        callback(file);
+                      }
                       Navigator.of(context).pop();
                     }),
                 ListTile(
@@ -55,7 +54,7 @@ class ModalPickerImage {
                     if (file != null) {
                       callback(file);
                     }
-                    // Navigator.of(context).pop();
+                    Navigator.of(context).pop();
                   },
                 ),
               ],
