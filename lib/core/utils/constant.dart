@@ -87,6 +87,7 @@ class AppConstant {
   static const String SKIP = 'Lewati';
   static const String START = 'Ayo Mulai';
   static const String APP_BAR_PROFILE = 'Profil';
+  static const String APP_BAR_CHILD_PROFILE = 'Profil Anak';
   static const String TITLE_PARENT_PROFILE = 'Profil Orang Tua/Wali';
   static const String LABEL_FULL_NAME_BY_IDENTITY =
       'Nama Lengkap (Sesuai Akte Lahir/KTP)';
