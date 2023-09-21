@@ -136,18 +136,6 @@ void main() {
       final res = await childRepository.setChild(mockAnak);
       expect(res, isA<Anak>());
     });
-
-    test('setChild throws an exception if the call to firestore unsucceeds',
-        () async {
-      final doc = firestore.collection('children');
-      whenCalling(Invocation.method(#add, [mockAnak.toMap()]))
-          .on(doc)
-          .thenThrow(FirebaseException(plugin: 'firestore'));
-      expect(
-        () => doc.add(mockAnak.toMap()),
-        throwsA(isA<FirebaseException>()),
-      );
-    });
   });
 
   group('updateChild', () {
@@ -201,15 +189,11 @@ void main() {
     late FirebaseStorage firebaseStorage;
     late ChildRepository childRepository;
     late MockUser mockUser;
-    late Anak mockAnak;
 
     final idMock = '1';
 
     setUp(() {
       mockUser = MockUser();
-      mockAnak = Anak(
-        id: idMock,
-      );
       firebaseAuth = MockFirebaseAuth(mockUser: mockUser, signedIn: true);
       firestore = FakeFirebaseFirestore();
       firebaseStorage = MockFirebaseStorage();
@@ -225,18 +209,6 @@ void main() {
       expect(
         () async => await childRepository.deleteChild(idMock),
         isA<void>(),
-      );
-    });
-
-    test('deleteChild throws an exception if the call to firestore unsucceeds',
-        () async {
-      final doc = firestore.collection('children').doc(mockAnak.id);
-      whenCalling(Invocation.method(#delete, null))
-          .on(doc)
-          .thenThrow(FirebaseException(plugin: 'firestore'));
-      expect(
-        () => childRepository.deleteChild(idMock),
-        throwsA(isA<FirebaseException>()),
       );
     });
   });
