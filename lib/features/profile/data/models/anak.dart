@@ -40,7 +40,9 @@ class Anak {
       nama: data['nama'],
       nik: data['nik'] ?? '',
       tempatLahir: data['tempat_lahir'] ?? '',
-      tanggalLahir: data['tanggal_lahir'].toDate() ?? '' as DateTime?,
+      tanggalLahir: data['tanggal_lahir'] != null
+          ? DateTime.parse(data['tanggal_lahir'].toString())
+          : null,
       jenisKelamin: data['jenis_kelamin'] ?? '',
       golDarah: data['gol_darah'] ?? '',
       photoURL: data['photo_url'] ?? '',

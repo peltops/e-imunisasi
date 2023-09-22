@@ -1,8 +1,8 @@
 import 'package:eimunisasi/features/profile/data/models/anak.dart';
-import 'package:eimunisasi/pages/home/profile/child/anak.dart';
+import 'package:eimunisasi/features/profile/presentation/screens/child_profile_screen.dart';
 import 'package:eimunisasi/pages/home/profile/child/daftar_anak.dart';
-import 'package:flutter/material.dart';
 import 'package:eimunisasi/services/anak_database.dart';
+import 'package:flutter/material.dart';
 
 class ListAnak extends StatelessWidget {
   const ListAnak({Key? key}) : super(key: key);
@@ -50,8 +50,11 @@ class ListAnak extends StatelessWidget {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) => AnakPage(
-                                                  anak: data[index],
+                                                builder: (context) =>
+                                                    ChildProfileScreen(
+                                                  child: data[index],
+                                                  mode: ChildProfileScreenMode
+                                                      .edit,
                                                 ),
                                               ),
                                             );

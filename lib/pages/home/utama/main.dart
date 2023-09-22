@@ -1,9 +1,10 @@
-import 'package:eimunisasi/pages/home/profile/child/list_anak.dart';
 import 'package:eimunisasi/pages/home/utama/bukusehat/buku_sehat.dart';
 import 'package:eimunisasi/pages/home/utama/kalender/kalender.dart';
 import 'package:eimunisasi/pages/home/utama/vaksinasi/vaksinasi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+
+import '../../../features/profile/presentation/screens/list_children_screen.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -80,7 +81,7 @@ class _MainPageState extends State<MainPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ListAnak(),
+                                builder: (context) => ListChildrenScreen(),
                               ),
                             );
                           },
