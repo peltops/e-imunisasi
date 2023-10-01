@@ -1,0 +1,60 @@
+default_platform(:android)
+
+ENV['SUPPLY_UPLOAD_MAX_RETRIES'] = '5'
+
+platform :android do
+  desc "Runs all the tests"
+  lane :test do
+    gradle(task: "test")
+  end
+
+  desc "Submit a new internal testing build to Google Play"
+  lane :internal do
+    sh "flutter build appbundle -v --no-deferred-components"
+    upload_to_play_store(
+      root_url: "https://androidpublisher.googleapis.com/",
+      track: 'internal',
+      aab: '../build/app/outputs/bundle/release/app-release.aab',
+      json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
+      )
+  end
+
+  desc "Promote internal track to beta"
+  lane :promote_internal_to_beta do
+    upload_to_play_store(
+      root_url: "https://androidpublisher.googleapis.com/",
+      track: 'internal',
+      track_promote_to: 'beta',
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+      json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
+      )
+  end
+
+  desc "Promote internal track to prod"
+  lane :promote_internal_to_production do
+    upload_to_play_store(
+      root_url: "https://androidpublisher.googleapis.com/",
+      track: 'internal',
+      track_promote_to: 'production',
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+      json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
+      )
+  end
+
+  desc "Promote beta track to prod"
+  lane :promote_beta_to_production do
+    upload_to_play_store(
+      root_url: "https://androidpublisher.googleapis.com/",
+      track: 'beta',
+      track_promote_to: 'production',
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+      json_key_data: ENV['PLAY_STORE_CONFIG_JSON'],
+      )
+  end
+end
