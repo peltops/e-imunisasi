@@ -4,6 +4,22 @@ abstract class ChildProfileEvent extends Equatable {
   const ChildProfileEvent();
 }
 
+class OnInitialEvent extends ChildProfileEvent {
+  final Anak? child;
+
+  OnInitialEvent({this.child});
+
+  @override
+  List<Object?> get props => [child];
+}
+
+class OnGetChildrenEvent extends ChildProfileEvent {
+  OnGetChildrenEvent();
+
+  @override
+  List<Object> get props => [];
+}
+
 class OnChangeNameEvent extends ChildProfileEvent {
   final String name;
 

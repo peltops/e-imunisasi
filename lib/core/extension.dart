@@ -26,6 +26,10 @@ extension Navigate on BuildContext {
       ),
     );
   }
+
+  void navigateBack() {
+    Navigator.pop(this);
+  }
 }
 
 extension DateTimeExtension on DateTime? {

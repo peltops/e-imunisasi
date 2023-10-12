@@ -14,7 +14,7 @@ class ProfilePictureFromUrl extends StatelessWidget {
     final isUrlSafe = Uri.tryParse(url ?? emptyString)?.isAbsolute ?? false;
     return CircleAvatar(
       radius: 50.0,
-      backgroundColor: isUrlSafe ? Colors.transparent : Colors.white,
+      backgroundColor: isUrlSafe ? Colors.transparent : Colors.grey.shade50,
       child: Stack(
         children: [
           if (isUrlSafe) ...[

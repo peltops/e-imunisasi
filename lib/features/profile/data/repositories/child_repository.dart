@@ -33,11 +33,11 @@ class ChildRepository {
           isEqualTo: _currentUser.uid,
         )
         .get();
-    return data.docs.map((e) {
-      var data = Map<String, dynamic>.from(e.data());
-      data['id'] = e.id;
-      return Anak.fromMap(data);
+    final result = data.docs.map((e) {
+      final data = Anak.fromMap(e.data());
+      return data.copyWith(id: e.id);
     }).toList();
+    return result;
   }
 
   Future<Anak> setChild(Anak anak) async {
