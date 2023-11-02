@@ -139,6 +139,9 @@ class ChildProfileBloc extends Bloc<ChildProfileEvent, ChildProfileState> {
       emit(state.copyWith(
         statusUpdateAvatar: FormzStatus.submissionSuccess,
       ));
+      emit(state.copyWith(
+        statusUpdateAvatar: FormzStatus.pure,
+      ));
     } catch (e) {
       emit(state.copyWith(
         statusUpdateAvatar: FormzStatus.submissionFailure,

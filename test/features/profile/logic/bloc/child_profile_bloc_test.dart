@@ -362,6 +362,9 @@ void main() {
         ChildProfileState(
           statusUpdateAvatar: FormzStatus.submissionSuccess,
         ),
+        ChildProfileState(
+          statusUpdateAvatar: FormzStatus.pure,
+        ),
       ],
     );
 
