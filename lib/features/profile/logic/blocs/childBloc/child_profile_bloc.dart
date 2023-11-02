@@ -45,9 +45,12 @@ class ChildProfileBloc extends Bloc<ChildProfileEvent, ChildProfileState> {
         children: children,
       ));
     } catch (e) {
-      emit(state.copyWith(
+      emit(
+        state.copyWith(
           statusGetChildren: FormzStatus.submissionFailure,
-          errorMessage: 'Gagal memuat data anak'));
+          errorMessage: 'Gagal memuat data anak',
+        ),
+      );
     }
   }
 
@@ -110,11 +113,11 @@ class ChildProfileBloc extends Bloc<ChildProfileEvent, ChildProfileState> {
       add(OnGetChildrenEvent());
       emit(
         state.copyWith(
-          statusUpdate: FormzStatus.submissionSuccess,
+          statusCreate: FormzStatus.submissionSuccess,
           child: null,
         ),
       );
-      emit(state.copyWith(statusUpdate: FormzStatus.pure));
+      emit(state.copyWith(statusCreate: FormzStatus.pure));
     } catch (e) {
       emit(
         state.copyWith(
@@ -139,7 +142,7 @@ class ChildProfileBloc extends Bloc<ChildProfileEvent, ChildProfileState> {
     } catch (e) {
       emit(state.copyWith(
         statusUpdateAvatar: FormzStatus.submissionFailure,
-        errorMessage: e.toString(),
+        errorMessage: 'Gagal memperbarui foto profil anak',
       ));
     }
   }

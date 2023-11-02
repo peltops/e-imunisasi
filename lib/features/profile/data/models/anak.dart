@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eimunisasi/utils/datetime_extension.dart';
+import 'package:equatable/equatable.dart';
 
-class Anak {
+class Anak extends Equatable {
   final String? id;
   final String? parentId;
   final String? nama;
@@ -100,4 +101,17 @@ class Anak {
       photoURL: photoURL ?? this.photoURL,
     );
   }
+
+  @override
+  List<Object?> get props => [
+        id,
+        parentId,
+        nama,
+        nik,
+        tempatLahir,
+        tanggalLahir,
+        jenisKelamin,
+        golDarah,
+        photoURL,
+      ];
 }
