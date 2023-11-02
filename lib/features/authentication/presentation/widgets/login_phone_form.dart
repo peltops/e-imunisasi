@@ -164,13 +164,10 @@ class _LoginButton extends StatelessWidget {
             style: TextStyle(fontSize: 15.0, color: Colors.white),
           ),
           loading: state.status.isSubmissionInProgress,
-          onPressed: state.phone.valid
+          onPressed: state.phone.valid && state.countryCode.valid
               ? () {
                   dismissKeyboard(context);
-                  state.phone.valid
-                      ? context.read<LoginPhoneCubit>().sendOTPCode()
-                      : snackbarCustom(AppConstant.PLEASE_ENTER_PHONE_NUMBER)
-                          .show(context);
+                  context.read<LoginPhoneCubit>().sendOTPCode();
                 }
               : null,
         );

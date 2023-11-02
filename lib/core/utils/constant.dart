@@ -85,4 +85,21 @@ class AppConstant {
   static const String WRONG_PIN = 'PIN Salah!';
   static const String SKIP = 'Lewati';
   static const String START = 'Ayo Mulai';
+  static const String APP_BAR_PROFILE = 'Profil';
+  static const String TITLE_PARENT_PROFILE = 'Profil Orang Tua/Wali';
+  static const String LABEL_FULL_NAME_BY_IDENTITY =
+      'Nama Lengkap (Sesuai Akte Lahir/KTP)';
+  static const String LABEL_DATE_OF_BIRTH = 'Tanggal Lahir';
+  static const String LABEL_CHOICE_DATE_OF_BIRTH = 'Pilih Tanggal Lahir';
+  static const String LABEL_PLACE_OF_BIRTH = 'Tempat Lahir';
+  static const String LABEL_NO_NIK = 'No. NIK';
+  static const String LABEL_NO_KK = 'No. KK';
+  static const String LABEL_JOB = 'Pekerjaan';
+  static const String LABEL_CHOICE_JOB = 'Pilih Pekerjaan';
+  static const String LABEL_BLOOD_TYPE = 'Golongan Darah';
+  static const String LABEL_CHOICE_BLOOD_TYPE = 'Pilih Golongan Darah';
+  static const String TITLE_INFO_ACCOUNT = 'Informasi Akun';
+  static const String LABEL_EMAIL = 'Email';
+  static const String LABEL_MOM_PHONE_NUMBER = 'No.handphone Ibu';
+  static const String TRY_AGAIN = 'Coba Lagi';
 }

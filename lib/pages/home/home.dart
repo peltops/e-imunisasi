@@ -1,7 +1,7 @@
+import 'package:eimunisasi/features/profile/presentation/screens/profile_screen.dart';
 import 'package:eimunisasi/pages/home/bantuan/bantuan_page.dart';
 import 'package:eimunisasi/pages/home/utama/main.dart';
 import 'package:eimunisasi/pages/home/pesan/pesan_page.dart';
-import 'package:eimunisasi/pages/home/profile/profile_page.dart';
 import 'package:eimunisasi/services/notifications.dart';
 import 'package:eimunisasi/utils/datetime_extension.dart';
 import 'package:eimunisasi/utils/string_extension.dart';
