@@ -2,8 +2,6 @@ name: Test and Build Flutter
 
 on:
   push:
-    branches:
-      - main
   pull_request:
 
 permissions: read-all
