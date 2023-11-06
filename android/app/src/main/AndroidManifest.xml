@@ -53,5 +53,6 @@
            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver"
            android:exported="true"
            tools:replace="android:exported"/>
+        <meta-data android:name="google_analytics_adid_collection_enabled" android:value="false" />
     </application>
 </manifest>
