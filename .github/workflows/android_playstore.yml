@@ -13,6 +13,10 @@ on:
           - promote_internal_to_beta
           - promote_internal_to_production
           - promote_beta_to_production
+      versions:
+        description: "version"
+        required: true
+        type: string
 
 jobs:
   release-android:
@@ -51,6 +55,13 @@ jobs:
 
       - name: Run build-runner
         run: flutter pub run build_runner build --delete-conflicting-outputs
+      
+      - name: Find and Replace
+        uses: jacobtomlinson/gha-find-replace@v3
+        with:
+          find: "^versions:.*$"
+          include: "pubscpec.yaml"
+          replace: "versions: ${{ github.event.inputs.versions }}" 
 
 #      - name: Run tests
 #        run: flutter test
