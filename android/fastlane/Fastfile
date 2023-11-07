@@ -10,7 +10,7 @@ platform :android do
 
   desc "Submit a new internal testing build to Google Play"
   lane :internal do
-    sh "flutter build appbundle -v --no-deferred-components"
+    sh "flutter build appbundle -v --no-deferred-components --build-number=#{ENV["GITHUB_RUN_NUMBER"]}"
     upload_to_play_store(
       root_url: "https://androidpublisher.googleapis.com/",
       track: 'internal',
