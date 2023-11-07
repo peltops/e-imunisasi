@@ -85,7 +85,7 @@ class ChildRepository {
     return fileUrl;
   }
 
-  Future<void> updateChildAvatar({
+  Future<String> updateChildAvatar({
     required File file,
     required String id,
   }) async {
@@ -98,6 +98,7 @@ class ChildRepository {
       await firestore.collection(_collectionName).doc(id).update(
         {'photo_url': url},
       );
+      return url;
     } catch (e) {
       rethrow;
     }

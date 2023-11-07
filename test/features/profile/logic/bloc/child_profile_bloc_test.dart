@@ -343,6 +343,7 @@ void main() {
   group("OnUpdateAvatar", () {
     late ChildRepository mockChildRepository;
     final file = File('test');
+    final url = 'url';
     setUp(() {
       mockChildRepository = MockChildRepository();
     });
@@ -351,19 +352,37 @@ void main() {
       "success",
       build: () {
         when(mockChildRepository.updateChildAvatar(file: file, id: id))
-            .thenAnswer((_) async => null);
-        return ChildProfileBloc(mockChildRepository);
+            .thenAnswer((_) async => url);
+        when(mockChildRepository.getAllChildren())
+            .thenAnswer((_) async => [child.copyWith(photoURL: url)]);
+        return ChildProfileBloc(mockChildRepository)
+          ..add(OnInitialEvent(child: child));
       },
       act: (bloc) => bloc.add(UpdateProfilePhotoEvent(photo: file, id: id)),
       expect: () => [
         ChildProfileState(
+          child: child,
+        ),
+        ChildProfileState(
+          child: child,
           statusUpdateAvatar: FormzStatus.submissionInProgress,
         ),
         ChildProfileState(
+          child: child.copyWith(photoURL: url),
           statusUpdateAvatar: FormzStatus.submissionSuccess,
         ),
         ChildProfileState(
+          child: child.copyWith(photoURL: url),
           statusUpdateAvatar: FormzStatus.pure,
+        ),
+        ChildProfileState(
+          child: child.copyWith(photoURL: url),
+          statusGetChildren: FormzStatus.submissionInProgress,
+        ),
+        ChildProfileState(
+          statusGetChildren: FormzStatus.submissionSuccess,
+          children: [child.copyWith(photoURL: url)],
+          child: child.copyWith(photoURL: url),
         ),
       ],
     );

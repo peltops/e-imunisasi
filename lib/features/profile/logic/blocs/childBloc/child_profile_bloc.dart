@@ -132,16 +132,18 @@ class ChildProfileBloc extends Bloc<ChildProfileEvent, ChildProfileState> {
       statusUpdateAvatar: FormzStatus.submissionInProgress,
     ));
     try {
-      await _childRepository.updateChildAvatar(
+     final url = await _childRepository.updateChildAvatar(
         file: event.photo,
         id: event.id,
       );
       emit(state.copyWith(
         statusUpdateAvatar: FormzStatus.submissionSuccess,
+        child: state.child?.copyWith(photoURL: url),
       ));
       emit(state.copyWith(
         statusUpdateAvatar: FormzStatus.pure,
       ));
+      add(OnGetChildrenEvent());
     } catch (e) {
       emit(state.copyWith(
         statusUpdateAvatar: FormzStatus.submissionFailure,
