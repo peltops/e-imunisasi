@@ -13,10 +13,6 @@ on:
           - promote_internal_to_beta
           - promote_internal_to_production
           - promote_beta_to_production
-      versions:
-        description: "version"
-        required: true
-        type: string
 
 jobs:
   release-android:
