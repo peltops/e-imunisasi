@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eimunisasi/core/extension.dart';
 import 'package:eimunisasi/core/loading.dart';
 import 'package:eimunisasi/core/utils/list_constant.dart';
@@ -7,24 +6,23 @@ import 'package:eimunisasi/core/widgets/picker.dart';
 import 'package:eimunisasi/core/widgets/spacer.dart';
 import 'package:eimunisasi/core/widgets/text.dart';
 import 'package:eimunisasi/core/widgets/top_app_bar.dart';
-import 'package:eimunisasi/features/profile/logic/bloc/profile_bloc.dart';
 import 'package:eimunisasi/injection.dart';
 import 'package:eimunisasi/pages/widget/button_custom.dart';
 import 'package:eimunisasi/pages/widget/image_picker.dart';
 import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 import 'package:eimunisasi/pages/widget/text_form_custom.dart';
-import 'package:eimunisasi/services/user_database.dart';
 import 'package:eimunisasi/utils/dismiss_keyboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
-import 'package:intl/intl.dart';
 
 import '../../../../core/pair.dart';
 import '../../../../core/utils/constant.dart';
 import '../../../../core/utils/themes/padding_constant.dart';
 import '../../../../core/widgets/dropdown.dart';
+import '../../../../core/widgets/profile_picture.dart';
+import '../../logic/blocs/parentBloc/profile_bloc.dart';
 
 class ParentProfileScreen extends StatelessWidget {
   const ParentProfileScreen({Key? key}) : super(key: key);
@@ -40,6 +38,11 @@ class ParentProfileScreen extends StatelessWidget {
                 .show(context);
           } else if (state.statusUpdate.isSubmissionSuccess) {
             snackbarCustom('Berhasil menyimpan data').show(context);
+          } else if (state.statusUpdateAvatar.isSubmissionFailure) {
+            snackbarCustom(state.errorMessage ?? 'Gagal mengubah foto')
+                .show(context);
+          } else if (state.statusUpdateAvatar.isSubmissionSuccess) {
+            snackbarCustom('Berhasil mengubah foto').show(context);
           }
         },
         child: Scaffold(
@@ -52,11 +55,13 @@ class ParentProfileScreen extends StatelessWidget {
                 return LoadingScreen();
               }
               if (state.statusGet.isSubmissionSuccess) {
-                return Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: AppPadding.paddingM),
-                  child: Container(
+                return Card(
+                  margin: EdgeInsets.all(AppPadding.paddingM),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: AppPadding.paddingM),
                     child: ListView(
+                      physics: const BouncingScrollPhysics(),
                       children: [
                         VerticalSpacer(),
                         _PhotoProfile(url: state.user?.avatarURL),
@@ -83,19 +88,16 @@ class ParentProfileScreen extends StatelessWidget {
                           HorizontalSpacer(),
                           Expanded(
                             child: TextFormCustom(
-                              onTap: () {
-                                Picker.pickDate(
-                                  context,
-                                  (date) => {
-                                    bloc.add(OnChangeDateOfBirthEvent(date))
-                                  },
-                                );
+                              onTap: () async {
+                                final date = await Picker.pickDate(context);
+                                if (date != null) {
+                                  bloc.add(OnChangeDateOfBirthEvent(date));
+                                }
                               },
                               readOnly: true,
                               label: AppConstant.LABEL_DATE_OF_BIRTH,
                               hintText: state.user?.tanggalLahir != null
-                                  ? DateFormat('dd-MM-yyyy')
-                                      .format(state.user!.tanggalLahir!)
+                                  ? (state.user?.tanggalLahir).formattedDate()
                                   : AppConstant.LABEL_CHOICE_DATE_OF_BIRTH,
                             ),
                           ),
@@ -178,6 +180,7 @@ class ParentProfileScreen extends StatelessWidget {
 
 class _SaveButton extends StatelessWidget {
   const _SaveButton({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ProfileBloc, ProfileState>(
@@ -197,114 +200,52 @@ class _SaveButton extends StatelessWidget {
 
 class _PhotoProfile extends StatelessWidget {
   final String? url;
+
   const _PhotoProfile({Key? key, required this.url}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final _currentUser = FirebaseAuth.instance.currentUser!;
+    final _currentUser = FirebaseAuth.instance.currentUser;
+    final bloc = context.read<ProfileBloc>();
+    final url = _currentUser?.photoURL ?? this.url;
+    final isVerified = _currentUser?.email != null && _currentUser?.emailVerified == true;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: Column(
         children: [
-          url == null || url!.isEmpty
-              ? CircleAvatar(
-                  foregroundColor: Colors.white,
-                  radius: 50.0,
-                  child: Stack(
-                    children: [
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: CircleAvatar(
-                          foregroundColor: Colors.white,
-                          backgroundColor:
-                              Theme.of(context).colorScheme.secondary,
-                          radius: 15,
-                          child: IconButton(
-                              alignment: Alignment.center,
-                              icon: Icon(
-                                Icons.photo_camera,
-                                size: 15.0,
-                              ),
-                              onPressed: () async {
-                                ModalPickerImage().showPicker(
-                                  context,
-                                  (val) {
-                                    UserService().updateUserAvatar(val);
-                                  },
-                                );
-                              }),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              : CircleAvatar(
-                  radius: 50.0,
-                  backgroundColor: Colors.transparent,
-                  backgroundImage: CachedNetworkImageProvider(
-                      'https://i.pinimg.com/originals/d2/4d/db/d24ddb8271b8ea9b4bbf4b67df8cbc01.gif',
-                      scale: 0.1),
-                  child: Stack(
-                    children: [
-                      Align(
-                        alignment: Alignment.center,
-                        child: CircleAvatar(
-                          radius: 50,
-                          backgroundColor: Colors.transparent,
-                          backgroundImage:
-                              CachedNetworkImageProvider(url!, scale: 0.1),
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: CircleAvatar(
-                          radius: 15,
-                          child: IconButton(
-                              alignment: Alignment.center,
-                              icon: Icon(
-                                Icons.photo_camera,
-                                size: 15.0,
-                              ),
-                              onPressed: () async {
-                                ModalPickerImage().showPicker(context, (val) {
-                                  UserService().updateUserAvatar(val);
-                                });
-                              }),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-          SizedBox(
-            height: 5,
+          BlocBuilder<ProfileBloc, ProfileState>(
+            buildWhen: (previous, current) {
+              return previous.statusUpdateAvatar != current.statusUpdateAvatar;
+            },
+            builder: (context, state) {
+              if (state.statusUpdateAvatar.isSubmissionInProgress) {
+                return const CircularProgressIndicator.adaptive();
+              }
+              return ProfilePictureFromUrl(
+                url: url,
+                onPressedCamera: () async {
+                  ModalPickerImage.showPicker(context, (file) {
+                    bloc.add(ProfileUpdateAvatarEvent(file));
+                  });
+                },
+              );
+            },
           ),
+          VerticalSpacer(),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _currentUser.email != null
-                  ? _currentUser.emailVerified
-                      ? Text(' (Terverifikasi)')
-                      : GestureDetector(
-                          onTap: () async {
-                            try {
-                              await _currentUser.sendEmailVerification();
-                              snackbarCustom(
-                                      "${AppConstant.EMAIL_VERIFICATION_SENT} ${_currentUser.email}")
-                                  .show(context);
-                            } on FirebaseException catch (e) {
-                              snackbarCustom(e.message).show(context);
-                            } catch (e) {
-                              snackbarCustom(
-                                      "${AppConstant.ERROR_OCCURRED} \n $e")
-                                  .show(context);
-                            }
-                          },
-                          child: Text(
-                            AppConstant.EMAIL_NOT_VERIFIED,
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        )
-                  : Container(),
+              if (isVerified) ...[
+                LabelText(text: AppConstant.VERIFIED),
+              ],
+              if (!isVerified) ...[
+                GestureDetector(
+                  onTap: () {
+                    bloc.add(VerifyEmailEvent());
+                  },
+                  child: LabelText(text: AppConstant.NOT_VERIFIED),
+                ),
+              ]
             ],
           ),
         ],

@@ -32,7 +32,7 @@ class _InformasiKesehatanPageState extends State<InformasiKesehatanPage> {
                 padding: const EdgeInsets.all(10.0),
                 child: Column(
                   children: [
-                    SearchBar(),
+                    SearchBarPeltops(),
                     SizedBox(height: 10),
                     Expanded(
                       child: StreamBuilder<List<InformasiKesehatanModel>>(

@@ -1,18 +1,18 @@
 import 'package:eimunisasi/core/extension.dart';
 import 'package:eimunisasi/core/utils/constant.dart';
-import 'package:eimunisasi/models/anak.dart';
+import 'package:eimunisasi/features/profile/data/models/anak.dart';
 import 'package:eimunisasi/models/appointment.dart';
 import 'package:eimunisasi/models/nakes.dart';
-import 'package:eimunisasi/models/user.dart';
+import 'package:eimunisasi/features/authentication/data/models/user.dart';
 import 'package:eimunisasi/pages/home/utama/vaksinasi/konfirmasi_janji.dart';
 import 'package:eimunisasi/pages/widget/button_custom.dart';
 import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 import 'package:eimunisasi/services/appointment_services.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+
+import '../../../../core/widgets/picker.dart';
 
 class DaftarVaksinasiPage extends StatefulWidget {
   final Anak anak;
@@ -130,39 +130,15 @@ class _DaftarVaksinasiPageState extends State<DaftarVaksinasiPage> {
                                   color: Colors.grey[300]!, width: 2),
                               borderRadius: BorderRadius.circular(5)),
                           dense: true,
-                          onTap: () {
-                            DatePicker.showDatePicker(
-                              context,
-                              theme: DatePickerTheme(
-                                doneStyle: TextStyle(
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Nunito',
-                                ),
-                                cancelStyle: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Nunito',
-                                  color: Colors.black,
-                                ),
-                                itemStyle: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: 'Nunito',
-                                ),
-                              ),
-                              showTitleActions: true,
-                              minTime: kFirstDay,
-                              maxTime: kLastDay,
-                              onConfirm: (val) {
-                                String formattedDate =
-                                    DateFormat('yyyy-MM-dd').format(val);
-                                setState(() {
-                                  _tanggal = formattedDate.toString();
-                                });
-                              },
-                              currentTime: DateTime.now(),
-                              locale: LocaleType.id,
-                            );
+                          onTap: () async {
+                            final date = await Picker.pickDate(context);
+                            if (date != null) {
+                              String formattedDate =
+                                  DateFormat('yyyy-MM-dd').format(date);
+                              setState(() {
+                                _tanggal = formattedDate.toString();
+                              });
+                            }
                           },
                           trailing: Icon(
                             Icons.date_range,

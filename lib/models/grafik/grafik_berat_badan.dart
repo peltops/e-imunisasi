@@ -69,7 +69,7 @@ class _LineChart extends StatelessWidget {
                 return LineTooltipItem(
                   '(${touchedSpot.y})',
                   TextStyle(
-                    color: touchedSpot.bar.gradient?.colors?.first ??
+                    color: touchedSpot.bar.gradient?.colors.first ??
                         touchedSpot.bar.color ??
                         Colors.blueGrey,
                     fontWeight: FontWeight.bold,
@@ -256,7 +256,7 @@ class _LineChart extends StatelessWidget {
         isStrokeCapRound: true,
         dotData: FlDotData(show: false),
         belowBarData: BarAreaData(show: false),
-        spots: (isBoy ?? true)
+        spots: (isBoy)
             ? LineDataBeratBadanBoyModel().listDataLine7()
             : LineDataBeratBadanGirlModel().listDataLine7(),
       );
@@ -269,7 +269,7 @@ class _LineChart extends StatelessWidget {
         isStrokeCapRound: true,
         dotData: FlDotData(show: true),
         belowBarData: BarAreaData(show: false),
-        spots: (isBoy ?? true)
+        spots: (isBoy)
             ? LineDataBeratBadanBoyModel().listDataPasienLine(listData!)
             : LineDataBeratBadanGirlModel().listDataPasienLine(listData!),
       );

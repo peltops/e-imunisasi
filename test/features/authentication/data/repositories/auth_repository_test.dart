@@ -1,8 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eimunisasi/models/user.dart';
-import 'package:eimunisasi/utils/string_extension.dart';
+import 'package:eimunisasi/features/authentication/data/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage_mocks/firebase_storage_mocks.dart';
 import 'package:mock_exceptions/mock_exceptions.dart';
@@ -187,12 +186,10 @@ void main() {
   group('signUpWithEmailAndPassword', () {
     late String email;
     late String password;
-    late UserCredential userCredential;
 
     setUp(() {
       email = 'example@example.com';
       password = '12331242';
-      userCredential = MockUserCredential();
     });
 
     test('signUpWithEmailAndPassword success', () async {
@@ -295,7 +292,6 @@ void main() {
   });
 
   group('getUser', () {
-    late User user;
     late Users users;
     late CollectionReference<Map<String, dynamic>> collectionReference;
     late DocumentReference<Map<String, dynamic>> documentReference;
@@ -477,6 +473,36 @@ void main() {
       final result = authRepository.destroyPasscode();
 
       expect(result, throwsA(isA<Exception>()));
+    });
+  });
+
+  group('verifyEmail', () {
+    late FirebaseAuth firebaseAuth;
+    late AuthRepository authRepository;
+    setUp(() {
+      firebaseAuth = MockFirebaseAuth(mockUser: mockUser, signedIn: true);
+      authRepository = AuthRepository(
+        firestore,
+        firebaseAuth,
+        firebaseStorage,
+        sharedPreferences,
+      );
+    });
+
+    test('verifyEmail success', () async {
+      final result = authRepository.verifyEmail();
+      expect(result, isA<Future<void>>());
+    });
+
+    test('verifyEmail throws an exception if sendEmailVerification throws',
+        () async {
+      whenCalling(Invocation.method(#sendEmailVerification, null))
+          .on(firebaseAuth)
+          .thenThrow(Exception('error'));
+
+      final result = authRepository.verifyEmail();
+
+      expect(result, isA<Future<void>>());
     });
   });
 }

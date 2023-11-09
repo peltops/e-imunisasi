@@ -1,6 +1,5 @@
 import 'package:eimunisasi/injection.dart';
 
-import '../../../data/repositories/auth_repository.dart';
 import '../../../logic/cubit/reset_password_cubit/reset_password_cubit.dart';
 import '../../widgets/reset_email_password_form.dart';
 import 'package:flutter/material.dart';

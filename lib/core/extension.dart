@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 extension StringExtension on String {
   String capitalize() {
@@ -6,11 +7,11 @@ extension StringExtension on String {
   }
 
   bool get isNullOrEmpty {
-    return this == null || this.isEmpty;
+    return this.isEmpty;
   }
 
   bool get isNotNullOrEmpty {
-    return this != null && this.isNotEmpty;
+    return this.isNotEmpty;
   }
 }
 
@@ -24,5 +25,19 @@ extension Navigate on BuildContext {
         builder: (context) => widget,
       ),
     );
+  }
+
+  void navigateBack() {
+    Navigator.pop(this);
+  }
+}
+
+extension DateTimeExtension on DateTime? {
+  /// default format is dd-MM-yyyy
+  String formattedDate({String? format}) {
+    if (this == null) return emptyString;
+    return format != null
+        ? DateFormat(format).format(this!)
+        : DateFormat('dd-MM-yyyy').format(this!);
   }
 }

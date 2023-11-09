@@ -1,29 +1,30 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
-import 'package:eimunisasi/utils/dismiss_keyboard.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../../../models/user.dart';
-import '../../../authentication/data/repositories/auth_repository.dart';
+import '../../../../authentication/data/models/user.dart';
+import '../../../../authentication/data/repositories/auth_repository.dart';
 
 part 'profile_event.dart';
 part 'profile_state.dart';
 
 @Injectable()
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
+  final AuthRepository _authRepository;
+
   ProfileBloc(this._authRepository) : super(ProfileState()) {
     on<ProfileGetEvent>(_onProfileGetEvent);
     on<ProfileUpdateEvent>(_onProfileUpdateEvent);
     on<ProfileUpdateAvatarEvent>(_onProfileUpdateAvatarEvent);
+    on<VerifyEmailEvent>(_onVerifyEmailEvent);
+    
     on<OnChangeNameEvent>((event, emit) {
       emit(
         state.copyWith(
           user: state.user?.copyWith(momName: event.name),
-          statusUpdate: FormzStatus.pure,
         ),
       );
     });
@@ -77,8 +78,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     });
   }
 
-  final AuthRepository _authRepository;
-
   void _onProfileGetEvent(
     ProfileGetEvent event,
     Emitter<ProfileState> emit,
@@ -103,7 +102,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       if (state.user == null) {
         emit(state.copyWith(
           statusUpdate: FormzStatus.submissionFailure,
-          errorMessage: 'User is null',
+          errorMessage: 'User tidak ditemukan',
         ));
         return;
       }
@@ -118,10 +117,24 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     ProfileUpdateAvatarEvent event,
     Emitter<ProfileState> emit,
   ) async {
-    emit(state.copyWith(statusUpdate: FormzStatus.submissionInProgress));
+    emit(state.copyWith(statusUpdateAvatar: FormzStatus.submissionInProgress));
     try {
       final url = await _authRepository.uploadImage(event.file);
       await _authRepository.updateUserAvatar(url);
+      emit(state.copyWith(statusUpdateAvatar: FormzStatus.submissionSuccess));
+      add(ProfileGetEvent());
+    } catch (e) {
+      emit(state.copyWith(statusUpdateAvatar: FormzStatus.submissionFailure));
+    }
+  }
+
+  void _onVerifyEmailEvent(
+    VerifyEmailEvent event,
+    Emitter<ProfileState> emit,
+  ) async {
+    emit(state.copyWith(statusUpdate: FormzStatus.submissionInProgress));
+    try {
+      await _authRepository.verifyEmail();
       emit(state.copyWith(statusUpdate: FormzStatus.submissionSuccess));
     } catch (e) {
       emit(state.copyWith(statusUpdate: FormzStatus.submissionFailure));

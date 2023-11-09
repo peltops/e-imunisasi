@@ -5,10 +5,11 @@ import 'package:eimunisasi/pages/home/utama/kalender/add_event.dart';
 import 'package:eimunisasi/pages/home/utama/kalender/update_event.dart';
 import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 import 'package:eimunisasi/services/notifications.dart';
+import 'package:eimunisasi/utils/any_extension.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:eimunisasi/models/calendar.dart';
-import 'package:eimunisasi/models/user.dart';
+import 'package:eimunisasi/features/authentication/data/models/user.dart';
 import 'package:eimunisasi/services/calendar_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -251,7 +252,7 @@ class _KalenderPageState extends State<KalenderPage> {
                           : Container()),
                       SizedBox(
                           width: double.infinity,
-                          child: (selectedDate == null
+                          child: (selectedDate.isNull()
                               ? DataTable(
                                   headingRowHeight: 40,
                                   // dataRowHeight: DataRowHeight.flexible(),

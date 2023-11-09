@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:eimunisasi/utils/string_extension.dart';
 import 'package:injectable/injectable.dart';
-import '../../../../../models/user.dart';
+import '../../../data/models/user.dart';
 import '../../../data/models/country_code.dart';
 import '../../../data/models/otp.dart';
 import '../../../data/models/phone.dart';

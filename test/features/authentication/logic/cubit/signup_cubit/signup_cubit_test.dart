@@ -5,7 +5,7 @@ import 'package:eimunisasi/features/authentication/data/models/email.dart';
 import 'package:eimunisasi/features/authentication/data/models/password.dart';
 import 'package:eimunisasi/features/authentication/data/models/phone.dart';
 import 'package:eimunisasi/features/authentication/data/repositories/auth_repository.dart';
-import 'package:eimunisasi/models/user.dart';
+import 'package:eimunisasi/features/authentication/data/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:formz/formz.dart';
 import 'package:mockito/annotations.dart';

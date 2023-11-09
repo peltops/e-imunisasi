@@ -1,5 +1,5 @@
 import 'package:eimunisasi/models/appointment.dart';
-import 'package:eimunisasi/models/user.dart';
+import 'package:eimunisasi/features/authentication/data/models/user.dart';
 import 'package:eimunisasi/pages/home/utama/vaksinasi/konfirmasi_janji.dart';
 import 'package:eimunisasi/services/appointment_services.dart';
 import 'package:flutter/material.dart';

@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eimunisasi/utils/datetime_extension.dart';
+import 'package:equatable/equatable.dart';
 
-class Anak {
+class Anak extends Equatable {
   final String? id;
   final String? parentId;
   final String? nama;
@@ -11,14 +13,13 @@ class Anak {
   final String? golDarah;
   final String? photoURL;
 
-  get umurAnak {
+  String get umurAnak {
     if (this.tanggalLahir.isNull) return 'Umur belum diisi';
 
-    Duration dur = DateTime.now().difference(this.tanggalLahir.orNow);
-    String tahun = (dur.inDays / 365).floor().toString();
-    String bulan = ((dur.inDays % 365) / 30).floor().toString();
-
-    return tahun + " tahun, " + bulan + " bulan ";
+    final diff = DateTime.now().difference(this.tanggalLahir.orNow);
+    final years = diff.inDays / 365;
+    final months = (diff.inDays % 365) / 30;
+    return '${years.floor()} tahun, ${months.floor()} bulan';
   }
 
   Anak({
@@ -40,12 +41,30 @@ class Anak {
       nama: data['nama'],
       nik: data['nik'] ?? '',
       tempatLahir: data['tempat_lahir'] ?? '',
-      tanggalLahir: data['tanggal_lahir'].toDate() ?? '' as DateTime?,
+      // timestamp to date
+      tanggalLahir: data['tanggal_lahir'] != null
+          ? (data['tanggal_lahir'] as Timestamp).toDate()
+          : null,
       jenisKelamin: data['jenis_kelamin'] ?? '',
       golDarah: data['gol_darah'] ?? '',
       photoURL: data['photo_url'] ?? '',
     );
   }
+
+  factory Anak.empty() {
+    return Anak(
+      id: '',
+      parentId: '',
+      nama: '',
+      nik: '',
+      tempatLahir: '',
+      tanggalLahir: null,
+      jenisKelamin: '',
+      golDarah: '',
+      photoURL: '',
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'parent_id': parentId,
@@ -82,4 +101,17 @@ class Anak {
       photoURL: photoURL ?? this.photoURL,
     );
   }
+
+  @override
+  List<Object?> get props => [
+        id,
+        parentId,
+        nama,
+        nik,
+        tempatLahir,
+        tanggalLahir,
+        jenisKelamin,
+        golDarah,
+        photoURL,
+      ];
 }

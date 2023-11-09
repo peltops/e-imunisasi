@@ -8,7 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../../models/user.dart';
+import '../models/user.dart';
 
 @Injectable()
 class AuthRepository {
@@ -122,7 +122,7 @@ class AuthRepository {
       await firestore
           .collection('users')
           .doc(firebaseAuth.currentUser?.uid)
-          .update({'photoURL': url});
+          .update({'avatarURL': url});
     } catch (e) {
       log(e.toString());
       rethrow;
@@ -137,6 +137,18 @@ class AuthRepository {
     final result = await ref.putFile(imageFile);
     final fileUrl = await result.ref.getDownloadURL();
     return fileUrl;
+  }
+
+  Future<void> verifyEmail() async {
+    try {
+      if (firebaseAuth.currentUser == null) {
+        throw Exception('User not found');
+      }
+      await firebaseAuth.currentUser?.sendEmailVerification();
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
   }
 
   Future<bool> destroyPasscode() async {

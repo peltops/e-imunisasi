@@ -4,7 +4,7 @@ import 'package:eimunisasi/features/authentication/data/models/otp.dart';
 import 'package:eimunisasi/features/authentication/data/models/phone.dart';
 import 'package:eimunisasi/features/authentication/data/repositories/auth_repository.dart';
 import 'package:eimunisasi/features/authentication/logic/cubit/login_phone_cubit/login_phone_cubit.dart';
-import 'package:eimunisasi/models/user.dart';
+import 'package:eimunisasi/features/authentication/data/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:formz/formz.dart';

@@ -1,13 +1,13 @@
 import 'package:eimunisasi/core/utils/constant.dart';
+import 'package:eimunisasi/core/widgets/picker.dart';
+import 'package:eimunisasi/features/authentication/data/models/user.dart';
 import 'package:eimunisasi/models/calendar.dart';
-import 'package:eimunisasi/models/user.dart';
 import 'package:eimunisasi/pages/widget/button_custom.dart';
 import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 import 'package:eimunisasi/pages/widget/text_form_custom.dart';
 import 'package:eimunisasi/services/calendar_database.dart';
 import 'package:eimunisasi/utils/dismiss_keyboard.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -54,37 +54,46 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
                         child: Column(children: [
                           SizedBox(height: 5.0),
                           TextFormCustom(
-                            onTap: () {
-                              DatePicker.showDatePicker(context,
-                                  theme: DatePickerTheme(
-                                    doneStyle: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'Nunito',
-                                    ),
-                                    cancelStyle: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'Nunito',
-                                      color: Colors.black,
-                                    ),
-                                    itemStyle: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontFamily: 'Nunito',
-                                    ),
-                                  ),
-                                  showTitleActions: true,
-                                  minTime: kFirstDay,
-                                  maxTime: kLastDay, onConfirm: (val) {
+                            onTap: () async {
+                              // LibPicker.DatePicker.showDatePicker(context,
+                              //     theme: LibPicker.DatePickerTheme(
+                              //       doneStyle: TextStyle(
+                              //         color: Theme.of(context)
+                              //             .colorScheme
+                              //             .secondary,
+                              //         fontWeight: FontWeight.bold,
+                              //         fontFamily: 'Nunito',
+                              //       ),
+                              //       cancelStyle: TextStyle(
+                              //         fontWeight: FontWeight.bold,
+                              //         fontFamily: 'Nunito',
+                              //         color: Colors.black,
+                              //       ),
+                              //       itemStyle: TextStyle(
+                              //         fontWeight: FontWeight.w500,
+                              //         fontFamily: 'Nunito',
+                              //       ),
+                              //     ),
+                              //     showTitleActions: true,
+                              //     minTime: kFirstDay,
+                              //     maxTime: kLastDay, onConfirm: (val) {
+                              //   String formattedDate =
+                              //       DateFormat('yyyy-MM-dd').format(val);
+                              //   setState(() {
+                              //     _dateTimeCtrl.text = formattedDate.toString();
+                              //   });
+                              // },
+                              //     currentTime: DateTime.now(),
+                              //     locale: LibPicker.LocaleType.id);
+                              final date = await Picker.pickDate(context);
+                              if (date != null) {
                                 String formattedDate =
-                                    DateFormat('yyyy-MM-dd').format(val);
+                                    DateFormat('yyyy-MM-dd').format(date);
                                 setState(() {
-                                  _dateTimeCtrl.text = formattedDate.toString();
+                                  _dateTimeCtrl.text =
+                                      formattedDate.toString();
                                 });
-                              },
-                                  currentTime: DateTime.now(),
-                                  locale: LocaleType.id);
+                              }
                             },
                             label: 'Tanggal',
                             readOnly: true,
@@ -130,15 +139,14 @@ class _AddEventCalendarState extends State<AddEventCalendar> {
                                               date: tempDate
                                                   .add(Duration(hours: 6))))
                                           .then((value) {
-                                            snackbarCustom(
-                                                    'Data berhasil ditambah')
-                                                .show(context);
-                                            Navigator.pop(context);
-                                          })
-                                          .catchError((onError) => snackbarCustom(
-                                                  'Terjadi kesalahan: $onError')
-                                              .show(context))
-                                          .whenComplete(() => setState(() {
+                                        snackbarCustom('Data berhasil ditambah')
+                                            .show(context);
+                                        Navigator.pop(context);
+                                      }).catchError((onError) {
+                                        snackbarCustom(
+                                                'Terjadi kesalahan: $onError')
+                                            .show(context);
+                                      }).whenComplete(() => setState(() {
                                                 loading = false;
                                               }));
                                     }

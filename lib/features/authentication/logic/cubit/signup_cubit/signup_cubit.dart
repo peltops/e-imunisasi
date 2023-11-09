@@ -3,7 +3,7 @@ import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/utils/string_extension.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:injectable/injectable.dart';
-import '../../../../../models/user.dart';
+import '../../../data/models/user.dart';
 import '../../../data/models/country_code.dart';
 import '../../../data/models/email.dart';
 import '../../../data/models/otp.dart';

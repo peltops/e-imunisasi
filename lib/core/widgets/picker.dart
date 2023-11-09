@@ -1,46 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 class Picker {
-  static DatePickerTheme dateTheme(BuildContext context) {
-    return DatePickerTheme(
-      doneStyle: TextStyle(
-        color: Theme.of(context).colorScheme.secondary,
-        fontWeight: FontWeight.bold,
-        fontFamily: 'Nunito',
-      ),
-      cancelStyle: TextStyle(
-        fontWeight: FontWeight.bold,
-        fontFamily: 'Nunito',
-        color: Colors.black,
-      ),
-      itemStyle: TextStyle(
-        fontWeight: FontWeight.w500,
-        fontFamily: 'Nunito',
-      ),
-    );
-  }
-
   static Future<DateTime?> pickDate(
-    BuildContext context,
-    Function(DateTime) onChanged, {
+    BuildContext context, {
     DateTime? minTime,
     DateTime? maxTime,
     bool showTitleActions = true,
     DateTime? currentTime,
-    LocaleType? locale = LocaleType.id,
+    Locale? locale = const Locale('id', 'ID'),
   }) async {
     final currentTimeDefault = DateTime.now();
     final minTimeDefault = DateTime(currentTimeDefault.year - 5);
     final maxTimeDefault = currentTimeDefault;
-    return DatePicker.showDatePicker(
-      context,
-      theme: dateTheme(context),
-      showTitleActions: true,
-      minTime: minTime ?? minTimeDefault,
-      maxTime: maxTime ?? maxTimeDefault,
-      onChanged: onChanged,
-      currentTime: currentTime ?? currentTimeDefault,
+    return await showDatePicker(
+      context: context,
+      initialDate: currentTime ?? currentTimeDefault,
+      firstDate: minTime ?? minTimeDefault,
+      lastDate: maxTime ?? maxTimeDefault,
       locale: locale,
     );
   }

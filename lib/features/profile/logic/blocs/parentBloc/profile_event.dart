@@ -87,3 +87,10 @@ class OnChangeBloodTypeEvent extends ProfileEvent {
   @override
   List<Object> get props => [bloodType];
 }
+
+class VerifyEmailEvent extends ProfileEvent {
+  VerifyEmailEvent();
+
+  @override
+  List<Object> get props => [];
+}

@@ -4,7 +4,8 @@ import 'package:eimunisasi/core/widgets/text.dart';
 import 'package:flutter/material.dart';
 
 class ErrorContainer extends StatelessWidget {
-  const ErrorContainer({Key? key}) : super(key: key);
+  final VoidCallback? onRefresh;
+  const ErrorContainer({Key? key, this.onRefresh}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,10 @@ class ErrorContainer extends StatelessWidget {
             text: AppConstant.ERROR_OCCURRED,
           ),
           VerticalSpacer(),
-          Text(AppConstant.TRY_AGAIN),
+          InkWell(
+            onTap: onRefresh,
+            child: Text(AppConstant.TRY_AGAIN),
+          ),
         ],
       ),
     );

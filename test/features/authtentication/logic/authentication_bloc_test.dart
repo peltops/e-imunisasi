@@ -2,7 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:eimunisasi/features/authentication/data/repositories/auth_repository.dart';
 import 'package:eimunisasi/features/authentication/logic/bloc/authentication_bloc/authentication_bloc.dart';
 import 'package:eimunisasi/features/splash/data/repositories/splash_repository.dart';
-import 'package:eimunisasi/models/user.dart';
+import 'package:eimunisasi/features/authentication/data/models/user.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
@@ -110,10 +110,7 @@ void main() {
     "AuthenticationBloc LoggedOut Failed",
     build: () {
       when(mockAuthRepository.signOut()).thenAnswer(
-        (_) async => {
-          throw Exception(),
-        },
-      );
+        (_) async => throw Exception(),);
       when(mockAuthRepository.getUser()).thenAnswer(
         (_) async => Users(
           uid: '1234',
