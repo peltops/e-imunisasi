@@ -236,6 +236,7 @@ void main() {
       build: () {
         when(mockAuthRepository.uploadImage(file)).thenAnswer((_) async => url);
         when(mockAuthRepository.updateUserAvatar(url)).thenAnswer((_) async => true);
+        when(mockAuthRepository.getUser()).thenAnswer((_) async => user);
         return ProfileBloc(mockAuthRepository);
       },
       act: (bloc) => bloc.add(ProfileUpdateAvatarEvent(file)),
@@ -244,6 +245,15 @@ void main() {
           statusUpdateAvatar: FormzStatus.submissionInProgress,
         ),
         ProfileState(
+          statusUpdateAvatar: FormzStatus.submissionSuccess,
+        ),
+        ProfileState(
+          statusGet: FormzStatus.submissionInProgress,
+          statusUpdateAvatar: FormzStatus.submissionSuccess,
+        ),
+        ProfileState(
+          user: user,
+          statusGet: FormzStatus.submissionSuccess,
           statusUpdateAvatar: FormzStatus.submissionSuccess,
         )
       ],
