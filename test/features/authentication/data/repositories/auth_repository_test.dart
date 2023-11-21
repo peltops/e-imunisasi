@@ -425,10 +425,12 @@ void main() {
     test('updateUserAvatar throws an exception if firestore throws', () async {
       when(firestore.collection('users')).thenReturn(collectionReference);
       when(collectionReference.doc(uid)).thenReturn(documentReference);
-      when(documentReference.update({'photoURL': 'url'}))
+      when(documentReference.update({'avatarURL': 'url'}))
           .thenThrow(FirebaseAuthException(code: 'invalid-email'));
+
+      final result = authRepository.updateUserAvatar('url');
       expect(
-        () => authRepository.updateUserAvatar('url'),
+        result,
         throwsA(isA<FirebaseAuthException>()),
       );
     });
