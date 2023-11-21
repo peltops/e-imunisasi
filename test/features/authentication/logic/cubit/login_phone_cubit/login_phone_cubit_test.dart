@@ -32,8 +32,8 @@ void main() {
 
   final phone = "85211011003";
   final phoneInvalid = "8123456789";
-  final countryCode = "62";
-  final countryCodeInvalid = "+6";
+  final countryCode = "+62";
+  final countryCodeInvalid = "62";
   final otp = "123456";
   final otpInvalid = "12345";
 
