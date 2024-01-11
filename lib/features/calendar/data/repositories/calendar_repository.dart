@@ -1,13 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eimunisasi/features/calendar/data/models/calendar_model.dart';
+import 'package:eimunisasi/features/calendar/data/models/hive_calendar_activity_model.dart';
+import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
 
 @Injectable()
 class CalendarRepository {
   final FirebaseFirestore firestore;
+  final HiveInterface hiveInterface;
 
   CalendarRepository(
     this.firestore,
+    this.hiveInterface,
   );
 
   Future<CalendarModel> setEvent(CalendarModel model) async {
@@ -55,4 +59,21 @@ class CalendarRepository {
       rethrow;
     }
   }
+
+  Future<int> setEventLocal(CalendarActivityHive data) async {
+    final box = await hiveInterface.openBox<CalendarActivityHive>('calendar_activity');
+    return box.add(data);
+  }
+
+  Future<List<CalendarActivityHive>> getEventLocal() async {
+    final box = await hiveInterface.openBox<CalendarActivityHive>('calendar_activity');
+    return box.values.toList();
+  }
+
+  Future<int> deleteAllEventLocal() async {
+    final box = await hiveInterface.openBox<CalendarActivityHive>('calendar_activity');
+    return await box.clear();
+  }
+
+
 }
