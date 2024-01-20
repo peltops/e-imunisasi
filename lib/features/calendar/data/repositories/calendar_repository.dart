@@ -70,10 +70,18 @@ class CalendarRepository {
     return box.values.toList();
   }
 
+  Future<void> updateEventLocal(CalendarActivityHive data) async {
+    final box = await hiveInterface.openBox<CalendarActivityHive>('calendar_activity');
+    return box.putAt(box.values.toList().indexWhere((element) => element.date == data.date), data);
+  }
+
+  Future<void> deleteEventLocal(CalendarActivityHive data) async {
+    final box = await hiveInterface.openBox<CalendarActivityHive>('calendar_activity');
+    return box.deleteAt(box.values.toList().indexWhere((element) => element.date == data.date));
+  }
+
   Future<int> deleteAllEventLocal() async {
     final box = await hiveInterface.openBox<CalendarActivityHive>('calendar_activity');
     return await box.clear();
   }
-
-
 }
