@@ -1,5 +1,9 @@
+import 'dart:collection';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eimunisasi/core/extension.dart';
+import 'package:eimunisasi/features/calendar/data/models/hive_calendar_activity_model.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class CalendarModel {
   final String? uid;
@@ -59,5 +63,37 @@ class CalendarModel {
       "date": date,
       "readOnly": readOnly,
     };
+  }
+
+  CalendarActivityHive toHive() {
+    return CalendarActivityHive()
+      ..activity = activity
+      ..date = date;
+  }
+}
+
+extension CalendarModelExtension on List<CalendarModel> {
+  LinkedHashMap<DateTime, List<CalendarModel>> groupEventsByDate() {
+    int getHashCode(DateTime key) {
+      return key.day * 1000000 + key.month * 10000 + key.year;
+    }
+
+    var _groupedEvents = LinkedHashMap<DateTime, List<CalendarModel>>(
+      equals: isSameDay,
+      hashCode: getHashCode,
+    );
+
+    this.forEach((event) {
+      if (event.date == null) return;
+      final date = DateTime.utc(
+        event.date!.year,
+        event.date!.month,
+        event.date!.day,
+        12,
+      );
+      if (_groupedEvents[date] == null) _groupedEvents[date] = [];
+      _groupedEvents[date]?.add(event);
+    });
+    return _groupedEvents;
   }
 }
