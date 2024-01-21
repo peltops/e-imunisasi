@@ -60,9 +60,9 @@ class CalendarRepository {
     }
   }
 
-  Future<int> setEventLocal(CalendarActivityHive data) async {
+  Future<int> setEventLocal(CalendarModel data) async {
     final box = await hiveInterface.openBox<CalendarActivityHive>('calendar_activity');
-    return box.add(data);
+    return box.add(data.toHive());
   }
 
   Future<List<CalendarActivityHive>> getEventLocal() async {
@@ -70,12 +70,12 @@ class CalendarRepository {
     return box.values.toList();
   }
 
-  Future<void> updateEventLocal(CalendarActivityHive data) async {
+  Future<void> updateEventLocal(CalendarModel data) async {
     final box = await hiveInterface.openBox<CalendarActivityHive>('calendar_activity');
-    return box.putAt(box.values.toList().indexWhere((element) => element.date == data.date), data);
+    return box.putAt(box.values.toList().indexWhere((element) => element.date == data.date), data.toHive());
   }
 
-  Future<void> deleteEventLocal(CalendarActivityHive data) async {
+  Future<void> deleteEventLocal(CalendarModel data) async {
     final box = await hiveInterface.openBox<CalendarActivityHive>('calendar_activity');
     return box.deleteAt(box.values.toList().indexWhere((element) => element.date == data.date));
   }

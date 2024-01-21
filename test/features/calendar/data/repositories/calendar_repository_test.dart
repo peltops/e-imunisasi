@@ -18,7 +18,6 @@ import 'package:mockito/mockito.dart';
   Query,
   QuerySnapshot,
   HiveInterface,
-  Box,
 ], customMocks: [
   MockSpec<QueryDocumentSnapshot>(
     as: #MockQueryDocumentSnapshot,
@@ -29,6 +28,7 @@ import 'package:mockito/mockito.dart';
 ])
 @GenerateNiceMocks([
   MockSpec<CalendarActivityHive>(),
+  MockSpec<Box<CalendarActivityHive>>(),
 ])
 import 'calendar_repository_test.mocks.dart';
 
@@ -211,12 +211,16 @@ void main() {
   group('setEventLocal', () {
     late CalendarRepository calendarRepository;
     late HiveInterface hiveInterface;
-    late Box<MockCalendarActivityHive> box;
+    late Box<CalendarActivityHive> box;
     final activity = 'test title';
     final date = DateTime.now();
     final testEvent = MockCalendarActivityHive()
       ..activity = activity
       ..date = date;
+    final eventModel = CalendarModel(
+      activity: activity,
+      date: date,
+    );
     setUp(() {
       hiveInterface = MockHiveInterface();
       box = MockBox();
@@ -227,20 +231,20 @@ void main() {
     });
     test('returns a list of CalendarModel if the call to firestore succeeds',
         () async {
-      when(hiveInterface.openBox<MockCalendarActivityHive>('calendar_activity'))
-          .thenAnswer((_) async => box);
       when(box.add(testEvent)).thenAnswer((_) async => 1);
-      final res = await calendarRepository.setEventLocal(testEvent);
+      when(hiveInterface.openBox<CalendarActivityHive>('calendar_activity'))
+          .thenAnswer((_) async => box);
+      final res = await calendarRepository.setEventLocal(eventModel);
       expect(res, isA<int>());
     });
 
     test('throws an exception if the call to firestore unsucceeds', () async {
-      when(hiveInterface.openBox<MockCalendarActivityHive>('calendar_activity'))
-          .thenAnswer((_) async => box);
+      when(hiveInterface.openBox<CalendarActivityHive>('calendar_activity'))
+          .thenThrow(Exception());
       when(box.add(testEvent)).thenThrow(Exception());
 
       expect(
-        () => calendarRepository.setEventLocal(testEvent),
+        () => calendarRepository.setEventLocal(eventModel),
         throwsA(isA<Exception>()),
       );
     });
@@ -249,7 +253,7 @@ void main() {
   group('getEventLocal', () {
     late CalendarRepository calendarRepository;
     late HiveInterface hiveInterface;
-    late Box<MockCalendarActivityHive> box;
+    late Box<CalendarActivityHive> box;
     final activity = 'test title';
     final date = DateTime.now();
     final testEvent = MockCalendarActivityHive()
@@ -265,15 +269,15 @@ void main() {
     });
     test('returns a list of CalendarModel if the call to firestore succeeds',
         () async {
-      when(hiveInterface.openBox<MockCalendarActivityHive>('calendar_activity'))
+      when(hiveInterface.openBox<CalendarActivityHive>('calendar_activity'))
           .thenAnswer((_) async => box);
       when(box.values).thenReturn([testEvent]);
       final res = await calendarRepository.getEventLocal();
-      expect(res, isA<List<MockCalendarActivityHive>>());
+      expect(res, isA<List<CalendarActivityHive>>());
     });
 
     test('throws an exception if the call to firestore unsucceeds', () async {
-      when(hiveInterface.openBox<MockCalendarActivityHive>('calendar_activity'))
+      when(hiveInterface.openBox<CalendarActivityHive>('calendar_activity'))
           .thenAnswer((_) async => box);
       when(box.values).thenThrow(Exception());
 
@@ -287,7 +291,7 @@ void main() {
   group('deleteAllEventLocal', () {
     late CalendarRepository calendarRepository;
     late HiveInterface hiveInterface;
-    late Box<MockCalendarActivityHive> box;
+    late Box<CalendarActivityHive> box;
     setUp(() {
       hiveInterface = MockHiveInterface();
       box = MockBox();
@@ -298,7 +302,7 @@ void main() {
     });
     test('returns a list of CalendarModel if the call to firestore succeeds',
         () async {
-      when(hiveInterface.openBox<MockCalendarActivityHive>('calendar_activity'))
+      when(hiveInterface.openBox<CalendarActivityHive>('calendar_activity'))
           .thenAnswer((_) async => box);
       when(box.clear()).thenAnswer((_) async => 1);
       final res = await calendarRepository.deleteAllEventLocal();
@@ -306,7 +310,7 @@ void main() {
     });
 
     test('throws an exception if the call to firestore unsucceeds', () async {
-      when(hiveInterface.openBox<MockCalendarActivityHive>('calendar_activity'))
+      when(hiveInterface.openBox<CalendarActivityHive>('calendar_activity'))
           .thenAnswer((_) async => box);
       when(box.clear()).thenThrow(Exception());
 
@@ -320,12 +324,16 @@ void main() {
   group('updateEventLocal', () {
     late CalendarRepository calendarRepository;
     late HiveInterface hiveInterface;
-    late Box<MockCalendarActivityHive> box;
+    late Box<CalendarActivityHive> box;
     final activity = 'test title';
     final date = DateTime.now();
     final testEvent = MockCalendarActivityHive()
       ..activity = activity
       ..date = date;
+    final eventModel = CalendarModel(
+      activity: activity,
+      date: date,
+    );
     setUp(() {
       hiveInterface = MockHiveInterface();
       box = MockBox();
@@ -336,23 +344,23 @@ void main() {
     });
     test('returns a list of CalendarModel if the call to firestore succeeds',
         () async {
-      when(hiveInterface.openBox<MockCalendarActivityHive>('calendar_activity'))
+      when(hiveInterface.openBox<CalendarActivityHive>('calendar_activity'))
           .thenAnswer((_) async => box);
       when(box.putAt(0, testEvent)).thenAnswer((_) async => 1);
       when(box.values).thenReturn([testEvent]);
 
-      final res = calendarRepository.updateEventLocal(testEvent);
+      final res = calendarRepository.updateEventLocal(eventModel);
       expect(() async => await res, isA<void>());
     });
 
     test('throws an exception if the call to firestore unsucceeds', () async {
-      when(hiveInterface.openBox<MockCalendarActivityHive>('calendar_activity'))
+      when(hiveInterface.openBox<CalendarActivityHive>('calendar_activity'))
           .thenAnswer((_) async => box);
       when(box.values).thenThrow(Exception());
       when(box.putAt(0, testEvent)).thenThrow(Exception());
 
       expect(
-        () => calendarRepository.updateEventLocal(testEvent),
+        () => calendarRepository.updateEventLocal(eventModel),
         throwsA(isA<Exception>()),
       );
     });
@@ -361,12 +369,16 @@ void main() {
   group('deleteEventLocal', () {
     late CalendarRepository calendarRepository;
     late HiveInterface hiveInterface;
-    late Box<MockCalendarActivityHive> box;
+    late Box<CalendarActivityHive> box;
     final activity = 'test title';
     final date = DateTime.now();
     final testEvent = MockCalendarActivityHive()
       ..activity = activity
       ..date = date;
+    final eventModel = CalendarModel(
+      activity: activity,
+      date: date,
+    );
     setUp(() {
       hiveInterface = MockHiveInterface();
       box = MockBox();
@@ -377,23 +389,23 @@ void main() {
     });
     test('returns a list of CalendarModel if the call to firestore succeeds',
         () async {
-      when(hiveInterface.openBox<MockCalendarActivityHive>('calendar_activity'))
+      when(hiveInterface.openBox<CalendarActivityHive>('calendar_activity'))
           .thenAnswer((_) async => box);
       when(box.deleteAt(0)).thenAnswer((_) async => 1);
       when(box.values).thenReturn([testEvent]);
 
-      final res = calendarRepository.deleteEventLocal(testEvent);
+      final res = calendarRepository.deleteEventLocal(eventModel);
       expect(() async => await res, isA<void>());
     });
 
     test('throws an exception if the call to firestore unsucceeds', () async {
-      when(hiveInterface.openBox<MockCalendarActivityHive>('calendar_activity'))
+      when(hiveInterface.openBox<CalendarActivityHive>('calendar_activity'))
           .thenAnswer((_) async => box);
       when(box.values).thenThrow(Exception());
       when(box.deleteAt(0)).thenThrow(Exception());
 
       expect(
-        () => calendarRepository.deleteEventLocal(testEvent),
+        () => calendarRepository.deleteEventLocal(eventModel),
         throwsA(isA<Exception>()),
       );
     });
