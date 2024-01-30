@@ -14,7 +14,7 @@ part 'calendar_event.dart';
 
 part 'calendar_state.dart';
 
-@Singleton()
+@injectable
 class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   final CalendarRepository calendarRepository;
 
