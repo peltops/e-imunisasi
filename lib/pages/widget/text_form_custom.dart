@@ -14,7 +14,7 @@ class TextFormCustom extends StatelessWidget {
   final String? initialValue;
   final TextEditingController? controller;
   final TextInputType? keyboardType;
-  final Function? onChanged;
+  final Function(String)? onChanged;
   final String? errorText;
   TextFormCustom({
     this.labelIcon,
@@ -77,7 +77,7 @@ class TextFormCustom extends StatelessWidget {
             hintText: hintText,
           ),
           validator: validator as String? Function(String?)?,
-          onChanged: onChanged as void Function(String)?,
+          onChanged: onChanged,
           obscureText: obscureText,
           controller: controller,
         ),

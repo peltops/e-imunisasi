@@ -87,7 +87,7 @@ class NotificationService extends ChangeNotifier {
 
   //Sheduled Notification
 
-  Future sheduledNotification(
+  Future scheduledNotification(
       int id, String title, String body, DateTime date) async {
     var android = AndroidNotificationDetails(
       "id",

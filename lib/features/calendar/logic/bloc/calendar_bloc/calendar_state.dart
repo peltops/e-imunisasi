@@ -14,6 +14,8 @@ class CalendarState extends Equatable {
     this.focusedDate,
     this.currentPageDate,
     this.format = CalendarFormat.month,
+    this.dateTimeForm,
+    this.activityForm = emptyString
   });
 
   final FormzStatus status;
@@ -28,6 +30,8 @@ class CalendarState extends Equatable {
   final DateTime? focusedDate;
   final DateTime? currentPageDate;
   final CalendarFormat format;
+  final DateTime? dateTimeForm;
+  final String activityForm;
 
   CalendarState copyWith({
     FormzStatus? status,
@@ -42,6 +46,8 @@ class CalendarState extends Equatable {
     DateTime? focusedDate,
     DateTime? currentPageDate,
     CalendarFormat? format,
+    DateTime? dateTimeForm,
+    String? activityForm,
   }) {
     return CalendarState(
       status: status ?? this.status,
@@ -56,6 +62,8 @@ class CalendarState extends Equatable {
       focusedDate: focusedDate ?? this.focusedDate,
       currentPageDate: currentPageDate ?? this.currentPageDate,
       format: format ?? this.format,
+      dateTimeForm: dateTimeForm ?? this.dateTimeForm,
+      activityForm: activityForm ?? this.activityForm,
     );
   }
 
@@ -73,5 +81,7 @@ class CalendarState extends Equatable {
         focusedDate,
         currentPageDate,
         format,
+        dateTimeForm,
+        activityForm,
       ];
 }

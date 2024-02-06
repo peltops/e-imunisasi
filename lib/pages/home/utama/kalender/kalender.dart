@@ -1,5 +1,6 @@
 import 'dart:collection';
 import 'package:eimunisasi/core/utils/constant.dart';
+import 'package:eimunisasi/features/calendar/data/models/calendar_model.dart';
 import 'package:eimunisasi/models/hive_calendar_activity.dart';
 import 'package:eimunisasi/pages/home/utama/kalender/add_event.dart';
 import 'package:eimunisasi/pages/home/utama/kalender/update_event.dart';
@@ -367,7 +368,12 @@ class _KalenderPageState extends State<KalenderPage> {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => UpdateEventCalendar(
                   docID: docID,
-                  data: data,
+                  data: CalendarModel(
+                      uid: data.uid,
+                      activity: data.activity,
+                      date: data.date,
+                      readOnly: data.readOnly
+                  ),
                 )));
         break;
       case 1:

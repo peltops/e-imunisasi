@@ -11,6 +11,7 @@ class CalendarModel {
   final String? activity;
   final String? documentID;
   final bool? readOnly;
+  final DateTime? createdDate;
 
   CalendarModel({
     this.uid,
@@ -18,6 +19,7 @@ class CalendarModel {
     this.date,
     this.documentID,
     this.readOnly = false,
+    this.createdDate,
   });
 
   CalendarModel copyWith({
@@ -26,6 +28,7 @@ class CalendarModel {
     DateTime? date,
     String? documentID,
     bool? readOnly,
+    DateTime? createdDate,
   }) {
     return CalendarModel(
       uid: uid ?? this.uid,
@@ -33,6 +36,7 @@ class CalendarModel {
       date: date ?? this.date,
       documentID: documentID ?? this.documentID,
       readOnly: readOnly ?? this.readOnly,
+      createdDate: createdDate ?? this.createdDate,
     );
   }
 
@@ -53,6 +57,18 @@ class CalendarModel {
         }
       }(),
       readOnly: data?['readOnly'] ?? false,
+      createdDate: () {
+        if (data?['createdDate'] == null) return null;
+        try {
+          if (data?['createdDate'] is DateTime) {
+            return data?['createdDate'];
+          } else {
+            return (data?['createdDate'] as Timestamp).toDate();
+          }
+        } catch (e) {
+          return null;
+        }
+      }(),
     );
   }
 
@@ -62,12 +78,14 @@ class CalendarModel {
       "activity": activity,
       "date": date,
       "readOnly": readOnly,
+      "createdDate": createdDate ?? DateTime.now(),
     };
   }
 
   CalendarActivityHive toHive() {
     return CalendarActivityHive()
       ..activity = activity
+      ..id = createdDate?.millisecondsSinceEpoch
       ..date = date;
   }
 }

@@ -1,5 +1,6 @@
 import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/features/authentication/data/models/user.dart';
+import 'package:eimunisasi/features/calendar/data/models/calendar_model.dart';
 import 'package:eimunisasi/models/calendar.dart';
 import 'package:eimunisasi/pages/widget/button_custom.dart';
 import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
@@ -16,7 +17,7 @@ import '../../../../core/widgets/picker.dart';
 
 class UpdateEventCalendar extends StatefulWidget {
   final docID;
-  final KalenderModel? data;
+  final CalendarModel? data;
 
   const UpdateEventCalendar({Key? key, this.docID, this.data})
       : super(key: key);

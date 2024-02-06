@@ -4,6 +4,8 @@ import 'package:eimunisasi/features/calendar/data/models/hive_calendar_activity_
 import 'package:eimunisasi/features/calendar/data/repositories/calendar_repository.dart';
 import 'package:eimunisasi/utils/string_extension.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
 import 'package:mock_exceptions/mock_exceptions.dart';
@@ -36,10 +38,16 @@ void main() {
   group('setEvent', () {
     late FirebaseFirestore mockFirebaseFirestore;
     late CalendarRepository calendarRepository;
+    late FirebaseAuth mockFirebaseAuth;
 
     setUp(() {
       mockFirebaseFirestore = FakeFirebaseFirestore();
-      calendarRepository = CalendarRepository(mockFirebaseFirestore, Hive);
+      mockFirebaseAuth = MockFirebaseAuth();
+      calendarRepository = CalendarRepository(
+        mockFirebaseFirestore,
+        Hive,
+        mockFirebaseAuth,
+      );
     });
 
     test('calls add on a CollectionReference with the correct data', () async {
@@ -71,10 +79,15 @@ void main() {
   group('updateEvent', () {
     late FirebaseFirestore mockFirebaseFirestore;
     late CalendarRepository calendarRepository;
-
+    late FirebaseAuth mockFirebaseAuth;
     setUp(() {
       mockFirebaseFirestore = FakeFirebaseFirestore();
-      calendarRepository = CalendarRepository(mockFirebaseFirestore, Hive);
+      mockFirebaseAuth = MockFirebaseAuth();
+      calendarRepository = CalendarRepository(
+        mockFirebaseFirestore,
+        Hive,
+        mockFirebaseAuth,
+      );
     });
 
     test('calls update on a DocumentReference with the correct data', () async {
@@ -125,6 +138,7 @@ void main() {
   group('deleteEvent', () {
     late FirebaseFirestore mockFirebaseFirestore;
     late CalendarRepository calendarRepository;
+    late FirebaseAuth mockFirebaseAuth;
     // Arrange
     final testEvent = CalendarModel(
       activity: 'test title',
@@ -133,7 +147,12 @@ void main() {
     );
     setUp(() {
       mockFirebaseFirestore = FakeFirebaseFirestore();
-      calendarRepository = CalendarRepository(mockFirebaseFirestore, Hive);
+      mockFirebaseAuth = MockFirebaseAuth();
+      calendarRepository = CalendarRepository(
+        mockFirebaseFirestore,
+        Hive,
+        mockFirebaseAuth,
+      );
     });
 
     test('calls delete on a DocumentReference with the correct data', () async {
@@ -156,6 +175,7 @@ void main() {
   group('getEvents', () {
     late CalendarRepository calendarRepository;
     late FirebaseFirestore firestore;
+    late FirebaseAuth mockFirebaseAuth;
 
     late CollectionReference<Map<String, dynamic>> collectionReference;
     late Query<Map<String, dynamic>> query;
@@ -173,6 +193,7 @@ void main() {
 
     setUp(() {
       firestore = MockFirebaseFirestore();
+      mockFirebaseAuth = MockFirebaseAuth();
       collectionReference = MockCollectionReference();
       query = MockQuery();
       querySnapshot = MockQuerySnapshot();
@@ -181,6 +202,7 @@ void main() {
       calendarRepository = CalendarRepository(
         firestore,
         Hive,
+        mockFirebaseAuth,
       );
     });
     test('returns a list of CalendarModel if the call to firestore succeeds',
@@ -188,6 +210,9 @@ void main() {
       when(
         firestore.collection('calendars'),
       ).thenAnswer((_) => collectionReference);
+      when(collectionReference.where('uid', isEqualTo: null)).thenReturn(
+        collectionReference,
+      );
       when(collectionReference.orderBy('date')).thenReturn(query);
       when(query.get()).thenAnswer((_) async => querySnapshot);
       when(querySnapshot.docs).thenReturn(listQueryDocumentSnapshot);
@@ -201,6 +226,9 @@ void main() {
       when(
         firestore.collection('calendars'),
       ).thenAnswer((_) => collectionReference);
+      when(collectionReference.where('uid', isEqualTo: null)).thenReturn(
+        collectionReference,
+      );
       when(collectionReference.orderBy('date')).thenReturn(query);
       when(query.get()).thenThrow(Exception());
 
@@ -227,6 +255,7 @@ void main() {
       calendarRepository = CalendarRepository(
         MockFirebaseFirestore(),
         hiveInterface,
+        MockFirebaseAuth(),
       );
     });
     test('returns a list of CalendarModel if the call to firestore succeeds',
@@ -265,6 +294,7 @@ void main() {
       calendarRepository = CalendarRepository(
         MockFirebaseFirestore(),
         hiveInterface,
+        MockFirebaseAuth(),
       );
     });
     test('returns a list of CalendarModel if the call to firestore succeeds',
@@ -298,6 +328,7 @@ void main() {
       calendarRepository = CalendarRepository(
         MockFirebaseFirestore(),
         hiveInterface,
+        MockFirebaseAuth(),
       );
     });
     test('returns a list of CalendarModel if the call to firestore succeeds',
@@ -316,51 +347,6 @@ void main() {
 
       expect(
         () => calendarRepository.deleteAllEventLocal(),
-        throwsA(isA<Exception>()),
-      );
-    });
-  });
-
-  group('updateEventLocal', () {
-    late CalendarRepository calendarRepository;
-    late HiveInterface hiveInterface;
-    late Box<CalendarActivityHive> box;
-    final activity = 'test title';
-    final date = DateTime.now();
-    final testEvent = MockCalendarActivityHive()
-      ..activity = activity
-      ..date = date;
-    final eventModel = CalendarModel(
-      activity: activity,
-      date: date,
-    );
-    setUp(() {
-      hiveInterface = MockHiveInterface();
-      box = MockBox();
-      calendarRepository = CalendarRepository(
-        MockFirebaseFirestore(),
-        hiveInterface,
-      );
-    });
-    test('returns a list of CalendarModel if the call to firestore succeeds',
-        () async {
-      when(hiveInterface.openBox<CalendarActivityHive>('calendar_activity'))
-          .thenAnswer((_) async => box);
-      when(box.putAt(0, testEvent)).thenAnswer((_) async => 1);
-      when(box.values).thenReturn([testEvent]);
-
-      final res = calendarRepository.updateEventLocal(eventModel);
-      expect(() async => await res, isA<void>());
-    });
-
-    test('throws an exception if the call to firestore unsucceeds', () async {
-      when(hiveInterface.openBox<CalendarActivityHive>('calendar_activity'))
-          .thenAnswer((_) async => box);
-      when(box.values).thenThrow(Exception());
-      when(box.putAt(0, testEvent)).thenThrow(Exception());
-
-      expect(
-        () => calendarRepository.updateEventLocal(eventModel),
         throwsA(isA<Exception>()),
       );
     });
@@ -385,6 +371,7 @@ void main() {
       calendarRepository = CalendarRepository(
         MockFirebaseFirestore(),
         hiveInterface,
+        MockFirebaseAuth(),
       );
     });
     test('returns a list of CalendarModel if the call to firestore succeeds',
@@ -402,7 +389,7 @@ void main() {
       when(hiveInterface.openBox<CalendarActivityHive>('calendar_activity'))
           .thenAnswer((_) async => box);
       when(box.values).thenThrow(Exception());
-      when(box.deleteAt(0)).thenThrow(Exception());
+      when(box.delete(any)).thenThrow(Exception());
 
       expect(
         () => calendarRepository.deleteEventLocal(eventModel),

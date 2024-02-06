@@ -8,4 +8,7 @@ class CalendarActivityHive extends HiveObject {
 
   @HiveField(1)
   String? activity;
+
+  @HiveField(2)
+  int? id;
 }

@@ -9,15 +9,18 @@ import 'package:formz/formz.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../../../../pages/home/utama/kalender/update_event.dart';
+import '../../../../pages/widget/snackbar_custom.dart';
 import '../../logic/bloc/calendar_bloc/calendar_bloc.dart';
 import 'add_event_calendar_screen.dart';
+import 'update_event_calendar_screen.dart';
 
 class CalendarScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<CalendarBloc>(
-      create: (_) => getIt<CalendarBloc>()..add(CalendarEventLoaded()),
+      create: (_) => getIt<CalendarBloc>()
+        ..add(CalendarEventLoaded())
+        ..add(SetSelectedDate(selectedDate: DateTime.now())),
       child: const _CalendarScaffold(),
     );
   }
@@ -114,7 +117,9 @@ class _CalendarSection extends StatelessWidget {
       builder: (context, state) {
         return TableCalendar(
           calendarBuilders: calendarBuilder(),
-          eventLoader: null,
+          eventLoader: (day) {
+            return state.groupedEvents?[day] ?? [];
+          },
           headerStyle: HeaderStyle(
             formatButtonVisible: false,
             titleCentered: true,
@@ -227,7 +232,12 @@ class _DetailCalendarSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CalendarBloc, CalendarState>(
+    return BlocConsumer<CalendarBloc, CalendarState>(
+      listener: (context, state) {
+        if (state.statusDeleteEvent == FormzStatus.submissionSuccess) {
+          snackbarCustom("Berhasil Menghapus Aktivitas").show(context);
+        }
+      },
       builder: (context, state) {
         if (state.selectedDate != null) {
           return DataTable(
@@ -255,9 +265,7 @@ class _DetailCalendarSection extends StatelessWidget {
               ),
             ],
             rows: state.groupedEvents?[state.selectedDate]?.map((e) {
-                  return _ListRowEvent(
-                    event: e,
-                  ).build(context);
+                  return _ListRowEvent(event: e).build(context);
                 }).toList() ??
                 [],
           );
@@ -292,17 +300,18 @@ class _ListRowEvent {
           ),
         ),
         DataCell(
-          (event.readOnly == true)
-              ? PopupMenuButton(
+          BlocBuilder<CalendarBloc, CalendarState>(
+            builder: (context, state) {
+              if (state.statusDeleteEvent == FormzStatus.submissionInProgress) {
+                return CircularProgressIndicator();
+              }
+              if (event.readOnly == false) {
+                return PopupMenuButton(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
                   onSelected: (item) {
-                    selectedItem(
-                      context,
-                      item,
-                      event,
-                    );
+                    selectedItem(context, item, event);
                   },
                   initialValue: 2,
                   child: Icon(
@@ -323,8 +332,11 @@ class _ListRowEvent {
                       ),
                     ),
                   ],
-                )
-              : SizedBox(),
+                );
+              }
+              return SizedBox();
+            },
+          ),
         ),
       ],
     );
@@ -332,7 +344,7 @@ class _ListRowEvent {
 
   void confirmDeleteDialog(BuildContext context, CalendarModel event) {
     // set up the buttons
-    Widget cancelButton = ElevatedButton(
+    final cancelButton = ElevatedButton(
         child: Text(AppConstant.NO),
         onPressed: () {
           Navigator.pop(context);
@@ -340,14 +352,15 @@ class _ListRowEvent {
         style: ElevatedButton.styleFrom(
           backgroundColor: Theme.of(context).primaryColor,
         ));
-    Widget continueButton = TextButton(
+    final continueButton = TextButton(
       child: Text(AppConstant.YES),
       onPressed: () async {
         context.read<CalendarBloc>().add(DeleteEvent(event: event));
+        context.navigateBack();
       },
     );
     // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
+    final alert = AlertDialog(
       title: Text(AppConstant.CONFIRMATION),
       content: Text(AppConstant.DELETE_CONFIRMATION_QUESTION),
       actions: [
@@ -355,7 +368,6 @@ class _ListRowEvent {
         continueButton,
       ],
     );
-    // show the dialog
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -367,9 +379,14 @@ class _ListRowEvent {
   void selectedItem(BuildContext context, item, CalendarModel data) {
     switch (item) {
       case 0:
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) =>
-                UpdateEventCalendar(docID: data.documentID, data: data)));
+        context.navigateTo(
+          BlocProvider.value(
+            value: context.read<CalendarBloc>()
+              ..add(SetDateTimeForm(value: data.date))
+              ..add(SetActivityForm(value: data.activity)),
+            child: UpdateEventCalendar(event: data),
+          ),
+        );
         break;
       case 1:
         confirmDeleteDialog(context, event);

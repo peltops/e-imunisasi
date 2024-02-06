@@ -103,4 +103,31 @@ class DeleteEvent extends CalendarEvent {
   List<Object> get props => [
     event,
   ];
+
+}
+
+class SetDateTimeForm extends CalendarEvent {
+  final DateTime? value;
+
+  SetDateTimeForm({
+    required this.value,
+  });
+
+  @override
+  List<Object?> get props => [
+    value,
+  ];
+}
+
+class SetActivityForm extends CalendarEvent {
+  final String? value;
+
+  SetActivityForm({
+    required this.value,
+  });
+
+  @override
+  List<Object?> get props => [
+    value,
+  ];
 }
