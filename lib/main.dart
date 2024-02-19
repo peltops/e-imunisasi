@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 import 'app.dart';
 import 'features/calendar/data/models/hive_calendar_activity_model.dart';
@@ -18,6 +19,7 @@ void main() async {
   Hive.registerAdapter(CalendarActivityHiveAdapter());
   NotificationService().initialize();
   tz.initializeTimeZones();
+  tz.setLocalLocation(tz.getLocation('Asia/Jakarta'));
   if (kDebugMode) {
     Bloc.observer = AppBlocObserver();
   }

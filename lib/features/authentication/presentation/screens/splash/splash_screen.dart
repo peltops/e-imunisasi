@@ -1,7 +1,27 @@
+import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    final permission = Permission.notification.request();
+    permission.then((status) {
+      if (status.isGranted == false) {
+        snackbarCustom(
+          'Izinkan notifikasi untuk menerima pemberitahuan',
+        ).show(context);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

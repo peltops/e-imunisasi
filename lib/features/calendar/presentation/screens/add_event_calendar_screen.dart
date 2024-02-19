@@ -124,14 +124,15 @@ class AddEventCalendar extends StatelessWidget {
   }
 
   void onSaved(BuildContext context, CalendarState state) {
-    final user = context.read<AuthenticationBloc>().state.user;
+    final auth = context.read<AuthenticationBloc>().state as Authenticated;
+    final user = auth.user;
     dismissKeyboard(context);
     if (!isValid(context, state)) return;
     context.read<CalendarBloc>().add(
           AddEvent(
             event: CalendarModel(
-              uid: user?.uid ?? '',
-              date: state.dateTimeForm?.add(Duration(hours: 12)),
+              uid: user.uid ?? '',
+              date: state.dateTimeForm?.add(Duration(hours: 6)),
               activity: state.activityForm,
             ),
           ),
