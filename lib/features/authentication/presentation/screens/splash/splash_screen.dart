@@ -1,4 +1,4 @@
-import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
+import 'package:eimunisasi/core/widgets/snackbar_custom.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 

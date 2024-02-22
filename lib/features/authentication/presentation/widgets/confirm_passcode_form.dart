@@ -1,10 +1,10 @@
-import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
+import 'package:eimunisasi/core/widgets/snackbar_custom.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 
 import '../../../../core/utils/constant.dart';
-import '../../../../pages/widget/button_custom.dart';
+import '../../../../core/widgets/button_custom.dart';
 import '../../../bottom_navbar/presentation/screens/bottom_navbar.dart';
 import '../../logic/cubit/local_auth_cubit/local_auth_cubit.dart';
 

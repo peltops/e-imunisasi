@@ -1,7 +1,6 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:eimunisasi/injection.dart';
-import 'package:eimunisasi/pages/onboarding/onboarding.dart';
-import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
+import 'package:eimunisasi/core/widgets/snackbar_custom.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -11,6 +10,7 @@ import 'features/authentication/logic/bloc/authentication_bloc/authentication_bl
 import 'features/authentication/presentation/screens/auth/login_phone_screen.dart';
 import 'features/authentication/presentation/screens/local_auth/passcode_screen.dart';
 import 'features/authentication/presentation/screens/splash/splash_screen.dart';
+import 'features/onboarding/onboarding.dart';
 
 class App extends StatelessWidget {
   const App({

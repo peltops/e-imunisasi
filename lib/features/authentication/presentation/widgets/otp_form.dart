@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:eimunisasi/core/utils/constant.dart';
-import 'package:eimunisasi/pages/widget/button_custom.dart';
-import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
+import 'package:eimunisasi/core/widgets/button_custom.dart';
+import 'package:eimunisasi/core/widgets/snackbar_custom.dart';
 
 import '../../../../app.dart';
 

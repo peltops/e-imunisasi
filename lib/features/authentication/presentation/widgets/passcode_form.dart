@@ -1,7 +1,7 @@
 import 'package:eimunisasi/core/utils/constant.dart';
-import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
+import 'package:eimunisasi/core/widgets/snackbar_custom.dart';
 
-import '../../../../pages/widget/button_custom.dart';
+import '../../../../core/widgets/button_custom.dart';
 import '../../../bottom_navbar/presentation/screens/bottom_navbar.dart';
 import '../../logic/cubit/local_auth_cubit/local_auth_cubit.dart';
 import '../screens/local_auth/confirm_passcode_screen.dart';

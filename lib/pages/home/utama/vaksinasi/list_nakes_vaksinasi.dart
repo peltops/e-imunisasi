@@ -1,7 +1,7 @@
 import 'package:eimunisasi/features/profile/data/models/anak.dart';
 import 'package:eimunisasi/models/nakes.dart';
 import 'package:eimunisasi/pages/home/utama/vaksinasi/daftar_vaksinasi.dart';
-import 'package:eimunisasi/pages/widget/search_bar.dart';
+import 'package:eimunisasi/core/widgets/search_bar.dart';
 import 'package:eimunisasi/services/nakes_service.dart';
 import 'package:flutter/material.dart';
 

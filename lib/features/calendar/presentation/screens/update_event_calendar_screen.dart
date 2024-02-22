@@ -1,6 +1,6 @@
 import 'package:eimunisasi/core/extension.dart';
 import 'package:eimunisasi/core/widgets/top_app_bar.dart';
-import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
+import 'package:eimunisasi/core/widgets/snackbar_custom.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
@@ -10,8 +10,8 @@ import '../../../../core/utils/themes/padding_constant.dart';
 import '../../../../core/widgets/picker.dart';
 import '../../../../core/widgets/spacer.dart';
 import '../../../../core/widgets/text.dart';
-import '../../../../pages/widget/button_custom.dart';
-import '../../../../pages/widget/text_form_custom.dart';
+import '../../../../core/widgets/button_custom.dart';
+import '../../../../core/widgets/text_form_custom.dart';
 import '../../../../utils/dismiss_keyboard.dart';
 import '../../data/models/calendar_model.dart';
 import '../../logic/bloc/calendar_bloc/calendar_bloc.dart';

@@ -9,7 +9,7 @@ import 'package:formz/formz.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../../../../pages/widget/snackbar_custom.dart';
+import '../../../../core/widgets/snackbar_custom.dart';
 import '../../logic/bloc/calendar_bloc/calendar_bloc.dart';
 import 'add_event_calendar_screen.dart';
 import 'update_event_calendar_screen.dart';

@@ -1,6 +1,6 @@
 import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/pages/home/utama/kontak/tenaga_kesehatan/list_daftar_nakes.dart';
-import 'package:eimunisasi/pages/widget/button_custom.dart';
+import 'package:eimunisasi/core/widgets/button_custom.dart';
 import 'package:flutter/material.dart';
 
 class DaftarNakes extends StatefulWidget {
