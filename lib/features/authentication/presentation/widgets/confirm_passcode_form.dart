@@ -1,14 +1,16 @@
 import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
-
-import '../../../../core/utils/constant.dart';
-import '../../../bottom_navbar/presentation/screens/bottom_navbar.dart';
-import '../../logic/cubit/local_auth_cubit/local_auth_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 
+import '../../../../core/utils/constant.dart';
+import '../../../../pages/widget/button_custom.dart';
+import '../../../bottom_navbar/presentation/screens/bottom_navbar.dart';
+import '../../logic/cubit/local_auth_cubit/local_auth_cubit.dart';
+
 class ConfirmPasscodeForm extends StatelessWidget {
   const ConfirmPasscodeForm({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<LocalAuthCubit, LocalAuthState>(
@@ -78,23 +80,17 @@ class _NextButton extends StatelessWidget {
       },
       child: BlocBuilder<LocalAuthCubit, LocalAuthState>(
         builder: (context, state) {
-          return state.status.isSubmissionInProgress
-              ? const CircularProgressIndicator()
-              : SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    key: const Key('confirmPasscodeForm_next_raisedButton'),
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    onPressed: () {
-                      context.read<LocalAuthCubit>().confirmPasscode();
-                    },
-                    child: const Text('Konfirmasi'),
-                  ),
-                );
+          return ButtonCustom(
+            key: const Key('confirmPasscodeForm_next_raisedButton'),
+            loading: state.status.isSubmissionInProgress,
+            child: Text(
+              AppConstant.CONFIRMATION,
+              style: TextStyle(fontSize: 15.0, color: Colors.white),
+            ),
+            onPressed: () {
+              context.read<LocalAuthCubit>().confirmPasscode();
+            },
+          );
         },
       ),
     );
