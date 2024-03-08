@@ -1,5 +1,5 @@
 import 'package:eimunisasi/features/profile/data/models/anak.dart';
-import 'package:eimunisasi/models/checkup_model.dart';
+import 'package:eimunisasi/features/healthy_book/data/models/checkup_model.dart';
 import 'package:eimunisasi/models/grafik/grafik_berat_badan.dart';
 import 'package:eimunisasi/models/grafik/grafik_lingkar_kepala.dart';
 import 'package:eimunisasi/models/grafik/grafik_tinggi_badan.dart';

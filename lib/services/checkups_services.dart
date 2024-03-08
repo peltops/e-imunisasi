@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eimunisasi/models/checkup_model.dart';
+import 'package:eimunisasi/features/healthy_book/data/models/checkup_model.dart';
 
 class CheckupsServices {
   CheckupsServices({this.nikAnak});

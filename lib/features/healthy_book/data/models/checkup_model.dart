@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
 
-class CheckupModel {
+class CheckupModel extends Equatable {
   final int? beratBadan;
   final int? tinggiBadan;
   final int? lingkarKepala;
@@ -91,5 +92,39 @@ class CheckupModel {
       'updated_at': updatedAt,
       'deleted_at': deletedAt,
     };
+  }
+
+  CheckupModel copyWith({
+    int? beratBadan,
+    int? tinggiBadan,
+    int? lingkarKepala,
+    String? jenisVaksin,
+    String? riwayatKeluhan,
+    String? diagnosa,
+    String? tindakan,
+    String? id,
+    String? idOrangTuaPasien,
+    String? idPasien,
+    String? idDokter,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    DateTime? deletedAt,
+  }) {
+    return CheckupModel(
+      beratBadan: beratBadan ?? this.beratBadan,
+      tinggiBadan: tinggiBadan ?? this.tinggiBadan,
+      lingkarKepala: lingkarKepala ?? this.lingkarKepala,
+      jenisVaksin: jenisVaksin ?? this.jenisVaksin,
+      riwayatKeluhan: riwayatKeluhan ?? this.riwayatKeluhan,
+      diagnosa: diagnosa ?? this.diagnosa,
+      tindakan: tindakan ?? this.tindakan,
+      id: id ?? this.id,
+      idOrangTuaPasien: idOrangTuaPasien ?? this.idOrangTuaPasien,
+      idPasien: idPasien ?? this.idPasien,
+      idDokter: idDokter ?? this.idDokter,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+    );
   }
 }
