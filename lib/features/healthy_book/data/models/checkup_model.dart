@@ -51,7 +51,7 @@ class CheckupModel extends Equatable {
         deletedAt
       ];
 
-  factory CheckupModel.fromMap(Map<String, dynamic> map, String docId) {
+  factory CheckupModel.fromFirebase(Map<String, dynamic> map, String docId) {
     return CheckupModel(
       beratBadan: map['berat_badan'],
       tinggiBadan: map['tinggi_badan'],

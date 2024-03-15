@@ -44,7 +44,7 @@ void main() {
         'created_at': Timestamp.now(),
         'deleted_at': null,
       };
-      final result = CheckupModel.fromMap(map, 'id');
+      final result = CheckupModel.fromFirebase(map, 'id');
       final expected = CheckupModel(
         beratBadan: 10,
         tinggiBadan: 10,
@@ -80,7 +80,7 @@ void main() {
         'deleted_at': Timestamp.fromDate(DateTime.now().add(Duration(days: 1))),
         'updated_at': Timestamp.fromDate(DateTime.now().add(Duration(days: 2))),
       };
-      final result = CheckupModel.fromMap(map, 'id');
+      final result = CheckupModel.fromFirebase(map, 'id');
       final expected = CheckupModel(
         beratBadan: 10,
         tinggiBadan: 10,

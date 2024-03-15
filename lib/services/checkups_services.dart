@@ -9,7 +9,7 @@ class CheckupsServices {
   List<CheckupModel> _listData(QuerySnapshot snapshot) {
     return snapshot.docs.map((e) {
       var data = Map<String, dynamic>.from(e.data() as Map<dynamic, dynamic>);
-      return CheckupModel.fromMap(data, e.id);
+      return CheckupModel.fromFirebase(data, e.id);
     }).toList();
   }
 
