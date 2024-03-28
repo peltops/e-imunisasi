@@ -37,6 +37,10 @@ class AuthenticationBloc
       final isSignedIn = await authRepository.isSignedIn();
       if (isSignedIn) {
         final data = await authRepository.getUser();
+        if (data == null) {
+          emit(AuthenticationError(message: 'User tidak ditemukan'));
+          return;
+        }
         emit(Authenticated(user: data));
       } else {
         final isSeenOnboarding = await splashRepository.isSeen();
@@ -50,6 +54,10 @@ class AuthenticationBloc
   void _onLoggedIn(LoggedIn event, Emitter<AuthenticationState> emit) async {
     emit(Loading());
     final data = await authRepository.getUser();
+    if (data == null) {
+      emit(AuthenticationError(message: 'User tidak ditemukan'));
+      return;
+    }
     emit(Authenticated(user: data));
   }
 

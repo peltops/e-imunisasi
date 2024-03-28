@@ -1,10 +1,10 @@
 import 'package:eimunisasi/core/utils/constant.dart';
-import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
+import 'package:eimunisasi/core/widgets/snackbar_custom.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
 import '../../../../app.dart';
-import '../../../../pages/widget/button_custom.dart';
-import '../../../../pages/widget/text_form_custom.dart';
+import '../../../../core/widgets/button_custom.dart';
+import '../../../../core/widgets/text_form_custom.dart';
 import '../../logic/bloc/authentication_bloc/authentication_bloc.dart';
 import '../screens/auth/reset_email_password.dart';
 

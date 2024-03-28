@@ -1,5 +1,5 @@
 import 'package:eimunisasi/models/klinik.dart';
-import 'package:eimunisasi/pages/widget/search_bar.dart';
+import 'package:eimunisasi/core/widgets/search_bar.dart';
 import 'package:eimunisasi/services/klinik_database.dart';
 import 'package:flutter/material.dart';
 

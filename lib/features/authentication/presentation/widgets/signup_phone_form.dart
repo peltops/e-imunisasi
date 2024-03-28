@@ -1,12 +1,12 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/features/authentication/logic/cubit/signup_cubit/signup_cubit.dart';
-import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
+import 'package:eimunisasi/core/widgets/snackbar_custom.dart';
 import 'package:eimunisasi/utils/string_extension.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import '../../../../core/widgets/text_form_custom.dart';
 import '../../../../injection.dart';
-import '../../../../pages/widget/button_custom.dart';
-import '../../../../pages/widget/text_form_custom.dart';
+import '../../../../core/widgets/button_custom.dart';
 import '../../../../utils/dismiss_keyboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

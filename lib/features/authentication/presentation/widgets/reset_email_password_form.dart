@@ -1,9 +1,9 @@
 import 'package:eimunisasi/core/utils/constant.dart';
-import 'package:eimunisasi/pages/widget/snackbar_custom.dart';
+import 'package:eimunisasi/core/widgets/snackbar_custom.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
-import '../../../../pages/widget/button_custom.dart';
-import '../../../../pages/widget/text_form_custom.dart';
+import '../../../../core/widgets/button_custom.dart';
+import '../../../../core/widgets/text_form_custom.dart';
 import '../../logic/cubit/reset_password_cubit/reset_password_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -1,13 +1,14 @@
 import 'package:bloc/bloc.dart';
-import 'package:eimunisasi/models/hive_calendar_activity.dart';
 import 'package:eimunisasi/services/notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 import 'app.dart';
+import 'features/calendar/data/models/hive_calendar_activity_model.dart';
 import 'injection.dart';
 
 void main() async {
@@ -15,10 +16,10 @@ void main() async {
   await configureDependencies();
   await Firebase.initializeApp();
   await Hive.initFlutter();
-  Hive.registerAdapter(CalendarsHiveAdapter());
-  await Hive.openBox<CalendarsHive>('calendar_activity');
+  Hive.registerAdapter(CalendarActivityHiveAdapter());
   NotificationService().initialize();
   tz.initializeTimeZones();
+  tz.setLocalLocation(tz.getLocation('Asia/Jakarta'));
   if (kDebugMode) {
     Bloc.observer = AppBlocObserver();
   }

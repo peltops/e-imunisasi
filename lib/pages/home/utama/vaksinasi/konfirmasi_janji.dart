@@ -1,7 +1,7 @@
 import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/models/appointment.dart';
 import 'package:eimunisasi/pages/home/home.dart';
-import 'package:eimunisasi/pages/widget/button_custom.dart';
+import 'package:eimunisasi/core/widgets/button_custom.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:intl/intl.dart';
