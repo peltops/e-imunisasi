@@ -1,5 +1,5 @@
 import 'package:eimunisasi/features/healthy_book/presentation/screens/healthy_book_screen.dart';
-import 'package:eimunisasi/pages/home/utama/kalender/kalender.dart';
+import 'package:eimunisasi/features/calendar/presentation/screens/calendar_screen.dart';
 import 'package:eimunisasi/pages/home/utama/vaksinasi/vaksinasi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -64,7 +64,7 @@ class _MainPageState extends State<MainPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => KalenderPage(),
+                              builder: (context) => CalendarScreen(),
                             ),
                           );
                         },

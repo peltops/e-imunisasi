@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eimunisasi/models/nakes.dart';
-import 'package:eimunisasi/services/calendar_database.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
-class NakesService extends FirestoreDatabase {
+class NakesService {
   final _service = FirebaseFirestore.instance;
 
-  NakesService() : super(uid: FirebaseAuth.instance.currentUser!.uid);
+  NakesService() : super();
 
 // Stream List Nakes
   List<Nakes> _listData(QuerySnapshot snapshot) {

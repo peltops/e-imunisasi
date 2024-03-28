@@ -1,6 +1,6 @@
 import 'package:eimunisasi/models/informasi_aplikasi.dart';
 import 'package:eimunisasi/pages/home/bantuan/child/detail_informasi.dart';
-import 'package:eimunisasi/pages/widget/search_bar.dart';
+import 'package:eimunisasi/core/widgets/search_bar.dart';
 import 'package:eimunisasi/services/informasi_aplikasi_database.dart';
 import 'package:flutter/material.dart';
 

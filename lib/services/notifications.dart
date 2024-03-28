@@ -1,73 +1,99 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:injectable/injectable.dart';
 import 'package:timezone/timezone.dart' as tz;
 
+@Singleton()
 class NotificationService extends ChangeNotifier {
-  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  final _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-  //initilize
-
-  Future initialize() async {
-    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-        FlutterLocalNotificationsPlugin();
-
-    AndroidInitializationSettings androidInitializationSettings =
-        AndroidInitializationSettings("ic_launcher");
-
-    final DarwinInitializationSettings initializationSettingsDarwin =
-        DarwinInitializationSettings();
-
-    final InitializationSettings initializationSettings =
-        InitializationSettings(
-            android: androidInitializationSettings,
-            iOS: initializationSettingsDarwin);
-
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  Future<bool?> initialize() async {
+    final localNotificationPlugin = FlutterLocalNotificationsPlugin();
+    localNotificationPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestNotificationsPermission();
+    final androidSetting = AndroidInitializationSettings("ic_launcher");
+    final iosSetting = DarwinInitializationSettings();
+    final initSetting = InitializationSettings(
+      android: androidSetting,
+      iOS: iosSetting,
+    );
+    return await localNotificationPlugin.initialize(initSetting);
   }
 
-  //Instant Notifications
-  Future instantNofitication() async {
-    var android = AndroidNotificationDetails("id", "channel");
-
-    var ios = DarwinNotificationDetails();
-
-    var platform = new NotificationDetails(android: android, iOS: ios);
-
-    await _flutterLocalNotificationsPlugin.show(
-        0, "Tes flutter local notification instant", "Hello everyone", platform,
-        payload: "Welcome to demo app");
-  }
-
-  //Image notification
-  Future imageNotification() async {
-    var bigPicture = BigPictureStyleInformation(
-        DrawableResourceAndroidBitmap("ic_launcher"),
-        largeIcon: DrawableResourceAndroidBitmap("ic_launcher"),
-        contentTitle: "Demo image notification",
-        summaryText: "This is some text",
-        htmlFormatContent: true,
-        htmlFormatContentTitle: true);
-
+  Future<void> instantNotification({
+    String? title,
+    String? body,
+    String? payload,
+  }) async {
+    final channelId = "instant_notification_id";
+    final channelName = "instant_notification_channel";
     var android = AndroidNotificationDetails(
-      "id",
-      "channel",
-      styleInformation: bigPicture,
+      channelId,
+      channelName,
+      importance: Importance.max,
+      priority: Priority.high,
+      playSound: true,
+      enableVibration: true,
+      enableLights: true,
+      styleInformation: DefaultStyleInformation(true, true),
+    );
+    var ios = DarwinNotificationDetails();
+    var platform = NotificationDetails(android: android, iOS: ios);
+
+    return await _flutterLocalNotificationsPlugin.show(
+      0,
+      title,
+      body,
+      platform,
+      payload: payload,
+    );
+  }
+
+  Future<void> imageNotification({
+    String? title,
+    String? body,
+    String? payload,
+  }) async {
+    var bigPicture = BigPictureStyleInformation(
+      DrawableResourceAndroidBitmap("ic_launcher"),
+      largeIcon: DrawableResourceAndroidBitmap("ic_launcher"),
+      contentTitle: title,
+      summaryText: body,
+      htmlFormatContent: true,
+      htmlFormatContentTitle: true,
     );
 
-    var platform = new NotificationDetails(android: android);
+    final channelId = "image_notification_id";
+    final channelName = "image_notification_channel";
+    var android = AndroidNotificationDetails(
+      channelId,
+      channelName,
+      styleInformation: bigPicture,
+    );
+    var platform = NotificationDetails(android: android);
 
-    await _flutterLocalNotificationsPlugin.show(
-        0, "Demo Image notification", "Tap to do something", platform,
-        payload: "Welcome to demo app");
+    return await _flutterLocalNotificationsPlugin.show(
+      0,
+      title,
+      body,
+      platform,
+      payload: payload,
+    );
   }
 
-  //Stylish Notification
-  Future stylishNotification() async {
+  Future<void> stylishNotification({
+    required String title,
+    required String body,
+    required String payload,
+  }) async {
+    final channelId = "stylish_notification_id";
+    final channelName = "stylish_notification_channel";
     var android = AndroidNotificationDetails(
-      "id",
-      "channel",
-      color: Colors.deepOrange,
+      channelId,
+      channelName,
+      color: Colors.pink[300],
       enableLights: true,
       enableVibration: true,
       largeIcon: DrawableResourceAndroidBitmap("ic_launcher"),
@@ -77,40 +103,53 @@ class NotificationService extends ChangeNotifier {
       ),
     );
 
-    var platform = new NotificationDetails(android: android);
+    var platform = NotificationDetails(android: android);
 
-    await _flutterLocalNotificationsPlugin.show(
-        0, "Demo Stylish notification", "Tap to do something", platform);
+    return await _flutterLocalNotificationsPlugin.show(
+      0,
+      title,
+      body,
+      platform,
+      payload: payload,
+    );
   }
 
-  //Sheduled Notification
-
-  Future sheduledNotification(
-      int id, String title, String body, DateTime date) async {
+  Future<void> scheduledNotification(
+    int id,
+    String title,
+    String body,
+    DateTime date,
+  ) async {
+    final channelId = "scheduled_notification_id";
+    final channelName = "scheduled_notification_channel";
     var android = AndroidNotificationDetails(
-      "id",
-      "channel",
+      channelId,
+      channelName,
       enableLights: true,
+      playSound: true,
       enableVibration: true,
     );
 
     var ios = DarwinNotificationDetails();
 
-    var platform = new NotificationDetails(android: android, iOS: ios);
-    await _flutterLocalNotificationsPlugin.zonedSchedule(
-        id, title, body, tz.TZDateTime.from(date, tz.local), platform,
-        androidAllowWhileIdle: true,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime);
+    var platform = NotificationDetails(android: android, iOS: ios);
+    return await _flutterLocalNotificationsPlugin.zonedSchedule(
+      id,
+      title,
+      body,
+      tz.TZDateTime.from(date, tz.local),
+      platform,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+    );
   }
 
-  //Cancel notification
-
-  Future cancelNotification(int id) async {
-    await _flutterLocalNotificationsPlugin.cancel(id);
+  Future<void> cancelNotification(int id) async {
+   return await _flutterLocalNotificationsPlugin.cancel(id);
   }
 
-  Future cancelNotificationAll() async {
-    await _flutterLocalNotificationsPlugin.cancelAll();
+  Future<void> cancelNotificationAll() async {
+   return await _flutterLocalNotificationsPlugin.cancelAll();
   }
 }
