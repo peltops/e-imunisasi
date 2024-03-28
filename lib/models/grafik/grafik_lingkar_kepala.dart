@@ -1,4 +1,4 @@
-import 'package:eimunisasi/models/checkup_model.dart';
+import 'package:eimunisasi/features/healthy_book/data/models/checkup_model.dart';
 import 'package:eimunisasi/models/grafik/line_data_lingkar_kepala_boy.dart';
 import 'package:eimunisasi/models/grafik/line_data_lingkar_kepala_girl.dart';
 import 'package:fl_chart/fl_chart.dart';

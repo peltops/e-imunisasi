@@ -12,7 +12,12 @@ import '../../data/models/anak.dart';
 import '../../logic/blocs/childBloc/child_profile_bloc.dart';
 
 class ListChildrenScreen extends StatelessWidget {
-  const ListChildrenScreen({Key? key}) : super(key: key);
+  final Function(Anak?)? onSelected;
+
+  const ListChildrenScreen({
+    Key? key,
+    this.onSelected,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +51,10 @@ class ListChildrenScreen extends StatelessWidget {
                     return Card(
                       child: ListTile(
                         onTap: () {
+                          if (onSelected != null) {
+                            onSelected!(data?[index]);
+                            return;
+                          }
                           context.navigateTo(
                             BlocProvider.value(
                               value: context.read<ChildProfileBloc>()

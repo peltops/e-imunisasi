@@ -1,4 +1,4 @@
-import 'package:eimunisasi/models/checkup_model.dart';
+import 'package:eimunisasi/features/healthy_book/data/models/checkup_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

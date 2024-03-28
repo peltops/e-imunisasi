@@ -1,5 +1,5 @@
+import 'package:eimunisasi/features/healthy_book/presentation/screens/healthy_book_screen.dart';
 import 'package:eimunisasi/features/calendar/presentation/screens/calendar_screen.dart';
-import 'package:eimunisasi/pages/home/utama/bukusehat/buku_sehat.dart';
 import 'package:eimunisasi/pages/home/utama/vaksinasi/vaksinasi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -14,109 +14,107 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  // @override
-  // void dispose() {
-  //   Hive.close();
-  //   super.dispose();
-  // }
-
   @override
   Widget build(BuildContext context) {
-    // final FirebaseAuth _auth = FirebaseAuth.instance;
     final isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.pink[300],
-          elevation: 0,
-          title: Text(
-            'Utama',
-            style: TextStyle(fontWeight: FontWeight.w700),
-          ),
-          centerTitle: true,
+      appBar: AppBar(
+        backgroundColor: Colors.pink[300],
+        elevation: 0,
+        title: Text(
+          'Utama',
+          style: TextStyle(fontWeight: FontWeight.w700),
         ),
-        body: Container(
-          color: Colors.pink[100],
-          child: Padding(
-            padding: EdgeInsets.all(20),
-            child: Column(
-              children: [
-                isLandscape
-                    ? SizedBox()
-                    : Container(
-                        width: double.infinity,
-                        height: MediaQuery.of(context).size.height / 4,
-                        child: Card(
-                            elevation: 0,
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: SvgPicture.asset(
-                                  'assets/images/undraw_baby_ja7a.svg'),
-                            )),
+        centerTitle: true,
+      ),
+      body: Container(
+        color: Colors.pink[100],
+        child: Padding(
+          padding: EdgeInsets.all(20),
+          child: Column(
+            children: [
+              isLandscape
+                  ? SizedBox()
+                  : Container(
+                      width: double.infinity,
+                      height: MediaQuery.of(context).size.height / 4,
+                      child: Card(
+                        elevation: 0,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: SvgPicture.asset(
+                            'assets/images/undraw_baby_ja7a.svg',
+                          ),
+                        ),
                       ),
-                Expanded(
-                    child: Card(
+                    ),
+              Expanded(
+                child: Card(
                   elevation: 0,
                   child: GridView.count(
-                      mainAxisSpacing: 20,
-                      crossAxisSpacing: 20,
-                      padding: EdgeInsets.all(20),
-                      crossAxisCount: isLandscape ? 4 : 2,
-                      children: [
-                        TombolMenu(
-                          icon: Icons.calendar_today,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CalendarScreen(),
-                              ),
-                            );
-                          },
-                          label: 'Kalender',
-                        ),
-                        TombolMenu(
-                          icon: Icons.child_friendly_outlined,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ListChildrenScreen(),
-                              ),
-                            );
-                          },
-                          label: 'Anak',
-                        ),
-                        TombolMenu(
-                          icon: Icons.medical_services_rounded,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => VaksinasiPage(),
-                              ),
-                            );
-                          },
-                          label: 'Vaksinasi',
-                        ),
-                        TombolMenu(
-                          icon: Icons.my_library_books_rounded,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => BukuSehatPage(),
-                              ),
-                            );
-                          },
-                          label: 'Buku Sehat',
-                        ),
-                      ]),
-                )),
-              ],
-            ),
+                    mainAxisSpacing: 20,
+                    crossAxisSpacing: 20,
+                    padding: EdgeInsets.all(20),
+                    crossAxisCount: isLandscape ? 4 : 2,
+                    children: [
+                      TombolMenu(
+                        icon: Icons.calendar_today,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CalendarScreen(),
+                            ),
+                          );
+                        },
+                        label: 'Kalender',
+                      ),
+                      TombolMenu(
+                        icon: Icons.child_friendly_outlined,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ListChildrenScreen(),
+                            ),
+                          );
+                        },
+                        label: 'Anak',
+                      ),
+                      TombolMenu(
+                        icon: Icons.medical_services_rounded,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => VaksinasiPage(),
+                            ),
+                          );
+                        },
+                        label: 'Vaksinasi',
+                      ),
+                      TombolMenu(
+                        icon: Icons.my_library_books_rounded,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => HealthyBookScreen(),
+                            ),
+                          );
+                        },
+                        label: 'Buku Sehat',
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
 
@@ -124,6 +122,7 @@ class TombolMenu extends StatelessWidget {
   final Function? onTap;
   final IconData? icon;
   final String? label;
+
   TombolMenu({
     Key? key,
     this.icon,
