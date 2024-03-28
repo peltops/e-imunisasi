@@ -1,18 +1,58 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:eimunisasi/features/healthy_book/data/models/checkup_model.dart';
 import 'package:eimunisasi/features/healthy_book/presentation/screens/tabbar_action_screen.dart';
 import 'package:eimunisasi/features/healthy_book/presentation/screens/tabbar_chart_screen.dart';
 import 'package:eimunisasi/features/healthy_book/presentation/screens/tabbar_diagnosa_screen.dart';
 import 'package:eimunisasi/features/healthy_book/presentation/screens/tabbar_table_screen.dart';
 import 'package:eimunisasi/features/healthy_book/presentation/screens/tabbar_vaccine_screen.dart';
 import 'package:eimunisasi/features/profile/data/models/anak.dart';
-import 'package:eimunisasi/services/checkups_services.dart';
+import 'package:eimunisasi/injection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:formz/formz.dart';
+
+import '../../logic/blocs/checkupBloc/checkup_bloc.dart';
 
 class PatientMedicalHistoryScreen extends StatelessWidget {
   final Anak? child;
 
   const PatientMedicalHistoryScreen({Key? key, this.child}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => getIt<CheckupBloc>()
+        ..add(OnGetCheckupsEvent(
+          childId: child?.nik,
+        )),
+      child: BlocBuilder<CheckupBloc, CheckupState>(
+        builder: (context, state) {
+          if (state.statusGet == FormzStatus.submissionInProgress) {
+            return Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          } else if (state.statusGet == FormzStatus.submissionSuccess) {
+            return PatientMedicalHistoryScaffold(
+              child: child,
+            );
+          } else {
+            return Scaffold(
+              body: Center(
+                child: Text('Gagal memuat data'),
+              ),
+            );
+          }
+        },
+      ),
+    );
+  }
+}
+
+class PatientMedicalHistoryScaffold extends StatelessWidget {
+  final Anak? child;
+
+  const PatientMedicalHistoryScaffold({Key? key, this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -84,15 +124,9 @@ class PatientMedicalHistoryScreen extends StatelessWidget {
                   ),
                 )),
           ),
-          StreamBuilder<List<CheckupModel>>(
-            stream: CheckupsServices().checkupsStream(child?.nik),
-            builder: (context, snapshot) {
-              List<CheckupModel>? data = <CheckupModel>[];
-              if (snapshot.hasData) {
-                data = snapshot.data;
-              } else {
-                data = [];
-              }
+          BlocBuilder<CheckupBloc, CheckupState>(
+            builder: (context, state) {
+              final data = state.checkups;
               return Expanded(
                 child: DefaultTabController(
                   length: 5,
