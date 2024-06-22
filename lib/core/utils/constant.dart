@@ -4,7 +4,7 @@ class AppConstant {
   static const String PIN_CONFIRM_LABEL = 'Konfirmasi PIN';
   static const String LOGIN = 'Masuk';
   static const String SIGN_UP = 'Daftar';
-  static const String PLEASE_LOGIN = 'Silahkan Masuk';
+  static const String PLEASE_LOGIN = 'Silahkan Login';
   static const String PLEASE_LOGIN_WITH_EMAIL =
       'Silahkan Login dengan Email Anda';
   static const String PLEASE_LOGIN_WITH_PHONE =
