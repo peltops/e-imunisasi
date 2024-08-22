@@ -49,10 +49,13 @@ app.*.map.json
 /keys
 
 # fvm
-.fvm/flutter_sdk
+.fvm
 
 # generate by build runner
 *.freezed.dart
 *.g.dart
 *.mocks.dart
 *.config.dart
+
+# coverage
+coverage/
