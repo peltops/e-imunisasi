@@ -1,17 +1,18 @@
-import 'package:eimunisasi/features/profile/data/models/anak.dart';
 import 'package:eimunisasi/features/healthy_book/data/models/checkup_model.dart';
 import 'package:eimunisasi/models/grafik/grafik_berat_badan.dart';
 import 'package:eimunisasi/models/grafik/grafik_lingkar_kepala.dart';
 import 'package:eimunisasi/models/grafik/grafik_tinggi_badan.dart';
 import 'package:flutter/material.dart';
 
-class TabbarGrafikScreen extends StatelessWidget {
-  final List<CheckupModel>? pemeriksaan;
-  final Anak? anak;
-  const TabbarGrafikScreen({
+import '../../../profile/data/models/anak.dart';
+
+class TabBarChartScreen extends StatelessWidget {
+  final List<CheckupModel>? checkup;
+  final Anak? child;
+  const TabBarChartScreen({
     Key? key,
-    this.pemeriksaan,
-    required this.anak,
+    this.checkup,
+    required this.child,
   }) : super(key: key);
 
   @override
@@ -38,19 +39,19 @@ class TabbarGrafikScreen extends StatelessWidget {
           Expanded(
             child: TabBarView(
               physics: const NeverScrollableScrollPhysics(),
-              children: pemeriksaan!.length > 0
+              children: (checkup?.length ?? 0) > 0
                   ? [
                       GrafikBeratBadan(
-                        listData: pemeriksaan,
-                        isBoy: anak!.jenisKelamin != 'Perempuan',
+                        listData: checkup,
+                        isBoy: child?.jenisKelamin != 'Perempuan',
                       ),
                       GrafikTinggiBadan(
-                        listData: pemeriksaan,
-                        isBoy: anak!.jenisKelamin != 'Perempuan',
+                        listData: checkup,
+                        isBoy: child?.jenisKelamin != 'Perempuan',
                       ),
                       GrafikLingkarKepala(
-                        listData: pemeriksaan,
-                        isBoy: anak!.jenisKelamin != 'Perempuan',
+                        listData: checkup,
+                        isBoy: child?.jenisKelamin != 'Perempuan',
                       ),
                     ]
                   : [
