@@ -1,4 +1,4 @@
-import 'package:eimunisasi/models/checkup_model.dart';
+import 'package:eimunisasi/features/healthy_book/data/models/checkup_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:math_expressions/math_expressions.dart';
 
