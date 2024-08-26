@@ -24,7 +24,6 @@ void main() {
       expect: () => [
         LocalAuthState(
           passcode: Passcode.dirty('1234'),
-          status: FormzStatus.valid,
         ),
       ],
     );
@@ -36,7 +35,6 @@ void main() {
       expect: () => [
         LocalAuthState(
           passcode: Passcode.dirty('123'),
-          status: FormzStatus.invalid,
         ),
       ],
     );
@@ -53,8 +51,7 @@ void main() {
       expect: () => [
         LocalAuthState(
           passcode: Passcode.dirty('1234'),
-          confirmPasscode: '1234',
-          status: FormzStatus.valid,
+          confirmPasscode: Passcode.dirty('1234'),
         ),
       ],
     );
@@ -68,8 +65,7 @@ void main() {
       expect: () => [
         LocalAuthState(
           passcode: Passcode.dirty('1234'),
-          confirmPasscode: '123',
-          status: FormzStatus.invalid,
+          confirmPasscode: Passcode.dirty('123'),
         ),
       ],
     );
@@ -85,11 +81,11 @@ void main() {
       act: (cubit) => cubit.getPasscode(),
       expect: () => [
         LocalAuthState(
-          status: FormzStatus.submissionInProgress,
+          status: FormzSubmissionStatus.inProgress,
         ),
         LocalAuthState(
           savedPasscode: Passcode.dirty('1234'),
-          status: FormzStatus.valid,
+          status: FormzSubmissionStatus.success,
         ),
       ],
     );
@@ -103,11 +99,11 @@ void main() {
       act: (cubit) => cubit.getPasscode(),
       expect: () => [
         LocalAuthState(
-          status: FormzStatus.submissionInProgress,
+          status: FormzSubmissionStatus.inProgress,
         ),
         LocalAuthState(
           errorMessage: 'Gagal mendapatkan passcode',
-          status: FormzStatus.submissionFailure,
+          status: FormzSubmissionStatus.failure,
         ),
       ],
     );
@@ -123,8 +119,8 @@ void main() {
         cubit.checkPasscode('1234');
       },
       expect: () => [
-        LocalAuthState(status: FormzStatus.submissionInProgress),
-        LocalAuthState(status: FormzStatus.submissionSuccess),
+        LocalAuthState(status: FormzSubmissionStatus.inProgress),
+        LocalAuthState(status: FormzSubmissionStatus.success),
       ],
     );
     blocTest<LocalAuthCubit, LocalAuthState>(
@@ -139,7 +135,7 @@ void main() {
       expect: () => [
         LocalAuthState(
           errorMessage: 'Silahkan isi PIN',
-          status: FormzStatus.submissionFailure,
+          status: FormzSubmissionStatus.failure,
         ),
       ],
     );
@@ -154,11 +150,11 @@ void main() {
       },
       expect: () => [
         LocalAuthState(
-          status: FormzStatus.submissionInProgress,
+          status: FormzSubmissionStatus.inProgress,
         ),
         LocalAuthState(
           errorMessage: "Password Salah",
-          status: FormzStatus.submissionFailure,
+          status: FormzSubmissionStatus.failure,
         ),
       ],
     );
@@ -174,11 +170,11 @@ void main() {
       },
       expect: () => [
         LocalAuthState(
-          status: FormzStatus.submissionInProgress,
+          status: FormzSubmissionStatus.inProgress,
         ),
         LocalAuthState(
             errorMessage: 'Terjadi Kesalahan',
-            status: FormzStatus.submissionFailure),
+            status: FormzSubmissionStatus.failure),
       ],
     );
   });
@@ -193,19 +189,19 @@ void main() {
       },
       seed: () => LocalAuthState(
         passcode: Passcode.dirty('1234'),
-        confirmPasscode: '1234',
+        confirmPasscode: Passcode.dirty('1234'),
       ),
       act: (cubit) async => cubit.confirmPasscode(),
       expect: () => [
         LocalAuthState(
           passcode: Passcode.dirty('1234'),
-          confirmPasscode: '1234',
-          status: FormzStatus.submissionInProgress,
+          confirmPasscode: Passcode.dirty('1234'),
+          status: FormzSubmissionStatus.inProgress,
         ),
         LocalAuthState(
           passcode: Passcode.dirty('1234'),
-          confirmPasscode: '1234',
-          status: FormzStatus.submissionSuccess,
+          confirmPasscode: Passcode.dirty('1234'),
+          status: FormzSubmissionStatus.success,
         ),
       ],
     );
@@ -216,20 +212,20 @@ void main() {
       },
       seed: () => LocalAuthState(
         passcode: Passcode.dirty('1234'),
-        confirmPasscode: '123',
+        confirmPasscode: Passcode.dirty('123'),
       ),
       act: (cubit) async => cubit.confirmPasscode(),
       expect: () => [
         LocalAuthState(
           passcode: Passcode.dirty('1234'),
-          confirmPasscode: '123',
-          status: FormzStatus.submissionInProgress,
+          confirmPasscode: Passcode.dirty('123'),
+          status: FormzSubmissionStatus.inProgress,
         ),
         LocalAuthState(
           passcode: Passcode.dirty('1234'),
-          confirmPasscode: '123',
+          confirmPasscode: Passcode.dirty('123'),
           errorMessage: "Passcode Salah",
-          status: FormzStatus.submissionFailure,
+          status: FormzSubmissionStatus.failure,
         ),
       ],
     );
@@ -242,20 +238,20 @@ void main() {
       },
       seed: () => LocalAuthState(
         passcode: Passcode.dirty('1234'),
-        confirmPasscode: '1234',
+        confirmPasscode: Passcode.dirty('1234'),
       ),
       act: (cubit) async => cubit.confirmPasscode(),
       expect: () => [
         LocalAuthState(
           passcode: Passcode.dirty('1234'),
-          confirmPasscode: '1234',
-          status: FormzStatus.submissionInProgress,
+          confirmPasscode: Passcode.dirty('1234'),
+          status: FormzSubmissionStatus.inProgress,
         ),
         LocalAuthState(
           passcode: Passcode.dirty('1234'),
-          confirmPasscode: '1234',
+          confirmPasscode: Passcode.dirty('1234'),
           errorMessage: 'Gagal menyimpan passcode',
-          status: FormzStatus.submissionFailure,
+          status: FormzSubmissionStatus.failure,
         ),
       ],
     );
@@ -271,8 +267,8 @@ void main() {
       },
       act: (cubit) => cubit.destroyPasscode(),
       expect: () => [
-        LocalAuthState(status: FormzStatus.submissionInProgress),
-        LocalAuthState(status: FormzStatus.submissionSuccess),
+        LocalAuthState(status: FormzSubmissionStatus.inProgress),
+        LocalAuthState(status: FormzSubmissionStatus.success),
       ],
     );
     blocTest<LocalAuthCubit, LocalAuthState>(
@@ -284,8 +280,11 @@ void main() {
       },
       act: (cubit) => cubit.destroyPasscode(),
       expect: () => [
-        LocalAuthState(status: FormzStatus.submissionInProgress),
-        LocalAuthState(status: FormzStatus.submissionFailure),
+        LocalAuthState(status: FormzSubmissionStatus.inProgress),
+        LocalAuthState(
+          status: FormzSubmissionStatus.failure,
+          errorMessage: 'Gagal menghapus passcode',
+        ),
       ],
     );
   });

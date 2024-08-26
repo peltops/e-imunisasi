@@ -4,7 +4,6 @@ import 'package:eimunisasi/features/authentication/presentation/screens/auth/reg
 import 'package:eimunisasi/injection.dart';
 import 'package:eimunisasi/core/widgets/snackbar_custom.dart';
 import 'package:eimunisasi/utils/string_extension.dart';
-import 'package:form_field_validator/form_field_validator.dart';
 import '../../../../core/widgets/button_custom.dart';
 import '../../../../core/widgets/text_form_custom.dart';
 import '../../../../utils/dismiss_keyboard.dart';
@@ -21,7 +20,7 @@ class LoginPhoneForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<LoginPhoneCubit, LoginPhoneState>(
       listener: (context, state) {
-        if (state.status.isSubmissionFailure) {
+        if (state.status.isFailure) {
           snackbarCustom(state.errorMessage ?? 'Authentication Failure')
               .show(context);
         } else if (state.verId != null) {
@@ -125,11 +124,6 @@ class _PhoneInput extends StatelessWidget {
                     label: AppConstant.PHONE_NUMBER_LABEL,
                     keyboardType: TextInputType.phone,
                     hintText: 'Contoh: 876543210',
-                    validator: MultiValidator([
-                      RequiredValidator(errorText: 'Masukan No. Ponsel!'),
-                      MaxLengthValidator(13,
-                          errorText: 'No. Ponsel terlalu panjang'),
-                    ]),
                     onChanged: (phone) =>
                         context.read<LoginPhoneCubit>().phoneChanged(phone),
                   ),
@@ -137,7 +131,7 @@ class _PhoneInput extends StatelessWidget {
               ],
             ),
             () {
-              if (state.phone.invalid) {
+              if (state.phone.isNotValid) {
                 return Text(
                   'Format salah! Contoh: 876543210',
                   style: TextStyle(color: Colors.red[600]),
@@ -163,8 +157,8 @@ class _LoginButton extends StatelessWidget {
             AppConstant.LOGIN,
             style: TextStyle(fontSize: 15.0, color: Colors.white),
           ),
-          loading: state.status.isSubmissionInProgress,
-          onPressed: state.phone.valid && state.countryCode.valid
+          loading: state.status.isInProgress,
+          onPressed: state.phone.isValid && state.countryCode.isValid
               ? () {
                   dismissKeyboard(context);
                   context.read<LoginPhoneCubit>().sendOTPCode();
@@ -186,7 +180,7 @@ class _LoginWithEmailButton extends StatelessWidget {
             AppConstant.LOGIN_WITH_EMAIL,
             style: TextStyle(fontSize: 15.0, color: Colors.white),
           ),
-          onPressed: state.status.isSubmissionInProgress
+          onPressed: state.status.isInProgress
               ? null
               : () => Navigator.push(context, MaterialPageRoute(builder: (_) {
                     return LoginEmailScreen();

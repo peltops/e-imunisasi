@@ -27,7 +27,7 @@ class _LineChart extends StatelessWidget {
   Widget build(BuildContext context) {
     return LineChart(
       sampleData2,
-      swapAnimationDuration: const Duration(milliseconds: 250),
+      duration: const Duration(milliseconds: 250),
     );
   }
 
@@ -59,7 +59,7 @@ class _LineChart extends StatelessWidget {
         },
         handleBuiltInTouches: true,
         touchTooltipData: LineTouchTooltipData(
-          tooltipBgColor: Colors.white,
+          getTooltipColor: (LineBarSpot touchedBar) => Colors.white,
           fitInsideHorizontally: true,
           tooltipMargin: 0,
           tooltipRoundedRadius: 20,

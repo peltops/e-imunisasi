@@ -11,7 +11,7 @@ enum PhoneValidationError {
 /// {@endtemplate}
 class Phone extends FormzInput<String, PhoneValidationError> {
   /// {@macro phone}
-  const Phone.pure() : super.pure('');
+  const Phone.initial() : super.pure('');
 
   /// {@macro phone}
   const Phone.dirty([String value = '']) : super.dirty(value);

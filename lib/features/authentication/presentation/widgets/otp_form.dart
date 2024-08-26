@@ -68,10 +68,10 @@ class _OTPFormState extends State<OTPForm> {
 
     return BlocListener<LoginPhoneCubit, LoginPhoneState>(
       listener: (context, state) {
-        if (state.status.isSubmissionFailure) {
+        if (state.status.isFailure) {
           snackbarCustom(state.errorMessage ?? 'Otentikasi gagal!')
               .show(context);
-        } else if (state.status.isSubmissionSuccess) {
+        } else if (state.status.isFailure) {
           BlocProvider.of<AuthenticationBloc>(context).add(LoggedIn());
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) => const AppView()));
@@ -170,13 +170,13 @@ class _LoginButton extends StatelessWidget {
     return BlocBuilder<LoginPhoneCubit, LoginPhoneState>(
       builder: (context, state) {
         return ButtonCustom(
-          loading: state.status.isSubmissionInProgress,
+          loading: state.status.isInProgress,
           child: Text(
             AppConstant.VERIFY,
             style: TextStyle(fontSize: 15.0, color: Colors.white),
           ),
           onPressed: () {
-            if (state.otpCode.valid) {
+            if (state.otpCode.isValid) {
               context.read<LoginPhoneCubit>().logInWithOTP();
             } else
               snackbarCustom(AppConstant.OTP_NOT_VALID).show(context);

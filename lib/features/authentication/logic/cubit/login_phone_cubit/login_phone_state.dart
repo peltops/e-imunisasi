@@ -2,16 +2,16 @@ part of 'login_phone_cubit.dart';
 
 class LoginPhoneState extends Equatable {
   const LoginPhoneState({
-    this.phone = const Phone.pure(),
-    this.otpCode = const OTP.pure(),
-    this.countryCode = const CountryCode.pure(),
-    this.status = FormzStatus.pure,
+    this.phone = const Phone.initial(),
+    this.otpCode = const OTP.initial(),
+    this.countryCode = const CountryCode.initial(),
+    this.status = FormzSubmissionStatus.initial,
     this.verId,
     this.errorMessage,
   });
   final Phone phone;
   final OTP otpCode;
-  final FormzStatus status;
+  final FormzSubmissionStatus status;
   final CountryCode countryCode;
   final String? verId;
   final String? errorMessage;
@@ -22,7 +22,7 @@ class LoginPhoneState extends Equatable {
   LoginPhoneState copyWith({
     Phone? phone,
     OTP? otpCode,
-    FormzStatus? status,
+    FormzSubmissionStatus? status,
     CountryCode? countryCode,
     String? verId,
     String? errorMessage,

@@ -55,7 +55,6 @@ void main() {
           SignUpState(
             email: Email.dirty(email),
             password: Password.dirty(password),
-            status: FormzStatus.valid,
           )
         ],
       );
@@ -68,7 +67,6 @@ void main() {
           SignUpState(
             email: Email.dirty(emailInvalid),
             password: Password.dirty(password),
-            status: FormzStatus.invalid,
           )
         ],
       );
@@ -82,7 +80,6 @@ void main() {
           SignUpState(
             email: Email.dirty(email),
             password: Password.dirty(passwordInvalid),
-            status: FormzStatus.invalid,
           )
         ],
       );
@@ -98,7 +95,6 @@ void main() {
         SignUpState(
           email: Email.dirty(email),
           password: Password.dirty(password),
-          status: FormzStatus.valid,
         )
       ],
     );
@@ -111,7 +107,6 @@ void main() {
         SignUpState(
           email: Email.dirty(email),
           password: Password.dirty(passwordInvalid),
-          status: FormzStatus.invalid,
         )
       ],
     );
@@ -125,7 +120,6 @@ void main() {
         SignUpState(
           email: Email.dirty(emailInvalid),
           password: Password.dirty(password),
-          status: FormzStatus.invalid,
         )
       ],
     );
@@ -133,19 +127,19 @@ void main() {
 
   group('countryCodeChanged', () {
     test('phone valid', () {
-      expect(Phone.dirty(phone).valid, true);
+      expect(Phone.dirty(phone).isValid, true);
     });
 
     test('phone invalid', () {
-      expect(Phone.dirty(phoneInvalid).valid, false);
+      expect(Phone.dirty(phoneInvalid).isValid, false);
     });
 
     test('countryCode valid', () {
-      expect(CountryCode.dirty(countryCode).valid, true);
+      expect(CountryCode.dirty(countryCode).isValid, true);
     });
 
     test('countryCode invalid', () {
-      expect(CountryCode.dirty(countryCodeInvalid).valid, false);
+      expect(CountryCode.dirty(countryCodeInvalid).isValid, false);
     });
 
     blocTest<SignUpCubit, SignUpState>(
@@ -157,7 +151,6 @@ void main() {
         SignUpState(
           phone: Phone.dirty(phone),
           countryCode: CountryCode.dirty(countryCode),
-          status: FormzStatus.valid,
         )
       ],
     );
@@ -171,7 +164,6 @@ void main() {
         SignUpState(
           phone: Phone.dirty(phone),
           countryCode: CountryCode.dirty(countryCodeInvalid),
-          status: FormzStatus.invalid,
         )
       ],
     );
@@ -187,7 +179,6 @@ void main() {
         SignUpState(
           countryCode: CountryCode.dirty(countryCode),
           phone: Phone.dirty(phone),
-          status: FormzStatus.valid,
         )
       ],
     );
@@ -201,7 +192,6 @@ void main() {
         SignUpState(
           countryCode: CountryCode.dirty(countryCode),
           phone: Phone.dirty(phoneInvalid),
-          status: FormzStatus.invalid,
         )
       ],
     );
@@ -234,7 +224,12 @@ void main() {
       "signUpFormSubmitted status is invalid",
       build: () => SignUpCubit(authRepository),
       act: (cubit) => cubit.signUpFormSubmitted(),
-      expect: () => [],
+      expect: () => [
+        SignUpState(
+          status: FormzSubmissionStatus.failure,
+          errorMessage: 'Please fill in the form correctly',
+        ),
+      ],
     );
 
     blocTest<SignUpCubit, SignUpState>(
@@ -255,7 +250,6 @@ void main() {
         password: Password.dirty(password),
         countryCode: CountryCode.dirty(countryCode),
         phone: Phone.dirty(phone),
-        status: FormzStatus.valid,
       ),
       act: (cubit) => cubit.signUpFormSubmitted(),
       verify: (_) {
@@ -270,14 +264,14 @@ void main() {
           password: Password.dirty(password),
           countryCode: CountryCode.dirty(countryCode),
           phone: Phone.dirty(phone),
-          status: FormzStatus.submissionInProgress,
+          status: FormzSubmissionStatus.inProgress,
         ),
         SignUpState(
           email: Email.dirty(email),
           password: Password.dirty(password),
           countryCode: CountryCode.dirty(countryCode),
           phone: Phone.dirty(phone),
-          status: FormzStatus.submissionSuccess,
+          status: FormzSubmissionStatus.success,
         ),
       ],
     );
@@ -296,7 +290,6 @@ void main() {
         password: Password.dirty(password),
         countryCode: CountryCode.dirty(countryCode),
         phone: Phone.dirty(phone),
-        status: FormzStatus.valid,
       ),
       act: (cubit) => cubit.signUpFormSubmitted(),
       verify: (_) {
@@ -311,14 +304,14 @@ void main() {
           password: Password.dirty(password),
           countryCode: CountryCode.dirty(countryCode),
           phone: Phone.dirty(phone),
-          status: FormzStatus.submissionInProgress,
+          status: FormzSubmissionStatus.inProgress,
         ),
         SignUpState(
           email: Email.dirty(email),
           password: Password.dirty(password),
           countryCode: CountryCode.dirty(countryCode),
           phone: Phone.dirty(phone),
-          status: FormzStatus.submissionFailure,
+          status: FormzSubmissionStatus.failure,
         ),
       ],
     );
@@ -327,9 +320,9 @@ void main() {
   test('phone is invalid and countryCode is valid', () {
     final phoneDirty = Phone.dirty(phoneInvalid);
     final countryCodeDirty = CountryCode.dirty(countryCodeInvalid);
-    expect((phoneDirty.invalid && countryCodeDirty.invalid), true);
-    expect(Phone.dirty(phoneInvalid).invalid, true);
-    expect(CountryCode.dirty(countryCodeInvalid).invalid, true);
+    expect((phoneDirty.isNotValid && countryCodeDirty.isNotValid), true);
+    expect(Phone.dirty(phoneInvalid).isNotValid, true);
+    expect(CountryCode.dirty(countryCodeInvalid).isNotValid, true);
   });
 
   group('sendOTPCode', () {
@@ -384,12 +377,12 @@ void main() {
         SignUpState(
           countryCode: CountryCode.dirty(countryCode),
           phone: Phone.dirty(phone),
-          status: FormzStatus.submissionInProgress,
+          status: FormzSubmissionStatus.inProgress,
         ),
         SignUpState(
           countryCode: CountryCode.dirty(countryCode),
           phone: Phone.dirty(phone),
-          status: FormzStatus.submissionFailure,
+          status: FormzSubmissionStatus.failure,
           errorMessage: AppConstant.PHONE_NUMBER_EXIST_ERROR,
         ),
       ],
@@ -422,7 +415,7 @@ void main() {
         SignUpState(
           countryCode: CountryCode.dirty(countryCode),
           phone: Phone.dirty(phone),
-          status: FormzStatus.submissionInProgress,
+          status: FormzSubmissionStatus.inProgress,
         ),
       ],
     );
@@ -439,12 +432,12 @@ void main() {
         SignUpState(
           countryCode: CountryCode.dirty(countryCode),
           phone: Phone.dirty(phone),
-          status: FormzStatus.submissionInProgress,
+          status: FormzSubmissionStatus.inProgress,
         ),
         SignUpState(
           countryCode: CountryCode.dirty(countryCode),
           phone: Phone.dirty(phone),
-          status: FormzStatus.submissionFailure,
+          status: FormzSubmissionStatus.failure,
         ),
       ],
     );

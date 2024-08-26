@@ -1,12 +1,12 @@
 import 'package:eimunisasi/core/widgets/snackbar_custom.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:formz/formz.dart';
 
 import '../../../../core/utils/constant.dart';
 import '../../../../core/widgets/button_custom.dart';
 import '../../../bottom_navbar/presentation/screens/bottom_navbar.dart';
 import '../../logic/cubit/local_auth_cubit/local_auth_cubit.dart';
+import 'package:formz/formz.dart';
 
 class ConfirmPasscodeForm extends StatelessWidget {
   const ConfirmPasscodeForm({Key? key}) : super(key: key);
@@ -15,7 +15,7 @@ class ConfirmPasscodeForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<LocalAuthCubit, LocalAuthState>(
       listener: (context, state) {
-        if (state.status.isSubmissionFailure) {
+        if (state.status.isFailure) {
           snackbarCustom(state.errorMessage ?? 'Gagal').show(context);
         }
       },
@@ -68,13 +68,13 @@ class _NextButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<LocalAuthCubit, LocalAuthState>(
       listener: (context, state) {
-        if (state.status.isSubmissionSuccess) {
+        if (state.status.isSuccess) {
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
                 builder: (context) => const BottomNavbarWrapper(),
               ),
               (route) => false);
-        } else if (state.status.isSubmissionFailure) {
+        } else if (state.status.isFailure) {
           snackbarCustom(state.errorMessage ?? 'Gagal').show(context);
         }
       },
@@ -82,7 +82,7 @@ class _NextButton extends StatelessWidget {
         builder: (context, state) {
           return ButtonCustom(
             key: const Key('confirmPasscodeForm_next_raisedButton'),
-            loading: state.status.isSubmissionInProgress,
+            loading: state.status.isInProgress,
             child: Text(
               AppConstant.CONFIRMATION,
               style: TextStyle(fontSize: 15.0, color: Colors.white),

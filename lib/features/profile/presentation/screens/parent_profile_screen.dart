@@ -33,15 +33,15 @@ class ParentProfileScreen extends StatelessWidget {
       create: (context) => getIt<ProfileBloc>()..add(ProfileGetEvent()),
       child: BlocListener<ProfileBloc, ProfileState>(
         listener: (context, state) {
-          if (state.statusUpdate.isSubmissionFailure) {
+          if (state.statusUpdate.isFailure) {
             snackbarCustom(state.errorMessage ?? 'Gagal menyimpan data')
                 .show(context);
-          } else if (state.statusUpdate.isSubmissionSuccess) {
+          } else if (state.statusUpdate.isSuccess) {
             snackbarCustom('Berhasil menyimpan data').show(context);
-          } else if (state.statusUpdateAvatar.isSubmissionFailure) {
+          } else if (state.statusUpdateAvatar.isFailure) {
             snackbarCustom(state.errorMessage ?? 'Gagal mengubah foto')
                 .show(context);
-          } else if (state.statusUpdateAvatar.isSubmissionSuccess) {
+          } else if (state.statusUpdateAvatar.isSuccess) {
             snackbarCustom('Berhasil mengubah foto').show(context);
           }
         },
@@ -51,10 +51,10 @@ class ParentProfileScreen extends StatelessWidget {
           body: BlocBuilder<ProfileBloc, ProfileState>(
             builder: (context, state) {
               final bloc = context.read<ProfileBloc>();
-              if (state.statusGet.isSubmissionInProgress) {
+              if (state.statusGet.isInProgress) {
                 return LoadingScreen();
               }
-              if (state.statusGet.isSubmissionSuccess) {
+              if (state.statusGet.isSuccess) {
                 return Card(
                   margin: EdgeInsets.all(AppPadding.paddingM),
                   child: Padding(
@@ -186,7 +186,7 @@ class _SaveButton extends StatelessWidget {
     return BlocBuilder<ProfileBloc, ProfileState>(
       builder: (context, state) {
         return ButtonCustom(
-          loading: state.statusUpdate.isSubmissionInProgress,
+          loading: state.statusUpdate.isInProgress,
           child: ButtonText(text: AppConstant.SAVE),
           onPressed: () {
             dismissKeyboard(context);
@@ -208,7 +208,8 @@ class _PhotoProfile extends StatelessWidget {
     final _currentUser = FirebaseAuth.instance.currentUser;
     final bloc = context.read<ProfileBloc>();
     final url = _currentUser?.photoURL ?? this.url;
-    final isVerified = _currentUser?.email != null && _currentUser?.emailVerified == true;
+    final isVerified =
+        _currentUser?.email != null && _currentUser?.emailVerified == true;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: Column(
@@ -218,7 +219,7 @@ class _PhotoProfile extends StatelessWidget {
               return previous.statusUpdateAvatar != current.statusUpdateAvatar;
             },
             builder: (context, state) {
-              if (state.statusUpdateAvatar.isSubmissionInProgress) {
+              if (state.statusUpdateAvatar.isInProgress) {
                 return const CircularProgressIndicator.adaptive();
               }
               return ProfilePictureFromUrl(

@@ -4,31 +4,31 @@ class ChildProfileState extends Equatable {
   const ChildProfileState({
     this.children,
     this.child,
-    this.statusGetChildren = FormzStatus.pure,
-    this.statusGet = FormzStatus.pure,
-    this.statusUpdate = FormzStatus.pure,
-    this.statusCreate = FormzStatus.pure,
-    this.statusUpdateAvatar = FormzStatus.pure,
+    this.statusGetChildren = FormzSubmissionStatus.initial,
+    this.statusGet = FormzSubmissionStatus.initial,
+    this.statusUpdate = FormzSubmissionStatus.initial,
+    this.statusCreate = FormzSubmissionStatus.initial,
+    this.statusUpdateAvatar = FormzSubmissionStatus.initial,
     this.errorMessage,
   });
 
   final List<Anak>? children;
   final Anak? child;
-  final FormzStatus statusGetChildren;
-  final FormzStatus statusGet;
-  final FormzStatus statusUpdate;
-  final FormzStatus statusCreate;
-  final FormzStatus statusUpdateAvatar;
+  final FormzSubmissionStatus statusGetChildren;
+  final FormzSubmissionStatus statusGet;
+  final FormzSubmissionStatus statusUpdate;
+  final FormzSubmissionStatus statusCreate;
+  final FormzSubmissionStatus statusUpdateAvatar;
   final String? errorMessage;
 
   ChildProfileState copyWith({
     List<Anak>? children,
     Anak? child,
-    FormzStatus? statusGetChildren,
-    FormzStatus? statusGet,
-    FormzStatus? statusUpdate,
-    FormzStatus? statusCreate,
-    FormzStatus? statusUpdateAvatar,
+    FormzSubmissionStatus? statusGetChildren,
+    FormzSubmissionStatus? statusGet,
+    FormzSubmissionStatus? statusUpdate,
+    FormzSubmissionStatus? statusCreate,
+    FormzSubmissionStatus? statusUpdateAvatar,
     String? errorMessage,
   }) {
     return ChildProfileState(

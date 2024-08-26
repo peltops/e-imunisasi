@@ -26,13 +26,13 @@ class PatientMedicalHistoryScreen extends StatelessWidget {
         )),
       child: BlocBuilder<CheckupBloc, CheckupState>(
         builder: (context, state) {
-          if (state.statusGet == FormzStatus.submissionInProgress) {
+          if (state.statusGet == FormzSubmissionStatus.inProgress) {
             return Scaffold(
               body: Center(
                 child: CircularProgressIndicator(),
               ),
             );
-          } else if (state.statusGet == FormzStatus.submissionSuccess) {
+          } else if (state.statusGet == FormzSubmissionStatus.success) {
             return PatientMedicalHistoryScaffold(
               child: child,
             );

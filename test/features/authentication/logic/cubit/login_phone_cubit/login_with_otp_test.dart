@@ -104,14 +104,14 @@ void main() {
           phone: Phone.dirty(phone),
           otpCode: OTP.dirty(otp),
           verId: verId,
-          status: FormzStatus.submissionInProgress,
+          status: FormzSubmissionStatus.inProgress,
         ),
         LoginPhoneState(
           countryCode: CountryCode.dirty(countryCode),
           phone: Phone.dirty(phone),
           otpCode: OTP.dirty(otp),
           verId: verId,
-          status: FormzStatus.submissionSuccess,
+          status: FormzSubmissionStatus.success,
         ),
       ],
     );

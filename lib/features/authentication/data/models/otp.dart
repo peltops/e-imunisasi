@@ -3,7 +3,7 @@ import 'package:formz/formz.dart';
 enum OTPValidationError { invalid }
 
 class OTP extends FormzInput<String, OTPValidationError> {
-  const OTP.pure() : super.pure('');
+  const OTP.initial() : super.pure('');
 
   const OTP.dirty([String value = '']) : super.dirty(value);
 

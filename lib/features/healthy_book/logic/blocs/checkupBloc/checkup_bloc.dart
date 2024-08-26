@@ -15,20 +15,20 @@ class CheckupBloc extends Bloc<CheckupEvent, CheckupState> {
   CheckupBloc(this.repository) : super(CheckupState()) {
     on<OnGetCheckupsEvent>(_onGetCheckups);
   }
-  void _onGetCheckups(OnGetCheckupsEvent event, Emitter<CheckupState> emit) async {
-    emit(state.copyWith(statusGet: FormzStatus.submissionInProgress));
+  void _onGetCheckups(
+      OnGetCheckupsEvent event, Emitter<CheckupState> emit) async {
+    emit(state.copyWith(statusGet: FormzSubmissionStatus.inProgress));
     try {
       final checkups = await repository.getCheckups(event.childId);
       emit(state.copyWith(
-        statusGet: FormzStatus.submissionSuccess,
+        statusGet: FormzSubmissionStatus.success,
         checkups: checkups,
       ));
     } catch (e) {
       emit(state.copyWith(
-        statusGet: FormzStatus.submissionFailure,
+        statusGet: FormzSubmissionStatus.failure,
         errorMessage: e.toString(),
       ));
     }
   }
-
 }

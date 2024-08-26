@@ -4,13 +4,13 @@ enum ConfirmPasswordValidationError { invalid }
 
 class SignUpState extends Equatable {
   const SignUpState({
-    this.email = const Email.pure(),
-    this.password = const Password.pure(),
-    this.phone = const Phone.pure(),
-    this.countryCode = const CountryCode.pure(),
-    this.otpCode = const OTP.pure(),
+    this.email = const Email.initial(),
+    this.password = const Password.initial(),
+    this.phone = const Phone.initial(),
+    this.countryCode = const CountryCode.initial(),
+    this.otpCode = const OTP.initial(),
     this.verId,
-    this.status = FormzStatus.pure,
+    this.status = FormzSubmissionStatus.initial,
     this.errorMessage,
     this.isShowPassword = false,
   });
@@ -21,7 +21,7 @@ class SignUpState extends Equatable {
   final CountryCode countryCode;
   final OTP otpCode;
   final String? verId;
-  final FormzStatus status;
+  final FormzSubmissionStatus status;
   final String? errorMessage;
   final bool isShowPassword;
 
@@ -45,7 +45,7 @@ class SignUpState extends Equatable {
     CountryCode? countryCode,
     OTP? otpCode,
     String? verId,
-    FormzStatus? status,
+    FormzSubmissionStatus? status,
     String? errorMessage,
     bool? isShowPassword,
   }) {

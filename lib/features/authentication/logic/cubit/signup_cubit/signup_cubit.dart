@@ -25,10 +25,6 @@ class SignUpCubit extends Cubit<SignUpState> {
     final email = Email.dirty(value);
     emit(state.copyWith(
       email: email,
-      status: Formz.validate([
-        email,
-        state.password,
-      ]),
     ));
   }
 
@@ -36,10 +32,6 @@ class SignUpCubit extends Cubit<SignUpState> {
     final password = Password.dirty(value);
     emit(state.copyWith(
       password: password,
-      status: Formz.validate([
-        state.email,
-        password,
-      ]),
     ));
   }
 
@@ -47,7 +39,6 @@ class SignUpCubit extends Cubit<SignUpState> {
     final countryCode = CountryCode.dirty(value);
     emit(state.copyWith(
       countryCode: countryCode,
-      status: Formz.validate([state.phone, countryCode]),
     ));
   }
 
@@ -55,7 +46,6 @@ class SignUpCubit extends Cubit<SignUpState> {
     final phone = Phone.dirty(value);
     emit(state.copyWith(
       phone: phone,
-      status: Formz.validate([phone, state.countryCode]),
     ));
   }
 
@@ -64,8 +54,15 @@ class SignUpCubit extends Cubit<SignUpState> {
   }
 
   Future<void> signUpFormSubmitted() async {
-    if (!state.status.isValidated) return;
-    emit(state.copyWith(status: FormzStatus.submissionInProgress));
+    if (state.email.isNotValid || state.password.isNotValid) {
+      return emit(
+        state.copyWith(
+          errorMessage: 'Please fill in the form correctly',
+          status: FormzSubmissionStatus.failure,
+        ),
+      );
+    }
+    emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
     try {
       final userResult = await _authRepository.signUpWithEmailAndPassword(
         email: state.email.value,
@@ -80,19 +77,19 @@ class SignUpCubit extends Cubit<SignUpState> {
         verified: userResult.user?.emailVerified,
       );
       await _authRepository.insertUserToDatabase(user: _newUser);
-      emit(state.copyWith(status: FormzStatus.submissionSuccess));
+      emit(state.copyWith(status: FormzSubmissionStatus.success));
     } catch (_) {
-      emit(state.copyWith(status: FormzStatus.submissionFailure));
+      emit(state.copyWith(status: FormzSubmissionStatus.failure));
     }
   }
 
   void sendOTPCode() async {
     final phoneNumber =
         state.countryCode.value + state.phone.value.removeZeroAtFirst();
-    if (state.phone.invalid || state.countryCode.invalid) return;
+    if (state.phone.isNotValid || state.countryCode.isNotValid) return;
 
     try {
-      emit(state.copyWith(status: FormzStatus.submissionInProgress));
+      emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
 
       final isPhoneNumberExist = await _authRepository.isPhoneNumberExist(
         phoneNumber,
@@ -100,7 +97,7 @@ class SignUpCubit extends Cubit<SignUpState> {
       if (isPhoneNumberExist) {
         emit(
           state.copyWith(
-            status: FormzStatus.submissionFailure,
+            status: FormzSubmissionStatus.failure,
             errorMessage: AppConstant.PHONE_NUMBER_EXIST_ERROR,
           ),
         );
@@ -109,12 +106,13 @@ class SignUpCubit extends Cubit<SignUpState> {
       await _authRepository.verifyPhoneNumber(
         phone: phoneNumber,
         codeSent: (String verId, int? token) {
-          emit(state.copyWith(status: FormzStatus.pure, verId: verId));
+          emit(
+              state.copyWith(status: FormzSubmissionStatus.initial, verId: verId));
         },
         verificationFailed: (FirebaseAuthException e) {
           emit(
             state.copyWith(
-              status: FormzStatus.submissionFailure,
+              status: FormzSubmissionStatus.failure,
               errorMessage: e.message,
             ),
           );
@@ -124,11 +122,11 @@ class SignUpCubit extends Cubit<SignUpState> {
             verificationId: credential.verificationId.orEmpty,
             otp: credential.smsCode.orEmpty,
           );
-          emit(state.copyWith(status: FormzStatus.submissionSuccess));
+          emit(state.copyWith(status: FormzSubmissionStatus.success));
         },
       );
     } catch (_) {
-      emit(state.copyWith(status: FormzStatus.submissionFailure));
+      emit(state.copyWith(status: FormzSubmissionStatus.failure));
     }
   }
 }

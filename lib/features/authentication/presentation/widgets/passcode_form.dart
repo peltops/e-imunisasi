@@ -15,7 +15,7 @@ class PasscodeForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<LocalAuthCubit, LocalAuthState>(
       listener: (context, state) {
-        if (state.status.isSubmissionFailure) {
+        if (state.status.isFailure) {
           snackbarCustom(state.errorMessage ?? 'Gagal').show(context);
         }
       },
@@ -44,9 +44,11 @@ class _TextHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<LocalAuthCubit, LocalAuthState>(
       builder: (context, state) {
-        return Text(state.savedPasscode.invalid
-            ? AppConstant.PLEASE_SET_PASSCODE
-            : AppConstant.PLEASE_ENTER_PASSCODE);
+        return Text(
+          state.savedPasscode.isNotValid
+              ? AppConstant.PLEASE_SET_PASSCODE
+              : AppConstant.PLEASE_ENTER_PASSCODE,
+        );
       },
     );
   }
@@ -69,11 +71,11 @@ class _PasscodeInput extends StatelessWidget {
               decoration: InputDecoration(
                 labelText: 'PIN',
                 helperText: 'Masukkan 4-digit PIN',
-                errorText: state.passcode.invalid ? 'Format salah!' : null,
+                errorText: state.passcode.isNotValid ? 'Format salah!' : null,
               ),
             ),
             const SizedBox(height: 16),
-            state.savedPasscode.invalid
+            state.savedPasscode.isNotValid
                 ? const Align(
                     alignment: Alignment.topLeft,
                     child: Text(
@@ -94,27 +96,27 @@ class _NextButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<LocalAuthCubit, LocalAuthState>(
       listener: (context, state) {
-        if (state.status.isSubmissionSuccess) {
+        if (state.status.isSuccess) {
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
                 builder: (context) => const BottomNavbarWrapper(),
               ),
               (route) => false);
-        } else if (state.status.isSubmissionFailure) {
+        } else if (state.status.isFailure) {
           snackbarCustom(state.errorMessage ?? 'Gagal').show(context);
         }
       },
       child: BlocBuilder<LocalAuthCubit, LocalAuthState>(
         builder: (context, state) {
           return ButtonCustom(
-            loading: state.status.isSubmissionInProgress,
+            loading: state.status.isInProgress,
             child: Text(
               AppConstant.NEXT,
               style: TextStyle(fontSize: 15.0, color: Colors.white),
             ),
             onPressed: () {
-              if (state.savedPasscode.invalid) {
-                if (state.passcode.valid) {
+              if (state.savedPasscode.isNotValid) {
+                if (state.passcode.isValid) {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (_) => BlocProvider.value(

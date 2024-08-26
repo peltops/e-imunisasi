@@ -34,9 +34,9 @@ void main() {
     ),
     act: (bloc) => bloc.add(OnGetCheckupsEvent()),
     expect: () => [
-      CheckupState(statusGet: FormzStatus.submissionInProgress),
+      CheckupState(statusGet: FormzSubmissionStatus.inProgress),
       CheckupState(
-          statusGet: FormzStatus.submissionSuccess,
+          statusGet: FormzSubmissionStatus.success,
           checkups: [mockCheckupModel]),
     ],
   );
@@ -53,9 +53,9 @@ void main() {
     ),
     act: (bloc) => bloc.add(OnGetCheckupsEvent()),
     expect: () => [
-      CheckupState(statusGet: FormzStatus.submissionInProgress),
+      CheckupState(statusGet: FormzSubmissionStatus.inProgress),
       CheckupState(
-          statusGet: FormzStatus.submissionFailure, errorMessage: "Exception"),
+          statusGet: FormzSubmissionStatus.failure, errorMessage: "Exception"),
     ],
   );
 }
