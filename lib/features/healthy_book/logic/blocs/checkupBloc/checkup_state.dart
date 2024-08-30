@@ -2,17 +2,17 @@ part of 'checkup_bloc.dart';
 
 class CheckupState extends Equatable {
   const CheckupState({
-    this.statusGet = FormzStatus.pure,
+    this.statusGet = FormzSubmissionStatus.initial,
     this.errorMessage,
     this.checkups = const [],
   });
 
-  final FormzStatus statusGet;
+  final FormzSubmissionStatus statusGet;
   final String? errorMessage;
   final List<CheckupModel> checkups;
 
   CheckupState copyWith({
-    FormzStatus? statusGet,
+    FormzSubmissionStatus? statusGet,
     String? errorMessage,
     List<CheckupModel>? checkups,
   }) {
@@ -25,9 +25,8 @@ class CheckupState extends Equatable {
 
   @override
   List<Object?> get props => [
-    statusGet,
-    errorMessage,
-    checkups,
-  ];
+        statusGet,
+        errorMessage,
+        checkups,
+      ];
 }
-

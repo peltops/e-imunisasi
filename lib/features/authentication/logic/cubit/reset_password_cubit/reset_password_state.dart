@@ -2,13 +2,13 @@ part of 'reset_password_cubit.dart';
 
 class ResetPasswordState extends Equatable {
   const ResetPasswordState({
-    this.email = const Email.pure(),
-    this.status = FormzStatus.pure,
+    this.email = const Email.initial(),
+    this.status = FormzSubmissionStatus.initial,
     this.errorMessage,
   });
 
   final Email email;
-  final FormzStatus status;
+  final FormzSubmissionStatus status;
   final String? errorMessage;
 
   @override
@@ -16,7 +16,7 @@ class ResetPasswordState extends Equatable {
 
   ResetPasswordState copyWith({
     Email? email,
-    FormzStatus? status,
+    FormzSubmissionStatus? status,
     String? errorMessage,
   }) {
     return ResetPasswordState(

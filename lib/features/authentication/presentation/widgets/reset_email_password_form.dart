@@ -1,6 +1,5 @@
 import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/core/widgets/snackbar_custom.dart';
-import 'package:form_field_validator/form_field_validator.dart';
 
 import '../../../../core/widgets/button_custom.dart';
 import '../../../../core/widgets/text_form_custom.dart';
@@ -16,9 +15,9 @@ class ResetEmailPasswordForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<ResetPasswordCubit, ResetPasswordState>(
       listener: (context, state) {
-        if (state.status.isSubmissionFailure) {
+        if (state.status.isFailure) {
           snackbarCustom(state.errorMessage ?? 'Reset gagal!').show(context);
-        } else if (state.status.isSubmissionSuccess) {
+        } else if (state.status.isSuccess) {
           Navigator.of(context).pop();
           snackbarCustom(
             'Berhasil! Silahkan cek email anda. ${state.email.value}',
@@ -52,11 +51,7 @@ class _EmailInput extends StatelessWidget {
           label: 'Email',
           hintText: 'orangtua@contoh.com',
           icon: Icon(Icons.email),
-          validator: MultiValidator([
-            EmailValidator(errorText: 'Masukan email yang valid'),
-            RequiredValidator(errorText: 'Masukan email'),
-          ]),
-          errorText: state.email.invalid ? 'Format email salah!' : null,
+          errorText: state.email.isNotValid ? 'Format email salah!' : null,
           onChanged: (email) =>
               context.read<ResetPasswordCubit>().emailChanged(email),
         );
@@ -72,12 +67,12 @@ class _ResetButton extends StatelessWidget {
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
         return ButtonCustom(
-          loading: state.status.isSubmissionInProgress,
+          loading: state.status.isInProgress,
           child: Text(
             AppConstant.RESET_PASSWORD_LINK_ACTION,
             style: TextStyle(fontSize: 15.0, color: Colors.white),
           ),
-          onPressed: state.status.isValidated
+          onPressed: state.email.isValid
               ? () => context
                   .read<ResetPasswordCubit>()
                   .resetPasswordFormSubmitted()

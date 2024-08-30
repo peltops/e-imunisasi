@@ -19,7 +19,6 @@ class LoginCubit extends Cubit<LoginState> {
     final email = Email.dirty(value);
     emit(state.copyWith(
       email: email,
-      status: Formz.validate([email, state.password]),
     ));
   }
 
@@ -27,7 +26,6 @@ class LoginCubit extends Cubit<LoginState> {
     final password = Password.dirty(value);
     emit(state.copyWith(
       password: password,
-      status: Formz.validate([state.email, password]),
     ));
   }
 
@@ -36,17 +34,24 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   Future<void> logInWithCredentials() async {
-    if (!state.status.isValidated) return;
-    emit(state.copyWith(status: FormzStatus.submissionInProgress));
+    if (state.email.isNotValid || state.password.isNotValid) {
+      return emit(
+        state.copyWith(
+          errorMessage: 'Please fill in the form correctly',
+          status: FormzSubmissionStatus.failure,
+        ),
+      );
+    }
+    emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
     try {
       await _authRepository.logInWithEmailAndPassword(
         email: state.email.value,
         password: state.password.value,
       );
-      emit(state.copyWith(status: FormzStatus.submissionSuccess));
+      emit(state.copyWith(status: FormzSubmissionStatus.success));
     } on FirebaseAuthException catch (e) {
       emit(state.copyWith(
-          status: FormzStatus.submissionFailure, errorMessage: e.message));
+          status: FormzSubmissionStatus.failure, errorMessage: e.message));
     }
   }
 }

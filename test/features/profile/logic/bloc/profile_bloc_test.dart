@@ -14,7 +14,6 @@ import 'profile_bloc_test.mocks.dart';
 
 @GenerateMocks([AuthRepository])
 void main() {
-
   const momName = 'momName';
   const placeOfBirth = 'placeOfBirth';
   final dateOfBirth = DateTime(2021, 1, 1);
@@ -40,8 +39,8 @@ void main() {
     });
 
     final ProfileState initialState = ProfileState(
-      statusGet: FormzStatus.pure,
-      statusUpdate: FormzStatus.pure,
+      statusGet: FormzSubmissionStatus.initial,
+      statusUpdate: FormzSubmissionStatus.initial,
     );
 
     blocTest<ProfileBloc, ProfileState>(
@@ -136,14 +135,14 @@ void main() {
     );
   });
 
-
-  group("OnProfileGetEvent", (){
+  group("OnProfileGetEvent", () {
     late AuthRepository mockAuthRepository;
     setUp(() {
       mockAuthRepository = MockAuthRepository();
     });
 
-    blocTest<ProfileBloc,ProfileState>("success",
+    blocTest<ProfileBloc, ProfileState>(
+      "success",
       build: () {
         when(mockAuthRepository.getUser()).thenAnswer((_) async => user);
         return ProfileBloc(mockAuthRepository);
@@ -151,16 +150,17 @@ void main() {
       act: (bloc) => bloc.add(ProfileGetEvent()),
       expect: () => [
         ProfileState(
-          statusGet: FormzStatus.submissionInProgress,
+          statusGet: FormzSubmissionStatus.inProgress,
         ),
         ProfileState(
           user: user,
-          statusGet: FormzStatus.submissionSuccess,
+          statusGet: FormzSubmissionStatus.success,
         )
       ],
     );
 
-    blocTest<ProfileBloc,ProfileState>("failed",
+    blocTest<ProfileBloc, ProfileState>(
+      "failed",
       build: () {
         when(mockAuthRepository.getUser()).thenThrow(Exception());
         return ProfileBloc(mockAuthRepository);
@@ -168,24 +168,26 @@ void main() {
       act: (bloc) => bloc.add(ProfileGetEvent()),
       expect: () => [
         ProfileState(
-          statusGet: FormzStatus.submissionInProgress,
+          statusGet: FormzSubmissionStatus.inProgress,
         ),
         ProfileState(
-          statusGet: FormzStatus.submissionFailure,
+          statusGet: FormzSubmissionStatus.failure,
         )
       ],
     );
   });
 
-  group("ProfileUpdateEvent", (){
+  group("ProfileUpdateEvent", () {
     late AuthRepository mockAuthRepository;
     setUp(() {
       mockAuthRepository = MockAuthRepository();
     });
 
-    blocTest<ProfileBloc,ProfileState>("success",
+    blocTest<ProfileBloc, ProfileState>(
+      "success",
       build: () {
-        when(mockAuthRepository.insertUserToDatabase(user: user)).thenAnswer((_) async => true);
+        when(mockAuthRepository.insertUserToDatabase(user: user))
+            .thenAnswer((_) async => true);
         return ProfileBloc(mockAuthRepository);
       },
       seed: () => ProfileState(user: user),
@@ -193,18 +195,20 @@ void main() {
       expect: () => [
         ProfileState(
           user: user,
-          statusUpdate: FormzStatus.submissionInProgress,
+          statusUpdate: FormzSubmissionStatus.inProgress,
         ),
         ProfileState(
           user: user,
-          statusUpdate: FormzStatus.submissionSuccess,
+          statusUpdate: FormzSubmissionStatus.success,
         )
       ],
     );
 
-    blocTest<ProfileBloc,ProfileState>("failed",
+    blocTest<ProfileBloc, ProfileState>(
+      "failed",
       build: () {
-        when(mockAuthRepository.insertUserToDatabase(user: user)).thenThrow(Exception());
+        when(mockAuthRepository.insertUserToDatabase(user: user))
+            .thenThrow(Exception());
         return ProfileBloc(mockAuthRepository);
       },
       seed: () => ProfileState(user: user),
@@ -212,17 +216,17 @@ void main() {
       expect: () => [
         ProfileState(
           user: user,
-          statusUpdate: FormzStatus.submissionInProgress,
+          statusUpdate: FormzSubmissionStatus.inProgress,
         ),
         ProfileState(
           user: user,
-          statusUpdate: FormzStatus.submissionFailure,
+          statusUpdate: FormzSubmissionStatus.failure,
         )
       ],
     );
   });
 
-  group("ProfileUpdateAvatarEvent", (){
+  group("ProfileUpdateAvatarEvent", () {
     late AuthRepository mockAuthRepository;
 
     final File file = File('test');
@@ -232,34 +236,37 @@ void main() {
       mockAuthRepository = MockAuthRepository();
     });
 
-    blocTest<ProfileBloc,ProfileState>("success",
+    blocTest<ProfileBloc, ProfileState>(
+      "success",
       build: () {
         when(mockAuthRepository.uploadImage(file)).thenAnswer((_) async => url);
-        when(mockAuthRepository.updateUserAvatar(url)).thenAnswer((_) async => true);
+        when(mockAuthRepository.updateUserAvatar(url))
+            .thenAnswer((_) async => true);
         when(mockAuthRepository.getUser()).thenAnswer((_) async => user);
         return ProfileBloc(mockAuthRepository);
       },
       act: (bloc) => bloc.add(ProfileUpdateAvatarEvent(file)),
       expect: () => [
         ProfileState(
-          statusUpdateAvatar: FormzStatus.submissionInProgress,
+          statusUpdateAvatar: FormzSubmissionStatus.inProgress,
         ),
         ProfileState(
-          statusUpdateAvatar: FormzStatus.submissionSuccess,
+          statusUpdateAvatar: FormzSubmissionStatus.success,
         ),
         ProfileState(
-          statusGet: FormzStatus.submissionInProgress,
-          statusUpdateAvatar: FormzStatus.submissionSuccess,
+          statusGet: FormzSubmissionStatus.inProgress,
+          statusUpdateAvatar: FormzSubmissionStatus.success,
         ),
         ProfileState(
           user: user,
-          statusGet: FormzStatus.submissionSuccess,
-          statusUpdateAvatar: FormzStatus.submissionSuccess,
+          statusGet: FormzSubmissionStatus.success,
+          statusUpdateAvatar: FormzSubmissionStatus.success,
         )
       ],
     );
 
-    blocTest<ProfileBloc,ProfileState>("failed uploadImage",
+    blocTest<ProfileBloc, ProfileState>(
+      "failed uploadImage",
       build: () {
         when(mockAuthRepository.uploadImage(file)).thenThrow(Exception());
         return ProfileBloc(mockAuthRepository);
@@ -267,15 +274,16 @@ void main() {
       act: (bloc) => bloc.add(ProfileUpdateAvatarEvent(file)),
       expect: () => [
         ProfileState(
-          statusUpdateAvatar: FormzStatus.submissionInProgress,
+          statusUpdateAvatar: FormzSubmissionStatus.inProgress,
         ),
         ProfileState(
-          statusUpdateAvatar: FormzStatus.submissionFailure,
+          statusUpdateAvatar: FormzSubmissionStatus.failure,
         )
       ],
     );
 
-    blocTest<ProfileBloc,ProfileState>("failed updateUserAvatar",
+    blocTest<ProfileBloc, ProfileState>(
+      "failed updateUserAvatar",
       build: () {
         when(mockAuthRepository.uploadImage(file)).thenAnswer((_) async => url);
         when(mockAuthRepository.updateUserAvatar(url)).thenThrow(Exception());
@@ -284,22 +292,23 @@ void main() {
       act: (bloc) => bloc.add(ProfileUpdateAvatarEvent(file)),
       expect: () => [
         ProfileState(
-          statusUpdateAvatar: FormzStatus.submissionInProgress,
+          statusUpdateAvatar: FormzSubmissionStatus.inProgress,
         ),
         ProfileState(
-          statusUpdateAvatar: FormzStatus.submissionFailure,
+          statusUpdateAvatar: FormzSubmissionStatus.failure,
         )
       ],
     );
   });
 
-  group('VerifyEmailEvent', (){
+  group('VerifyEmailEvent', () {
     late AuthRepository mockAuthRepository;
     setUp(() {
       mockAuthRepository = MockAuthRepository();
     });
 
-    blocTest<ProfileBloc,ProfileState>("success",
+    blocTest<ProfileBloc, ProfileState>(
+      "success",
       build: () {
         when(mockAuthRepository.verifyEmail()).thenAnswer((_) async => true);
         return ProfileBloc(mockAuthRepository);
@@ -307,15 +316,16 @@ void main() {
       act: (bloc) => bloc.add(VerifyEmailEvent()),
       expect: () => [
         ProfileState(
-          statusUpdate: FormzStatus.submissionInProgress,
+          statusUpdate: FormzSubmissionStatus.inProgress,
         ),
         ProfileState(
-          statusUpdate: FormzStatus.submissionSuccess,
+          statusUpdate: FormzSubmissionStatus.success,
         )
       ],
     );
 
-    blocTest<ProfileBloc,ProfileState>("failed",
+    blocTest<ProfileBloc, ProfileState>(
+      "failed",
       build: () {
         when(mockAuthRepository.verifyEmail()).thenThrow(Exception());
         return ProfileBloc(mockAuthRepository);
@@ -323,10 +333,10 @@ void main() {
       act: (bloc) => bloc.add(VerifyEmailEvent()),
       expect: () => [
         ProfileState(
-          statusUpdate: FormzStatus.submissionInProgress,
+          statusUpdate: FormzSubmissionStatus.inProgress,
         ),
         ProfileState(
-          statusUpdate: FormzStatus.submissionFailure,
+          statusUpdate: FormzSubmissionStatus.failure,
         )
       ],
     );

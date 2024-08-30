@@ -54,7 +54,6 @@ void main() {
         LoginPhoneState(
           phone: Phone.dirty(phone),
           countryCode: CountryCode.dirty(countryCodeInvalid),
-          status: FormzStatus.invalid,
         )
       ],
     );
@@ -71,7 +70,6 @@ void main() {
         LoginPhoneState(
           phone: Phone.dirty(phone),
           countryCode: CountryCode.dirty(countryCodeInvalid),
-          status: FormzStatus.invalid,
         )
       ],
     );
@@ -88,7 +86,6 @@ void main() {
         LoginPhoneState(
           phone: Phone.dirty(phone),
           countryCode: CountryCode.dirty(countryCode),
-          status: FormzStatus.invalid,
         )
       ],
     );
@@ -105,7 +102,6 @@ void main() {
         LoginPhoneState(
           phone: Phone.dirty(phone),
           countryCode: CountryCode.dirty(countryCode),
-          status: FormzStatus.invalid,
         )
       ],
     );
@@ -124,7 +120,6 @@ void main() {
         LoginPhoneState(
           phone: Phone.dirty(phoneInvalid),
           countryCode: CountryCode.dirty(countryCode),
-          status: FormzStatus.invalid,
         )
       ],
     );
@@ -141,7 +136,6 @@ void main() {
         LoginPhoneState(
           phone: Phone.dirty(phoneInvalid),
           countryCode: CountryCode.dirty(countryCode),
-          status: FormzStatus.invalid,
         )
       ],
     );
@@ -158,7 +152,6 @@ void main() {
         LoginPhoneState(
           phone: Phone.dirty(phone),
           countryCode: CountryCode.dirty(countryCode),
-          status: FormzStatus.invalid,
         )
       ],
     );
@@ -175,7 +168,6 @@ void main() {
         LoginPhoneState(
           phone: Phone.dirty(phone),
           countryCode: CountryCode.dirty(countryCode),
-          status: FormzStatus.invalid,
         )
       ],
     );
@@ -192,7 +184,6 @@ void main() {
       expect: () => [
         LoginPhoneState(
           otpCode: OTP.dirty("1234567"),
-          status: FormzStatus.invalid,
         )
       ],
     );
@@ -204,7 +195,6 @@ void main() {
       expect: () => [
         LoginPhoneState(
           otpCode: OTP.dirty(otpInvalid),
-          status: FormzStatus.invalid,
         )
       ],
     );
@@ -222,7 +212,6 @@ void main() {
           otpCode: OTP.dirty(otp),
           phone: Phone.dirty(phone),
           countryCode: CountryCode.dirty(countryCode),
-          status: FormzStatus.valid,
         )
       ],
     );
@@ -236,7 +225,7 @@ void main() {
       expect: () => [
         LoginPhoneState(
           verId: "123456",
-          status: FormzStatus.pure,
+          status: FormzSubmissionStatus.initial,
         )
       ],
     );
@@ -294,7 +283,7 @@ void main() {
         LoginPhoneState(
           countryCode: CountryCode.dirty(countryCode),
           phone: Phone.dirty(phone),
-          status: FormzStatus.submissionInProgress,
+          status: FormzSubmissionStatus.inProgress,
         ),
       ],
     );
@@ -326,12 +315,12 @@ void main() {
         LoginPhoneState(
           countryCode: CountryCode.dirty(countryCode),
           phone: Phone.dirty(phone),
-          status: FormzStatus.submissionInProgress,
+          status: FormzSubmissionStatus.inProgress,
         ),
         LoginPhoneState(
           countryCode: CountryCode.dirty(countryCode),
           phone: Phone.dirty(phone),
-          status: FormzStatus.submissionFailure,
+          status: FormzSubmissionStatus.failure,
           errorMessage:
               'Nomor HP belum terdaftar, silahkan daftar terlebih dahulu',
         ),
@@ -350,12 +339,12 @@ void main() {
         LoginPhoneState(
           countryCode: CountryCode.dirty(countryCode),
           phone: Phone.dirty(phone),
-          status: FormzStatus.submissionInProgress,
+          status: FormzSubmissionStatus.inProgress,
         ),
         LoginPhoneState(
           countryCode: CountryCode.dirty(countryCode),
           phone: Phone.dirty(phone),
-          status: FormzStatus.submissionFailure,
+          status: FormzSubmissionStatus.failure,
         ),
       ],
     );

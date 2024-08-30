@@ -1,6 +1,5 @@
 import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/core/widgets/snackbar_custom.dart';
-import 'package:form_field_validator/form_field_validator.dart';
 
 import '../../../../app.dart';
 import '../../../../core/widgets/button_custom.dart';
@@ -21,10 +20,10 @@ class LoginEmailForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<LoginCubit, LoginState>(
       listener: (context, state) {
-        if (state.status.isSubmissionFailure) {
+        if (state.status.isFailure) {
           snackbarCustom(state.errorMessage ?? 'Otentikasi gagal!')
               .show(context);
-        } else if (state.status.isSubmissionSuccess) {
+        } else if (state.status.isSuccess) {
           context.read<AuthenticationBloc>().add(LoggedIn());
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) => const AppView()));
@@ -62,11 +61,7 @@ class _EmailInput extends StatelessWidget {
           label: 'Email',
           hintText: 'orangtua@contoh.com',
           icon: Icon(Icons.email),
-          validator: MultiValidator([
-            EmailValidator(errorText: 'Masukan email yang valid'),
-            RequiredValidator(errorText: 'Masukan email'),
-          ]),
-          errorText: state.email.invalid ? 'Format email salah!' : null,
+          errorText: state.email.isNotValid ? 'Format email salah!' : null,
           onChanged: (email) => context.read<LoginCubit>().emailChanged(email),
         );
       },
@@ -107,14 +102,12 @@ class _LoginButton extends StatelessWidget {
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
         return ButtonCustom(
-          loading: state.status.isSubmissionInProgress,
+          loading: state.status.isInProgress,
           child: Text(
             '${AppConstant.LOGIN} ',
             style: TextStyle(fontSize: 15.0, color: Colors.white),
           ),
-          onPressed: state.status.isValidated
-              ? () => context.read<LoginCubit>().logInWithCredentials()
-              : null,
+          onPressed: () => context.read<LoginCubit>().logInWithCredentials(),
         );
       },
     );

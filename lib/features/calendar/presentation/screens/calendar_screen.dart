@@ -54,10 +54,10 @@ class _CalendarScaffold extends StatelessWidget {
       ),
       body: BlocBuilder<CalendarBloc, CalendarState>(
         builder: (context, state) {
-          if (state.status == FormzStatus.submissionFailure) {
+          if (state.status == FormzSubmissionStatus.failure) {
             return Center(child: Text('Error'));
           }
-          if (state.status == FormzStatus.submissionInProgress) {
+          if (state.status == FormzSubmissionStatus.inProgress) {
             return Center(child: CircularProgressIndicator());
           }
           return ListView(
@@ -234,7 +234,7 @@ class _DetailCalendarSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<CalendarBloc, CalendarState>(
       listener: (context, state) {
-        if (state.statusDeleteEvent == FormzStatus.submissionSuccess) {
+        if (state.statusDeleteEvent == FormzSubmissionStatus.success) {
           snackbarCustom("Berhasil Menghapus Aktivitas").show(context);
         }
       },
@@ -251,7 +251,7 @@ class _DetailCalendarSection extends StatelessWidget {
               fontFamily: 'Nunito',
               color: Colors.black,
             ),
-            headingRowColor: MaterialStateColor.resolveWith(
+            headingRowColor: WidgetStateColor.resolveWith(
                 (states) => Theme.of(context).primaryColor),
             columns: [
               DataColumn(
@@ -302,7 +302,7 @@ class _ListRowEvent {
         DataCell(
           BlocBuilder<CalendarBloc, CalendarState>(
             builder: (context, state) {
-              if (state.statusDeleteEvent == FormzStatus.submissionInProgress) {
+              if (state.statusDeleteEvent == FormzSubmissionStatus.inProgress) {
                 return CircularProgressIndicator();
               }
               if (event.readOnly == false) {

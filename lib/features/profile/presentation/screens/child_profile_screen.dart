@@ -35,26 +35,26 @@ class ChildProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<ChildProfileBloc, ChildProfileState>(
       listener: (context, state) {
-        if (state.statusUpdate.isSubmissionFailure) {
+        if (state.statusUpdate.isFailure) {
           snackbarCustom(
             state.errorMessage ?? 'Gagal menyimpan data',
           ).show(context);
-        } else if (state.statusUpdate.isSubmissionSuccess) {
+        } else if (state.statusUpdate.isSuccess) {
           context.navigateBack();
           snackbarCustom('Berhasil menyimpan data').show(context);
-        } else if (state.statusUpdateAvatar.isSubmissionFailure) {
+        } else if (state.statusUpdateAvatar.isFailure) {
           snackbarCustom(
             state.errorMessage ?? 'Gagal mengubah foto',
           ).show(context);
-        } else if (state.statusUpdateAvatar.isSubmissionSuccess) {
+        } else if (state.statusUpdateAvatar.isSuccess) {
           snackbarCustom(
             'Berhasil mengubah foto',
           ).show(context);
-        } else if (state.statusCreate.isSubmissionFailure) {
+        } else if (state.statusCreate.isFailure) {
           snackbarCustom(
             state.errorMessage ?? 'Gagal menyimpan data',
           ).show(context);
-        } else if (state.statusCreate.isSubmissionSuccess) {
+        } else if (state.statusCreate.isSuccess) {
           context.navigateBack();
           snackbarCustom(
             'Berhasil menyimpan data',
@@ -225,7 +225,7 @@ class _SaveButton extends StatelessWidget {
     return BlocBuilder<ChildProfileBloc, ChildProfileState>(
       builder: (context, state) {
         return ButtonCustom(
-          loading: state.statusUpdate.isSubmissionInProgress,
+          loading: state.statusUpdate.isInProgress,
           child: ButtonText(text: AppConstant.SAVE),
           onPressed: () async {
             dismissKeyboard(context);
@@ -258,7 +258,7 @@ class _PhotoProfile extends StatelessWidget {
           return previous.statusUpdateAvatar != current.statusUpdateAvatar;
         },
         builder: (context, state) {
-          if (state.statusUpdateAvatar.isSubmissionInProgress) {
+          if (state.statusUpdateAvatar.isInProgress) {
             return const CircularProgressIndicator.adaptive();
           }
           return ProfilePictureFromUrl(

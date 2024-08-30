@@ -11,7 +11,7 @@ enum PasswordValidationError {
 /// {@endtemplate}
 class Password extends FormzInput<String, PasswordValidationError> {
   /// {@macro password}
-  const Password.pure() : super.pure('');
+  const Password.initial() : super.pure('');
 
   /// {@macro password}
   const Password.dirty([String value = '']) : super.dirty(value);

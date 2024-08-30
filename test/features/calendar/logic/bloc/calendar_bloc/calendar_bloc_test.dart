@@ -70,10 +70,10 @@ void main() {
         ),
       expect: () => [
         CalendarState(
-          status: FormzStatus.submissionInProgress,
+          status: FormzSubmissionStatus.inProgress,
         ),
         CalendarState(
-          status: FormzStatus.submissionSuccess,
+          status: FormzSubmissionStatus.success,
           events: response,
           groupedEvents: response.groupEventsByDate(),
         ),
@@ -98,13 +98,13 @@ void main() {
         ),
       expect: () => [
         CalendarState(
-          status: FormzStatus.submissionInProgress,
+          status: FormzSubmissionStatus.inProgress,
         ),
         CalendarState(
-          status: FormzStatus.submissionFailure,
+          status: FormzSubmissionStatus.failure,
         ),
         CalendarState(
-          status: FormzStatus.pure,
+          status: FormzSubmissionStatus.initial,
         ),
       ],
     );
@@ -225,15 +225,15 @@ void main() {
         ),
       expect: () => [
         CalendarState(
-          statusAddEvent: FormzStatus.submissionInProgress,
+          statusAddEvent: FormzSubmissionStatus.inProgress,
         ),
         CalendarState(
-          statusAddEvent: FormzStatus.submissionSuccess,
+          statusAddEvent: FormzSubmissionStatus.success,
           events: [event],
           groupedEvents: [event].groupEventsByDate(),
         ),
         CalendarState(
-          statusAddEvent: FormzStatus.pure,
+          statusAddEvent: FormzSubmissionStatus.initial,
           dateTimeForm: null,
           activityForm: emptyString,
           events: [event],
@@ -267,13 +267,13 @@ void main() {
         ),
       expect: () => [
         CalendarState(
-          statusAddEvent: FormzStatus.submissionInProgress,
+          statusAddEvent: FormzSubmissionStatus.inProgress,
         ),
         CalendarState(
-          statusAddEvent: FormzStatus.submissionFailure,
+          statusAddEvent: FormzSubmissionStatus.failure,
         ),
         CalendarState(
-          statusAddEvent: FormzStatus.pure,
+          statusAddEvent: FormzSubmissionStatus.initial,
         ),
       ],
     );
@@ -304,13 +304,13 @@ void main() {
         ),
       expect: () => [
         CalendarState(
-          statusAddEvent: FormzStatus.submissionInProgress,
+          statusAddEvent: FormzSubmissionStatus.inProgress,
         ),
         CalendarState(
-          statusAddEvent: FormzStatus.submissionFailure,
+          statusAddEvent: FormzSubmissionStatus.failure,
         ),
         CalendarState(
-          statusAddEvent: FormzStatus.pure,
+          statusAddEvent: FormzSubmissionStatus.initial,
         ),
       ],
     );
@@ -344,15 +344,15 @@ void main() {
         ),
       expect: () => [
         CalendarState(
-          statusUpdateEvent: FormzStatus.submissionInProgress,
+          statusUpdateEvent: FormzSubmissionStatus.inProgress,
         ),
         CalendarState(
-          statusUpdateEvent: FormzStatus.submissionSuccess,
+          statusUpdateEvent: FormzSubmissionStatus.success,
           events: [event],
           groupedEvents: [event].groupEventsByDate(),
         ),
         CalendarState(
-          statusUpdateEvent: FormzStatus.pure,
+          statusUpdateEvent: FormzSubmissionStatus.initial,
           dateTimeForm: null,
           activityForm: emptyString,
           events: [event],
@@ -386,13 +386,13 @@ void main() {
         ),
       expect: () => [
         CalendarState(
-          statusUpdateEvent: FormzStatus.submissionInProgress,
+          statusUpdateEvent: FormzSubmissionStatus.inProgress,
         ),
         CalendarState(
-          statusUpdateEvent: FormzStatus.submissionFailure,
+          statusUpdateEvent: FormzSubmissionStatus.failure,
         ),
         CalendarState(
-          statusUpdateEvent: FormzStatus.pure,
+          statusUpdateEvent: FormzSubmissionStatus.initial,
         ),
       ],
     );
@@ -424,13 +424,13 @@ void main() {
         ),
       expect: () => [
         CalendarState(
-          statusUpdateEvent: FormzStatus.submissionInProgress,
+          statusUpdateEvent: FormzSubmissionStatus.inProgress,
         ),
         CalendarState(
-          statusUpdateEvent: FormzStatus.submissionFailure,
+          statusUpdateEvent: FormzSubmissionStatus.failure,
         ),
         CalendarState(
-          statusUpdateEvent: FormzStatus.pure,
+          statusUpdateEvent: FormzSubmissionStatus.initial,
         ),
       ],
     );
@@ -470,15 +470,15 @@ void main() {
         ),
       expect: () => [
         CalendarState(
-          statusDeleteEvent: FormzStatus.submissionInProgress,
+          statusDeleteEvent: FormzSubmissionStatus.inProgress,
         ),
         CalendarState(
-          statusDeleteEvent: FormzStatus.submissionSuccess,
+          statusDeleteEvent: FormzSubmissionStatus.success,
           events: [],
           groupedEvents: <CalendarModel>[].groupEventsByDate(),
         ),
         CalendarState(
-          statusDeleteEvent: FormzStatus.pure,
+          statusDeleteEvent: FormzSubmissionStatus.initial,
           dateTimeForm: null,
           activityForm: emptyString,
           events: [],
@@ -539,7 +539,7 @@ void main() {
       ),
       expect: () => [
         CalendarState(
-          statusDeleteEvent: FormzStatus.submissionInProgress,
+          statusDeleteEvent: FormzSubmissionStatus.inProgress,
           events: [mockEvent1],
           groupedEvents: [
             mockEvent1,
@@ -547,12 +547,12 @@ void main() {
           ].groupEventsByDate(),
         ),
         CalendarState(
-          statusDeleteEvent: FormzStatus.submissionSuccess,
+          statusDeleteEvent: FormzSubmissionStatus.success,
           events: <CalendarModel>[mockEvent1],
           groupedEvents: <CalendarModel>[mockEvent1].groupEventsByDate(),
         ),
         CalendarState(
-          statusDeleteEvent: FormzStatus.pure,
+          statusDeleteEvent: FormzSubmissionStatus.initial,
           dateTimeForm: null,
           activityForm: emptyString,
           events: <CalendarModel>[mockEvent1],
@@ -585,13 +585,13 @@ void main() {
         ),
       expect: () => [
         CalendarState(
-          statusDeleteEvent: FormzStatus.submissionInProgress,
+          statusDeleteEvent: FormzSubmissionStatus.inProgress,
         ),
         CalendarState(
-          statusDeleteEvent: FormzStatus.submissionFailure,
+          statusDeleteEvent: FormzSubmissionStatus.failure,
         ),
         CalendarState(
-          statusDeleteEvent: FormzStatus.pure,
+          statusDeleteEvent: FormzSubmissionStatus.initial,
         ),
       ],
     );
@@ -623,13 +623,13 @@ void main() {
         ),
       expect: () => [
         CalendarState(
-          statusDeleteEvent: FormzStatus.submissionInProgress,
+          statusDeleteEvent: FormzSubmissionStatus.inProgress,
         ),
         CalendarState(
-          statusDeleteEvent: FormzStatus.submissionFailure,
+          statusDeleteEvent: FormzSubmissionStatus.failure,
         ),
         CalendarState(
-          statusDeleteEvent: FormzStatus.pure,
+          statusDeleteEvent: FormzSubmissionStatus.initial,
         ),
       ],
     );

@@ -20,7 +20,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     on<ProfileUpdateEvent>(_onProfileUpdateEvent);
     on<ProfileUpdateAvatarEvent>(_onProfileUpdateAvatarEvent);
     on<VerifyEmailEvent>(_onVerifyEmailEvent);
-    
+
     on<OnChangeNameEvent>((event, emit) {
       emit(
         state.copyWith(
@@ -32,7 +32,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       emit(
         state.copyWith(
           user: state.user?.copyWith(tempatLahir: event.placeOfBirth),
-          statusUpdate: FormzStatus.pure,
+          statusUpdate: FormzSubmissionStatus.initial,
         ),
       );
     });
@@ -40,7 +40,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       emit(
         state.copyWith(
           user: state.user?.copyWith(tanggalLahir: event.dateOfBirth),
-          statusUpdate: FormzStatus.pure,
+          statusUpdate: FormzSubmissionStatus.initial,
         ),
       );
     });
@@ -48,7 +48,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       emit(
         state.copyWith(
           user: state.user?.copyWith(noKTP: event.identityNumber),
-          statusUpdate: FormzStatus.pure,
+          statusUpdate: FormzSubmissionStatus.initial,
         ),
       );
     });
@@ -56,7 +56,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       emit(
         state.copyWith(
           user: state.user?.copyWith(noKK: event.familyCardNumber),
-          statusUpdate: FormzStatus.pure,
+          statusUpdate: FormzSubmissionStatus.initial,
         ),
       );
     });
@@ -64,7 +64,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       emit(
         state.copyWith(
           user: state.user?.copyWith(pekerjaanIbu: event.job),
-          statusUpdate: FormzStatus.pure,
+          statusUpdate: FormzSubmissionStatus.initial,
         ),
       );
     });
@@ -72,7 +72,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       emit(
         state.copyWith(
           user: state.user?.copyWith(golDarahIbu: event.bloodType),
-          statusUpdate: FormzStatus.pure,
+          statusUpdate: FormzSubmissionStatus.initial,
         ),
       );
     });
@@ -82,14 +82,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     ProfileGetEvent event,
     Emitter<ProfileState> emit,
   ) async {
-    emit(state.copyWith(statusGet: FormzStatus.submissionInProgress));
+    emit(state.copyWith(statusGet: FormzSubmissionStatus.inProgress));
     try {
       final user = await _authRepository.getUser();
       emit(
-        state.copyWith(user: user, statusGet: FormzStatus.submissionSuccess),
+        state.copyWith(user: user, statusGet: FormzSubmissionStatus.success),
       );
     } catch (e) {
-      emit(state.copyWith(statusGet: FormzStatus.submissionFailure));
+      emit(state.copyWith(statusGet: FormzSubmissionStatus.failure));
     }
   }
 
@@ -97,19 +97,19 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     ProfileUpdateEvent event,
     Emitter<ProfileState> emit,
   ) async {
-    emit(state.copyWith(statusUpdate: FormzStatus.submissionInProgress));
+    emit(state.copyWith(statusUpdate: FormzSubmissionStatus.inProgress));
     try {
       if (state.user == null) {
         emit(state.copyWith(
-          statusUpdate: FormzStatus.submissionFailure,
+          statusUpdate: FormzSubmissionStatus.failure,
           errorMessage: 'User tidak ditemukan',
         ));
         return;
       }
       await _authRepository.insertUserToDatabase(user: state.user!);
-      emit(state.copyWith(statusUpdate: FormzStatus.submissionSuccess));
+      emit(state.copyWith(statusUpdate: FormzSubmissionStatus.success));
     } catch (e) {
-      emit(state.copyWith(statusUpdate: FormzStatus.submissionFailure));
+      emit(state.copyWith(statusUpdate: FormzSubmissionStatus.failure));
     }
   }
 
@@ -117,14 +117,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     ProfileUpdateAvatarEvent event,
     Emitter<ProfileState> emit,
   ) async {
-    emit(state.copyWith(statusUpdateAvatar: FormzStatus.submissionInProgress));
+    emit(state.copyWith(statusUpdateAvatar: FormzSubmissionStatus.inProgress));
     try {
       final url = await _authRepository.uploadImage(event.file);
       await _authRepository.updateUserAvatar(url);
-      emit(state.copyWith(statusUpdateAvatar: FormzStatus.submissionSuccess));
+      emit(state.copyWith(statusUpdateAvatar: FormzSubmissionStatus.success));
       add(ProfileGetEvent());
     } catch (e) {
-      emit(state.copyWith(statusUpdateAvatar: FormzStatus.submissionFailure));
+      emit(state.copyWith(statusUpdateAvatar: FormzSubmissionStatus.failure));
     }
   }
 
@@ -132,12 +132,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     VerifyEmailEvent event,
     Emitter<ProfileState> emit,
   ) async {
-    emit(state.copyWith(statusUpdate: FormzStatus.submissionInProgress));
+    emit(state.copyWith(statusUpdate: FormzSubmissionStatus.inProgress));
     try {
       await _authRepository.verifyEmail();
-      emit(state.copyWith(statusUpdate: FormzStatus.submissionSuccess));
+      emit(state.copyWith(statusUpdate: FormzSubmissionStatus.success));
     } catch (e) {
-      emit(state.copyWith(statusUpdate: FormzStatus.submissionFailure));
+      emit(state.copyWith(statusUpdate: FormzSubmissionStatus.failure));
     }
   }
 }

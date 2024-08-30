@@ -37,17 +37,17 @@ class ChildProfileBloc extends Bloc<ChildProfileEvent, ChildProfileState> {
   }
 
   void _onGetChildrenEvent(OnGetChildrenEvent event, Emitter emit) async {
-    emit(state.copyWith(statusGetChildren: FormzStatus.submissionInProgress));
+    emit(state.copyWith(statusGetChildren: FormzSubmissionStatus.inProgress));
     try {
       final children = await _childRepository.getAllChildren();
       emit(state.copyWith(
-        statusGetChildren: FormzStatus.submissionSuccess,
+        statusGetChildren: FormzSubmissionStatus.success,
         children: children,
       ));
     } catch (e) {
       emit(
         state.copyWith(
-          statusGetChildren: FormzStatus.submissionFailure,
+          statusGetChildren: FormzSubmissionStatus.failure,
           errorMessage: 'Gagal memuat data anak',
         ),
       );
@@ -93,35 +93,36 @@ class ChildProfileBloc extends Bloc<ChildProfileEvent, ChildProfileState> {
   }
 
   void _onUpdateChildEvent(UpdateProfileEvent event, Emitter emit) async {
-    emit(state.copyWith(statusUpdate: FormzStatus.submissionInProgress));
+    emit(state.copyWith(statusUpdate: FormzSubmissionStatus.inProgress));
     try {
       await _childRepository.updateChild(state.child!);
       add(OnGetChildrenEvent());
-      emit(state.copyWith(statusUpdate: FormzStatus.submissionSuccess));
-      emit(state.copyWith(child: null, statusUpdate: FormzStatus.pure));
+      emit(state.copyWith(statusUpdate: FormzSubmissionStatus.success));
+      emit(state.copyWith(
+          child: null, statusUpdate: FormzSubmissionStatus.initial));
     } catch (e) {
       emit(state.copyWith(
-          statusUpdate: FormzStatus.submissionFailure,
+          statusUpdate: FormzSubmissionStatus.failure,
           errorMessage: 'Gagal memperbarui profil anak'));
     }
   }
 
   void _onCreateChildEvent(CreateProfileEvent event, Emitter emit) async {
-    emit(state.copyWith(statusCreate: FormzStatus.submissionInProgress));
+    emit(state.copyWith(statusCreate: FormzSubmissionStatus.inProgress));
     try {
       await _childRepository.setChild(state.child!);
       add(OnGetChildrenEvent());
       emit(
         state.copyWith(
-          statusCreate: FormzStatus.submissionSuccess,
+          statusCreate: FormzSubmissionStatus.success,
           child: null,
         ),
       );
-      emit(state.copyWith(statusCreate: FormzStatus.pure));
+      emit(state.copyWith(statusCreate: FormzSubmissionStatus.initial));
     } catch (e) {
       emit(
         state.copyWith(
-            statusCreate: FormzStatus.submissionFailure,
+            statusCreate: FormzSubmissionStatus.failure,
             errorMessage: 'Gagal membuat profil anak'),
       );
     }
@@ -129,24 +130,24 @@ class ChildProfileBloc extends Bloc<ChildProfileEvent, ChildProfileState> {
 
   void _onUpdateAvatarEvent(UpdateProfilePhotoEvent event, Emitter emit) async {
     emit(state.copyWith(
-      statusUpdateAvatar: FormzStatus.submissionInProgress,
+      statusUpdateAvatar: FormzSubmissionStatus.inProgress,
     ));
     try {
-     final url = await _childRepository.updateChildAvatar(
+      final url = await _childRepository.updateChildAvatar(
         file: event.photo,
         id: event.id,
       );
       emit(state.copyWith(
-        statusUpdateAvatar: FormzStatus.submissionSuccess,
+        statusUpdateAvatar: FormzSubmissionStatus.success,
         child: state.child?.copyWith(photoURL: url),
       ));
       emit(state.copyWith(
-        statusUpdateAvatar: FormzStatus.pure,
+        statusUpdateAvatar: FormzSubmissionStatus.initial,
       ));
       add(OnGetChildrenEvent());
     } catch (e) {
       emit(state.copyWith(
-        statusUpdateAvatar: FormzStatus.submissionFailure,
+        statusUpdateAvatar: FormzSubmissionStatus.failure,
         errorMessage: 'Gagal memperbarui foto profil anak',
       ));
     }

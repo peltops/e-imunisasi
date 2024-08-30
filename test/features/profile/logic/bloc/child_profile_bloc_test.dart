@@ -69,10 +69,10 @@ void main() {
       act: (bloc) => bloc.add(OnGetChildrenEvent()),
       expect: () => [
         ChildProfileState(
-          statusGetChildren: FormzStatus.submissionInProgress,
+          statusGetChildren: FormzSubmissionStatus.inProgress,
         ),
         ChildProfileState(
-          statusGetChildren: FormzStatus.submissionSuccess,
+          statusGetChildren: FormzSubmissionStatus.success,
           children: [child],
         )
       ],
@@ -87,10 +87,10 @@ void main() {
       act: (bloc) => bloc.add(OnGetChildrenEvent()),
       expect: () => [
         ChildProfileState(
-          statusGetChildren: FormzStatus.submissionInProgress,
+          statusGetChildren: FormzSubmissionStatus.inProgress,
         ),
         ChildProfileState(
-          statusGetChildren: FormzStatus.submissionFailure,
+          statusGetChildren: FormzSubmissionStatus.failure,
           errorMessage: 'Gagal memuat data anak',
         )
       ],
@@ -230,27 +230,27 @@ void main() {
       act: (bloc) => bloc.add(UpdateProfileEvent()),
       expect: () => [
         ChildProfileState(
-          statusUpdate: FormzStatus.pure,
+          statusUpdate: FormzSubmissionStatus.initial,
           child: child,
         ),
         ChildProfileState(
           child: child,
-          statusUpdate: FormzStatus.submissionInProgress,
+          statusUpdate: FormzSubmissionStatus.inProgress,
         ),
         ChildProfileState(
           child: child,
-          statusUpdate: FormzStatus.submissionSuccess,
+          statusUpdate: FormzSubmissionStatus.success,
         ),
         ChildProfileState(
-          statusUpdate: FormzStatus.pure,
+          statusUpdate: FormzSubmissionStatus.initial,
           child: child,
         ),
         ChildProfileState(
           child: child,
-          statusGetChildren: FormzStatus.submissionInProgress,
+          statusGetChildren: FormzSubmissionStatus.inProgress,
         ),
         ChildProfileState(
-          statusGetChildren: FormzStatus.submissionSuccess,
+          statusGetChildren: FormzSubmissionStatus.success,
           children: [child],
           child: child,
         ),
@@ -266,10 +266,10 @@ void main() {
       act: (bloc) => bloc.add(UpdateProfileEvent()),
       expect: () => [
         ChildProfileState(
-          statusUpdate: FormzStatus.submissionInProgress,
+          statusUpdate: FormzSubmissionStatus.inProgress,
         ),
         ChildProfileState(
-          statusUpdate: FormzStatus.submissionFailure,
+          statusUpdate: FormzSubmissionStatus.failure,
           errorMessage: 'Gagal memperbarui profil anak',
         )
       ],
@@ -299,22 +299,22 @@ void main() {
         ),
         ChildProfileState(
           child: child,
-          statusCreate: FormzStatus.submissionInProgress,
+          statusCreate: FormzSubmissionStatus.inProgress,
         ),
         ChildProfileState(
           child: child,
-          statusCreate: FormzStatus.submissionSuccess,
+          statusCreate: FormzSubmissionStatus.success,
         ),
         ChildProfileState(
-          statusCreate: FormzStatus.pure,
+          statusCreate: FormzSubmissionStatus.initial,
           child: child,
         ),
         ChildProfileState(
           child: child,
-          statusGetChildren: FormzStatus.submissionInProgress,
+          statusGetChildren: FormzSubmissionStatus.inProgress,
         ),
         ChildProfileState(
-          statusGetChildren: FormzStatus.submissionSuccess,
+          statusGetChildren: FormzSubmissionStatus.success,
           children: [child],
           child: child,
         ),
@@ -330,10 +330,10 @@ void main() {
       act: (bloc) => bloc.add(CreateProfileEvent()),
       expect: () => [
         ChildProfileState(
-          statusCreate: FormzStatus.submissionInProgress,
+          statusCreate: FormzSubmissionStatus.inProgress,
         ),
         ChildProfileState(
-          statusCreate: FormzStatus.submissionFailure,
+          statusCreate: FormzSubmissionStatus.failure,
           errorMessage: 'Gagal membuat profil anak',
         )
       ],
@@ -365,22 +365,22 @@ void main() {
         ),
         ChildProfileState(
           child: child,
-          statusUpdateAvatar: FormzStatus.submissionInProgress,
+          statusUpdateAvatar: FormzSubmissionStatus.inProgress,
         ),
         ChildProfileState(
           child: child.copyWith(photoURL: url),
-          statusUpdateAvatar: FormzStatus.submissionSuccess,
+          statusUpdateAvatar: FormzSubmissionStatus.success,
         ),
         ChildProfileState(
           child: child.copyWith(photoURL: url),
-          statusUpdateAvatar: FormzStatus.pure,
+          statusUpdateAvatar: FormzSubmissionStatus.initial,
         ),
         ChildProfileState(
           child: child.copyWith(photoURL: url),
-          statusGetChildren: FormzStatus.submissionInProgress,
+          statusGetChildren: FormzSubmissionStatus.inProgress,
         ),
         ChildProfileState(
-          statusGetChildren: FormzStatus.submissionSuccess,
+          statusGetChildren: FormzSubmissionStatus.success,
           children: [child.copyWith(photoURL: url)],
           child: child.copyWith(photoURL: url),
         ),
@@ -397,10 +397,10 @@ void main() {
       act: (bloc) => bloc.add(UpdateProfilePhotoEvent(photo: file, id: id)),
       expect: () => [
         ChildProfileState(
-          statusUpdateAvatar: FormzStatus.submissionInProgress,
+          statusUpdateAvatar: FormzSubmissionStatus.inProgress,
         ),
         ChildProfileState(
-          statusUpdateAvatar: FormzStatus.submissionFailure,
+          statusUpdateAvatar: FormzSubmissionStatus.failure,
           errorMessage: 'Gagal memperbarui foto profil anak',
         ),
       ],

@@ -32,7 +32,7 @@ class ListChildrenScreen extends StatelessWidget {
             elevation: 0,
             child: BlocBuilder<ChildProfileBloc, ChildProfileState>(
               builder: (context, state) {
-                if (state.statusGetChildren == FormzStatus.submissionFailure) {
+                if (state.statusGetChildren == FormzSubmissionStatus.failure) {
                   return ErrorContainer(
                     onRefresh: () {
                       context
@@ -41,7 +41,7 @@ class ListChildrenScreen extends StatelessWidget {
                     },
                   );
                 } else if (state.statusGetChildren ==
-                    FormzStatus.submissionInProgress) {
+                    FormzSubmissionStatus.inProgress) {
                   return Center(child: CircularProgressIndicator());
                 }
                 final data = state.children;

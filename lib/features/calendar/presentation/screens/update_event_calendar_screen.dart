@@ -29,11 +29,11 @@ class UpdateEventCalendar extends StatelessWidget {
     final bloc = context.read<CalendarBloc>();
     return BlocListener<CalendarBloc, CalendarState>(
       listener: (context, state) {
-        if (state.statusUpdateEvent == FormzStatus.submissionSuccess) {
+        if (state.statusUpdateEvent == FormzSubmissionStatus.success) {
           snackbarCustom("Berhasil Mengubah Aktivitas").show(context);
           context.navigateBack();
         }
-        if (state.statusUpdateEvent == FormzStatus.submissionFailure) {
+        if (state.statusUpdateEvent == FormzSubmissionStatus.failure) {
           snackbarCustom("Gagal Mengubah Aktivitas").show(context);
         }
       },
@@ -109,7 +109,7 @@ class UpdateEventCalendar extends StatelessWidget {
                 builder: (context, state) {
                   return ButtonCustom(
                     loading: state.statusUpdateEvent ==
-                        FormzStatus.submissionInProgress,
+                        FormzSubmissionStatus.inProgress,
                     child: ButtonText(text: AppConstant.SAVE),
                     onPressed: () => onSaved(context, state, event),
                   );

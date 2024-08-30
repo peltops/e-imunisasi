@@ -3,7 +3,6 @@ import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/features/authentication/logic/cubit/signup_cubit/signup_cubit.dart';
 import 'package:eimunisasi/core/widgets/snackbar_custom.dart';
 import 'package:eimunisasi/utils/string_extension.dart';
-import 'package:form_field_validator/form_field_validator.dart';
 import '../../../../core/widgets/text_form_custom.dart';
 import '../../../../injection.dart';
 import '../../../../core/widgets/button_custom.dart';
@@ -21,7 +20,7 @@ class SignUpPhoneForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<SignUpCubit, SignUpState>(
       listener: (context, state) {
-        if (state.status.isSubmissionFailure) {
+        if (state.status.isFailure) {
           snackbarCustom(state.errorMessage ?? 'Authentication Failure')
               .show(context);
         } else if (state.verId.isNotNullOrEmpty) {
@@ -115,15 +114,9 @@ class _PhoneInput extends StatelessWidget {
                     label: AppConstant.PHONE_NUMBER_PARENT_LABEL,
                     keyboardType: TextInputType.phone,
                     hintText: 'Contoh: 876543210',
-                    validator: MultiValidator([
-                      RequiredValidator(
-                          errorText: AppConstant.PHONE_NUMBER_EMPTY_ERROR),
-                      MaxLengthValidator(13,
-                          errorText: AppConstant.PHONE_NUMBER_TOO_LONG_ERROR),
-                    ]),
                     onChanged: (phone) =>
                         context.read<SignUpCubit>().phoneChanged(phone),
-                    errorText: state.phone.invalid
+                    errorText: state.phone.isNotValid
                         ? AppConstant.PHONE_NUMBER_INVALID_ERROR
                         : null,
                   ),
@@ -147,11 +140,11 @@ class _SignUpButton extends StatelessWidget {
             AppConstant.LOGIN,
             style: TextStyle(fontSize: 15.0, color: Colors.white),
           ),
-          loading: state.status.isSubmissionInProgress,
-          onPressed: state.phone.valid
+          loading: state.status.isInProgress,
+          onPressed: state.phone.isValid
               ? () {
                   dismissKeyboard(context);
-                  state.phone.valid
+                  state.phone.isValid
                       ? context.read<SignUpCubit>().sendOTPCode()
                       : snackbarCustom(AppConstant.PLEASE_ENTER_PHONE_NUMBER)
                           .show(context);

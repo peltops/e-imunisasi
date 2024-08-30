@@ -11,7 +11,7 @@ enum EmailValidationError {
 /// {@endtemplate}
 class Email extends FormzInput<String, EmailValidationError> {
   /// {@macro email}
-  const Email.pure() : super.pure('');
+  const Email.initial() : super.pure('');
 
   /// {@macro email}
   const Email.dirty([String value = '']) : super.dirty(value);

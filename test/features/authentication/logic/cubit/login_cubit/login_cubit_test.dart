@@ -27,7 +27,6 @@ void main() {
       expect: () => [
         LoginState(
           email: Email.dirty('example@example.com'),
-          status: FormzStatus.invalid,
         )
       ],
     );
@@ -40,7 +39,6 @@ void main() {
         LoginState(
           email: Email.dirty('example@example.com'),
           password: Password.dirty('Admin123'),
-          status: FormzStatus.valid,
         )
       ],
     );
@@ -53,7 +51,6 @@ void main() {
       expect: () => [
         LoginState(
           password: Password.dirty('Admin123'),
-          status: FormzStatus.invalid,
         )
       ],
     );
@@ -66,7 +63,6 @@ void main() {
         LoginState(
           email: Email.dirty('example@example.com'),
           password: Password.dirty('Admin123'),
-          status: FormzStatus.valid,
         )
       ],
     );
@@ -95,9 +91,13 @@ void main() {
     blocTest<LoginCubit, LoginState>(
       'logInWithCredentials invalid',
       build: () => LoginCubit(authRepository),
-      seed: () => LoginState(status: FormzStatus.invalid),
       act: (cubit) => cubit.logInWithCredentials(),
-      expect: () => [],
+      expect: () => [
+        LoginState(
+          status: FormzSubmissionStatus.failure,
+          errorMessage: 'Please fill in the form correctly',
+        ),
+      ],
     );
     blocTest<LoginCubit, LoginState>(
       'logInWithCredentials valid',
@@ -113,19 +113,18 @@ void main() {
       seed: () => LoginState(
         email: Email.dirty('example@example.com'),
         password: Password.dirty('Admin123'),
-        status: FormzStatus.valid,
       ),
       act: (cubit) => cubit.logInWithCredentials(),
       expect: () => [
         LoginState(
           email: Email.dirty('example@example.com'),
           password: Password.dirty('Admin123'),
-          status: FormzStatus.submissionInProgress,
+          status: FormzSubmissionStatus.inProgress,
         ),
         LoginState(
           email: Email.dirty('example@example.com'),
           password: Password.dirty('Admin123'),
-          status: FormzStatus.submissionSuccess,
+          status: FormzSubmissionStatus.success,
         ),
       ],
     );
@@ -143,19 +142,18 @@ void main() {
       seed: () => LoginState(
         email: Email.dirty('example@example.com'),
         password: Password.dirty('Admin123'),
-        status: FormzStatus.valid,
       ),
       act: (cubit) => cubit.logInWithCredentials(),
       expect: () => [
         LoginState(
           email: Email.dirty('example@example.com'),
           password: Password.dirty('Admin123'),
-          status: FormzStatus.submissionInProgress,
+          status: FormzSubmissionStatus.inProgress,
         ),
         LoginState(
           email: Email.dirty('example@example.com'),
           password: Password.dirty('Admin123'),
-          status: FormzStatus.submissionFailure,
+          status: FormzSubmissionStatus.failure,
           errorMessage: 'error',
         ),
       ],
