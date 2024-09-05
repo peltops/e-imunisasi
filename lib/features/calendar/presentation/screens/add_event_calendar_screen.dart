@@ -5,6 +5,7 @@ import 'package:eimunisasi/core/widgets/snackbar_custom.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/utils/constant.dart';
 import '../../../../core/utils/themes/padding_constant.dart';
@@ -17,6 +18,18 @@ import '../../../../utils/dismiss_keyboard.dart';
 import '../../data/models/calendar_model.dart';
 import '../../logic/bloc/calendar_bloc/calendar_bloc.dart';
 
+class AddEventCalendarScreen extends StatelessWidget {
+  const AddEventCalendarScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider.value(
+      value: context.read<CalendarBloc>(),
+      child: AddEventCalendar(),
+    );
+  }
+}
+
 class AddEventCalendar extends StatelessWidget {
   const AddEventCalendar({Key? key}) : super(key: key);
 
@@ -27,7 +40,7 @@ class AddEventCalendar extends StatelessWidget {
       listener: (context, state) {
         if (state.statusAddEvent == FormzSubmissionStatus.success) {
           snackbarCustom("Berhasil Menambah Aktivitas").show(context);
-          context.navigateBack();
+          context.pop();
         }
         if (state.statusAddEvent == FormzSubmissionStatus.failure) {
           snackbarCustom("Gagal Menambah Aktivitas").show(context);

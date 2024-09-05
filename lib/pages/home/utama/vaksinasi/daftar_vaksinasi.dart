@@ -4,11 +4,12 @@ import 'package:eimunisasi/features/profile/data/models/anak.dart';
 import 'package:eimunisasi/models/appointment.dart';
 import 'package:eimunisasi/models/nakes.dart';
 import 'package:eimunisasi/features/authentication/data/models/user.dart';
-import 'package:eimunisasi/pages/home/utama/vaksinasi/konfirmasi_janji.dart';
 import 'package:eimunisasi/core/widgets/button_custom.dart';
 import 'package:eimunisasi/core/widgets/snackbar_custom.dart';
+import 'package:eimunisasi/routers/route_paths/route_paths.dart';
 import 'package:eimunisasi/services/appointment_services.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -175,15 +176,12 @@ class _DaftarVaksinasiPageState extends State<DaftarVaksinasiPage> {
                                   try {
                                     AppointmentService(uid: user.uid)
                                         .setAppointment(appointment)
-                                        .then((value) => Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    KonfirmasiVaksinasiPage(
-                                                  appointment: value,
-                                                ),
-                                              ),
-                                            ));
+                                        .then((value) {
+                                      context.push(
+                                        RoutePaths.vaccinationConfirmation,
+                                        extra: value,
+                                      );
+                                    });
                                   } catch (e) {
                                     snackbarCustom(
                                             AppConstant.MAKE_APPOINTMENT_FAILED)

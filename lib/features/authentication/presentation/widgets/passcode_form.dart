@@ -1,10 +1,11 @@
 import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/core/widgets/snackbar_custom.dart';
+import 'package:eimunisasi/routers/route_paths/auth_route_paths.dart';
+import 'package:eimunisasi/routers/route_paths/route_paths.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/widgets/button_custom.dart';
-import '../../../bottom_navbar/presentation/screens/bottom_navbar.dart';
 import '../../logic/cubit/local_auth_cubit/local_auth_cubit.dart';
-import '../screens/local_auth/confirm_passcode_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
@@ -97,11 +98,7 @@ class _NextButton extends StatelessWidget {
     return BlocListener<LocalAuthCubit, LocalAuthState>(
       listener: (context, state) {
         if (state.status.isSuccess) {
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(
-                builder: (context) => const BottomNavbarWrapper(),
-              ),
-              (route) => false);
+          context.pushReplacement(RoutePaths.home);
         } else if (state.status.isFailure) {
           snackbarCustom(state.errorMessage ?? 'Gagal').show(context);
         }
@@ -117,14 +114,7 @@ class _NextButton extends StatelessWidget {
             onPressed: () {
               if (state.savedPasscode.isNotValid) {
                 if (state.passcode.isValid) {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => BlocProvider.value(
-                        value: context.read<LocalAuthCubit>(),
-                        child: const ConfirmPasscodeScreen(),
-                      ),
-                    ),
-                  );
+                  context.go(AuthRoutePaths.confirmPasscode.fullPath);
                 }
               } else {
                 context

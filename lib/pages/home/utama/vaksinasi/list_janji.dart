@@ -1,8 +1,9 @@
 import 'package:eimunisasi/models/appointment.dart';
 import 'package:eimunisasi/features/authentication/data/models/user.dart';
-import 'package:eimunisasi/pages/home/utama/vaksinasi/konfirmasi_janji.dart';
+import 'package:eimunisasi/routers/route_paths/route_paths.dart';
 import 'package:eimunisasi/services/appointment_services.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
@@ -48,14 +49,10 @@ class ListJanjiVaksinasi extends StatelessWidget {
                                 return Card(
                                     child: ListTile(
                                   onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              KonfirmasiVaksinasiPage(
-                                            appointment: appointment,
-                                          ),
-                                        ));
+                                    context.push(
+                                      RoutePaths.vaccinationConfirmation,
+                                      extra: appointment,
+                                    );
                                   },
                                   title: Text(
                                     appointment.anak!.nama! +

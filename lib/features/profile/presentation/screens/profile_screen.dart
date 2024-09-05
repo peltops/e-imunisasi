@@ -1,14 +1,14 @@
-import 'package:eimunisasi/core/extension.dart';
 import 'package:eimunisasi/core/utils/assets_constant.dart';
 import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/core/utils/themes/padding_constant.dart';
 import 'package:eimunisasi/core/widgets/spacer.dart';
 import 'package:eimunisasi/core/widgets/text.dart';
 import 'package:eimunisasi/core/widgets/top_app_bar.dart';
-import 'package:eimunisasi/features/profile/presentation/screens/parent_profile_screen.dart';
+import 'package:eimunisasi/routers/route_paths/route_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/utils/themes/shape.dart';
 import '../../../authentication/logic/bloc/authentication_bloc/authentication_bloc.dart';
@@ -42,7 +42,7 @@ class ProfilePage extends StatelessWidget {
                 elevation: 0,
                 child: ListTile(
                   shape: Shape.roundedRectangleM,
-                  onTap: () => context.navigateTo(ParentProfileScreen()),
+                  onTap: () => context.push(RoutePaths.parentProfile),
                   title: LabelText(text: 'Profil'),
                   trailing: Icon(Icons.keyboard_arrow_right_rounded),
                 ),

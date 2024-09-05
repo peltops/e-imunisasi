@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ModalPickerImage {
@@ -28,7 +29,7 @@ class ModalPickerImage {
     return null;
   }
 
-  static void showPicker(context, Function(File) callback) {
+  static void showPicker(BuildContext context, Function(File) callback) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext bc) {
@@ -44,7 +45,7 @@ class ModalPickerImage {
                       if (file != null) {
                         callback(file);
                       }
-                      Navigator.of(context).pop();
+                      context.pop();
                     }),
                 ListTile(
                   leading: Icon(Icons.photo_camera),
@@ -54,7 +55,7 @@ class ModalPickerImage {
                     if (file != null) {
                       callback(file);
                     }
-                    Navigator.of(context).pop();
+                    context.pop();
                   },
                 ),
               ],

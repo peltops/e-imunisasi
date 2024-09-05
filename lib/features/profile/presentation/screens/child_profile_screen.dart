@@ -10,6 +10,7 @@ import 'package:eimunisasi/utils/dismiss_keyboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/pair.dart';
 import '../../../../core/utils/list_constant.dart';
@@ -25,11 +26,33 @@ enum ChildProfileScreenMode { add, edit }
 
 class ChildProfileScreen extends StatelessWidget {
   final ChildProfileScreenMode mode;
-
+  final Anak? child;
   const ChildProfileScreen({
-    Key? key,
+    super.key,
     required this.mode,
-  }) : super(key: key);
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider.value(
+      value: context.read<ChildProfileBloc>()
+        ..add(
+          OnInitialEvent(child: child),
+        ),
+      child: _ChildProfileScaffold(
+        mode: ChildProfileScreenMode.add,
+      ),
+    );
+  }
+}
+
+class _ChildProfileScaffold extends StatelessWidget {
+  final ChildProfileScreenMode mode;
+
+  const _ChildProfileScaffold({
+    required this.mode,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +63,7 @@ class ChildProfileScreen extends StatelessWidget {
             state.errorMessage ?? 'Gagal menyimpan data',
           ).show(context);
         } else if (state.statusUpdate.isSuccess) {
-          context.navigateBack();
+          context.pop();
           snackbarCustom('Berhasil menyimpan data').show(context);
         } else if (state.statusUpdateAvatar.isFailure) {
           snackbarCustom(
@@ -55,7 +78,7 @@ class ChildProfileScreen extends StatelessWidget {
             state.errorMessage ?? 'Gagal menyimpan data',
           ).show(context);
         } else if (state.statusCreate.isSuccess) {
-          context.navigateBack();
+          context.pop();
           snackbarCustom(
             'Berhasil menyimpan data',
           ).show(context);

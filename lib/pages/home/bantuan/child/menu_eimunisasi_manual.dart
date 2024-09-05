@@ -1,8 +1,9 @@
 import 'package:eimunisasi/models/informasi_aplikasi.dart';
-import 'package:eimunisasi/pages/home/bantuan/child/detail_informasi.dart';
 import 'package:eimunisasi/core/widgets/search_bar.dart';
+import 'package:eimunisasi/routers/route_paths/route_paths.dart';
 import 'package:eimunisasi/services/informasi_aplikasi_database.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class EimunisasiManualPage extends StatefulWidget {
   const EimunisasiManualPage({Key? key}) : super(key: key);
@@ -47,11 +48,10 @@ class _EimunisasiManualPageState extends State<EimunisasiManualPage> {
                                     return Card(
                                       child: ListTile(
                                         onTap: () {
-                                          Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      DetailInformasiPage(
-                                                          data: data[index])));
+                                          context.push(
+                                            RoutePaths.detailInformasi,
+                                            extra: data[index],
+                                          );
                                         },
                                         title: Text(data[index].judul!),
                                       ),

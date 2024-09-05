@@ -3,8 +3,9 @@ import 'dart:async';
 import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/core/widgets/button_custom.dart';
 import 'package:eimunisasi/core/widgets/snackbar_custom.dart';
+import 'package:eimunisasi/routers/route_paths/route_paths.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../../../app.dart';
 
 import '../../logic/bloc/authentication_bloc/authentication_bloc.dart';
 import '../../logic/cubit/login_phone_cubit/login_phone_cubit.dart';
@@ -71,10 +72,9 @@ class _OTPFormState extends State<OTPForm> {
         if (state.status.isFailure) {
           snackbarCustom(state.errorMessage ?? 'Otentikasi gagal!')
               .show(context);
-        } else if (state.status.isFailure) {
+        } else if (state.status.isSuccess) {
           BlocProvider.of<AuthenticationBloc>(context).add(LoggedIn());
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const AppView()));
+          context.pushReplacement(RoutePaths.root);
         }
       },
       child: Column(

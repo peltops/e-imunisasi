@@ -1,7 +1,8 @@
 import 'package:eimunisasi/features/profile/data/models/anak.dart';
-import 'package:eimunisasi/pages/home/utama/vaksinasi/list_nakes_vaksinasi.dart';
+import 'package:eimunisasi/routers/route_paths/route_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:eimunisasi/services/anak_database.dart';
+import 'package:go_router/go_router.dart';
 
 class ListAnakVaksinasi extends StatelessWidget {
   final page;
@@ -44,13 +45,10 @@ class ListAnakVaksinasi extends StatelessWidget {
                                     return Card(
                                         child: ListTile(
                                       onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => ListNakes(
-                                                anak: anak,
-                                              ),
-                                            ));
+                                        context.push(
+                                          RoutePaths.chooseHealthWorkers,
+                                          extra: anak,
+                                        );
                                       },
                                       title: Text(
                                         anak.nama!,

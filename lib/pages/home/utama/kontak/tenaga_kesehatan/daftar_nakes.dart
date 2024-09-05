@@ -1,7 +1,8 @@
 import 'package:eimunisasi/core/utils/constant.dart';
-import 'package:eimunisasi/pages/home/utama/kontak/tenaga_kesehatan/list_daftar_nakes.dart';
 import 'package:eimunisasi/core/widgets/button_custom.dart';
+import 'package:eimunisasi/routers/route_paths/route_paths.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class DaftarNakes extends StatefulWidget {
   @override
@@ -39,13 +40,12 @@ class _DaftarNakesState extends State<DaftarNakes> {
                           children: [
                             ButtonCustom(
                                 onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              ListDaftarNakes(
-                                                nama: AppConstant.DOCTOR,
-                                              )));
+                                  context.push(
+                                    RoutePaths.healthWorkers,
+                                    extra: {
+                                      'name': AppConstant.DOCTOR,
+                                    },
+                                  );
                                 },
                                 child: Text(
                                   AppConstant.DOCTOR,
@@ -53,13 +53,12 @@ class _DaftarNakesState extends State<DaftarNakes> {
                                 )),
                             ButtonCustom(
                                 onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              ListDaftarNakes(
-                                                nama: AppConstant.NURSE,
-                                              )));
+                                  context.push(
+                                    RoutePaths.healthWorkers,
+                                    extra: {
+                                      'name': AppConstant.NURSE,
+                                    },
+                                  );
                                 },
                                 child: Text(
                                   AppConstant.NURSE,
@@ -67,13 +66,12 @@ class _DaftarNakesState extends State<DaftarNakes> {
                                 )),
                             ButtonCustom(
                                 onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              ListDaftarNakes(
-                                                nama: AppConstant.MIDWIFE,
-                                              )));
+                                  context.push(
+                                    RoutePaths.healthWorkers,
+                                    extra: {
+                                      'name': AppConstant.MIDWIFE,
+                                    },
+                                  );
                                 },
                                 child: Text(
                                   AppConstant.MIDWIFE,
@@ -81,13 +79,12 @@ class _DaftarNakesState extends State<DaftarNakes> {
                                 )),
                             ButtonCustom(
                                 onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              ListDaftarNakes(
-                                                nama: AppConstant.NUTRITIONIST,
-                                              )));
+                                  context.push(
+                                    RoutePaths.healthWorkers,
+                                    extra: {
+                                      'name': AppConstant.NUTRITIONIST,
+                                    },
+                                  );
                                 },
                                 child: Text(
                                   AppConstant.NUTRITIONIST,

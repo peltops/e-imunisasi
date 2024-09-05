@@ -1,16 +1,11 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:eimunisasi/injection.dart';
-import 'package:eimunisasi/core/widgets/snackbar_custom.dart';
+import 'package:eimunisasi/routers/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'core/loading.dart';
 import 'features/authentication/logic/bloc/authentication_bloc/authentication_bloc.dart';
-import 'features/authentication/presentation/screens/auth/login_phone_screen.dart';
-import 'features/authentication/presentation/screens/local_auth/passcode_screen.dart';
-import 'features/authentication/presentation/screens/splash/splash_screen.dart';
-import 'features/onboarding/onboarding.dart';
 
 class App extends StatelessWidget {
   const App({
@@ -36,48 +31,26 @@ class AppView extends StatefulWidget {
 class _AppViewState extends State<AppView> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primaryColor: Colors.pink[300],
-          primarySwatch: Colors.pink,
-          colorScheme: ColorScheme.fromSwatch()
-              .copyWith(primary: Colors.pink[500], secondary: Colors.pink[300]),
-          fontFamily: 'Nunito',
-        ),
-        supportedLocales: [
-          Locale("en"),
-          Locale("id"),
-        ],
-        localizationsDelegates: [
-          CountryLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-        ],
-        home: BlocConsumer<AuthenticationBloc, AuthenticationState>(
-          listener: (BuildContext context, AuthenticationState state) {
-            if (state is AuthenticationError) {
-              snackbarCustom(state.message).show(context);
-            }
-          },
-          builder: (context, state) {
-            if (state is Uninitialized) {
-              return const SplashScreen();
-            } else if (state is Loading) {
-              return const LoadingScreen();
-            } else if (state is Authenticated) {
-              return const PasscodeScreen();
-            } else if (state is Unauthenticated) {
-              if (state.isSeenOnboarding) {
-                return const LoginPhoneScreen();
-              }
-              return OnboardScreen();
-            } else if (state is AuthenticationError) {
-              return const LoginPhoneScreen();
-            }
-            return Container();
-          },
-        ));
+    return MaterialApp.router(
+      routerConfig: router,
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primaryColor: Colors.pink[300],
+        primarySwatch: Colors.pink,
+        colorScheme: ColorScheme.fromSwatch()
+            .copyWith(primary: Colors.pink[500], secondary: Colors.pink[300]),
+        fontFamily: 'Nunito',
+      ),
+      supportedLocales: [
+        Locale("en"),
+        Locale("id"),
+      ],
+      localizationsDelegates: [
+        CountryLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+    );
   }
 }

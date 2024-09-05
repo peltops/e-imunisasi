@@ -1,8 +1,8 @@
 import 'package:eimunisasi/core/utils/constant.dart';
-import 'package:eimunisasi/pages/home/utama/kontak/klinik/list_daftar_klinik.dart';
-import 'package:eimunisasi/pages/home/utama/kontak/tenaga_kesehatan/daftar_nakes.dart';
+import 'package:eimunisasi/routers/route_paths/route_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 class KontakPage extends StatefulWidget {
   @override
@@ -42,11 +42,7 @@ class _KontakPageState extends State<KontakPage> {
                       Card(
                           child: ListTile(
                         onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      DaftarNakes()));
+                          context.push(RoutePaths.healthWorkers);
                         },
                         leading: Icon(
                           Icons.medical_services_rounded,
@@ -58,11 +54,7 @@ class _KontakPageState extends State<KontakPage> {
                       Card(
                           child: ListTile(
                         onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      ListDaftarKlinik()));
+                          context.push(RoutePaths.clinics);
                         },
                         leading: Icon(
                           Icons.local_hospital_rounded,

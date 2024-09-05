@@ -1,8 +1,9 @@
 import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/models/appointment.dart';
-import 'package:eimunisasi/pages/home/home.dart';
 import 'package:eimunisasi/core/widgets/button_custom.dart';
+import 'package:eimunisasi/routers/route_paths/route_paths.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:intl/intl.dart';
 
@@ -136,11 +137,7 @@ class _KonfirmasiVaksinasiPageState extends State<KonfirmasiVaksinasiPage> {
                         SizedBox(height: 30),
                         ButtonCustom(
                           onPressed: () {
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => HomePage()),
-                                (route) => false);
+                            context.pushReplacement(RoutePaths.home);
                           },
                           child: Text(
                             'Halaman Utama',

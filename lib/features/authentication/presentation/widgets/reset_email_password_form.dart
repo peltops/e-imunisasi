@@ -1,5 +1,6 @@
 import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/core/widgets/snackbar_custom.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/widgets/button_custom.dart';
 import '../../../../core/widgets/text_form_custom.dart';
@@ -18,7 +19,7 @@ class ResetEmailPasswordForm extends StatelessWidget {
         if (state.status.isFailure) {
           snackbarCustom(state.errorMessage ?? 'Reset gagal!').show(context);
         } else if (state.status.isSuccess) {
-          Navigator.of(context).pop();
+          context.pop();
           snackbarCustom(
             'Berhasil! Silahkan cek email anda. ${state.email.value}',
           ).show(context);
