@@ -27,18 +27,18 @@ class AuthRoutePaths {
     parent: RootRoutePaths.auth,
   );
 
+  static const RouteModel resetEmailPassword = RouteModel(
+    path: 'reset-email-password',
+    parent: RootRoutePaths.auth,
+  );
+
   static const RouteModel passcode = RouteModel(
     path: 'passcode',
-    parent: RootRoutePaths.auth,
+    parent: RootRoutePaths.authLocal,
   );
 
   static const RouteModel confirmPasscode = RouteModel(
     path: 'confirm-passcode',
-    parent: RootRoutePaths.auth,
-  );
-
-  static const RouteModel resetEmailPassword = RouteModel(
-    path: 'reset-email-password',
-    parent: RootRoutePaths.auth,
+    parent: RootRoutePaths.authLocal,
   );
 }

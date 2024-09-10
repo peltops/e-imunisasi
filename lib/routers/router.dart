@@ -33,6 +33,7 @@ import 'package:eimunisasi/pages/home/utama/vaksinasi/list_anak_vaksinasi.dart';
 import 'package:eimunisasi/pages/home/utama/vaksinasi/list_janji.dart';
 import 'package:eimunisasi/pages/home/utama/vaksinasi/list_nakes_vaksinasi.dart';
 import 'package:eimunisasi/pages/home/utama/vaksinasi/vaksinasi.dart';
+import 'package:eimunisasi/routers/auth_local_router.dart';
 import 'package:eimunisasi/routers/auth_router.dart';
 import 'package:eimunisasi/routers/route_paths/auth_route_paths.dart';
 import 'package:eimunisasi/routers/route_paths/root_route_paths.dart';
@@ -44,7 +45,7 @@ import 'package:go_router/go_router.dart';
 final router = GoRouter(
   routes: [
     GoRoute(
-      path: RootRoutePaths.root.fullPath,
+      path: RootRoutePaths.root.path,
       builder: (context, state) {
         final error = state.uri.queryParameters['error'];
         final errorCode = state.uri.queryParameters['error_code'];
@@ -97,160 +98,181 @@ final router = GoRouter(
           },
         );
       },
-      routes: [
-        GoRoute(
-          path: RootRoutePaths.auth.fullPath,
-          routes: AuthRouter.routes,
-          redirect: (_, __) => AuthRoutePaths.login.fullPath,
-        ),
-        GoRoute(
-          path: RootRoutePaths.onboarding.fullPath,
-          builder: (_, __) => OnboardScreen(),
-        ),
-        GoRoute(
-          path: RootRoutePaths.splash.fullPath,
-          builder: (_, __) => SplashScreen(),
-        ),
-        GoRoute(
-          path: RoutePaths.home,
-          builder: (_, __) => BottomNavbarWrapper(),
-        ),
-        GoRoute(
-          path: RoutePaths.addEventCalendar,
-          builder: (_, __) => AddEventCalendarScreen(),
-        ),
-        GoRoute(
-          path: RoutePaths.updateEventCalendar,
-          builder: (_, state) => UpdateEventCalendarScreen(
-            event: state.extra as CalendarModel,
-          ),
-        ),
-        GoRoute(
-          path: RoutePaths.hospitals,
-          builder: (_, __) => ListDaftarRumahSakit(),
-        ),
-        GoRoute(
-          path: RoutePaths.medicalInformation,
-          builder: (_, __) => InformasiKesehatanPage(),
-        ),
-        GoRoute(
-          path: RoutePaths.appManual,
-          builder: (_, __) => EimunisasiManualPage(),
-        ),
-        GoRoute(
-          path: RoutePaths.detailInformasi,
-          builder: (_, state) => DetailInformasiPage(
-            data: state.extra as InformasiAplikasiModel,
-          ),
-        ),
-        GoRoute(
-          path: RoutePaths.calendar,
-          builder: (_, __) => const CalendarScreen(),
-        ),
-        GoRoute(
-          path: RoutePaths.listChildren,
-          builder: (_, __) => const ListChildrenScreen(),
-        ),
-        GoRoute(
-          path: RoutePaths.chooseChildMedicalRecord,
-          builder: (context, __) => ListChildrenScreen(
-            onSelected: (child) {
-              context.go(
-                RoutePaths.patientMedicalRecord,
-                extra: child,
-              );
-            },
-          ),
-        ),
-        GoRoute(
-          path: RoutePaths.patientMedicalRecordScreen,
-          builder: (context, state) => PatientMedicalHistoryScreen(
-            child: state.extra as Anak,
-          ),
-        ),
-        GoRoute(
-          path: RoutePaths.vaccination,
-          builder: (_, __) => VaksinasiPage(),
-        ),
-        GoRoute(
-          path: RoutePaths.listAnak,
-          builder: (_, state) => ListAnak(
-            page: (state.extra as Map<String, dynamic>)['page'],
-          ),
-        ),
-        GoRoute(
-          path: RoutePaths.patientMedicalRecord,
-          builder: (_, state) => RekamMedisPasienScreen(
-            anak: state.extra as Anak,
-          ),
-        ),
-        GoRoute(
-          path: RoutePaths.healthWorkers,
-          builder: (_, state) => ListDaftarNakes(
-            nama: (state.extra as Map<String, dynamic>)['name'],
-          ),
-        ),
-        GoRoute(
-          path: RoutePaths.clinics,
-          builder: (_, state) => ListDaftarKlinik(),
-        ),
-        GoRoute(
-          path: RoutePaths.vaccinationConfirmation,
-          builder: (_, state) => KonfirmasiVaksinasiPage(
-            appointment: state.extra as AppointmentModel,
-          ),
-        ),
-        GoRoute(
-          path: RoutePaths.chooseHealthWorkers,
-          builder: (_, state) => ChooseNakesScreen(
-            anak: state.extra as Anak,
-          ),
-        ),
-        GoRoute(
-          path: RoutePaths.makeAppointmentVaccination,
-          builder: (_, state) => DaftarVaksinasiPage(
-            nakes: (state.extra as Map<String, dynamic>)['healthWorker'],
-            anak: (state.extra as Map<String, dynamic>)['child'],
-          ),
-        ),
-        GoRoute(
-          path: RoutePaths.chooseChildVaccination,
-          builder: (_, state) => ListAnakVaksinasi(),
-        ),
-        GoRoute(
-          path: RoutePaths.appointmentVaccination,
-          builder: (_, state) => ListJanjiVaksinasi(),
-        ),
-        GoRoute(
-          path: RoutePaths.healthyBook,
-          builder: (_, state) => HealthyBookScreen(),
-        ),
-        GoRoute(
-          path: RoutePaths.childProfile,
-          builder: (_, state) => ChildProfileScreen(
-            mode: (state.extra as Map<String, dynamic>)['mode'],
-            child: (state.extra as Map<String, dynamic>)['child'],
-          ),
-        ),
-        GoRoute(
-          path: RoutePaths.parentProfile,
-          builder: (_, __) => ParentProfileScreen(),
-        ),
-        GoRoute(
-          path: RoutePaths.error,
-          builder: (context, state) {
-            final title = state.uri.queryParameters['error'];
-            final desc = state.uri.queryParameters['error_description'];
+    ),
+    GoRoute(
+      path: RootRoutePaths.auth.path,
+      routes: AuthRouter.routes,
+      redirect: (_, state) {
+        if(state.fullPath == RootRoutePaths.auth.fullPath) {
+          return AuthRoutePaths.login.fullPath;
+        }
+        return null;
+      }
+    ),
+    GoRoute(
+      path: RootRoutePaths.authLocal.path,
+      routes: AuthLocalRouter.routes,
+      redirect: (_, state) {
+        if(state.fullPath == RootRoutePaths.authLocal.fullPath) {
+          return AuthRoutePaths.passcode.fullPath;
+        }
+        return null;
+      }
+    ),
+    GoRoute(
+      path: RootRoutePaths.onboarding.path,
+      builder: (_, __) => OnboardScreen(),
+    ),
+    GoRoute(
+      path: RootRoutePaths.splash.path,
+      builder: (_, __) => SplashScreen(),
+    ),
+    GoRoute(
+      path: RootRoutePaths.dashboard.path,
+      builder: (_, __) => BottomNavbarWrapper(),
+    ),
+    GoRoute(
+      path: RoutePaths.addEventCalendar,
+      builder: (_, __) => AddEventCalendarScreen(),
+    ),
+    GoRoute(
+      path: RoutePaths.updateEventCalendar,
+      builder: (_, state) => UpdateEventCalendarScreen(
+        event: state.extra as CalendarModel,
+      ),
+    ),
+    GoRoute(
+      path: RoutePaths.hospitals,
+      builder: (_, __) => ListDaftarRumahSakit(),
+    ),
+    GoRoute(
+      path: RoutePaths.medicalInformation,
+      builder: (_, __) => InformasiKesehatanPage(),
+    ),
+    GoRoute(
+      path: RoutePaths.appManual,
+      builder: (_, __) => EimunisasiManualPage(),
+    ),
+    GoRoute(
+      path: RoutePaths.detailInformasi,
+      builder: (_, state) => DetailInformasiPage(
+        data: state.extra as InformasiAplikasiModel,
+      ),
+    ),
+    GoRoute(
+      path: RoutePaths.calendar,
+      builder: (_, __) => const CalendarScreen(),
+    ),
+    GoRoute(
+      path: RoutePaths.listChildren,
+      builder: (_, __) => const ListChildrenScreen(),
+    ),
+    GoRoute(
+      path: RoutePaths.chooseChildMedicalRecord,
+      builder: (context, __) => ListChildrenScreen(
+        onSelected: (child) {
+          context.go(
+            RoutePaths.patientMedicalRecord,
+            extra: child,
+          );
+        },
+      ),
+    ),
+    GoRoute(
+      path: RoutePaths.patientMedicalRecordScreen,
+      builder: (context, state) => PatientMedicalHistoryScreen(
+        child: state.extra as Anak,
+      ),
+    ),
+    GoRoute(
+      path: RoutePaths.vaccination,
+      builder: (_, __) => VaksinasiPage(),
+    ),
+    GoRoute(
+      path: RoutePaths.listAnak,
+      builder: (_, state) => ListAnak(
+        page: (state.extra as Map<String, dynamic>)['page'],
+      ),
+    ),
+    GoRoute(
+      path: RoutePaths.patientMedicalRecord,
+      builder: (_, state) => RekamMedisPasienScreen(
+        anak: state.extra as Anak,
+      ),
+    ),
+    GoRoute(
+      path: RoutePaths.healthWorkers,
+      builder: (_, state) => ListDaftarNakes(
+        nama: (state.extra as Map<String, dynamic>)['name'],
+      ),
+    ),
+    GoRoute(
+      path: RoutePaths.clinics,
+      builder: (_, state) => ListDaftarKlinik(),
+    ),
+    GoRoute(
+      path: RoutePaths.vaccinationConfirmation,
+      builder: (_, state) => KonfirmasiVaksinasiPage(
+        appointment: state.extra as AppointmentModel,
+      ),
+    ),
+    GoRoute(
+      path: RoutePaths.chooseHealthWorkers,
+      builder: (_, state) => ChooseNakesScreen(
+        anak: state.extra as Anak,
+      ),
+    ),
+    GoRoute(
+      path: RoutePaths.makeAppointmentVaccination,
+      builder: (_, state) => DaftarVaksinasiPage(
+        nakes: (state.extra as Map<String, dynamic>)['healthWorker'],
+        anak: (state.extra as Map<String, dynamic>)['child'],
+      ),
+    ),
+    GoRoute(
+      path: RoutePaths.chooseChildVaccination,
+      builder: (_, state) => ListAnakVaksinasi(),
+    ),
+    GoRoute(
+      path: RoutePaths.appointmentVaccination,
+      builder: (_, state) => ListJanjiVaksinasi(),
+    ),
+    GoRoute(
+      path: RoutePaths.healthyBook,
+      builder: (_, state) => HealthyBookScreen(),
+    ),
+    GoRoute(
+      path: RoutePaths.childProfile,
+      builder: (_, state) => ChildProfileScreen(
+        mode: (state.extra as Map<String, dynamic>)['mode'],
+        child: (state.extra as Map<String, dynamic>)['child'],
+      ),
+    ),
+    GoRoute(
+      path: RoutePaths.parentProfile,
+      builder: (_, __) => ParentProfileScreen(),
+    ),
+    GoRoute(
+      path: RoutePaths.error,
+      builder: (context, state) {
+        final title = state.uri.queryParameters['error'];
+        final desc = state.uri.queryParameters['error_description'];
 
-            return Scaffold(
-              body: ErrorContainer(
-                title: title,
-                message: desc,
-              ),
-            );
-          },
-        ),
-      ],
+        return Scaffold(
+          body: ErrorContainer(
+            title: title,
+            message: desc,
+          ),
+        );
+      },
     ),
   ],
+  errorBuilder: (context, state) {
+    return Scaffold(
+      body: ErrorContainer(
+        title: 'Error',
+        message: state.error.toString(),
+      ),
+    );
+  },
 );

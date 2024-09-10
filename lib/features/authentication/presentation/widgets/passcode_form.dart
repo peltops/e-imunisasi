@@ -1,7 +1,7 @@
 import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/core/widgets/snackbar_custom.dart';
 import 'package:eimunisasi/routers/route_paths/auth_route_paths.dart';
-import 'package:eimunisasi/routers/route_paths/route_paths.dart';
+import 'package:eimunisasi/routers/route_paths/root_route_paths.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/widgets/button_custom.dart';
@@ -16,7 +16,9 @@ class PasscodeForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<LocalAuthCubit, LocalAuthState>(
       listener: (context, state) {
-        if (state.status.isFailure) {
+        if (state.statusDelete.isFailure ||
+            state.statusSet.isFailure ||
+            state.statusGet.isFailure) {
           snackbarCustom(state.errorMessage ?? 'Gagal').show(context);
         }
       },
@@ -96,17 +98,19 @@ class _NextButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocListener<LocalAuthCubit, LocalAuthState>(
+      listenWhen: (previous, current) =>
+          previous.statusGet != current.statusGet,
       listener: (context, state) {
-        if (state.status.isSuccess) {
-          context.pushReplacement(RoutePaths.home);
-        } else if (state.status.isFailure) {
+        if (state.statusGet.isSuccess) {
+          context.go(RootRoutePaths.dashboard.fullPath);
+        } else if (state.statusGet.isFailure) {
           snackbarCustom(state.errorMessage ?? 'Gagal').show(context);
         }
       },
       child: BlocBuilder<LocalAuthCubit, LocalAuthState>(
         builder: (context, state) {
           return ButtonCustom(
-            loading: state.status.isInProgress,
+            loading: state.statusGet.isInProgress,
             child: Text(
               AppConstant.NEXT,
               style: TextStyle(fontSize: 15.0, color: Colors.white),
@@ -114,7 +118,10 @@ class _NextButton extends StatelessWidget {
             onPressed: () {
               if (state.savedPasscode.isNotValid) {
                 if (state.passcode.isValid) {
-                  context.go(AuthRoutePaths.confirmPasscode.fullPath);
+                  context.push(
+                    AuthRoutePaths.confirmPasscode.fullPath,
+                    extra: context.read<LocalAuthCubit>(),
+                  );
                 }
               } else {
                 context

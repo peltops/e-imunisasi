@@ -15,12 +15,12 @@ class RouteModel extends Equatable {
     if (parent == null) {
       return path;
     }
-    final lastParentChar = parent?.path[parent!.path.length - 1];
+    final lastParentChar = parent?.fullPath[parent!.fullPath.length - 1];
     final firstPathChar = path[0];
     if (lastParentChar == '/' || firstPathChar == '/') {
-      return '${parent?.path}$path';
+      return '${parent?.fullPath}$path';
     } else {
-      return '${parent?.path}/$path';
+      return '${parent?.fullPath}/$path';
     }
   }
 }

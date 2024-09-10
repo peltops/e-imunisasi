@@ -40,32 +40,32 @@ class LocalAuthCubit extends Cubit<LocalAuthState> {
       return emit(
         state.copyWith(
           errorMessage: 'Silahkan isi PIN',
-          status: FormzSubmissionStatus.failure,
+          statusSet: FormzSubmissionStatus.failure,
         ),
       );
     }
-    emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
+    emit(state.copyWith(statusSet: FormzSubmissionStatus.inProgress));
     try {
       await sharedPreferences.setInt('passCode', passcode);
       final code = Passcode.dirty(passcode.toString());
       emit(
         state.copyWith(
           passcode: code,
-          status: FormzSubmissionStatus.success,
+          statusSet: FormzSubmissionStatus.success,
         ),
       );
     } catch (e) {
       emit(
         state.copyWith(
           errorMessage: 'Gagal menyimpan passcode',
-          status: FormzSubmissionStatus.failure,
+          statusSet: FormzSubmissionStatus.failure,
         ),
       );
     }
   }
 
   void getPasscode() async {
-    emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
+    emit(state.copyWith(statusGet: FormzSubmissionStatus.inProgress));
     try {
       int? passcode = sharedPreferences.getInt('passCode');
       debugPrint("**************" + passcode.toString());
@@ -73,45 +73,54 @@ class LocalAuthCubit extends Cubit<LocalAuthState> {
       emit(
         state.copyWith(
           savedPasscode: code,
-          status: FormzSubmissionStatus.success,
+          statusGet: FormzSubmissionStatus.success,
         ),
       );
     } catch (e) {
       emit(
         state.copyWith(
             errorMessage: 'Gagal mendapatkan passcode',
-            status: FormzSubmissionStatus.failure),
+            statusGet: FormzSubmissionStatus.failure),
       );
     }
   }
 
   void checkPasscode(String passcode) async {
     if (passcode.isEmpty) {
-      return emit(state.copyWith(
+      return emit(
+        state.copyWith(
           errorMessage: 'Silahkan isi PIN',
-          status: FormzSubmissionStatus.failure));
+          statusGet: FormzSubmissionStatus.failure,
+        ),
+      );
     }
-    emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
+    emit(state.copyWith(statusGet: FormzSubmissionStatus.inProgress));
     try {
       int? savedPasscode = sharedPreferences.getInt('passCode');
       debugPrint("**************" + savedPasscode.toString());
       if (savedPasscode == int.parse(passcode)) {
-        emit(state.copyWith(status: FormzSubmissionStatus.success));
+        emit(state.copyWith(statusGet: FormzSubmissionStatus.success));
       } else {
-        emit(state.copyWith(
+        emit(
+          state.copyWith(
             errorMessage: AppConstant.WRONG_PASSWORD,
-            status: FormzSubmissionStatus.failure));
+            statusGet: FormzSubmissionStatus.failure,
+          ),
+        );
       }
     } catch (e) {
       log('Error Passcode: $e');
-      emit(state.copyWith(
+      emit(
+        state.copyWith(
           errorMessage: 'Terjadi Kesalahan',
-          status: FormzSubmissionStatus.failure));
+          statusGet: FormzSubmissionStatus.failure,
+        ),
+      );
     }
   }
 
   void confirmPasscode() async {
-    emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
+    emit(state.copyWith(statusSet: FormzSubmissionStatus.inProgress));
 
     final String passcode = state.passcode.value;
     final String confirmPasscode = state.confirmPasscode.value;
@@ -121,22 +130,22 @@ class LocalAuthCubit extends Cubit<LocalAuthState> {
       emit(
         state.copyWith(
           errorMessage: AppConstant.WRONG_PASSCODE,
-          status: FormzSubmissionStatus.failure,
+          statusSet: FormzSubmissionStatus.failure,
         ),
       );
     }
   }
 
   void destroyPasscode() async {
-    emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
+    emit(state.copyWith(statusDelete: FormzSubmissionStatus.inProgress));
     try {
       await sharedPreferences.remove('passCode');
-      emit(state.copyWith(status: FormzSubmissionStatus.success));
+      emit(state.copyWith(statusDelete: FormzSubmissionStatus.success));
     } catch (e) {
       emit(
         state.copyWith(
           errorMessage: 'Gagal menghapus passcode',
-          status: FormzSubmissionStatus.failure,
+          statusDelete: FormzSubmissionStatus.failure,
         ),
       );
     }

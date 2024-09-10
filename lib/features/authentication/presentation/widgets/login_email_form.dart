@@ -19,6 +19,7 @@ class LoginEmailForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocListener<LoginCubit, LoginState>(
+      listenWhen: (previous, current) => previous.status != current.status,
       listener: (context, state) {
         if (state.status.isFailure) {
           snackbarCustom(state.errorMessage ?? 'Otentikasi gagal!')
@@ -119,7 +120,9 @@ class _SignUpButton extends StatelessWidget {
     final theme = Theme.of(context);
     return TextButton(
       key: const Key('loginEmailForm_createAccount_flatButton'),
-      onPressed: () => context.push(AuthRoutePaths.register.fullPath),
+      onPressed: () => context.push(
+        AuthRoutePaths.register.fullPath,
+      ),
       child: Text(
         'Buat Akun',
         style: TextStyle(color: theme.primaryColor),
@@ -136,7 +139,7 @@ class _ResetEmailPasswordButton extends StatelessWidget {
       key: const Key('resetEmailPasswordForm_createAccount_flatButton'),
       onTap: () => context.push(
         AuthRoutePaths.resetEmailPassword.fullPath,
-      ), //
+      ),
       child: Text(
         'Lupa Password? Klik Disini',
         style: TextStyle(color: theme.primaryColor),

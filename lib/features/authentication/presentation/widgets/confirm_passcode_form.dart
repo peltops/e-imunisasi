@@ -1,5 +1,5 @@
 import 'package:eimunisasi/core/widgets/snackbar_custom.dart';
-import 'package:eimunisasi/routers/route_paths/route_paths.dart';
+import 'package:eimunisasi/routers/route_paths/root_route_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -16,7 +16,7 @@ class ConfirmPasscodeForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<LocalAuthCubit, LocalAuthState>(
       listener: (context, state) {
-        if (state.status.isFailure) {
+        if (state.statusSet.isFailure) {
           snackbarCustom(state.errorMessage ?? 'Gagal').show(context);
         }
       },
@@ -54,7 +54,7 @@ class _PasscodeInput extends StatelessWidget {
             labelText: 'Masukkan kembali PIN',
             helperText: 'Konfirmasi 4-digit PIN',
             // ignore: unrelated_type_equality_checks
-            errorText: state.confirmPasscode != state.passcode.value
+            errorText: state.confirmPasscode.value != state.passcode.value
                 ? 'PIN Tidak Sama!'
                 : null,
           ),
@@ -68,10 +68,12 @@ class _NextButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocListener<LocalAuthCubit, LocalAuthState>(
+      listenWhen: (previous, current) =>
+          previous.statusSet != current.statusSet,
       listener: (context, state) {
-        if (state.status.isSuccess) {
-          context.pushReplacement(RoutePaths.home);
-        } else if (state.status.isFailure) {
+        if (state.statusSet.isSuccess) {
+          context.go(RootRoutePaths.dashboard.fullPath);
+        } else if (state.statusSet.isFailure) {
           snackbarCustom(state.errorMessage ?? 'Gagal').show(context);
         }
       },
@@ -79,7 +81,7 @@ class _NextButton extends StatelessWidget {
         builder: (context, state) {
           return ButtonCustom(
             key: const Key('confirmPasscodeForm_next_raisedButton'),
-            loading: state.status.isInProgress,
+            loading: state.statusSet.isInProgress,
             child: Text(
               AppConstant.CONFIRMATION,
               style: TextStyle(fontSize: 15.0, color: Colors.white),
