@@ -1,10 +1,8 @@
-import 'package:eimunisasi/features/healthy_book/presentation/screens/healthy_book_screen.dart';
-import 'package:eimunisasi/features/calendar/presentation/screens/calendar_screen.dart';
-import 'package:eimunisasi/pages/home/utama/vaksinasi/vaksinasi.dart';
+import 'package:eimunisasi/routers/route_paths/route_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../../features/profile/presentation/screens/list_children_screen.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -61,48 +59,28 @@ class _MainPageState extends State<MainPage> {
                       TombolMenu(
                         icon: Icons.calendar_today,
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CalendarScreen(),
-                            ),
-                          );
+                          context.push(RoutePaths.calendar);
                         },
                         label: 'Kalender',
                       ),
                       TombolMenu(
                         icon: Icons.child_friendly_outlined,
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ListChildrenScreen(),
-                            ),
-                          );
+                          context.push(RoutePaths.listChildren);
                         },
                         label: 'Anak',
                       ),
                       TombolMenu(
                         icon: Icons.medical_services_rounded,
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => VaksinasiPage(),
-                            ),
-                          );
+                          context.push(RoutePaths.vaccination);
                         },
                         label: 'Vaksinasi',
                       ),
                       TombolMenu(
                         icon: Icons.my_library_books_rounded,
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => HealthyBookScreen(),
-                            ),
-                          );
+                          context.push(RoutePaths.healthyBook);
                         },
                         label: 'Buku Sehat',
                       ),

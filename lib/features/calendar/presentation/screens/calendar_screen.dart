@@ -2,19 +2,21 @@ import 'package:eimunisasi/core/extension.dart';
 import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/features/calendar/data/models/calendar_model.dart';
 import 'package:eimunisasi/injection.dart';
+import 'package:eimunisasi/routers/route_paths/route_paths.dart';
 import 'package:eimunisasi/utils/any_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../../../core/widgets/snackbar_custom.dart';
 import '../../logic/bloc/calendar_bloc/calendar_bloc.dart';
-import 'add_event_calendar_screen.dart';
-import 'update_event_calendar_screen.dart';
 
 class CalendarScreen extends StatelessWidget {
+  const CalendarScreen({Key? key}) : super(key: key);
+  
   @override
   Widget build(BuildContext context) {
     return BlocProvider<CalendarBloc>(
@@ -43,12 +45,7 @@ class _CalendarScaffold extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.add),
-            onPressed: () => context.navigateTo(
-              BlocProvider.value(
-                value: context.read<CalendarBloc>(),
-                child: AddEventCalendar(),
-              ),
-            ),
+            onPressed: () => context.push(RoutePaths.addEventCalendar),
           )
         ],
       ),
@@ -347,7 +344,7 @@ class _ListRowEvent {
     final cancelButton = ElevatedButton(
         child: Text(AppConstant.NO),
         onPressed: () {
-          Navigator.pop(context);
+          context.pop();
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Theme.of(context).primaryColor,
@@ -356,7 +353,7 @@ class _ListRowEvent {
       child: Text(AppConstant.YES),
       onPressed: () async {
         context.read<CalendarBloc>().add(DeleteEvent(event: event));
-        context.navigateBack();
+        context.pop();
       },
     );
     // set up the AlertDialog
@@ -379,13 +376,9 @@ class _ListRowEvent {
   void selectedItem(BuildContext context, item, CalendarModel data) {
     switch (item) {
       case 0:
-        context.navigateTo(
-          BlocProvider.value(
-            value: context.read<CalendarBloc>()
-              ..add(SetDateTimeForm(value: data.date))
-              ..add(SetActivityForm(value: data.activity)),
-            child: UpdateEventCalendar(event: data),
-          ),
+        context.push(
+          RoutePaths.updateEventCalendar,
+          extra: data,
         );
         break;
       case 1:

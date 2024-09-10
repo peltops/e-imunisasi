@@ -1,7 +1,8 @@
 import 'package:eimunisasi/core/utils/constant.dart';
-import 'package:eimunisasi/pages/home/utama/bukusehat/child/list_anak.dart';
+import 'package:eimunisasi/routers/route_paths/route_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 class BukuSehatPage extends StatefulWidget {
   @override
@@ -41,12 +42,12 @@ class _BukuSehatPageState extends State<BukuSehatPage> {
                       Card(
                         child: ListTile(
                           onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ListAnak(
-                                          page: 'riwayat',
-                                        )));
+                            context.push(
+                              RoutePaths.listAnak,
+                              extra: {
+                                'page': 'riwayat',
+                              },
+                            );
                           },
                           leading: Icon(
                             Icons.history,

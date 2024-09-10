@@ -1,14 +1,14 @@
 import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/core/widgets/snackbar_custom.dart';
+import 'package:eimunisasi/routers/route_paths/auth_route_paths.dart';
+import 'package:eimunisasi/routers/route_paths/route_paths.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../../../app.dart';
 import '../../../../core/widgets/button_custom.dart';
 import '../../../../core/widgets/text_form_custom.dart';
 import '../../logic/bloc/authentication_bloc/authentication_bloc.dart';
-import '../screens/auth/reset_email_password.dart';
 
 import '../../logic/cubit/login_cubit/login_cubit.dart';
-import '../screens/auth/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
@@ -19,14 +19,14 @@ class LoginEmailForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocListener<LoginCubit, LoginState>(
+      listenWhen: (previous, current) => previous.status != current.status,
       listener: (context, state) {
         if (state.status.isFailure) {
           snackbarCustom(state.errorMessage ?? 'Otentikasi gagal!')
               .show(context);
         } else if (state.status.isSuccess) {
           context.read<AuthenticationBloc>().add(LoggedIn());
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const AppView()));
+          context.go(RoutePaths.root);
         }
       },
       child: Align(
@@ -120,8 +120,9 @@ class _SignUpButton extends StatelessWidget {
     final theme = Theme.of(context);
     return TextButton(
       key: const Key('loginEmailForm_createAccount_flatButton'),
-      onPressed: () => Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const RegisterScreen())),
+      onPressed: () => context.push(
+        AuthRoutePaths.register.fullPath,
+      ),
       child: Text(
         'Buat Akun',
         style: TextStyle(color: theme.primaryColor),
@@ -136,10 +137,9 @@ class _ResetEmailPasswordButton extends StatelessWidget {
     final theme = Theme.of(context);
     return InkWell(
       key: const Key('resetEmailPasswordForm_createAccount_flatButton'),
-      onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => const ResetEmailPasswordScreen())),
+      onTap: () => context.push(
+        AuthRoutePaths.resetEmailPassword.fullPath,
+      ),
       child: Text(
         'Lupa Password? Klik Disini',
         style: TextStyle(color: theme.primaryColor),

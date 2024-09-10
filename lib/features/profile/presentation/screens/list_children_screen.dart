@@ -1,9 +1,11 @@
 import 'package:eimunisasi/core/extension.dart';
 import 'package:eimunisasi/core/widgets/error.dart';
 import 'package:eimunisasi/features/profile/presentation/screens/child_profile_screen.dart';
+import 'package:eimunisasi/routers/route_paths/route_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/utils/constant.dart';
 import '../../../../core/widgets/top_app_bar.dart';
@@ -55,17 +57,10 @@ class ListChildrenScreen extends StatelessWidget {
                             onSelected!(data?[index]);
                             return;
                           }
-                          context.navigateTo(
-                            BlocProvider.value(
-                              value: context.read<ChildProfileBloc>()
-                                ..add(
-                                  OnInitialEvent(child: data?[index]),
-                                ),
-                              child: ChildProfileScreen(
-                                mode: ChildProfileScreenMode.edit,
-                              ),
-                            ),
-                          );
+                          context.push(RoutePaths.childProfile, extra: {
+                            'child': data?[index],
+                            'mode': ChildProfileScreenMode.edit,
+                          });
                         },
                         title: Text(
                           data?[index].nama ?? emptyString,
@@ -90,17 +85,9 @@ class ListChildrenScreen extends StatelessWidget {
             return FloatingActionButton(
               child: Icon(Icons.add),
               onPressed: () {
-                context.navigateTo(
-                  BlocProvider.value(
-                    value: context.read<ChildProfileBloc>()
-                      ..add(
-                        OnInitialEvent(child: Anak.empty()),
-                      ),
-                    child: ChildProfileScreen(
-                      mode: ChildProfileScreenMode.add,
-                    ),
-                  ),
-                );
+                context.push(RoutePaths.childProfile, extra: {
+                  'mode': ChildProfileScreenMode.add,
+                });
               },
             );
           },

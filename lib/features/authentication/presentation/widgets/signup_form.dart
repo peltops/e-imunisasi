@@ -1,5 +1,6 @@
 import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/core/widgets/snackbar_custom.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/widgets/button_custom.dart';
 import '../../../../core/widgets/text_form_custom.dart';
@@ -16,7 +17,7 @@ class SignUpForm extends StatelessWidget {
     return BlocListener<SignUpCubit, SignUpState>(
       listener: (context, state) {
         if (state.status.isSuccess) {
-          Navigator.of(context).pop();
+          context.pop();
           snackbarCustom('Pendaftaran berhasil, Silahkan login').show(context);
         } else if (state.status.isFailure) {
           snackbarCustom(state.errorMessage ?? 'Pendaftaran gagal!')

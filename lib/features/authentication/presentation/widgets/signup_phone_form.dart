@@ -2,17 +2,17 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/features/authentication/logic/cubit/signup_cubit/signup_cubit.dart';
 import 'package:eimunisasi/core/widgets/snackbar_custom.dart';
+import 'package:eimunisasi/features/authentication/presentation/screens/auth/otp_screen.dart';
+import 'package:eimunisasi/routers/route_paths/auth_route_paths.dart';
 import 'package:eimunisasi/utils/string_extension.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/widgets/text_form_custom.dart';
-import '../../../../injection.dart';
 import '../../../../core/widgets/button_custom.dart';
 import '../../../../utils/dismiss_keyboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 
-import '../../logic/cubit/login_phone_cubit/login_phone_cubit.dart';
-import '../screens/auth/otp_screen.dart';
 
 class SignUpPhoneForm extends StatelessWidget {
   const SignUpPhoneForm({Key? key}) : super(key: key);
@@ -24,15 +24,12 @@ class SignUpPhoneForm extends StatelessWidget {
           snackbarCustom(state.errorMessage ?? 'Authentication Failure')
               .show(context);
         } else if (state.verId.isNotNullOrEmpty) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (_) => BlocProvider(
-                create: (_) => getIt<LoginPhoneCubit>()
-                  ..phoneChanged(state.phone.value)
-                  ..countryCodeChanged(state.countryCode.value)
-                  ..verIdChanged(state.verId.orEmpty),
-                child: const OTPScreen(),
-              ),
+          context.pushReplacement(
+            AuthRoutePaths.otp.fullPath,
+            extra: OTPScreenArguments(
+              phone: state.phone.value,
+              countryCode: state.countryCode.value,
+              verId: state.verId.orEmpty,
             ),
           );
         }
@@ -70,7 +67,7 @@ class SignUpPhoneForm extends StatelessWidget {
                           fontWeight: FontWeight.w700,
                           color: Theme.of(context).primaryColor),
                     ),
-                    onTap: () => Navigator.pop(context),
+                    onTap: () => context.pop(),
                   ),
                 ],
               ),

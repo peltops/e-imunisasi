@@ -1,13 +1,14 @@
 import 'package:eimunisasi/features/profile/data/models/anak.dart';
 import 'package:eimunisasi/models/nakes.dart';
-import 'package:eimunisasi/pages/home/utama/vaksinasi/daftar_vaksinasi.dart';
 import 'package:eimunisasi/core/widgets/search_bar.dart';
+import 'package:eimunisasi/routers/route_paths/route_paths.dart';
 import 'package:eimunisasi/services/nakes_service.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-class ListNakes extends StatelessWidget {
+class ChooseNakesScreen extends StatelessWidget {
   final Anak anak;
-  const ListNakes({Key? key, required this.anak}) : super(key: key);
+  const ChooseNakesScreen({Key? key, required this.anak}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -49,15 +50,13 @@ class ListNakes extends StatelessWidget {
                                 return Card(
                                     child: ListTile(
                                   onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              DaftarVaksinasiPage(
-                                            anak: anak,
-                                            nakes: nakes,
-                                          ),
-                                        ));
+                                    context.push(
+                                      RoutePaths.makeAppointmentVaccination,
+                                      extra: {
+                                        'child': anak,
+                                        'healthWorker': nakes,
+                                      },
+                                    );
                                   },
                                   title: Text(
                                     nakes.namaLengkap!,

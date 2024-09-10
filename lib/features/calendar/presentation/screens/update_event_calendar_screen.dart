@@ -4,6 +4,7 @@ import 'package:eimunisasi/core/widgets/snackbar_custom.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/utils/constant.dart';
 import '../../../../core/utils/themes/padding_constant.dart';
@@ -15,6 +16,24 @@ import '../../../../core/widgets/text_form_custom.dart';
 import '../../../../utils/dismiss_keyboard.dart';
 import '../../data/models/calendar_model.dart';
 import '../../logic/bloc/calendar_bloc/calendar_bloc.dart';
+
+class UpdateEventCalendarScreen extends StatelessWidget {
+  final CalendarModel event;
+  const UpdateEventCalendarScreen({
+    Key? key,
+    required this.event,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider.value(
+      value: context.read<CalendarBloc>()
+        ..add(SetDateTimeForm(value: event.date))
+        ..add(SetActivityForm(value: event.activity)),
+      child: UpdateEventCalendar(event: event),
+    );
+  }
+}
 
 class UpdateEventCalendar extends StatelessWidget {
   final CalendarModel event;
@@ -31,7 +50,7 @@ class UpdateEventCalendar extends StatelessWidget {
       listener: (context, state) {
         if (state.statusUpdateEvent == FormzSubmissionStatus.success) {
           snackbarCustom("Berhasil Mengubah Aktivitas").show(context);
-          context.navigateBack();
+          context.pop();
         }
         if (state.statusUpdateEvent == FormzSubmissionStatus.failure) {
           snackbarCustom("Gagal Mengubah Aktivitas").show(context);

@@ -5,32 +5,46 @@ class LocalAuthState extends Equatable {
     this.passcode = const Passcode.initial(),
     this.savedPasscode = const Passcode.initial(),
     this.confirmPasscode = const Passcode.initial(),
-    this.status = FormzSubmissionStatus.initial,
+    this.statusGet = FormzSubmissionStatus.initial,
+    this.statusSet = FormzSubmissionStatus.initial,
+    this.statusDelete = FormzSubmissionStatus.initial,
     this.errorMessage,
   });
 
   final Passcode savedPasscode;
   final Passcode passcode;
   final Passcode confirmPasscode;
-  final FormzSubmissionStatus status;
+  final FormzSubmissionStatus statusGet;
+  final FormzSubmissionStatus statusSet;
+  final FormzSubmissionStatus statusDelete;
   final String? errorMessage;
 
   @override
-  List<Object?> get props =>
-      [passcode, confirmPasscode, status, errorMessage];
+  List<Object?> get props => [
+        passcode,
+        confirmPasscode,
+        statusGet,
+        statusSet,
+        statusDelete,
+        errorMessage,
+      ];
 
   LocalAuthState copyWith({
     Passcode? savedPasscode,
     Passcode? passcode,
     Passcode? confirmPasscode,
-    FormzSubmissionStatus? status,
+    FormzSubmissionStatus? statusGet,
+    FormzSubmissionStatus? statusSet,
+    FormzSubmissionStatus? statusDelete,
     String? errorMessage,
   }) {
     return LocalAuthState(
       savedPasscode: savedPasscode ?? this.savedPasscode,
       passcode: passcode ?? this.passcode,
       confirmPasscode: confirmPasscode ?? this.confirmPasscode,
-      status: status ?? this.status,
+      statusGet: statusGet ?? this.statusGet,
+      statusSet: statusSet ?? this.statusSet,
+      statusDelete: statusDelete ?? this.statusDelete,
       errorMessage: errorMessage ?? this.errorMessage,
     );
   }

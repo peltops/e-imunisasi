@@ -1,9 +1,8 @@
 import 'package:eimunisasi/core/utils/constant.dart';
-import 'package:eimunisasi/pages/home/bantuan/child/menu_eimunisasi_manual.dart';
-import 'package:eimunisasi/pages/home/bantuan/child/menu_infomasi_kesehatan.dart';
-import 'package:eimunisasi/pages/home/bantuan/child/menu_rumah_sakit.dart';
+import 'package:eimunisasi/routers/route_paths/route_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 class BantuanPage extends StatefulWidget {
   @override
@@ -47,11 +46,7 @@ class _BantuanPageState extends State<BantuanPage> {
                           Card(
                               child: ListTile(
                             onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          ListDaftarRumahSakit()));
+                              context.push(RoutePaths.hospitals);
                             },
                             leading: Icon(
                               Icons.local_hospital_outlined,
@@ -63,11 +58,7 @@ class _BantuanPageState extends State<BantuanPage> {
                           Card(
                               child: ListTile(
                             onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          InformasiKesehatanPage()));
+                              context.push(RoutePaths.medicalInformation);
                             },
                             leading: Icon(
                               Icons.info_outline,
@@ -79,11 +70,7 @@ class _BantuanPageState extends State<BantuanPage> {
                           Card(
                               child: ListTile(
                             onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          EimunisasiManualPage()));
+                              context.push(RoutePaths.appManual);
                             },
                             leading: Icon(
                               Icons.video_settings_sharp,

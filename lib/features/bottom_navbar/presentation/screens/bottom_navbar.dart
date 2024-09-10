@@ -1,14 +1,15 @@
 import 'package:eimunisasi/pages/home/bantuan/bantuan_page.dart';
 import 'package:eimunisasi/pages/home/utama/main.dart';
+import 'package:eimunisasi/routers/route_paths/auth_route_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/utils/constant.dart';
 import '../../../../core/widgets/snackbar_custom.dart';
 import '../../../../pages/home/pesan/pesan_page.dart';
 import '../../../authentication/logic/bloc/authentication_bloc/authentication_bloc.dart';
-import '../../../authentication/presentation/screens/auth/login_phone_screen.dart';
 import '../../../profile/presentation/screens/profile_screen.dart';
 import '../../logic/buttom_navbar/bottom_navbar_cubit.dart';
 
@@ -20,12 +21,7 @@ class BottomNavbarWrapper extends StatelessWidget {
     return BlocListener<AuthenticationBloc, AuthenticationState>(
       listener: (context, state) {
         if (state is Unauthenticated) {
-          Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-              builder: (context) => LoginPhoneScreen(),
-            ),
-            (route) => false,
-          );
+          context.pushReplacement(AuthRoutePaths.loginPhone.fullPath);
           snackbarCustom(AppConstant.LOGOUT_SUCCEED);
         }
       },

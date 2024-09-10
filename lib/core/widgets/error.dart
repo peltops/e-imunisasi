@@ -5,7 +5,14 @@ import 'package:flutter/material.dart';
 
 class ErrorContainer extends StatelessWidget {
   final VoidCallback? onRefresh;
-  const ErrorContainer({Key? key, this.onRefresh}) : super(key: key);
+  final String? message;
+  final String? title;
+  const ErrorContainer({
+    Key? key,
+    this.onRefresh,
+    this.message,
+    this.title,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +27,14 @@ class ErrorContainer extends StatelessWidget {
           ),
           VerticalSpacer(),
           TitleText(
-            text: AppConstant.ERROR_OCCURRED,
+            text: title ?? AppConstant.ERROR_OCCURRED,
           ),
           VerticalSpacer(),
           InkWell(
             onTap: onRefresh,
-            child: Text(AppConstant.TRY_AGAIN),
+            child: Text(
+              message ?? AppConstant.TRY_AGAIN,
+            ),
           ),
         ],
       ),

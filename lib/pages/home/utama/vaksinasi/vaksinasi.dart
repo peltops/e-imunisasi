@@ -1,8 +1,8 @@
 import 'package:eimunisasi/core/utils/constant.dart';
-import 'package:eimunisasi/pages/home/utama/vaksinasi/list_anak_vaksinasi.dart';
-import 'package:eimunisasi/pages/home/utama/vaksinasi/list_janji.dart';
+import 'package:eimunisasi/routers/route_paths/route_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 class VaksinasiPage extends StatefulWidget {
   @override
@@ -45,12 +45,7 @@ class _VaksinasiPageState extends State<VaksinasiPage> {
                       Card(
                           child: ListTile(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ListAnakVaksinasi(),
-                            ),
-                          );
+                          context.push(RoutePaths.chooseChildVaccination);
                         },
                         leading: Icon(
                           Icons.medical_services_outlined,
@@ -62,12 +57,7 @@ class _VaksinasiPageState extends State<VaksinasiPage> {
                       Card(
                           child: ListTile(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ListJanjiVaksinasi(),
-                            ),
-                          );
+                          context.push(RoutePaths.appointmentVaccination);
                         },
                         leading: Icon(
                           Icons.list_rounded,
