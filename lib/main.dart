@@ -15,7 +15,6 @@ import 'injection.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await configureDependencies();
   await Firebase.initializeApp();
   await Supabase.initialize(
     url: 'https://eimunisasi-base-staging.peltops.com/',
@@ -31,5 +30,6 @@ void main() async {
   if (kDebugMode) {
     Bloc.observer = AppBlocObserver();
   }
+  await configureDependencies();
   runApp(App());
 }

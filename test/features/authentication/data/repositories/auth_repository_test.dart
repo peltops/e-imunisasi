@@ -8,6 +8,7 @@ import 'package:mock_exceptions/mock_exceptions.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:test/test.dart';
 import 'package:eimunisasi/features/authentication/data/repositories/auth_repository.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -36,6 +37,7 @@ import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
   MockSpec<File>(),
   MockSpec<UploadTask>(),
   MockSpec<SharedPreferences>(),
+  MockSpec<SupabaseClient>(),
 ])
 import 'auth_repository_test.mocks.dart';
 
@@ -46,6 +48,7 @@ void main() {
   late SharedPreferences sharedPreferences;
   late AuthRepository authRepository;
   late MockUser mockUser;
+  late SupabaseClient supabaseClient;
 
   setUp(() {
     mockUser = MockUser(
@@ -61,11 +64,13 @@ void main() {
     firestore = MockFirebaseFirestore();
     firebaseStorage = MockFirebaseStorage();
     sharedPreferences = MockSharedPreferences();
+    supabaseClient = MockSupabaseClient();
     authRepository = AuthRepository(
       firestore,
       firebaseAuth,
       firebaseStorage,
       sharedPreferences,
+      supabaseClient,
     );
   });
 
@@ -285,6 +290,7 @@ void main() {
         firebaseAuth,
         firebaseStorage,
         sharedPreferences,
+        supabaseClient,
       );
       final result = await authRepository.isSignedIn();
       expect(result, false);
@@ -488,6 +494,7 @@ void main() {
         firebaseAuth,
         firebaseStorage,
         sharedPreferences,
+        supabaseClient,
       );
     });
 
