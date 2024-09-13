@@ -13,7 +13,11 @@ import 'package:test/test.dart';
 import 'package:eimunisasi/features/authentication/data/repositories/auth_repository.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
+import 'package:flutter_test/flutter_test.dart' as flutter_test;
+import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 
+import '../../../../mocks/url_launcher.mock.dart';
 @GenerateMocks([
   FirebaseFirestore,
   CollectionReference,
@@ -23,6 +27,9 @@ import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
   QuerySnapshot,
   Reference,
   TaskSnapshot,
+  SupabaseClient,
+  GoTrueClient,
+  OAuthResponse,
 ], customMocks: [
   MockSpec<QueryDocumentSnapshot>(
     as: #MockQueryDocumentSnapshot,
@@ -37,18 +44,20 @@ import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
   MockSpec<File>(),
   MockSpec<UploadTask>(),
   MockSpec<SharedPreferences>(),
-  MockSpec<SupabaseClient>(),
 ])
 import 'auth_repository_test.mocks.dart';
 
 void main() {
+  flutter_test.TestWidgetsFlutterBinding.ensureInitialized();
   late FirebaseAuth firebaseAuth;
   late FirebaseFirestore firestore;
   late FirebaseStorage firebaseStorage;
   late SharedPreferences sharedPreferences;
   late AuthRepository authRepository;
   late MockUser mockUser;
-  late SupabaseClient supabaseClient;
+  late MockSupabaseClient mockSupabase;
+  late MockGoTrueClient mockGoTrue;
+  late MockOAuthResponse oAuthResponse;
 
   setUp(() {
     mockUser = MockUser(
@@ -64,13 +73,15 @@ void main() {
     firestore = MockFirebaseFirestore();
     firebaseStorage = MockFirebaseStorage();
     sharedPreferences = MockSharedPreferences();
-    supabaseClient = MockSupabaseClient();
+    mockSupabase = MockSupabaseClient();
+    mockGoTrue = MockGoTrueClient();
+    oAuthResponse = MockOAuthResponse();
     authRepository = AuthRepository(
       firestore,
       firebaseAuth,
       firebaseStorage,
       sharedPreferences,
-      supabaseClient,
+      mockSupabase,
     );
   });
 
@@ -290,7 +301,7 @@ void main() {
         firebaseAuth,
         firebaseStorage,
         sharedPreferences,
-        supabaseClient,
+        mockSupabase,
       );
       final result = await authRepository.isSignedIn();
       expect(result, false);
@@ -494,7 +505,7 @@ void main() {
         firebaseAuth,
         firebaseStorage,
         sharedPreferences,
-        supabaseClient,
+        mockSupabase,
       );
     });
 
@@ -512,6 +523,55 @@ void main() {
       final result = authRepository.verifyEmail();
 
       expect(result, isA<Future<void>>());
+    });
+  });
+
+  group('logInWithSeribaseOauth', () {
+    setUp(() {
+      //  Mock the URL launcher
+      final mock = setupMockUrlLauncher();
+      UrlLauncherPlatform.instance = mock;
+
+      // Mock the OAuth response URL
+      when(oAuthResponse.provider).thenReturn(supabase.OAuthProvider.keycloak);
+      when(oAuthResponse.url).thenReturn('http://www.google.com');
+    });
+
+    test('logInWithSeribaseOauth success', () async {
+      // Mock the getOAuthSignInUrl method
+      when(mockGoTrue.getOAuthSignInUrl(
+        provider: supabase.OAuthProvider.keycloak,
+        redirectTo: anyNamed('redirectTo'),
+        scopes: anyNamed('scopes'),
+        queryParams: anyNamed('queryParams'),
+      )).thenAnswer((_) async => oAuthResponse);
+
+      // Ensure mockSupabase.auth returns the correct MockGoTrueClient
+      when(mockSupabase.auth).thenReturn(mockGoTrue);
+
+      // Call the method under test
+      final result = await authRepository.logInWithSeribaseOauth();
+
+      // Verify the result is true, assuming that the repository checks for a successful response
+      expect(result, true);
+    });
+
+    test('logInWithSeribaseOauth throws an exception if signInWithOAuth throws',
+        () async {
+      // Mock the getOAuthSignInUrl method
+      when(mockGoTrue.getOAuthSignInUrl(
+        provider: supabase.OAuthProvider.keycloak,
+        redirectTo: anyNamed('redirectTo'),
+        scopes: anyNamed('scopes'),
+        queryParams: anyNamed('queryParams'),
+      )).thenThrow(Exception('error'));
+
+      // Ensure mockSupabase.auth returns the correct MockGoTrueClient
+      when(mockSupabase.auth).thenReturn(mockGoTrue);
+
+      final result = authRepository.logInWithSeribaseOauth();
+
+      expect(result, throwsA(isA<Exception>()));
     });
   });
 }
