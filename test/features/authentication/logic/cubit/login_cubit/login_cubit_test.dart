@@ -159,4 +159,64 @@ void main() {
       ],
     );
   });
+
+
+  group('logInWithSeribaseOauth', () {
+    blocTest<LoginCubit, LoginState>(
+      'should success when logInWithSeribaseOauth return true',
+      build: () {
+        when(
+          authRepository.logInWithSeribaseOauth(),
+        ).thenAnswer((_) async => Future.value(true));
+        return LoginCubit(authRepository);
+      },
+      act: (cubit) => cubit.logInWithSeribaseOauth(),
+      expect: () => [
+        LoginState(
+          status: FormzSubmissionStatus.inProgress,
+        ),
+        LoginState(
+          status: FormzSubmissionStatus.success,
+        ),
+      ],
+    );
+    blocTest<LoginCubit, LoginState>(
+      'should failed when logInWithSeribaseOauth return false',
+      build: () {
+        when(
+          authRepository.logInWithSeribaseOauth(),
+        ).thenAnswer((_) async => Future.value(false));
+        return LoginCubit(authRepository);
+      },
+      act: (cubit) => cubit.logInWithSeribaseOauth(),
+      expect: () => [
+        LoginState(
+          status: FormzSubmissionStatus.inProgress,
+        ),
+        LoginState(
+          status: FormzSubmissionStatus.failure,
+          errorMessage: 'Failed to login with Seribase Oauth',
+        ),
+      ],
+    );
+    blocTest<LoginCubit, LoginState>(
+      'should failed when logInWithSeribaseOauth throw error',
+      build: () {
+        when(
+          authRepository.logInWithSeribaseOauth(),
+        ).thenThrow(Exception('error'));
+        return LoginCubit(authRepository);
+      },
+      act: (cubit) => cubit.logInWithSeribaseOauth(),
+      expect: () => [
+        LoginState(
+          status: FormzSubmissionStatus.inProgress,
+        ),
+        LoginState(
+          status: FormzSubmissionStatus.failure,
+          errorMessage: 'Failed to login with Seribase Oauth',
+        ),
+      ],
+    );
+  });
 }

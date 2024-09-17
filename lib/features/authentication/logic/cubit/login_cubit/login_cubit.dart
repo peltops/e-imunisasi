@@ -66,11 +66,14 @@ class LoginCubit extends Cubit<LoginState> {
             errorMessage: 'Failed to login with Seribase Oauth',
           ),
         );
+        return;
       }
       emit(state.copyWith(status: FormzSubmissionStatus.success));
-    } on FirebaseAuthException catch (e) {
+    } catch (e) {
       emit(state.copyWith(
-          status: FormzSubmissionStatus.failure, errorMessage: e.message));
+        status: FormzSubmissionStatus.failure,
+        errorMessage: 'Failed to login with Seribase Oauth',
+      ));
     }
   }
 }
