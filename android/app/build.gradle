@@ -4,6 +4,7 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
     id "com.google.gms.google-services"
 }
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -27,6 +28,7 @@ def keystorePropertiesFile = rootProject.file('key.properties')
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
+
 android {
     compileSdkVersion 34
 
@@ -35,7 +37,6 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.peltops.e_imunisasi"
         minSdkVersion 23
         compileSdkVersion 34
@@ -46,12 +47,6 @@ android {
     }
 
     signingConfigs {
-        debug {
-            keyAlias keystoreProperties['debugKeyAlias']
-            keyPassword keystoreProperties['debugKeyPassword']
-            storeFile keystoreProperties['debugStoreFile'] ? file(keystoreProperties['debugStoreFile']) : null
-            storePassword keystoreProperties['debugStorePassword']
-        }
         release {
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
@@ -59,20 +54,22 @@ android {
             storePassword keystoreProperties['storePassword']
         }
     }
+
     buildTypes {
         release {
             signingConfig signingConfigs.release
         }
         debug {
-            // Check if debugStoreFile exists
             if (keystoreProperties['debugStoreFile'] && file(keystoreProperties['debugStoreFile']).exists()) {
-                signingConfig signingConfigs.debug
+                keyAlias keystoreProperties['debugKeyAlias']
+                keyPassword keystoreProperties['debugKeyPassword']
+                storeFile file(keystoreProperties['debugStoreFile'])
+                storePassword keystoreProperties['debugStorePassword']
             } else {
                 println("Debug keystore file not found. Skipping debug signing config.")
             }
         }
     }
-
 }
 
 flutter {
