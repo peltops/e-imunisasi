@@ -41,4 +41,9 @@ class AuthRoutePaths {
     path: 'confirm-passcode',
     parent: RootRoutePaths.authLocal,
   );
+
+  static const RouteModel loginWithSeribaseOauth = RouteModel(
+    path: 'login-with-seribase-oauth',
+    parent: RootRoutePaths.auth,
+  );
 }

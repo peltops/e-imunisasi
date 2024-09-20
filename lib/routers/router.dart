@@ -2,7 +2,7 @@ import 'package:eimunisasi/core/loading.dart';
 import 'package:eimunisasi/core/widgets/error.dart';
 import 'package:eimunisasi/core/widgets/snackbar_custom.dart';
 import 'package:eimunisasi/features/authentication/logic/bloc/authentication_bloc/authentication_bloc.dart';
-import 'package:eimunisasi/features/authentication/presentation/screens/auth/login_phone_screen.dart';
+import 'package:eimunisasi/features/authentication/presentation/screens/auth/login_seribase_oauth_screen.dart';
 import 'package:eimunisasi/features/authentication/presentation/screens/local_auth/passcode_screen.dart';
 import 'package:eimunisasi/features/authentication/presentation/screens/splash/splash_screen.dart';
 import 'package:eimunisasi/features/bottom_navbar/presentation/screens/bottom_navbar.dart';
@@ -54,21 +54,7 @@ final router = GoRouter(
         if (error != null && errorCode != null && errorDescription != null) {
           WidgetsBinding.instance.addPostFrameCallback(
             (_) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: ListTile(
-                    textColor: Colors.white,
-                    title: Text(error.toUpperCase()),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Code: $errorCode'),
-                        Text(errorDescription),
-                      ],
-                    ),
-                  ),
-                ),
-              );
+              snackbarCustom(errorDescription).show(context);
             },
           );
         }
@@ -88,11 +74,11 @@ final router = GoRouter(
               return const PasscodeScreen();
             } else if (state is Unauthenticated) {
               if (state.isSeenOnboarding) {
-                return const LoginPhoneScreen();
+                return const LoginSeribaseOauthScreen();
               }
               return OnboardScreen();
             } else if (state is AuthenticationError) {
-              return const LoginPhoneScreen();
+              return const LoginSeribaseOauthScreen();
             }
             return Container();
           },
@@ -100,25 +86,23 @@ final router = GoRouter(
       },
     ),
     GoRoute(
-      path: RootRoutePaths.auth.path,
-      routes: AuthRouter.routes,
-      redirect: (_, state) {
-        if(state.fullPath == RootRoutePaths.auth.fullPath) {
-          return AuthRoutePaths.login.fullPath;
-        }
-        return null;
-      }
-    ),
+        path: RootRoutePaths.auth.path,
+        routes: AuthRouter.routes,
+        redirect: (_, state) {
+          if (state.fullPath == RootRoutePaths.auth.fullPath) {
+            return AuthRoutePaths.loginWithSeribaseOauth.fullPath;
+          }
+          return null;
+        }),
     GoRoute(
-      path: RootRoutePaths.authLocal.path,
-      routes: AuthLocalRouter.routes,
-      redirect: (_, state) {
-        if(state.fullPath == RootRoutePaths.authLocal.fullPath) {
-          return AuthRoutePaths.passcode.fullPath;
-        }
-        return null;
-      }
-    ),
+        path: RootRoutePaths.authLocal.path,
+        routes: AuthLocalRouter.routes,
+        redirect: (_, state) {
+          if (state.fullPath == RootRoutePaths.authLocal.fullPath) {
+            return AuthRoutePaths.passcode.fullPath;
+          }
+          return null;
+        }),
     GoRoute(
       path: RootRoutePaths.onboarding.path,
       builder: (_, __) => OnboardScreen(),

@@ -7,6 +7,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
 
 import '../models/user.dart';
 
@@ -16,9 +18,15 @@ class AuthRepository {
   final FirebaseAuth firebaseAuth;
   final FirebaseStorage firebaseStorage;
   final SharedPreferences sharedPreferences;
+  final SupabaseClient supabaseClient;
 
-  AuthRepository(this.firestore, this.firebaseAuth, this.firebaseStorage,
-      this.sharedPreferences);
+  AuthRepository(
+    this.firestore,
+    this.firebaseAuth,
+    this.firebaseStorage,
+    this.sharedPreferences,
+    this.supabaseClient,
+  );
 
   Future<UserCredential> logInWithEmailAndPassword(
       {required String email, required String password}) {
@@ -153,5 +161,12 @@ class AuthRepository {
 
   Future<bool> destroyPasscode() async {
     return sharedPreferences.remove('passCode');
+  }
+
+  Future<bool> logInWithSeribaseOauth() async {
+    return await supabaseClient.auth.signInWithOAuth(
+      supabase.OAuthProvider.keycloak,
+      scopes: 'openid',
+    );
   }
 }
