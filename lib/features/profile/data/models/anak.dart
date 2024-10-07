@@ -51,6 +51,26 @@ class Anak extends Equatable {
     );
   }
 
+  factory Anak.fromSeribase(Map<String, dynamic> data) {
+    return Anak(
+      id: data['id'],
+      parentId: data['parent_id'],
+      nama: data['name'],
+      nik: data['nik'] ?? '',
+      tempatLahir: data['place_of_birth'] ?? '',
+      tanggalLahir: () {
+        try {
+          return DateTime.parse(data['date_of_birth']);
+        } catch (e) {
+          return null;
+        }
+      }(),
+      jenisKelamin: data['gender'] ?? '',
+      golDarah: data['blood_type'] ?? '',
+      photoURL: data['avatar_url'] ?? '',
+    );
+  }
+
   factory Anak.empty() {
     return Anak(
       id: '',
@@ -75,6 +95,19 @@ class Anak extends Equatable {
       "jenis_kelamin": jenisKelamin,
       "gol_darah": golDarah,
       "photo_url": photoURL,
+    };
+  }
+
+  Map<String, dynamic> toSeribaseMap() {
+    return {
+      'parent_id': parentId,
+      "name": nama,
+      "nik": nik,
+      "place_of_birth": tempatLahir,
+      "date_of_birth": tanggalLahir?.toIso8601String(),
+      "gender": jenisKelamin,
+      "blood_type": golDarah,
+      "avatar_url": photoURL,
     };
   }
 

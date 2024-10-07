@@ -53,12 +53,6 @@ android {
             storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
             storePassword keystoreProperties['storePassword']
         }
-    }
-
-    buildTypes {
-        release {
-            signingConfig signingConfigs.release
-        }
         debug {
             if (keystoreProperties['debugStoreFile'] && file(keystoreProperties['debugStoreFile']).exists()) {
                 keyAlias keystoreProperties['debugKeyAlias']
@@ -67,6 +61,20 @@ android {
                 storePassword keystoreProperties['debugStorePassword']
             } else {
                 println("Debug keystore file not found. Skipping debug signing config.")
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+        }
+        debug {
+            applicationIdSuffix ".debug"
+            if (signingConfigs.debug.storeFile) {
+                println("Debug keystore file found for signing config.")
+                println(signingConfigs.debug.storeFile)
+                signingConfig signingConfigs.debug
             }
         }
     }

@@ -95,7 +95,7 @@ class ChildProfileBloc extends Bloc<ChildProfileEvent, ChildProfileState> {
   void _onUpdateChildEvent(UpdateProfileEvent event, Emitter emit) async {
     emit(state.copyWith(statusUpdate: FormzSubmissionStatus.inProgress));
     try {
-      await _childRepository.updateChild(state.child!);
+      await _childRepository.setChild(state.child!);
       add(OnGetChildrenEvent());
       emit(state.copyWith(statusUpdate: FormzSubmissionStatus.success));
       emit(state.copyWith(
