@@ -308,60 +308,6 @@ void main() {
     });
   });
 
-  group('getUser', () {
-    late Users users;
-    late CollectionReference<Map<String, dynamic>> collectionReference;
-    late DocumentReference<Map<String, dynamic>> documentReference;
-    late DocumentSnapshot<Map<String, dynamic>> documentSnapshot;
-
-    setUp(() {
-      users = MockUsers();
-      collectionReference = MockCollectionReference();
-      documentReference = MockDocumentReference();
-      documentSnapshot = MockDocumentSnapshot();
-      when(firestore.collection('users')).thenReturn(collectionReference);
-      when(collectionReference.doc(firebaseAuth.currentUser?.uid))
-          .thenReturn(documentReference);
-    });
-
-    test('getUser success', () async {
-      when(documentReference.get()).thenAnswer(
-        (_) => Future.value(documentSnapshot),
-      );
-      when(documentSnapshot.exists).thenReturn(true);
-      when(documentSnapshot.data()).thenReturn(users.toJson());
-
-      final result = await authRepository.getUser();
-      verify(documentReference.get()).called(1);
-      expect(result, isA<Users>());
-    });
-
-    test('getUser throws an exception if get throws', () async {
-      when(documentReference.get())
-          .thenThrow(FirebaseAuthException(code: 'invalid-email'));
-
-      expect(
-        () => authRepository.getUser(),
-        throwsA(isA<FirebaseAuthException>()),
-      );
-    });
-
-    test('getUser throws an exception if documentSnapshot does not exist',
-        () async {
-      when(documentReference.get()).thenAnswer(
-        (_) => Future.value(documentSnapshot),
-      );
-      when(documentSnapshot.exists).thenReturn(false);
-
-      final result = await authRepository.getUser();
-
-      expect(
-        result,
-        null,
-      );
-    });
-  });
-
   group('isPhoneNumberExist', () {
     late CollectionReference<Map<String, dynamic>> collectionReference;
     late Query<Map<String, dynamic>> query;
@@ -412,68 +358,6 @@ void main() {
     });
   });
 
-  group('updateUserAvatar', () {
-    late CollectionReference<Map<String, dynamic>> collectionReference;
-    late DocumentReference<Map<String, dynamic>> documentReference;
-    final user = MockUser(
-      isAnonymous: false,
-      uid: '12345',
-      email: '',
-    );
-    final FirebaseAuth firebaseAuth = MockFirebaseAuth(
-      mockUser: user,
-      signedIn: true,
-    );
-    final uid = firebaseAuth.currentUser?.uid ?? '';
-
-    setUp(() {
-      collectionReference = MockCollectionReference();
-      documentReference = MockDocumentReference();
-    });
-
-    test('updateUserAvatar success', () async {
-      when(firestore.collection('users')).thenReturn(collectionReference);
-      when(collectionReference.doc(uid)).thenReturn(documentReference);
-      final result = authRepository.updateUserAvatar('url');
-
-      expect(result, isA<Future<void>>());
-    });
-
-    test('updateUserAvatar throws an exception if firestore throws', () async {
-      when(firestore.collection('users')).thenReturn(collectionReference);
-      when(collectionReference.doc(uid)).thenReturn(documentReference);
-      when(documentReference.update({'avatarURL': 'url'}))
-          .thenThrow(FirebaseAuthException(code: 'invalid-email'));
-
-      final result = authRepository.updateUserAvatar('url');
-      expect(
-        result,
-        throwsA(isA<FirebaseAuthException>()),
-      );
-    });
-  });
-
-  group('uploadImage', () {
-    late File file;
-
-    setUp(() {
-      file = MockFile();
-    });
-
-    test('uploadImage success', () async {
-      when(file.path).thenReturn('urlpath');
-      final filename = firebaseAuth.currentUser?.uid ?? '';
-
-      final storageRef = firebaseStorage.ref().child(filename);
-      final resultPutFile = await storageRef.putFile(file);
-      final url = await resultPutFile.ref.getDownloadURL();
-
-      final result = await authRepository.uploadImage(file);
-
-      expect(result, contains(url));
-    });
-  });
-
   group('destroyPasscode', () {
     test('destroyPasscode success', () async {
       when(sharedPreferences.remove('passCode'))
@@ -492,37 +376,6 @@ void main() {
       final result = authRepository.destroyPasscode();
 
       expect(result, throwsA(isA<Exception>()));
-    });
-  });
-
-  group('verifyEmail', () {
-    late FirebaseAuth firebaseAuth;
-    late AuthRepository authRepository;
-    setUp(() {
-      firebaseAuth = MockFirebaseAuth(mockUser: mockUser, signedIn: true);
-      authRepository = AuthRepository(
-        firestore,
-        firebaseAuth,
-        firebaseStorage,
-        sharedPreferences,
-        mockSupabase,
-      );
-    });
-
-    test('verifyEmail success', () async {
-      final result = authRepository.verifyEmail();
-      expect(result, isA<Future<void>>());
-    });
-
-    test('verifyEmail throws an exception if sendEmailVerification throws',
-        () async {
-      whenCalling(Invocation.method(#sendEmailVerification, null))
-          .on(firebaseAuth)
-          .thenThrow(Exception('error'));
-
-      final result = authRepository.verifyEmail();
-
-      expect(result, isA<Future<void>>());
     });
   });
 

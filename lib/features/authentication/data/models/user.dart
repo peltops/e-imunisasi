@@ -67,6 +67,34 @@ class Users extends Equatable {
     );
   }
 
+  factory Users.fromSeribase(Map<String, dynamic> data) {
+    return Users(
+      uid: data['user_id'],
+      email: data['email'] ?? '',
+      momName: data['mother_name'] ?? '',
+      dadName: data['father_name'] ?? '',
+      nomorhpAyah: data['father_phone_number'] ?? '',
+      nomorhpIbu: data['mother_phone_number'] ?? '',
+      golDarahAyah: data['father_blood_type'] ?? '',
+      golDarahIbu: data['mother_blood_type'] ?? '',
+      pekerjaanAyah: data['father_job'] ?? '',
+      pekerjaanIbu: data['mother_job'] ?? '',
+      alamat: data['address'] ?? '',
+      avatarURL: data['avatar_url'] ?? '',
+      verified: data['verified'] ?? false,
+      tempatLahir: data['place_of_birth'] ?? '',
+      tanggalLahir: () {
+        try {
+          return DateTime.parse(data['date_of_birth']);
+        } catch (e) {
+          return null;
+        }
+      }(),
+      noKK: data['no_kartu_keluarga'] ?? '',
+      noKTP: data['no_induk_kependudukan'] ?? '',
+    );
+  }
+
   Map<String, dynamic> toJson() => {
         "uid": uid,
         "email": email,
@@ -86,6 +114,30 @@ class Users extends Equatable {
         "noKK": noKK,
         "noKTP": noKTP,
       };
+
+  Map<String, dynamic> toSeribaseMap() {
+    return {
+      if (uid != null) "user_id": uid,
+      if (email != null) "email": email,
+      if (momName != null) "mother_name": momName,
+      if (dadName != null) "father_name": dadName,
+      if (nomorhpAyah != null) "father_phone_number": nomorhpAyah,
+      if (nomorhpIbu != null) "mother_phone_number": nomorhpIbu,
+      if (golDarahAyah != null) "father_blood_type": golDarahAyah,
+      if (golDarahIbu != null) "mother_blood_type": golDarahIbu,
+      if (pekerjaanAyah != null) "father_job": pekerjaanAyah,
+      if (pekerjaanIbu != null) "mother_job": pekerjaanIbu,
+      if (alamat != null) "address": alamat,
+      if (avatarURL != null) "avatar_url": avatarURL,
+      if (verified != null) "verified": verified,
+      if (tempatLahir != null) "place_of_birth": tempatLahir,
+      if (tanggalLahir != null)
+        "date_of_birth": tanggalLahir?.toIso8601String(),
+      if (noKK != null) "no_kartu_keluarga": noKK,
+      if (noKTP != null) "no_induk_kependudukan": noKTP,
+    };
+  }
+
   Users copyWith({
     String? uid,
     String? email,

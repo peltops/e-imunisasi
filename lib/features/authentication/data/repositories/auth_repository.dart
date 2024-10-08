@@ -20,6 +20,8 @@ class AuthRepository {
   final SharedPreferences sharedPreferences;
   final SupabaseClient supabaseClient;
 
+  static const String _tableName = 'profiles';
+
   AuthRepository(
     this.firestore,
     this.firebaseAuth,
@@ -93,13 +95,14 @@ class AuthRepository {
   }
 
   Future<Users?> getUser() async {
-    final user = await firestore
-        .collection('users')
-        .doc(firebaseAuth.currentUser?.uid)
-        .get();
-    if (user.exists) {
-      Users userResult = Users.fromMap(user.data() ?? {});
-      return userResult;
+    final user = await supabaseClient.auth.currentUser;
+    final userExpand = await supabaseClient.from(_tableName).select();
+    if (user != null && userExpand.isNotEmpty) {
+      final userResult = Users.fromSeribase(userExpand.first);
+      return userResult.copyWith(
+        email: user.email,
+        verified: user.emailConfirmedAt != null,
+      );
     } else {
       return null;
     }
@@ -121,38 +124,42 @@ class AuthRepository {
     return user;
   }
 
+  Future<String> uploadImage(File file) async {
+    try {
+      final id = await supabaseClient.auth.currentUser?.id;
+      final fullPath = await supabaseClient.storage.from('avatars').upload(
+            'public/$id',
+            file,
+            fileOptions: const FileOptions(cacheControl: '3600', upsert: true),
+            retryAttempts: 3,
+          );
+      return fullPath;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<void> updateUserAvatar(String url) async {
     try {
-      if (firebaseAuth.currentUser == null) {
+      if (supabaseClient.auth.currentUser == null) {
         throw Exception('User not found');
       }
-      await firebaseAuth.currentUser?.updatePhotoURL(url);
-      await firestore
-          .collection('users')
-          .doc(firebaseAuth.currentUser?.uid)
-          .update({'avatarURL': url});
+      await supabaseClient.from(_tableName).update({'avatar_url': url}).eq(
+        'id',
+        supabaseClient.auth.currentUser!.id,
+      );
     } catch (e) {
       log(e.toString());
       rethrow;
     }
   }
 
-  Future<String> uploadImage(File imageFile) async {
-    final fileName = firebaseAuth.currentUser?.uid ?? 'user';
-
-    final ref = firebaseStorage.ref().child(fileName);
-
-    final result = await ref.putFile(imageFile);
-    final fileUrl = await result.ref.getDownloadURL();
-    return fileUrl;
-  }
-
   Future<void> verifyEmail() async {
     try {
-      if (firebaseAuth.currentUser == null) {
-        throw Exception('User not found');
-      }
-      await firebaseAuth.currentUser?.sendEmailVerification();
+      await supabaseClient.auth.resend(
+        type: OtpType.signup,
+        email: supabaseClient.auth.currentUser?.email,
+      );
     } catch (e) {
       log(e.toString());
       rethrow;
