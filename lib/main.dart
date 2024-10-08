@@ -17,7 +17,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await Supabase.initialize(
-    url: 'https://eimunisasi-base-staging.peltops.com/',
+    url: 'https://eimunisasi-base-staging.peltops.com',
     anonKey:
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ewogICJyb2xlIjogImFub24iLAogICJpc3MiOiAic3VwYWJhc2UiLAogICJpYXQiOiAxNzIzNDEzNjAwLAogICJleHAiOiAxODgxMTgwMDAwCn0.LP3Zca0w11eNX1974BpPg0GWShJysP6jw9732kL-Y9c',
   );
