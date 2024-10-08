@@ -40,14 +40,13 @@ class ChildRepository {
     return await supabaseClient.from(_tableName).delete().eq('id', id);
   }
 
-  Future<String> _uploadImage(File filePath, String id) async {
+  Future<String> _uploadImage(File file, String id) async {
     try {
-      final bytes = await filePath.readAsBytes();
       final fullPath = await supabaseClient.storage
           .from('avatars')
-          .uploadBinary(
+          .upload(
             'public/$id',
-            bytes,
+            file,
             fileOptions: const FileOptions(cacheControl: '3600', upsert: true),
             retryAttempts: 3,
           );
