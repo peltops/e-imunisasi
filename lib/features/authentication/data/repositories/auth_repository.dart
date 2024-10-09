@@ -86,7 +86,7 @@ class AuthRepository {
   }
 
   Future<void> signOut() async {
-    return firebaseAuth.signOut();
+    return await supabaseClient.auth.signOut();
   }
 
   Future<bool> isSignedIn() async {

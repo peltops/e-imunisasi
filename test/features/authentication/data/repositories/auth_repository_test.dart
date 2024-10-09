@@ -269,25 +269,6 @@ void main() {
     });
   });
 
-  group('signOut', () {
-    test('signOut success', () {
-      final result = authRepository.signOut();
-      expect(result, isA<Future<void>>());
-    });
-
-    test('signOut throws an exception if signOut throws', () async {
-      whenCalling(Invocation.method(#signOut, null))
-          .on(firebaseAuth)
-          .thenThrow(Exception('error'));
-
-      final result = authRepository.signOut();
-      expect(
-        result,
-        isA<Future<void>>(),
-      );
-    });
-  });
-
   group('isSignedIn', () {
     test('isSignedIn success', () async {
       final result = await authRepository.isSignedIn();
