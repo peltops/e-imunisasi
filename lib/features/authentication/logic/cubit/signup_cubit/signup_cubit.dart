@@ -1,9 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:eimunisasi/core/utils/constant.dart';
-import 'package:eimunisasi/utils/string_extension.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:injectable/injectable.dart';
-import '../../../data/models/user.dart';
 import '../../../data/models/country_code.dart';
 import '../../../data/models/email.dart';
 import '../../../data/models/otp.dart';
@@ -64,67 +60,11 @@ class SignUpCubit extends Cubit<SignUpState> {
     }
     emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
     try {
-      final userResult = await _authRepository.signUpWithEmailAndPassword(
+      await _authRepository.signUpWithEmailAndPassword(
         email: state.email.value,
         password: state.password.value,
       );
-      final _newUser = Users(
-        uid: userResult.user?.uid,
-        email: userResult.user?.email,
-        nomorhpIbu: userResult.user?.phoneNumber,
-        golDarahAyah: '-',
-        golDarahIbu: '-',
-        verified: userResult.user?.emailVerified,
-      );
-      await _authRepository.insertUserToDatabase(user: _newUser);
       emit(state.copyWith(status: FormzSubmissionStatus.success));
-    } catch (_) {
-      emit(state.copyWith(status: FormzSubmissionStatus.failure));
-    }
-  }
-
-  void sendOTPCode() async {
-    final phoneNumber =
-        state.countryCode.value + state.phone.value.removeZeroAtFirst();
-    if (state.phone.isNotValid || state.countryCode.isNotValid) return;
-
-    try {
-      emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
-
-      final isPhoneNumberExist = await _authRepository.isPhoneNumberExist(
-        phoneNumber,
-      );
-      if (isPhoneNumberExist) {
-        emit(
-          state.copyWith(
-            status: FormzSubmissionStatus.failure,
-            errorMessage: AppConstant.PHONE_NUMBER_EXIST_ERROR,
-          ),
-        );
-        return;
-      }
-      await _authRepository.verifyPhoneNumber(
-        phone: phoneNumber,
-        codeSent: (String verId, int? token) {
-          emit(
-              state.copyWith(status: FormzSubmissionStatus.initial, verId: verId));
-        },
-        verificationFailed: (FirebaseAuthException e) {
-          emit(
-            state.copyWith(
-              status: FormzSubmissionStatus.failure,
-              errorMessage: e.message,
-            ),
-          );
-        },
-        verificationCompleted: (PhoneAuthCredential credential) async {
-          await _authRepository.signInWithCredential(
-            verificationId: credential.verificationId.orEmpty,
-            otp: credential.smsCode.orEmpty,
-          );
-          emit(state.copyWith(status: FormzSubmissionStatus.success));
-        },
-      );
     } catch (_) {
       emit(state.copyWith(status: FormzSubmissionStatus.failure));
     }

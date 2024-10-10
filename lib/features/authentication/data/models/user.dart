@@ -117,24 +117,22 @@ class Users extends Equatable {
 
   Map<String, dynamic> toSeribaseMap() {
     return {
-      if (uid != null) "user_id": uid,
-      if (email != null) "email": email,
-      if (momName != null) "mother_name": momName,
-      if (dadName != null) "father_name": dadName,
-      if (nomorhpAyah != null) "father_phone_number": nomorhpAyah,
-      if (nomorhpIbu != null) "mother_phone_number": nomorhpIbu,
-      if (golDarahAyah != null) "father_blood_type": golDarahAyah,
-      if (golDarahIbu != null) "mother_blood_type": golDarahIbu,
-      if (pekerjaanAyah != null) "father_job": pekerjaanAyah,
-      if (pekerjaanIbu != null) "mother_job": pekerjaanIbu,
-      if (alamat != null) "address": alamat,
-      if (avatarURL != null) "avatar_url": avatarURL,
-      if (verified != null) "verified": verified,
-      if (tempatLahir != null) "place_of_birth": tempatLahir,
+      if (uid?.isNotEmpty ?? false) "user_id": uid,
+      if (momName?.isNotEmpty ?? false) "mother_name": momName,
+      if (dadName?.isNotEmpty ?? false) "father_name": dadName,
+      if (nomorhpAyah?.isNotEmpty ?? false) "father_phone_number": nomorhpAyah,
+      if (nomorhpIbu?.isNotEmpty ?? false) "mother_phone_number": nomorhpIbu,
+      if (golDarahAyah?.isNotEmpty ?? false) "father_blood_type": golDarahAyah,
+      if (golDarahIbu?.isNotEmpty ?? false) "mother_blood_type": golDarahIbu,
+      if (pekerjaanAyah?.isNotEmpty ?? false) "father_job": pekerjaanAyah,
+      if (pekerjaanIbu?.isNotEmpty ?? false) "mother_job": pekerjaanIbu,
+      if (alamat?.isNotEmpty ?? false) "address": alamat,
+      if (avatarURL?.isNotEmpty ?? false) "avatar_url": avatarURL,
+      if (tempatLahir?.isNotEmpty ?? false) "place_of_birth": tempatLahir,
       if (tanggalLahir != null)
         "date_of_birth": tanggalLahir?.toIso8601String(),
-      if (noKK != null) "no_kartu_keluarga": noKK,
-      if (noKTP != null) "no_induk_kependudukan": noKTP,
+      if (noKK?.isNotEmpty ?? false) "no_kartu_keluarga": noKK,
+      if (noKTP?.isNotEmpty ?? false) "no_induk_kependudukan": noKTP,
     };
   }
 

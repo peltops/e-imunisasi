@@ -6,36 +6,76 @@ import 'package:eimunisasi/features/authentication/data/models/user.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'authentication_bloc_test.mocks.dart';
 
-@GenerateMocks([AuthRepository, SplashRepository])
+@GenerateMocks([AuthRepository, SplashRepository, SupabaseClient, GoTrueClient])
+@GenerateNiceMocks([
+  MockSpec<Session>(as: #MockSession),
+  MockSpec<UserResponse>(as: #MockUserResponse),
+])
 void main() {
   late AuthRepository mockAuthRepository;
   late SplashRepository mockSplashRepository;
+  late SupabaseClient mockSupabaseClient;
+  late GoTrueClient mockGoTrueClient;
+  late MockSession mockSession;
+  late MockUserResponse mockUser;
 
-  setUp(() {
+  setUpAll(() {
     mockAuthRepository = MockAuthRepository();
     mockSplashRepository = MockSplashRepository();
+    mockSupabaseClient = MockSupabaseClient();
+    mockGoTrueClient = MockGoTrueClient();
+    mockSession = MockSession();
+    mockUser = MockUserResponse();
+
+    when(mockGoTrueClient.getUser()).thenAnswer((_) async => mockUser);
+    when(mockGoTrueClient.onAuthStateChange).thenAnswer(
+      (_) => Stream.fromIterable([
+        AuthState(
+          AuthChangeEvent.initialSession,
+          mockSession,
+        ),
+      ]),
+    );
+    when(mockSupabaseClient.auth).thenReturn(mockGoTrueClient);
   });
 
   blocTest<AuthenticationBloc, AuthenticationState>(
     "AuthenticationBloc initial state and after 3 seconds is AppStarted event",
-    build: () => AuthenticationBloc(
-      mockAuthRepository,
-      mockSplashRepository,
-    ),
+    build: () {
+      when(mockAuthRepository.isSignedIn()).thenAnswer((_) async => false);
+      when(mockSplashRepository.isSeen()).thenAnswer((_) async => true);
+      when(mockAuthRepository.getUser()).thenAnswer((_) async => null);
+      return AuthenticationBloc(
+        mockAuthRepository,
+        mockSplashRepository,
+        mockSupabaseClient,
+      );
+    },
     wait: Duration(seconds: 3),
-    expect: () => [Loading(), Unauthenticated()],
+    expect: () => [
+      Loading(),
+      Unauthenticated(
+        isSeenOnboarding: true,
+      ),
+    ],
   );
 
   blocTest<AuthenticationBloc, AuthenticationState>(
     "AuthenticationBloc app started",
-    build: () => AuthenticationBloc(
-      mockAuthRepository,
-      mockSplashRepository,
-    ),
+    build: () {
+      when(mockAuthRepository.isSignedIn()).thenAnswer((_) async => false);
+      when(mockSplashRepository.isSeen()).thenAnswer((_) async => true);
+      return AuthenticationBloc(
+        mockAuthRepository,
+        mockSplashRepository,
+        mockSupabaseClient,
+      );
+    },
     act: (bloc) => bloc.add(AppStarted()),
-    expect: () => [Loading(), Unauthenticated()],
+    expect: () => [Loading(), Unauthenticated(isSeenOnboarding: true)],
   );
 
   blocTest<AuthenticationBloc, AuthenticationState>(
@@ -46,6 +86,7 @@ void main() {
       return AuthenticationBloc(
         mockAuthRepository,
         mockSplashRepository,
+        mockSupabaseClient,
       );
     },
     act: (bloc) => bloc.add(AppStarted()),
@@ -65,6 +106,7 @@ void main() {
       return AuthenticationBloc(
         mockAuthRepository,
         mockSplashRepository,
+        mockSupabaseClient,
       );
     },
     act: (bloc) => bloc.add(AppStarted()),
@@ -84,6 +126,7 @@ void main() {
       return AuthenticationBloc(
         mockAuthRepository,
         mockSplashRepository,
+        mockSupabaseClient,
       );
     },
     act: (bloc) => bloc.add(LoggedIn()),
@@ -100,6 +143,7 @@ void main() {
       return AuthenticationBloc(
         mockAuthRepository,
         mockSplashRepository,
+        mockSupabaseClient,
       );
     },
     act: (bloc) => bloc.add(LoggedOut()),
@@ -109,8 +153,10 @@ void main() {
   blocTest<AuthenticationBloc, AuthenticationState>(
     "AuthenticationBloc LoggedOut Failed",
     build: () {
+      when(mockSplashRepository.isSeen()).thenAnswer((_) async => true);
       when(mockAuthRepository.signOut()).thenAnswer(
-        (_) async => throw Exception(),);
+        (_) async => throw Exception(),
+      );
       when(mockAuthRepository.getUser()).thenAnswer(
         (_) async => Users(
           uid: '1234',
@@ -120,14 +166,13 @@ void main() {
       return AuthenticationBloc(
         mockAuthRepository,
         mockSplashRepository,
+        mockSupabaseClient,
       );
     },
     act: (bloc) => bloc.add(LoggedOut()),
     expect: () => [
       Loading(),
       AuthenticationError(message: 'Gagal logout. Silahkan coba lagi!'),
-      Loading(),
-      Authenticated(user: Users(uid: '1234', email: 'email@email.com'))
     ],
   );
 }

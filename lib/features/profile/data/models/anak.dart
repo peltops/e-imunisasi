@@ -100,15 +100,15 @@ class Anak extends Equatable {
 
   Map<String, dynamic> toSeribaseMap() {
     return {
-      if (parentId != null) 'parent_id': parentId,
-      if (nama != null) 'name': nama,
-      if (nik != null) 'nik': nik,
-      if (tempatLahir != null) 'place_of_birth': tempatLahir,
+      if (parentId?.isNotEmpty ?? false) 'parent_id': parentId,
+      if (nama?.isNotEmpty ?? false) 'name': nama,
+      if (nik?.isNotEmpty ?? false) 'nik': nik,
+      if (tempatLahir?.isNotEmpty ?? false) 'place_of_birth': tempatLahir,
       if (tanggalLahir != null)
         'date_of_birth': tanggalLahir?.toIso8601String(),
-      if (jenisKelamin != null) 'gender': jenisKelamin,
-      if (golDarah != null) 'blood_type': golDarah,
-      if (photoURL != null) 'avatar_url': photoURL,
+      if (jenisKelamin?.isNotEmpty ?? false) 'gender': jenisKelamin,
+      if (golDarah?.isNotEmpty ?? false) 'blood_type': golDarah,
+      if (photoURL?.isNotEmpty ?? false) 'avatar_url': photoURL,
     };
   }
 
