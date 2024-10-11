@@ -60,7 +60,21 @@ android {
                 storeFile file(keystoreProperties['debugStoreFile'])
                 storePassword keystoreProperties['debugStorePassword']
             } else {
-                println("Debug keystore file not found. Skipping debug signing config.")
+                println("Debug keystore file not found. Using Android debug keystore.")
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+        }
+        debug {
+            applicationIdSuffix ".debug"
+            if (signingConfigs.debug.storeFile) {
+                println("Debug keystore file found for signing config.")
+                println(signingConfigs.debug.storeFile)
+                signingConfig signingConfigs.debug
             }
         }
     }
