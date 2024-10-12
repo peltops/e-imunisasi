@@ -54,13 +54,14 @@ android {
             storePassword keystoreProperties['storePassword']
         }
         debug {
-            if (keystoreProperties['debugStoreFile'] && file(keystoreProperties['debugStoreFile']).exists()) {
+            def debugKeystorePath = "${rootProject.projectDir}/${keystoreProperties['debugStoreFile']}"
+            if (keystoreProperties['debugStoreFile'] && file(debugKeystorePath).exists()) {
                 keyAlias keystoreProperties['debugKeyAlias']
                 keyPassword keystoreProperties['debugKeyPassword']
-                storeFile file(keystoreProperties['debugStoreFile'])
+                storeFile file(debugKeystorePath)
                 storePassword keystoreProperties['debugStorePassword']
             } else {
-                println("Debug keystore file not found. Using Android debug keystore.")
+                println("Debug keystore file not found at ${debugKeystorePath}.")
             }
         }
     }
@@ -72,22 +73,7 @@ android {
         debug {
             applicationIdSuffix ".debug"
             if (signingConfigs.debug.storeFile) {
-                println("Debug keystore file found for signing config.")
-                println(signingConfigs.debug.storeFile)
-                signingConfig signingConfigs.debug
-            }
-        }
-    }
-
-    buildTypes {
-        release {
-            signingConfig signingConfigs.release
-        }
-        debug {
-            applicationIdSuffix ".debug"
-            if (signingConfigs.debug.storeFile) {
-                println("Debug keystore file found for signing config.")
-                println(signingConfigs.debug.storeFile)
+                println("Using debug keystore at ${signingConfigs.debug.storeFile}")
                 signingConfig signingConfigs.debug
             }
         }
