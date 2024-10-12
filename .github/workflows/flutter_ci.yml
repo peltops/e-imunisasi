@@ -55,6 +55,18 @@ jobs:
           flags: unittests
           verbose: true
 
+      - name: Configure Keystore
+        run: |
+          echo "debugStoreFile=keystore/debug_keystore" >> key.properties
+          echo "debugKeyAlias=$KEYSTORE_KEY_ALIAS" >> key.properties
+          echo "debugStorePassword=$KEYSTORE_STORE_PASSWORD" >> key.properties
+          echo "debugKeyPassword=$KEYSTORE_KEY_PASSWORD" >> key.properties
+        env:
+          KEYSTORE_KEY_ALIAS: ${{ secrets.DEBUG_KEY_ALIAS }}
+          KEYSTORE_KEY_PASSWORD: ${{ secrets.DEBUG_KEY_PASSWORD }}
+          KEYSTORE_STORE_PASSWORD: ${{ secrets.DEBUG_KEYSTORE_PASSWORD }}
+        working-directory: android
+
       - name: Build
         run: flutter build ${{ matrix.target }}
 
