@@ -102,12 +102,15 @@ class AuthRepository {
   Future<String> uploadImage(File file) async {
     try {
       final id = await supabaseClient.auth.currentUser?.id;
-      final fullPath = await supabaseClient.storage.from('avatars').upload(
-            'public/$id',
+      await supabaseClient.storage.from('avatars').upload(
+            '$id',
             file,
             fileOptions: const FileOptions(cacheControl: '3600', upsert: true),
             retryAttempts: 3,
           );
+      final fullPath = await supabaseClient.storage
+          .from('avatars')
+          .getPublicUrl('$id');
       return fullPath;
     } catch (e) {
       rethrow;
@@ -120,7 +123,7 @@ class AuthRepository {
         throw Exception('User not found');
       }
       await supabaseClient.from(_tableName).update({'avatar_url': url}).eq(
-        'id',
+        'user_id',
         supabaseClient.auth.currentUser!.id,
       );
     } catch (e) {

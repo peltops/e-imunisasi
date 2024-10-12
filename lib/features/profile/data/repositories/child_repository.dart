@@ -42,14 +42,17 @@ class ChildRepository {
 
   Future<String> _uploadImage(File file, String id) async {
     try {
-      final fullPath = await supabaseClient.storage
+      await supabaseClient.storage
           .from('avatars')
           .upload(
-            'public/$id',
+            '$id',
             file,
             fileOptions: const FileOptions(cacheControl: '3600', upsert: true),
             retryAttempts: 3,
           );
+      final fullPath = await supabaseClient.storage
+          .from('avatars')
+          .getPublicUrl('$id');
       return fullPath;
     } catch (e) {
       rethrow;
@@ -60,7 +63,7 @@ class ChildRepository {
     try {
       return await supabaseClient.storage
           .from('avatars')
-          .remove(['public/$id']);
+          .remove(['$id']);
     } catch (e) {
       rethrow;
     }
