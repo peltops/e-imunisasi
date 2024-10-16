@@ -149,7 +149,7 @@ class _ChildProfileScaffold extends StatelessWidget {
                                   onTap: () async {
                                     final date = await Picker.pickDate(
                                       context,
-                                      currentTime: child?.tanggalLahir,
+                                      currentTime: state.child?.tanggalLahir,
                                     );
                                     if (date != null) {
                                       bloc.add(
@@ -160,7 +160,7 @@ class _ChildProfileScaffold extends StatelessWidget {
                                   readOnly: true,
                                   label: AppConstant.LABEL_DATE_OF_BIRTH,
                                   hintText: () {
-                                    if (child?.tanggalLahir == null) {
+                                    if (state.child?.tanggalLahir == null) {
                                       return AppConstant
                                           .LABEL_CHOICE_DATE_OF_BIRTH;
                                     }

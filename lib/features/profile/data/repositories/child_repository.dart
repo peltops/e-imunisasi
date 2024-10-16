@@ -15,7 +15,10 @@ class ChildRepository {
   );
 
   Future<List<Anak>> getAllChildren() async {
-    final data = await supabaseClient.from(_tableName).select();
+    final data = await supabaseClient.from(_tableName).select().order(
+          'created_at',
+          ascending: true,
+        );
     final result = data.map((e) => Anak.fromSeribase(e)).toList();
     return result;
   }
