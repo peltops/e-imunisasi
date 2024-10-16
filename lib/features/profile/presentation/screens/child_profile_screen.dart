@@ -41,7 +41,8 @@ class ChildProfileScreen extends StatelessWidget {
           OnInitialEvent(child: child),
         ),
       child: _ChildProfileScaffold(
-        mode: ChildProfileScreenMode.add,
+        mode: mode,
+        child: child,
       ),
     );
   }
@@ -49,14 +50,20 @@ class ChildProfileScreen extends StatelessWidget {
 
 class _ChildProfileScaffold extends StatelessWidget {
   final ChildProfileScreenMode mode;
+  final Anak? child;
 
   const _ChildProfileScaffold({
     required this.mode,
+    required this.child,
   });
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<ChildProfileBloc, ChildProfileState>(
+      listenWhen: (previous, current) =>
+          previous.statusUpdate != current.statusUpdate ||
+          previous.statusUpdateAvatar != current.statusUpdateAvatar ||
+          previous.statusCreate != current.statusCreate,
       listener: (context, state) {
         if (state.statusUpdate.isFailure) {
           snackbarCustom(
@@ -107,7 +114,7 @@ class _ChildProfileScaffold extends StatelessWidget {
                         children: [
                           VerticalSpacer(),
                           TextFormCustom(
-                            initialValue: state.child?.nama ?? emptyString,
+                            initialValue: child?.nama ?? emptyString,
                             label: AppConstant.LABEL_FULL_NAME_BY_IDENTITY,
                             onChanged: (name) {
                               bloc.add(OnChangeNameEvent(name));
@@ -115,7 +122,7 @@ class _ChildProfileScaffold extends StatelessWidget {
                           ),
                           VerticalSpacer(),
                           TextFormCustom(
-                            initialValue: state.child?.nik ?? emptyString,
+                            initialValue: child?.nik ?? emptyString,
                             keyboardType: TextInputType.number,
                             label: AppConstant.LABEL_NO_NIK,
                             onChanged: (nik) {
@@ -127,7 +134,7 @@ class _ChildProfileScaffold extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: TextFormCustom(
-                                  initialValue: state.child?.tempatLahir,
+                                  initialValue: child?.tempatLahir,
                                   label: AppConstant.LABEL_PLACE_OF_BIRTH,
                                   onChanged: (placeOfBirth) {
                                     bloc.add(
@@ -142,7 +149,7 @@ class _ChildProfileScaffold extends StatelessWidget {
                                   onTap: () async {
                                     final date = await Picker.pickDate(
                                       context,
-                                      currentTime: state.child?.tanggalLahir,
+                                      currentTime: child?.tanggalLahir,
                                     );
                                     if (date != null) {
                                       bloc.add(
@@ -153,7 +160,7 @@ class _ChildProfileScaffold extends StatelessWidget {
                                   readOnly: true,
                                   label: AppConstant.LABEL_DATE_OF_BIRTH,
                                   hintText: () {
-                                    if (state.child?.tanggalLahir == null) {
+                                    if (child?.tanggalLahir == null) {
                                       return AppConstant
                                           .LABEL_CHOICE_DATE_OF_BIRTH;
                                     }
@@ -168,9 +175,9 @@ class _ChildProfileScaffold extends StatelessWidget {
                           DropdownPeltops(
                             label: AppConstant.LABEL_GENDER,
                             initialValue:
-                                state.child?.jenisKelamin ?? emptyString,
-                            listItem: ListConstant.GENDER
-                                .map((e) => Pair(e, e))
+                                child?.jenisKelamin ?? emptyString,
+                            listItem: Gender.values
+                                .map((e) => Pair(e.name, e.value))
                                 .toList(),
                             onChanged: (val) {
                               bloc.add(OnChangeGenderEvent(val ?? emptyString));
@@ -179,9 +186,9 @@ class _ChildProfileScaffold extends StatelessWidget {
                           VerticalSpacer(),
                           DropdownPeltops(
                             label: AppConstant.LABEL_BLOOD_TYPE,
-                            initialValue: state.child?.golDarah ?? emptyString,
-                            listItem: ListConstant.TYPE_BLOOD
-                                .map((e) => Pair(e, e))
+                            initialValue: child?.golDarah ?? emptyString,
+                            listItem: BloodType.values
+                                .map((e) => Pair(e.name, e.name))
                                 .toList(),
                             onChanged: (val) {
                               bloc.add(

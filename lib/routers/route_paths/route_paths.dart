@@ -44,8 +44,6 @@ class RoutePaths {
 
   static const String healthyBook = '/healthy-book';
 
-  static const String childProfile = '/child-profile';
-
   static const String chooseChildMedicalRecord = '/choose-child-medical-record';
 
   static const String patientMedicalRecordScreen =

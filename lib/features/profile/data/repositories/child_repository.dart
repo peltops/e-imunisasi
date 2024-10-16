@@ -24,12 +24,33 @@ class ChildRepository {
     final _currentUser = supabaseClient.auth.currentUser;
     try {
       final data = anak.copyWith(parentId: _currentUser?.id);
-      await supabaseClient
+      final result = await supabaseClient
           .from(_tableName)
-          .upsert(
+          .insert(
             data.toSeribaseMap(),
           )
+          .select('id')
+          .limit(1)
+          .single();
+      return data.copyWith(id: result['id'] ?? '');
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Anak> updateChild(Anak anak) async {
+    final _currentUser = supabaseClient.auth.currentUser;
+    try {
+      final data = anak.copyWith(parentId: _currentUser?.id);
+      if (anak.id == null) throw 'ID anak tidak ditemukan';
+      await supabaseClient
+          .from(_tableName)
+          .update(
+            data.toSeribaseMap(),
+          )
+          .eq('id', anak.id!)
           .select();
+
       return data;
     } catch (e) {
       rethrow;
@@ -42,17 +63,14 @@ class ChildRepository {
 
   Future<String> _uploadImage(File file, String id) async {
     try {
-      await supabaseClient.storage
-          .from('avatars')
-          .upload(
+      await supabaseClient.storage.from('avatars').upload(
             '$id',
             file,
             fileOptions: const FileOptions(cacheControl: '3600', upsert: true),
             retryAttempts: 3,
           );
-      final fullPath = await supabaseClient.storage
-          .from('avatars')
-          .getPublicUrl('$id');
+      final fullPath =
+          await supabaseClient.storage.from('avatars').getPublicUrl('$id');
       return fullPath;
     } catch (e) {
       rethrow;
@@ -61,9 +79,7 @@ class ChildRepository {
 
   Future<List<FileObject>> _deleteImage(String id) async {
     try {
-      return await supabaseClient.storage
-          .from('avatars')
-          .remove(['$id']);
+      return await supabaseClient.storage.from('avatars').remove(['$id']);
     } catch (e) {
       rethrow;
     }

@@ -22,4 +22,7 @@ class RootRoutePaths {
   static const RouteModel dashboard = RouteModel(
     path: '/dashboard',
   );
+  static const RouteModel profile = RouteModel(
+    path: '/profile',
+  );
 }

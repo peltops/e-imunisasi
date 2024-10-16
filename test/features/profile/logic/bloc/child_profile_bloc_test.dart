@@ -220,7 +220,7 @@ void main() {
     blocTest<ChildProfileBloc, ChildProfileState>(
       "success",
       build: () {
-        when(mockChildRepository.setChild(child))
+        when(mockChildRepository.updateChild(child))
             .thenAnswer((_) async => child);
         when(mockChildRepository.getAllChildren())
             .thenAnswer((_) async => [child]);

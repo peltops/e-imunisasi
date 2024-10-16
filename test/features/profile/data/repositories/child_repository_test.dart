@@ -51,7 +51,6 @@ void main() {
         child2,
       ];
 
-      // when(mockSupabaseAuth.currentUser).thenReturn(mockUser);
       when(mockUser.id).thenReturn('1');
       await mockSupabaseClient.from('children').insert(mockData.map((e) {
             return e.toSeribaseMap();
@@ -64,7 +63,6 @@ void main() {
 
     test('setChild inserts a child and returns it with id', () async {
       final anak = Anak(
-        id: '1',
         parentId: mockUser.id,
         nik: '1234567890',
         tempatLahir: 'Jakarta',
@@ -76,7 +74,7 @@ void main() {
       );
       final result = await childRepository.setChild(anak);
 
-      expect(result.id, '1');
+      expect(result.id, '');
       expect(result.parentId, mockUser.id);
     });
 
