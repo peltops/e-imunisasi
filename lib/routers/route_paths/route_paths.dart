@@ -48,6 +48,4 @@ class RoutePaths {
 
   static const String patientMedicalRecordScreen =
       '/patient-medical-record-screen';
-
-  static const String parentProfile = '/parent-profile';
 }
