@@ -141,10 +141,10 @@ class _SignUpButton extends StatelessWidget {
           onPressed: state.phone.isValid
               ? () {
                   dismissKeyboard(context);
-                  state.phone.isValid
-                      ? context.read<SignUpCubit>().sendOTPCode()
-                      : snackbarCustom(AppConstant.PLEASE_ENTER_PHONE_NUMBER)
-                          .show(context);
+                  // state.phone.isValid
+                  //     ? context.read<SignUpCubit>().sendOTPCode()
+                  //     : snackbarCustom(AppConstant.PLEASE_ENTER_PHONE_NUMBER)
+                  //         .show(context);
                 }
               : null,
         );

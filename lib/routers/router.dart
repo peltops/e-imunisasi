@@ -14,7 +14,6 @@ import 'package:eimunisasi/features/healthy_book/presentation/screens/healthy_bo
 import 'package:eimunisasi/features/healthy_book/presentation/screens/patient_medical_history_screen.dart';
 import 'package:eimunisasi/features/onboarding/onboarding.dart';
 import 'package:eimunisasi/features/profile/data/models/anak.dart';
-import 'package:eimunisasi/features/profile/presentation/screens/child_profile_screen.dart';
 import 'package:eimunisasi/features/profile/presentation/screens/list_children_screen.dart';
 import 'package:eimunisasi/features/profile/presentation/screens/parent_profile_screen.dart';
 import 'package:eimunisasi/models/appointment.dart';
@@ -35,6 +34,7 @@ import 'package:eimunisasi/pages/home/utama/vaksinasi/list_nakes_vaksinasi.dart'
 import 'package:eimunisasi/pages/home/utama/vaksinasi/vaksinasi.dart';
 import 'package:eimunisasi/routers/auth_local_router.dart';
 import 'package:eimunisasi/routers/auth_router.dart';
+import 'package:eimunisasi/routers/profile_router.dart';
 import 'package:eimunisasi/routers/route_paths/auth_route_paths.dart';
 import 'package:eimunisasi/routers/route_paths/root_route_paths.dart';
 import 'package:eimunisasi/routers/route_paths/route_paths.dart';
@@ -86,23 +86,25 @@ final router = GoRouter(
       },
     ),
     GoRoute(
-        path: RootRoutePaths.auth.path,
-        routes: AuthRouter.routes,
-        redirect: (_, state) {
-          if (state.fullPath == RootRoutePaths.auth.fullPath) {
-            return AuthRoutePaths.loginWithSeribaseOauth.fullPath;
-          }
-          return null;
-        }),
+      path: RootRoutePaths.auth.path,
+      routes: AuthRouter.routes,
+      redirect: (_, state) {
+        if (state.fullPath == RootRoutePaths.auth.fullPath) {
+          return AuthRoutePaths.loginWithSeribaseOauth.fullPath;
+        }
+        return null;
+      },
+    ),
     GoRoute(
-        path: RootRoutePaths.authLocal.path,
-        routes: AuthLocalRouter.routes,
-        redirect: (_, state) {
-          if (state.fullPath == RootRoutePaths.authLocal.fullPath) {
-            return AuthRoutePaths.passcode.fullPath;
-          }
-          return null;
-        }),
+      path: RootRoutePaths.authLocal.path,
+      routes: AuthLocalRouter.routes,
+      redirect: (_, state) {
+        if (state.fullPath == RootRoutePaths.authLocal.fullPath) {
+          return AuthRoutePaths.passcode.fullPath;
+        }
+        return null;
+      },
+    ),
     GoRoute(
       path: RootRoutePaths.onboarding.path,
       builder: (_, __) => OnboardScreen(),
@@ -114,6 +116,11 @@ final router = GoRouter(
     GoRoute(
       path: RootRoutePaths.dashboard.path,
       builder: (_, __) => BottomNavbarWrapper(),
+    ),
+    GoRoute(
+      path: RootRoutePaths.profile.path,
+      builder: (_, __) => ParentProfileScreen(),
+      routes: ProfileRouter.routes,
     ),
     GoRoute(
       path: RoutePaths.addEventCalendar,
@@ -146,10 +153,6 @@ final router = GoRouter(
     GoRoute(
       path: RoutePaths.calendar,
       builder: (_, __) => const CalendarScreen(),
-    ),
-    GoRoute(
-      path: RoutePaths.listChildren,
-      builder: (_, __) => const ListChildrenScreen(),
     ),
     GoRoute(
       path: RoutePaths.chooseChildMedicalRecord,
@@ -224,17 +227,6 @@ final router = GoRouter(
     GoRoute(
       path: RoutePaths.healthyBook,
       builder: (_, state) => HealthyBookScreen(),
-    ),
-    GoRoute(
-      path: RoutePaths.childProfile,
-      builder: (_, state) => ChildProfileScreen(
-        mode: (state.extra as Map<String, dynamic>)['mode'],
-        child: (state.extra as Map<String, dynamic>)['child'],
-      ),
-    ),
-    GoRoute(
-      path: RoutePaths.parentProfile,
-      builder: (_, __) => ParentProfileScreen(),
     ),
     GoRoute(
       path: RoutePaths.error,

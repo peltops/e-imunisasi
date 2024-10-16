@@ -1,7 +1,7 @@
 import 'package:eimunisasi/core/extension.dart';
 import 'package:eimunisasi/core/widgets/error.dart';
 import 'package:eimunisasi/features/profile/presentation/screens/child_profile_screen.dart';
-import 'package:eimunisasi/routers/route_paths/route_paths.dart';
+import 'package:eimunisasi/routers/route_paths/profile_route_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
@@ -23,8 +23,8 @@ class ListChildrenScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => getIt<ChildProfileBloc>()..add(OnGetChildrenEvent()),
+    return BlocProvider.value(
+      value: getIt<ChildProfileBloc>()..add(OnGetChildrenEvent()),
       child: Scaffold(
         appBar: AppBarPeltops(title: AppConstant.APP_BAR_CHILD_PROFILE),
         backgroundColor: Colors.pink[100],
@@ -45,6 +45,12 @@ class ListChildrenScreen extends StatelessWidget {
                 } else if (state.statusGetChildren ==
                     FormzSubmissionStatus.inProgress) {
                   return Center(child: CircularProgressIndicator());
+                } else if (state.children == null || state.children!.isEmpty) {
+                  return Center(
+                    child: Text(
+                      'Data anak kosong, silahkan tambahkan anak',
+                    ),
+                  );
                 }
                 final data = state.children;
                 return ListView.builder(
@@ -57,10 +63,14 @@ class ListChildrenScreen extends StatelessWidget {
                             onSelected!(data?[index]);
                             return;
                           }
-                          context.push(RoutePaths.childProfile, extra: {
-                            'child': data?[index],
-                            'mode': ChildProfileScreenMode.edit,
-                          });
+                          context.push(
+                            ProfileRoutePaths.editChildren.fullPath,
+                            extra: {
+                              'child': data?[index],
+                              'mode': ChildProfileScreenMode.edit,
+                              'bloc': context.read<ChildProfileBloc>(),
+                            },
+                          );
                         },
                         title: Text(
                           data?[index].nama ?? emptyString,
@@ -85,9 +95,12 @@ class ListChildrenScreen extends StatelessWidget {
             return FloatingActionButton(
               child: Icon(Icons.add),
               onPressed: () {
-                context.push(RoutePaths.childProfile, extra: {
-                  'mode': ChildProfileScreenMode.add,
-                });
+                context.push(
+                  ProfileRoutePaths.addChildren.fullPath,
+                  extra: {
+                    'bloc': context.read<ChildProfileBloc>(),
+                  },
+                );
               },
             );
           },

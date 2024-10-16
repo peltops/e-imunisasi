@@ -95,6 +95,7 @@ class ChildProfileBloc extends Bloc<ChildProfileEvent, ChildProfileState> {
   void _onUpdateChildEvent(UpdateProfileEvent event, Emitter emit) async {
     emit(state.copyWith(statusUpdate: FormzSubmissionStatus.inProgress));
     try {
+      if (state.child == null) throw 'Data anak tidak ditemukan';
       await _childRepository.updateChild(state.child!);
       add(OnGetChildrenEvent());
       emit(state.copyWith(statusUpdate: FormzSubmissionStatus.success));
@@ -110,6 +111,7 @@ class ChildProfileBloc extends Bloc<ChildProfileEvent, ChildProfileState> {
   void _onCreateChildEvent(CreateProfileEvent event, Emitter emit) async {
     emit(state.copyWith(statusCreate: FormzSubmissionStatus.inProgress));
     try {
+      if (state.child == null) throw 'Data anak tidak ditemukan';
       await _childRepository.setChild(state.child!);
       add(OnGetChildrenEvent());
       emit(

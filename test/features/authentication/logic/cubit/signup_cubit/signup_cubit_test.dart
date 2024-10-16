@@ -1,28 +1,27 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/features/authentication/data/models/country_code.dart';
 import 'package:eimunisasi/features/authentication/data/models/email.dart';
 import 'package:eimunisasi/features/authentication/data/models/password.dart';
 import 'package:eimunisasi/features/authentication/data/models/phone.dart';
 import 'package:eimunisasi/features/authentication/data/repositories/auth_repository.dart';
 import 'package:eimunisasi/features/authentication/data/models/user.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:formz/formz.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:test/test.dart';
 import 'package:eimunisasi/features/authentication/logic/cubit/signup_cubit/signup_cubit.dart';
 
 @GenerateMocks([AuthRepository])
 @GenerateNiceMocks(
-    [MockSpec<Users>(), MockSpec<UserCredential>(), MockSpec<User>()])
+    [MockSpec<Users>(), MockSpec<AuthResponse>(), MockSpec<User>()])
 import 'signup_cubit_test.mocks.dart';
 
 void main() {
   late AuthRepository authRepository;
   late Users user;
   late User userFirebase;
-  late UserCredential userCredential;
+  late AuthResponse authResponse;
 
   final phone = "85211011003";
   final phoneInvalid = "8123456789";
@@ -37,7 +36,7 @@ void main() {
     authRepository = MockAuthRepository();
     user = MockUsers();
     userFirebase = MockUser();
-    userCredential = MockUserCredential();
+    authResponse = MockAuthResponse();
   });
   group(
     "emailChanged",
@@ -235,12 +234,12 @@ void main() {
     blocTest<SignUpCubit, SignUpState>(
       "signUpFormSubmitted status is valid",
       build: () {
-        when(userCredential.user).thenReturn(userFirebase);
+        when(authResponse.user).thenReturn(userFirebase);
 
         when(authRepository.signUpWithEmailAndPassword(
           email: email,
           password: password,
-        )).thenAnswer((_) => Future.value(userCredential));
+        )).thenAnswer((_) => Future.value(authResponse));
         when(authRepository.insertUserToDatabase(user: user))
             .thenAnswer((_) => Future.value());
         return SignUpCubit(authRepository);
@@ -323,123 +322,5 @@ void main() {
     expect((phoneDirty.isNotValid && countryCodeDirty.isNotValid), true);
     expect(Phone.dirty(phoneInvalid).isNotValid, true);
     expect(CountryCode.dirty(countryCodeInvalid).isNotValid, true);
-  });
-
-  group('sendOTPCode', () {
-    blocTest<SignUpCubit, SignUpState>(
-      "sendOTPCode phone and countryCode is invalid",
-      seed: () => SignUpState(
-        countryCode: CountryCode.dirty(countryCodeInvalid),
-        phone: Phone.dirty(phoneInvalid),
-      ),
-      build: () => SignUpCubit(authRepository),
-      act: (cubit) => cubit.sendOTPCode(),
-      expect: () => [],
-    );
-
-    blocTest<SignUpCubit, SignUpState>(
-      "sendOTPCode phone invalid and countryCode is valid",
-      seed: () => SignUpState(
-        countryCode: CountryCode.dirty(countryCode),
-        phone: Phone.dirty(phoneInvalid),
-      ),
-      build: () => SignUpCubit(authRepository),
-      act: (cubit) => cubit.sendOTPCode(),
-      expect: () => [],
-    );
-
-    blocTest<SignUpCubit, SignUpState>(
-      "sendOTPCode phone valid and countryCode is invalid",
-      seed: () => SignUpState(
-        countryCode: CountryCode.dirty(countryCodeInvalid),
-        phone: Phone.dirty(phone),
-      ),
-      build: () => SignUpCubit(authRepository),
-      act: (cubit) => cubit.sendOTPCode(),
-      expect: () => [],
-    );
-
-    blocTest<SignUpCubit, SignUpState>(
-      "sendOTPCode phone is valid and countryCode is valid, and isPhoneNumberExist is true",
-      seed: () => SignUpState(
-        countryCode: CountryCode.dirty(countryCode),
-        phone: Phone.dirty(phone),
-      ),
-      setUp: () {
-        final phoneNumber = countryCode + phone;
-        when(
-          authRepository.isPhoneNumberExist(phoneNumber),
-        ).thenAnswer((_) => Future.value(true));
-      },
-      build: () => SignUpCubit(authRepository),
-      act: (cubit) => cubit.sendOTPCode(),
-      expect: () => [
-        SignUpState(
-          countryCode: CountryCode.dirty(countryCode),
-          phone: Phone.dirty(phone),
-          status: FormzSubmissionStatus.inProgress,
-        ),
-        SignUpState(
-          countryCode: CountryCode.dirty(countryCode),
-          phone: Phone.dirty(phone),
-          status: FormzSubmissionStatus.failure,
-          errorMessage: AppConstant.PHONE_NUMBER_EXIST_ERROR,
-        ),
-      ],
-    );
-
-    blocTest<SignUpCubit, SignUpState>(
-      "sendOTPCode phone is valid and countryCode is valid, and isPhoneNumberExist is false",
-      seed: () => SignUpState(
-        countryCode: CountryCode.dirty(countryCode),
-        phone: Phone.dirty(phone),
-      ),
-      setUp: () {
-        final phoneNumber = countryCode + phone;
-        final codeSent = (String verificationId, int? resendToken) {};
-        final verificationFailed = (FirebaseAuthException e) {};
-        final verificationCompleted = (PhoneAuthCredential credential) {};
-        when(authRepository.isPhoneNumberExist(
-          phoneNumber,
-        )).thenAnswer((_) => Future.value(false));
-        when(authRepository.verifyPhoneNumber(
-          phone: phone,
-          codeSent: codeSent,
-          verificationFailed: verificationFailed,
-          verificationCompleted: verificationCompleted,
-        ));
-      },
-      build: () => SignUpCubit(authRepository),
-      act: (cubit) => cubit.sendOTPCode(),
-      expect: () => [
-        SignUpState(
-          countryCode: CountryCode.dirty(countryCode),
-          phone: Phone.dirty(phone),
-          status: FormzSubmissionStatus.inProgress,
-        ),
-      ],
-    );
-
-    blocTest<SignUpCubit, SignUpState>(
-      "sendOTPCode phone is valid and countryCode is valid, and isPhoneNumberExist is false, and isPhoneNumberExist, verifyPhoneNumber throw error",
-      seed: () => SignUpState(
-        countryCode: CountryCode.dirty(countryCode),
-        phone: Phone.dirty(phone),
-      ),
-      build: () => SignUpCubit(authRepository),
-      act: (cubit) => cubit.sendOTPCode(),
-      expect: () => [
-        SignUpState(
-          countryCode: CountryCode.dirty(countryCode),
-          phone: Phone.dirty(phone),
-          status: FormzSubmissionStatus.inProgress,
-        ),
-        SignUpState(
-          countryCode: CountryCode.dirty(countryCode),
-          phone: Phone.dirty(phone),
-          status: FormzSubmissionStatus.failure,
-        ),
-      ],
-    );
   });
 }

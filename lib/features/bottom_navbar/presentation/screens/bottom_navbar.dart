@@ -1,6 +1,6 @@
 import 'package:eimunisasi/pages/home/bantuan/bantuan_page.dart';
 import 'package:eimunisasi/pages/home/utama/main.dart';
-import 'package:eimunisasi/routers/route_paths/auth_route_paths.dart';
+import 'package:eimunisasi/routers/route_paths/root_route_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -21,7 +21,9 @@ class BottomNavbarWrapper extends StatelessWidget {
     return BlocListener<AuthenticationBloc, AuthenticationState>(
       listener: (context, state) {
         if (state is Unauthenticated) {
-          context.pushReplacement(AuthRoutePaths.loginPhone.fullPath);
+          context.pushReplacement(
+            RootRoutePaths.root.fullPath,
+          );
           snackbarCustom(AppConstant.LOGOUT_SUCCEED);
         }
       },

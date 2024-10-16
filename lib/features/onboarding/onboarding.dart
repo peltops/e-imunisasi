@@ -41,7 +41,7 @@ class _OnboardScreenState extends State<OnboardScreen> {
 
   void handleStart() {
     prefs?.setBool('isSplashSeen', true);
-    print("isSplashSeen ${prefs?.getBool('isSplashSeen')}");
+    debugPrint("isSplashSeen ${prefs?.getBool('isSplashSeen')}");
     context.read<AuthenticationBloc>().add(AppStarted());
   }
 

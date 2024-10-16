@@ -74,6 +74,7 @@ dev_dependencies:
   plugin_platform_interface: ^2.1.8
   url_launcher_platform_interface: ^2.3.2
   mocktail: ^1.0.4
+  mock_supabase_http_client: ^0.0.1
 
 flutter:
   uses-material-design: true

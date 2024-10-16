@@ -1,3 +1,4 @@
+import 'package:eimunisasi/routers/route_paths/profile_route_paths.dart';
 import 'package:eimunisasi/routers/route_paths/route_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -66,7 +67,7 @@ class _MainPageState extends State<MainPage> {
                       TombolMenu(
                         icon: Icons.child_friendly_outlined,
                         onTap: () {
-                          context.push(RoutePaths.listChildren);
+                          context.push(ProfileRoutePaths.children.fullPath);
                         },
                         label: 'Anak',
                       ),
