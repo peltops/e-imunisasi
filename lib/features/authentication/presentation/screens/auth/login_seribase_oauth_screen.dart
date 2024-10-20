@@ -17,7 +17,6 @@ class LoginSeribaseOauthScreen extends StatelessWidget {
   }
 }
 
-
 class _LoginSeribaseOauthScaffold extends StatelessWidget {
   const _LoginSeribaseOauthScaffold();
 
@@ -32,27 +31,28 @@ class _LoginSeribaseOauthScaffold extends StatelessWidget {
         ),
         body: Center(
           child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/images/logo.png',
-                    width: 100,
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/images/logo.png',
+                  width: 100,
+                ),
+                const SizedBox(height: 30.0),
+                const Text(
+                  "Silahkan masuk dengan akun Seribase Anda",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black,
                   ),
-                  const SizedBox(height: 30.0),
-                  const Text(
-                    "Silahkan masuk dengan akun Seribase Anda",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
-              )),
+                ),
+              ],
+            ),
+          ),
         ),
         bottomNavigationBar: Padding(
           padding: const EdgeInsets.all(20.0),

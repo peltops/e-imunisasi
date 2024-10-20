@@ -67,6 +67,34 @@ class Users extends Equatable {
     );
   }
 
+  factory Users.fromSeribase(Map<String, dynamic> data) {
+    return Users(
+      uid: data['user_id'],
+      email: data['email'] ?? '',
+      momName: data['mother_name'] ?? '',
+      dadName: data['father_name'] ?? '',
+      nomorhpAyah: data['father_phone_number'] ?? '',
+      nomorhpIbu: data['mother_phone_number'] ?? '',
+      golDarahAyah: data['father_blood_type'] ?? '',
+      golDarahIbu: data['mother_blood_type'] ?? '',
+      pekerjaanAyah: data['father_job'] ?? '',
+      pekerjaanIbu: data['mother_job'] ?? '',
+      alamat: data['address'] ?? '',
+      avatarURL: data['avatar_url'] ?? '',
+      verified: data['verified'] ?? false,
+      tempatLahir: data['place_of_birth'] ?? '',
+      tanggalLahir: () {
+        try {
+          return DateTime.parse(data['date_of_birth']);
+        } catch (e) {
+          return null;
+        }
+      }(),
+      noKK: data['no_kartu_keluarga'] ?? '',
+      noKTP: data['no_induk_kependudukan'] ?? '',
+    );
+  }
+
   Map<String, dynamic> toJson() => {
         "uid": uid,
         "email": email,
@@ -86,6 +114,28 @@ class Users extends Equatable {
         "noKK": noKK,
         "noKTP": noKTP,
       };
+
+  Map<String, dynamic> toSeribaseMap() {
+    return {
+      if (uid?.isNotEmpty ?? false) "user_id": uid,
+      if (momName?.isNotEmpty ?? false) "mother_name": momName,
+      if (dadName?.isNotEmpty ?? false) "father_name": dadName,
+      if (nomorhpAyah?.isNotEmpty ?? false) "father_phone_number": nomorhpAyah,
+      if (nomorhpIbu?.isNotEmpty ?? false) "mother_phone_number": nomorhpIbu,
+      if (golDarahAyah?.isNotEmpty ?? false) "father_blood_type": golDarahAyah,
+      if (golDarahIbu?.isNotEmpty ?? false) "mother_blood_type": golDarahIbu,
+      if (pekerjaanAyah?.isNotEmpty ?? false) "father_job": pekerjaanAyah,
+      if (pekerjaanIbu?.isNotEmpty ?? false) "mother_job": pekerjaanIbu,
+      if (alamat?.isNotEmpty ?? false) "address": alamat,
+      if (avatarURL?.isNotEmpty ?? false) "avatar_url": avatarURL,
+      if (tempatLahir?.isNotEmpty ?? false) "place_of_birth": tempatLahir,
+      if (tanggalLahir != null)
+        "date_of_birth": tanggalLahir?.toIso8601String(),
+      if (noKK?.isNotEmpty ?? false) "no_kartu_keluarga": noKK,
+      if (noKTP?.isNotEmpty ?? false) "no_induk_kependudukan": noKTP,
+    };
+  }
+
   Users copyWith({
     String? uid,
     String? email,

@@ -1,103 +1,111 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:eimunisasi/features/profile/data/models/anak.dart';
 import 'package:injectable/injectable.dart';
-
-import '../models/anak.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 @injectable
 class ChildRepository {
-  final FirebaseFirestore firestore;
-  final FirebaseAuth firebaseAuth;
-  final FirebaseStorage firebaseStorage;
+  final SupabaseClient supabaseClient;
 
-  static const String _collectionName = 'children';
+  static const String _tableName = 'children';
 
   ChildRepository(
-    this.firestore,
-    this.firebaseAuth,
-    this.firebaseStorage,
+    this.supabaseClient,
   );
 
   Future<List<Anak>> getAllChildren() async {
-    final _currentUser = firebaseAuth.currentUser;
-    if (_currentUser == null) {
-      throw Exception('User not logged in');
-    }
-    final data = await firestore
-        .collection(_collectionName)
-        .where(
-          'parent_id',
-          isEqualTo: _currentUser.uid,
-        )
-        .get();
-    final result = data.docs.map((e) {
-      final data = Anak.fromMap(e.data());
-      return data.copyWith(id: e.id);
-    }).toList();
+    final data = await supabaseClient.from(_tableName).select().order(
+          'created_at',
+          ascending: true,
+        );
+    final result = data.map((e) => Anak.fromSeribase(e)).toList();
     return result;
   }
 
   Future<Anak> setChild(Anak anak) async {
-    final _currentUser = firebaseAuth.currentUser;
-    if (_currentUser == null) {
-      throw Exception('User not logged in');
-    }
+    final _currentUser = supabaseClient.auth.currentUser;
     try {
-      final data = anak.copyWith(parentId: _currentUser.uid);
-      final result =
-          await firestore.collection(_collectionName).add(data.toMap());
-      return data.copyWith(id: result.id);
+      final data = anak.copyWith(parentId: _currentUser?.id);
+      final result = await supabaseClient
+          .from(_tableName)
+          .insert(
+            data.toSeribaseMap(),
+          )
+          .select('id')
+          .limit(1)
+          .single();
+      return data.copyWith(id: result['id'] ?? '');
     } catch (e) {
       rethrow;
     }
   }
 
-  Future<void> updateChild(Anak anak) async {
-    final _currentUser = firebaseAuth.currentUser;
-    if (_currentUser == null) {
-      throw Exception('User not logged in');
+  Future<Anak> updateChild(Anak anak) async {
+    final _currentUser = supabaseClient.auth.currentUser;
+    try {
+      final data = anak.copyWith(parentId: _currentUser?.id);
+      if (anak.id == null) throw 'ID anak tidak ditemukan';
+      await supabaseClient
+          .from(_tableName)
+          .update(
+            data.toSeribaseMap(),
+          )
+          .eq('id', anak.id!)
+          .select();
+
+      return data;
+    } catch (e) {
+      rethrow;
     }
-    return await firestore
-        .collection(_collectionName)
-        .doc(anak.id)
-        .update(anak.toMap());
   }
 
   Future<void> deleteChild(String id) async {
-    final _currentUser = firebaseAuth.currentUser;
-    if (_currentUser == null) {
-      throw Exception('User not logged in');
-    }
-    return await firestore.collection(_collectionName).doc(id).delete();
+    return await supabaseClient.from(_tableName).delete().eq('id', id);
   }
 
-  Future<String> _uploadImage(File filePath, String id) async {
-    final _currentUser = firebaseAuth.currentUser;
-    if (_currentUser == null) {
-      throw Exception('User not logged in');
+  Future<String> _uploadImage(File file, String id) async {
+    try {
+      await supabaseClient.storage.from('avatars').upload(
+            '$id',
+            file,
+            fileOptions: const FileOptions(cacheControl: '3600', upsert: true),
+            retryAttempts: 3,
+          );
+      final fullPath =
+          await supabaseClient.storage.from('avatars').getPublicUrl('$id');
+      await CachedNetworkImage.evictFromCache(fullPath);
+      return fullPath;
+    } catch (e) {
+      rethrow;
     }
-    final ref = firebaseStorage.ref().child(id);
-    final result = await ref.putFile(filePath);
-    final fileUrl = await result.ref.getDownloadURL();
-    return fileUrl;
+  }
+
+  Future<List<FileObject>> _deleteImage(String id) async {
+    try {
+      return await supabaseClient.storage.from('avatars').remove(['$id']);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<String> updateChildAvatar({
     required File file,
     required String id,
   }) async {
-    final _currentUser = firebaseAuth.currentUser;
-    if (_currentUser == null) {
-      throw Exception('User not logged in');
-    }
     try {
       final url = await _uploadImage(file, id);
-      await firestore.collection(_collectionName).doc(id).update(
-        {'photo_url': url},
-      );
+      await supabaseClient
+          .from(_tableName)
+          .update(
+            {'avatar_url': url},
+          )
+          .eq('id', id)
+          .catchError((e) {
+            _deleteImage(id);
+            throw e;
+          });
       return url;
     } catch (e) {
       rethrow;

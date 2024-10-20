@@ -57,7 +57,7 @@ class _OTPFormState extends State<OTPForm> {
   @override
   Widget build(BuildContext context) {
     void reloadCodeSent(String phone) {
-      context.read<LoginPhoneCubit>().sendOTPCode();
+      // context.read<LoginPhoneCubit>().sendOTPCode();
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
@@ -177,7 +177,7 @@ class _LoginButton extends StatelessWidget {
           ),
           onPressed: () {
             if (state.otpCode.isValid) {
-              context.read<LoginPhoneCubit>().logInWithOTP();
+              // context.read<LoginPhoneCubit>().logInWithOTP();
             } else
               snackbarCustom(AppConstant.OTP_NOT_VALID).show(context);
           },

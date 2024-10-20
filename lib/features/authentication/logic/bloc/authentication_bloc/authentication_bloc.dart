@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:eimunisasi/features/splash/data/repositories/splash_repository.dart';
 import 'package:injectable/injectable.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../data/models/user.dart';
 import '../../../data/repositories/auth_repository.dart';
 import 'package:equatable/equatable.dart';
@@ -14,13 +16,37 @@ class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   final AuthRepository authRepository;
   final SplashRepository splashRepository;
+  final SupabaseClient supabaseClient;
 
-  AuthenticationBloc(this.authRepository, this.splashRepository)
-      : super(Uninitialized()) {
+  StreamSubscription<AuthState>? _authSubscription;
+  AuthenticationBloc(
+    this.authRepository,
+    this.splashRepository,
+    this.supabaseClient,
+  ) : super(Uninitialized()) {
+    _authSubcription();
     _splash();
     on<AppStarted>(_onAppStarted);
     on<LoggedIn>(_onLoggedIn);
     on<LoggedOut>(_onLoggedOut);
+  }
+
+  @override
+  Future<void> close() {
+    _authSubscription?.cancel();
+    return super.close();
+  }
+
+  void _authSubcription() {
+    _authSubscription = supabaseClient.auth.onAuthStateChange.listen((
+      event,
+    ) {
+      final authEvent = event.event;
+      if (authEvent == AuthChangeEvent.signedIn) {
+        add(LoggedIn());
+        return;
+      }
+    });
   }
 
   void _splash() async {
@@ -30,7 +56,9 @@ class AuthenticationBloc
   }
 
   void _onAppStarted(
-      AppStarted event, Emitter<AuthenticationState> emit) async {
+    AppStarted event,
+    Emitter<AuthenticationState> emit,
+  ) async {
     print('AppStarted');
     emit(Loading());
     try {
@@ -51,7 +79,10 @@ class AuthenticationBloc
     }
   }
 
-  void _onLoggedIn(LoggedIn event, Emitter<AuthenticationState> emit) async {
+  void _onLoggedIn(
+    LoggedIn event,
+    Emitter<AuthenticationState> emit,
+  ) async {
     emit(Loading());
     final data = await authRepository.getUser();
     if (data == null) {
@@ -61,10 +92,14 @@ class AuthenticationBloc
     emit(Authenticated(user: data));
   }
 
-  void _onLoggedOut(LoggedOut event, Emitter<AuthenticationState> emit) async {
+  void _onLoggedOut(
+    LoggedOut event,
+    Emitter<AuthenticationState> emit,
+  ) async {
     emit(Loading());
+    final isSeenOnboarding = await splashRepository.isSeen();
     await authRepository.signOut().then((_) {
-      emit(Unauthenticated());
+      emit(Unauthenticated(isSeenOnboarding: isSeenOnboarding));
     }).catchError((error) {
       log(
         error.toString(),
@@ -73,7 +108,6 @@ class AuthenticationBloc
       emit(
         const AuthenticationError(message: 'Gagal logout. Silahkan coba lagi!'),
       );
-      add(LoggedIn());
     });
   }
 }

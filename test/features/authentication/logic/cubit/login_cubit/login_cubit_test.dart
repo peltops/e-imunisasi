@@ -14,10 +14,8 @@ import 'login_cubit_test.mocks.dart';
 
 void main() {
   late AuthRepository authRepository;
-  late UserCredential userCredential;
   setUp(() {
     authRepository = MockAuthRepository();
-    userCredential = MockUserCredential();
   });
   group('emailChanged', () {
     blocTest<LoginCubit, LoginState>(
@@ -87,80 +85,6 @@ void main() {
       expect: () => [LoginState(isShowPassword: false)],
     );
   });
-  group('logInWithCredentials', () {
-    blocTest<LoginCubit, LoginState>(
-      'logInWithCredentials invalid',
-      build: () => LoginCubit(authRepository),
-      act: (cubit) => cubit.logInWithCredentials(),
-      expect: () => [
-        LoginState(
-          status: FormzSubmissionStatus.failure,
-          errorMessage: 'Please fill in the form correctly',
-        ),
-      ],
-    );
-    blocTest<LoginCubit, LoginState>(
-      'logInWithCredentials valid',
-      build: () {
-        when(
-          authRepository.logInWithEmailAndPassword(
-            email: 'example@example.com',
-            password: 'Admin123',
-          ),
-        ).thenAnswer((_) async => Future.value(userCredential));
-        return LoginCubit(authRepository);
-      },
-      seed: () => LoginState(
-        email: Email.dirty('example@example.com'),
-        password: Password.dirty('Admin123'),
-      ),
-      act: (cubit) => cubit.logInWithCredentials(),
-      expect: () => [
-        LoginState(
-          email: Email.dirty('example@example.com'),
-          password: Password.dirty('Admin123'),
-          status: FormzSubmissionStatus.inProgress,
-        ),
-        LoginState(
-          email: Email.dirty('example@example.com'),
-          password: Password.dirty('Admin123'),
-          status: FormzSubmissionStatus.success,
-        ),
-      ],
-    );
-    blocTest<LoginCubit, LoginState>(
-      'logInWithCredentials valid but error',
-      build: () {
-        when(
-          authRepository.logInWithEmailAndPassword(
-            email: 'example@example.com',
-            password: 'Admin123',
-          ),
-        ).thenThrow(FirebaseAuthException(code: 'code', message: 'error'));
-        return LoginCubit(authRepository);
-      },
-      seed: () => LoginState(
-        email: Email.dirty('example@example.com'),
-        password: Password.dirty('Admin123'),
-      ),
-      act: (cubit) => cubit.logInWithCredentials(),
-      expect: () => [
-        LoginState(
-          email: Email.dirty('example@example.com'),
-          password: Password.dirty('Admin123'),
-          status: FormzSubmissionStatus.inProgress,
-        ),
-        LoginState(
-          email: Email.dirty('example@example.com'),
-          password: Password.dirty('Admin123'),
-          status: FormzSubmissionStatus.failure,
-          errorMessage: 'error',
-        ),
-      ],
-    );
-  });
-
-
   group('logInWithSeribaseOauth', () {
     blocTest<LoginCubit, LoginState>(
       'should success when logInWithSeribaseOauth return true',

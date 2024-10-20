@@ -4,7 +4,7 @@ import 'package:eimunisasi/core/utils/themes/padding_constant.dart';
 import 'package:eimunisasi/core/widgets/spacer.dart';
 import 'package:eimunisasi/core/widgets/text.dart';
 import 'package:eimunisasi/core/widgets/top_app_bar.dart';
-import 'package:eimunisasi/routers/route_paths/route_paths.dart';
+import 'package:eimunisasi/routers/route_paths/root_route_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -42,7 +42,7 @@ class ProfilePage extends StatelessWidget {
                 elevation: 0,
                 child: ListTile(
                   shape: Shape.roundedRectangleM,
-                  onTap: () => context.push(RoutePaths.parentProfile),
+                  onTap: () => context.push(RootRoutePaths.profile.fullPath),
                   title: LabelText(text: 'Profil'),
                   trailing: Icon(Icons.keyboard_arrow_right_rounded),
                 ),

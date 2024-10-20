@@ -221,7 +221,7 @@ void main() {
       "success",
       build: () {
         when(mockChildRepository.updateChild(child))
-            .thenAnswer((_) async => null);
+            .thenAnswer((_) async => child);
         when(mockChildRepository.getAllChildren())
             .thenAnswer((_) async => [child]);
         return ChildProfileBloc(mockChildRepository)
@@ -260,7 +260,7 @@ void main() {
     blocTest<ChildProfileBloc, ChildProfileState>(
       "failed",
       build: () {
-        when(mockChildRepository.updateChild(child)).thenThrow(Exception());
+        when(mockChildRepository.setChild(child)).thenThrow(Exception());
         return ChildProfileBloc(mockChildRepository);
       },
       act: (bloc) => bloc.add(UpdateProfileEvent()),
