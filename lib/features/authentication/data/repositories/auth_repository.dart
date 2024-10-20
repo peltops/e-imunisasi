@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -111,6 +112,7 @@ class AuthRepository {
       final fullPath = await supabaseClient.storage
           .from('avatars')
           .getPublicUrl('$id');
+      await CachedNetworkImage.evictFromCache(fullPath);
       return fullPath;
     } catch (e) {
       rethrow;

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eimunisasi/features/profile/data/models/anak.dart';
 import 'package:injectable/injectable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -74,6 +75,7 @@ class ChildRepository {
           );
       final fullPath =
           await supabaseClient.storage.from('avatars').getPublicUrl('$id');
+      await CachedNetworkImage.evictFromCache(fullPath);
       return fullPath;
     } catch (e) {
       rethrow;
