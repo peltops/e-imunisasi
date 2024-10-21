@@ -22,6 +22,8 @@ class CalendarModel {
     this.createdDate,
   });
 
+  static String tableName = 'calendars';
+
   CalendarModel copyWith({
     String? uid,
     String? activity,
@@ -72,6 +74,31 @@ class CalendarModel {
     );
   }
 
+  factory CalendarModel.fromSeribase(Map<String, dynamic>? data) {
+    return CalendarModel(
+      uid: data?['parent_id'] ?? emptyString,
+      activity: data?['activity'] ?? emptyString,
+      date: () {
+        if (data?['do_at'] == null) return null;
+        try {
+          return DateTime.parse(data?['do_at']);
+        } catch (e) {
+          return null;
+        }
+      }(),
+      readOnly: data?['read_only'] ?? false,
+      createdDate: () {
+        if (data?['created_at'] == null) return null;
+        try {
+          return DateTime.parse(data?['created_at']);
+        } catch (e) {
+          return null;
+        }
+      }(),
+      documentID: data?['id'] ?? emptyString,
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return {
       "uid": uid,
@@ -79,6 +106,17 @@ class CalendarModel {
       "date": date,
       "readOnly": readOnly,
       "createdDate": createdDate ?? DateTime.now(),
+    };
+  }
+
+  Map<String, dynamic> toSeribase() {
+    return {
+      "id": documentID,
+      "parent_id": uid,
+      "activity": activity,
+      "do_at": date?.toIso8601String(),
+      "read_only": readOnly,
+      "created_at": (createdDate ?? DateTime.now()).toIso8601String(),
     };
   }
 
