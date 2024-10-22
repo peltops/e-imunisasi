@@ -1,29 +1,30 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eimunisasi/features/calendar/data/models/calendar_model.dart';
 import 'package:eimunisasi/features/calendar/data/models/hive_calendar_activity_model.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 @Injectable()
 class CalendarRepository {
-  final FirebaseFirestore firestore;
+  final SupabaseClient supabase;
   final HiveInterface hiveInterface;
-  final FirebaseAuth auth;
 
   CalendarRepository(
-    this.firestore,
+    this.supabase,
     this.hiveInterface,
-    this.auth,
   );
 
   Future<CalendarModel> setEvent(CalendarModel model) async {
     try {
       final modelWithCreatedDate = model.copyWith(createdDate: DateTime.now());
-      final result = await firestore.collection('calendars').add(
-            modelWithCreatedDate.toMap(),
-          );
-      return modelWithCreatedDate.copyWith(documentID: result.id);
+      final result = await supabase
+          .from(CalendarModel.tableName)
+          .insert(
+            modelWithCreatedDate.toSeribase(),
+          )
+          .select('id')
+          .single();
+      return modelWithCreatedDate.copyWith(documentID: result['id']);
     } catch (e) {
       rethrow;
     }
@@ -31,10 +32,11 @@ class CalendarRepository {
 
   Future<CalendarModel> updateEvent(CalendarModel data) async {
     try {
-      await firestore
-          .collection('calendars')
-          .doc(data.documentID)
-          .update(data.toMap());
+      assert(data.documentID != null, 'ID must not be null');
+      await supabase
+          .from(CalendarModel.tableName)
+          .update(data.toSeribase())
+          .eq('id', data.documentID!);
       return data;
     } catch (e) {
       rethrow;
@@ -43,9 +45,10 @@ class CalendarRepository {
 
   Future<void> deleteEvent(String docID) async {
     try {
-      await firestore.collection('calendars').doc(docID).delete();
-    } on FirebaseException catch (_) {
-      rethrow;
+      await supabase.from(CalendarModel.tableName).delete().eq(
+            'id',
+            docID,
+          );
     } catch (e) {
       rethrow;
     }
@@ -53,18 +56,17 @@ class CalendarRepository {
 
   Future<List<CalendarModel>> getEvents() async {
     try {
-      final uid = auth.currentUser?.uid;
-      var snapshot = await firestore
-          .collection('calendars')
-          .where('uid', isEqualTo: uid)
-          .orderBy('date')
-          .get();
-      return snapshot.docs.map((e) {
-        var data = Map<String, dynamic>.from(e.data());
-        return CalendarModel.fromMap(data).copyWith(documentID: e.id);
-      }).toList();
-    } on FirebaseException catch (_) {
-      rethrow;
+      final uid = supabase.auth.currentUser?.id;
+      assert(uid != null, 'User ID must not be null');
+      final result = await supabase
+          .from(CalendarModel.tableName)
+          .select()
+          .eq('uid', uid!)
+          .order('created_at', ascending: false)
+          .withConverter(
+            (json) => json.map((e) => CalendarModel.fromMap(e)).toList(),
+          );
+      return result;
     } catch (e) {
       rethrow;
     }
@@ -72,12 +74,12 @@ class CalendarRepository {
 
   Future<int> setEventLocal(CalendarModel data) async {
     try {
-      final box =
-      await hiveInterface.openBox<CalendarActivityHive>('calendar_activity');
+      final box = await hiveInterface
+          .openBox<CalendarActivityHive>('calendar_activity');
       final id = data.createdDate?.millisecondsSinceEpoch;
       await box.put('$id', data.toHive());
       return box.values.toList().indexWhere((element) => element.id == id);
-    }catch (e) {
+    } catch (e) {
       rethrow;
     }
   }
