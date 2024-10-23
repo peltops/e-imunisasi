@@ -111,11 +111,11 @@ class CalendarModel {
 
   Map<String, dynamic> toSeribase() {
     return {
-      "id": documentID,
-      "parent_id": uid,
-      "activity": activity,
-      "do_at": date?.toIso8601String(),
-      "read_only": readOnly,
+      if (documentID != null) "id": documentID,
+      if (uid != null) "parent_id": uid,
+      if (activity != null) "activity": activity,
+      if (date != null) "do_at": date?.toIso8601String(),
+      if (readOnly != null) "read_only": readOnly,
       "created_at": (createdDate ?? DateTime.now()).toIso8601String(),
     };
   }
