@@ -347,7 +347,12 @@ class _ListRowEvent {
   void confirmDeleteDialog(BuildContext context, CalendarModel event) {
     // set up the buttons
     final cancelButton = ElevatedButton(
-        child: Text(AppConstant.NO),
+        child: Text(
+          AppConstant.NO,
+          style: TextStyle(
+            color: Theme.of(context).scaffoldBackgroundColor,
+          ),
+        ),
         onPressed: () {
           context.pop();
         },
