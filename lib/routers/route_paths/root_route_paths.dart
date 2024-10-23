@@ -25,4 +25,7 @@ class RootRoutePaths {
   static const RouteModel profile = RouteModel(
     path: '/profile',
   );
+  static const RouteModel calendar = RouteModel(
+    path: '/calendar',
+  );
 }
