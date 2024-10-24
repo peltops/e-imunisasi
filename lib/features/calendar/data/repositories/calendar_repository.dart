@@ -61,7 +61,7 @@ class CalendarRepository {
       final result = await supabase
           .from(CalendarModel.tableName)
           .select()
-          .eq('uid', uid!)
+          .eq('parent_id', uid!)
           .order('created_at', ascending: false)
           .withConverter(
             (json) => json.map((e) => CalendarModel.fromSeribase(e)).toList(),

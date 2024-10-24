@@ -17,8 +17,6 @@ class RoutePaths {
 
   static const String detailInformasi = '/detail-informasi';
 
-  static const String calendar = '/calendar';
-
   static const String listChildren = '/list-children';
 
   static const String vaccination = '/vaccination';

@@ -153,7 +153,7 @@ final router = GoRouter(
       ),
     ),
     GoRoute(
-      path: RoutePaths.calendar,
+      path: RootRoutePaths.calendar.path,
       builder: (_, __) => const CalendarScreen(),
       routes: CalendarRouter.routes,
     ),
