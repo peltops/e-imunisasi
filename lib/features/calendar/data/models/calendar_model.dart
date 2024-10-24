@@ -1,6 +1,5 @@
 import 'dart:collection';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eimunisasi/core/extension.dart';
 import 'package:eimunisasi/features/calendar/data/models/hive_calendar_activity_model.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -42,38 +41,6 @@ class CalendarModel {
     );
   }
 
-  factory CalendarModel.fromMap(Map<String, dynamic>? data) {
-    return CalendarModel(
-      uid: data?['uid'] ?? emptyString,
-      activity: data?['activity'] ?? emptyString,
-      date: () {
-        if (data?['date'] == null) return null;
-        try {
-          if (data?['date'] is DateTime) {
-            return data?['date'];
-          } else {
-            return (data?['date'] as Timestamp).toDate();
-          }
-        } catch (e) {
-          return null;
-        }
-      }(),
-      readOnly: data?['readOnly'] ?? false,
-      createdDate: () {
-        if (data?['createdDate'] == null) return null;
-        try {
-          if (data?['createdDate'] is DateTime) {
-            return data?['createdDate'];
-          } else {
-            return (data?['createdDate'] as Timestamp).toDate();
-          }
-        } catch (e) {
-          return null;
-        }
-      }(),
-    );
-  }
-
   factory CalendarModel.fromSeribase(Map<String, dynamic>? data) {
     return CalendarModel(
       uid: data?['parent_id'] ?? emptyString,
@@ -97,16 +64,6 @@ class CalendarModel {
       }(),
       documentID: data?['id'] ?? emptyString,
     );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      "uid": uid,
-      "activity": activity,
-      "date": date,
-      "readOnly": readOnly,
-      "createdDate": createdDate ?? DateTime.now(),
-    };
   }
 
   Map<String, dynamic> toSeribase() {

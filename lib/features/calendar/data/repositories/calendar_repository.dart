@@ -64,7 +64,7 @@ class CalendarRepository {
           .eq('uid', uid!)
           .order('created_at', ascending: false)
           .withConverter(
-            (json) => json.map((e) => CalendarModel.fromMap(e)).toList(),
+            (json) => json.map((e) => CalendarModel.fromSeribase(e)).toList(),
           );
       return result;
     } catch (e) {
