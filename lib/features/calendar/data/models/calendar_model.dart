@@ -1,6 +1,5 @@
 import 'dart:collection';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eimunisasi/core/extension.dart';
 import 'package:eimunisasi/features/calendar/data/models/hive_calendar_activity_model.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -22,6 +21,8 @@ class CalendarModel {
     this.createdDate,
   });
 
+  static String tableName = 'calendars';
+
   CalendarModel copyWith({
     String? uid,
     String? activity,
@@ -40,45 +41,39 @@ class CalendarModel {
     );
   }
 
-  factory CalendarModel.fromMap(Map<String, dynamic>? data) {
+  factory CalendarModel.fromSeribase(Map<String, dynamic>? data) {
     return CalendarModel(
-      uid: data?['uid'] ?? emptyString,
+      uid: data?['parent_id'] ?? emptyString,
       activity: data?['activity'] ?? emptyString,
       date: () {
-        if (data?['date'] == null) return null;
+        if (data?['do_at'] == null) return null;
         try {
-          if (data?['date'] is DateTime) {
-            return data?['date'];
-          } else {
-            return (data?['date'] as Timestamp).toDate();
-          }
+          return DateTime.parse(data?['do_at']);
         } catch (e) {
           return null;
         }
       }(),
-      readOnly: data?['readOnly'] ?? false,
+      readOnly: data?['read_only'] ?? false,
       createdDate: () {
-        if (data?['createdDate'] == null) return null;
+        if (data?['created_at'] == null) return null;
         try {
-          if (data?['createdDate'] is DateTime) {
-            return data?['createdDate'];
-          } else {
-            return (data?['createdDate'] as Timestamp).toDate();
-          }
+          return DateTime.parse(data?['created_at']);
         } catch (e) {
           return null;
         }
       }(),
+      documentID: data?['id'] ?? emptyString,
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toSeribase() {
     return {
-      "uid": uid,
-      "activity": activity,
-      "date": date,
-      "readOnly": readOnly,
-      "createdDate": createdDate ?? DateTime.now(),
+      if (documentID != null) "id": documentID,
+      if (uid != null) "parent_id": uid,
+      if (activity != null) "activity": activity,
+      if (date != null) "do_at": date?.toIso8601String(),
+      if (readOnly != null) "read_only": readOnly,
+      "created_at": (createdDate ?? DateTime.now()).toIso8601String(),
     };
   }
 

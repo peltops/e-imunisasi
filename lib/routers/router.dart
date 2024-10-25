@@ -42,6 +42,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import 'calendar_router.dart';
+
 final router = GoRouter(
   routes: [
     GoRoute(
@@ -151,8 +153,9 @@ final router = GoRouter(
       ),
     ),
     GoRoute(
-      path: RoutePaths.calendar,
+      path: RootRoutePaths.calendar.path,
       builder: (_, __) => const CalendarScreen(),
+      routes: CalendarRouter.routes,
     ),
     GoRoute(
       path: RoutePaths.chooseChildMedicalRecord,

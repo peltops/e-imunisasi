@@ -1,4 +1,5 @@
 import 'package:eimunisasi/routers/route_paths/profile_route_paths.dart';
+import 'package:eimunisasi/routers/route_paths/root_route_paths.dart';
 import 'package:eimunisasi/routers/route_paths/route_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -60,7 +61,7 @@ class _MainPageState extends State<MainPage> {
                       TombolMenu(
                         icon: Icons.calendar_today,
                         onTap: () {
-                          context.push(RoutePaths.calendar);
+                          context.push(RootRoutePaths.calendar.fullPath);
                         },
                         label: 'Kalender',
                       ),

@@ -2,7 +2,7 @@ import 'package:eimunisasi/core/extension.dart';
 import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/features/calendar/data/models/calendar_model.dart';
 import 'package:eimunisasi/injection.dart';
-import 'package:eimunisasi/routers/route_paths/route_paths.dart';
+import 'package:eimunisasi/routers/route_paths/calendar_route_paths.dart';
 import 'package:eimunisasi/utils/any_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,7 +16,7 @@ import '../../logic/bloc/calendar_bloc/calendar_bloc.dart';
 
 class CalendarScreen extends StatelessWidget {
   const CalendarScreen({Key? key}) : super(key: key);
-  
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider<CalendarBloc>(
@@ -45,7 +45,12 @@ class _CalendarScaffold extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.add),
-            onPressed: () => context.push(RoutePaths.addEventCalendar),
+            onPressed: () => context.push(
+              CalendarRoutePaths.addCalendar.fullPath,
+              extra: {
+                'bloc': context.read<CalendarBloc>(),
+              },
+            ),
           )
         ],
       ),
@@ -342,7 +347,12 @@ class _ListRowEvent {
   void confirmDeleteDialog(BuildContext context, CalendarModel event) {
     // set up the buttons
     final cancelButton = ElevatedButton(
-        child: Text(AppConstant.NO),
+        child: Text(
+          AppConstant.NO,
+          style: TextStyle(
+            color: Theme.of(context).scaffoldBackgroundColor,
+          ),
+        ),
         onPressed: () {
           context.pop();
         },
@@ -377,8 +387,11 @@ class _ListRowEvent {
     switch (item) {
       case 0:
         context.push(
-          RoutePaths.updateEventCalendar,
-          extra: data,
+          CalendarRoutePaths.editCalendar.fullPath,
+          extra: {
+            'bloc': context.read<CalendarBloc>(),
+            'data': data,
+          },
         );
         break;
       case 1:
