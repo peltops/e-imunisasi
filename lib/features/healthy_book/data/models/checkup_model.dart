@@ -33,6 +33,8 @@ class CheckupModel extends Equatable {
     this.deletedAt,
   });
 
+  static String tableName = 'checkups';
+
   List<Object?> get props => [
         beratBadan,
         tinggiBadan,
