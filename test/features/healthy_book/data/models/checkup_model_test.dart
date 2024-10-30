@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eimunisasi/features/healthy_book/data/models/checkup_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -28,23 +27,25 @@ void main() {
     expect(checkupModel, isA<CheckupModel>());
   });
 
-  group('fromMap', () {
+  group('fromSeribase', () {
     test('should return a valid model', () {
+      final dateNow = DateTime.now();
       final Map<String, dynamic> map = {
-        'berat_badan': 10,
-        'tinggi_badan': 10,
-        'lingkar_kepala': 10,
-        'jenis_vaksin': 'jenisVaksin',
-        'riwayat_keluhan': 'riwayatKeluhan',
-        'diagnosa': 'diagnosa',
-        'tindakan': 'tindakan',
-        'id_orang_tua_pasien': 'idOrangTua',
-        'id_pasien': 'idPasien',
-        'id_dokter': 'idDokter',
-        'created_at': Timestamp.now(),
+        'id': 'id',
+        'weight': 10,
+        'height': 10,
+        'head_circumference': 10,
+        'vaccine_type': 'jenisVaksin',
+        'complaint': 'riwayatKeluhan',
+        'diagnosis': 'diagnosa',
+        'action': 'tindakan',
+        'parent_id': 'idOrangTua',
+        'child_id': 'idPasien',
+        'inspector_id': 'idDokter',
+        'created_at': dateNow.toIso8601String(),
         'deleted_at': null,
       };
-      final result = CheckupModel.fromFirebase(map, 'id');
+      final result = CheckupModel.fromSeribase(map);
       final expected = CheckupModel(
         beratBadan: 10,
         tinggiBadan: 10,
@@ -57,7 +58,7 @@ void main() {
         idOrangTuaPasien: 'idOrangTua',
         idPasien: 'idPasien',
         idDokter: 'idDokter',
-        createdAt: map['created_at'].toDate(),
+        createdAt: dateNow,
         updatedAt: null,
         deletedAt: null,
       );
@@ -65,22 +66,24 @@ void main() {
     });
 
     test('should return a valid model with deletedAt and updatedAt', () {
+      final dateNow = DateTime.now();
       final Map<String, dynamic> map = {
-        'berat_badan': 10,
-        'tinggi_badan': 10,
-        'lingkar_kepala': 10,
-        'jenis_vaksin': 'jenisVaksin',
-        'riwayat_keluhan': 'riwayatKeluhan',
-        'diagnosa': 'diagnosa',
-        'tindakan': 'tindakan',
-        'id_orang_tua_pasien': 'idOrangTua',
-        'id_pasien': 'idPasien',
-        'id_dokter': 'idDokter',
-        'created_at': Timestamp.now(),
-        'deleted_at': Timestamp.fromDate(DateTime.now().add(Duration(days: 1))),
-        'updated_at': Timestamp.fromDate(DateTime.now().add(Duration(days: 2))),
+        'id': 'id',
+        'weight': 10,
+        'height': 10,
+        'head_circumference': 10,
+        'vaccine_type': 'jenisVaksin',
+        'complaint': 'riwayatKeluhan',
+        'diagnosis': 'diagnosa',
+        'action': 'tindakan',
+        'parent_id': 'idOrangTua',
+        'child_id': 'idPasien',
+        'inspector_id': 'idDokter',
+        'created_at': dateNow.toIso8601String(),
+        'deleted_at': dateNow.add(Duration(days: 1)).toIso8601String(),
+        'updated_at': dateNow.add(Duration(days: 2)).toIso8601String(),
       };
-      final result = CheckupModel.fromFirebase(map, 'id');
+      final result = CheckupModel.fromSeribase(map);
       final expected = CheckupModel(
         beratBadan: 10,
         tinggiBadan: 10,
@@ -93,9 +96,9 @@ void main() {
         idOrangTuaPasien: 'idOrangTua',
         idPasien: 'idPasien',
         idDokter: 'idDokter',
-        createdAt: map['created_at'].toDate(),
-        updatedAt: map['updated_at'].toDate(),
-        deletedAt: map['deleted_at'].toDate(),
+        createdAt: dateNow,
+        updatedAt: dateNow.add(Duration(days: 2)),
+        deletedAt: dateNow.add(Duration(days: 1)),
       );
       expect(result, expected);
     });
@@ -105,19 +108,19 @@ void main() {
     test('should return a JSON map containing the proper data', () {
       final result = checkupModel.toMap();
       final expected = {
-        'berat_badan': 10,
-        'tinggi_badan': 10,
-        'lingkar_kepala': 10,
-        'jenis_vaksin': 'jenisVaksin',
-        'riwayat_keluhan': 'riwayatKeluhan',
-        'diagnosa': 'diagnosa',
-        'tindakan': 'tindakan',
-        'id_orang_tua_pasien': 'idOrangTua',
-        'id_pasien': 'idPasien',
-        'id_dokter': 'idDokter',
-        'created_at': checkupModel.createdAt,
-        'updated_at': checkupModel.updatedAt,
-        'deleted_at': checkupModel.deletedAt,
+        'weight': 10,
+        'height': 10,
+        'head_circumference': 10,
+        'vaccine_type': 'jenisVaksin',
+        'complaint': 'riwayatKeluhan',
+        'diagnosis': 'diagnosa',
+        'action': 'tindakan',
+        'child_id': 'idPasien',
+        'parent_id': 'idOrangTua',
+        'inspector_id': 'idDokter',
+        'created_at': checkupModel.createdAt?.toIso8601String(),
+        'updated_at': checkupModel.updatedAt?.toIso8601String(),
+        'deleted_at': checkupModel.deletedAt?.toIso8601String(),
       };
       expect(result, expected);
     });

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 class CheckupModel extends Equatable {
@@ -51,46 +50,59 @@ class CheckupModel extends Equatable {
         deletedAt
       ];
 
-  factory CheckupModel.fromFirebase(Map<String, dynamic> map, String docId) {
+  factory CheckupModel.fromSeribase(Map<String, dynamic> map) {
     return CheckupModel(
-      beratBadan: map['berat_badan'],
-      tinggiBadan: map['tinggi_badan'],
-      lingkarKepala: map['lingkar_kepala'],
-      jenisVaksin: map['jenis_vaksin'],
-      riwayatKeluhan: map['riwayat_keluhan'],
-      diagnosa: map['diagnosa'],
-      tindakan: map['tindakan'],
-      id: docId,
-      idOrangTuaPasien: map['id_orang_tua_pasien'],
-      idPasien: map['id_pasien'],
-      idDokter: map['id_dokter'],
-      createdAt: ((map['created_at'] != null)
-          ? (map['created_at'] as Timestamp).toDate()
-          : null),
-      updatedAt: ((map['updated_at'] != null)
-          ? (map['updated_at'] as Timestamp).toDate()
-          : null),
-      deletedAt: ((map['deleted_at'] != null)
-          ? (map['deleted_at'] as Timestamp).toDate()
-          : null),
+      beratBadan: map['weight'],
+      tinggiBadan: map['height'],
+      lingkarKepala: map['head_circumference'],
+      jenisVaksin: map['vaccine_type'],
+      riwayatKeluhan: map['complaint'],
+      diagnosa: map['diagnosis'],
+      tindakan: map['action'],
+      id: map['id'],
+      idOrangTuaPasien: map['parent_id'],
+      idPasien: map['child_id'],
+      idDokter: map['inspector_id'],
+      createdAt: () {
+        try {
+          return DateTime.parse(map['created_at']);
+        } catch (e) {
+          return null;
+        }
+      }(),
+      updatedAt: () {
+        try {
+          return DateTime.parse(map['updated_at']);
+        } catch (e) {
+          return null;
+        }
+      }(),
+      deletedAt: () {
+        try {
+          return DateTime.parse(map['deleted_at']);
+        } catch (e) {
+          return null;
+        }
+      }(),
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'berat_badan': beratBadan,
-      'tinggi_badan': tinggiBadan,
-      'lingkar_kepala': lingkarKepala,
-      'jenis_vaksin': jenisVaksin,
-      'riwayat_keluhan': riwayatKeluhan,
-      'diagnosa': diagnosa,
-      'tindakan': tindakan,
-      'id_pasien': idPasien,
-      'id_orang_tua_pasien': idOrangTuaPasien,
-      'id_dokter': idDokter,
-      'created_at': createdAt,
-      'updated_at': updatedAt,
-      'deleted_at': deletedAt,
+      if (beratBadan != null) 'weight': beratBadan,
+      if (tinggiBadan != null) 'height': tinggiBadan,
+      if (lingkarKepala != null) 'head_circumference': lingkarKepala,
+      // TODO: check if this is correct
+      if (jenisVaksin != null) 'vaccine_type': jenisVaksin,
+      if (riwayatKeluhan != null) 'complaint': riwayatKeluhan,
+      if (diagnosa != null) 'diagnosis': diagnosa,
+      if (tindakan != null) 'action': tindakan,
+      if (idPasien != null) 'child_id': idPasien,
+      if (idOrangTuaPasien != null) 'parent_id': idOrangTuaPasien,
+      if (idDokter != null) 'inspector_id': idDokter,
+      if (createdAt != null) 'created_at': createdAt?.toIso8601String(),
+      if (updatedAt != null) 'updated_at': updatedAt?.toIso8601String(),
+      if (deletedAt != null) 'deleted_at': deletedAt?.toIso8601String(),
     };
   }
 

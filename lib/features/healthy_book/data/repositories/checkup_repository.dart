@@ -17,7 +17,7 @@ class CheckupRepository {
           .get();
       return snapshot.docs.map((e) {
         var data = Map<String, dynamic>.from(e.data());
-        return CheckupModel.fromFirebase(data, e.id);
+        return CheckupModel.fromSeribase(data);
       }).toList();
     } on FirebaseException catch (_) {
       rethrow;
