@@ -28,4 +28,7 @@ class RootRoutePaths {
   static const RouteModel calendar = RouteModel(
     path: '/calendar',
   );
+  static const RouteModel healthyBook = RouteModel(
+    path: '/healthy-book',
+  );
 }

@@ -11,10 +11,8 @@ import 'package:eimunisasi/features/calendar/presentation/screens/add_event_cale
 import 'package:eimunisasi/features/calendar/presentation/screens/calendar_screen.dart';
 import 'package:eimunisasi/features/calendar/presentation/screens/update_event_calendar_screen.dart';
 import 'package:eimunisasi/features/healthy_book/presentation/screens/healthy_book_screen.dart';
-import 'package:eimunisasi/features/healthy_book/presentation/screens/patient_medical_history_screen.dart';
 import 'package:eimunisasi/features/onboarding/onboarding.dart';
 import 'package:eimunisasi/features/profile/data/models/anak.dart';
-import 'package:eimunisasi/features/profile/presentation/screens/list_children_screen.dart';
 import 'package:eimunisasi/features/profile/presentation/screens/parent_profile_screen.dart';
 import 'package:eimunisasi/models/appointment.dart';
 import 'package:eimunisasi/models/informasi_aplikasi.dart';
@@ -22,8 +20,6 @@ import 'package:eimunisasi/pages/home/bantuan/child/detail_informasi.dart';
 import 'package:eimunisasi/pages/home/bantuan/child/menu_eimunisasi_manual.dart';
 import 'package:eimunisasi/pages/home/bantuan/child/menu_infomasi_kesehatan.dart';
 import 'package:eimunisasi/pages/home/bantuan/child/menu_rumah_sakit.dart';
-import 'package:eimunisasi/pages/home/utama/bukusehat/child/list_anak.dart';
-import 'package:eimunisasi/pages/home/utama/bukusehat/rekam_medis_pasien/rekam_medis_pasien_screen.dart';
 import 'package:eimunisasi/pages/home/utama/kontak/klinik/list_daftar_klinik.dart';
 import 'package:eimunisasi/pages/home/utama/kontak/tenaga_kesehatan/list_daftar_nakes.dart';
 import 'package:eimunisasi/pages/home/utama/vaksinasi/daftar_vaksinasi.dart';
@@ -43,6 +39,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'calendar_router.dart';
+import 'healthy_book_router.dart';
 
 final router = GoRouter(
   routes: [
@@ -158,37 +155,8 @@ final router = GoRouter(
       routes: CalendarRouter.routes,
     ),
     GoRoute(
-      path: RoutePaths.chooseChildMedicalRecord,
-      builder: (context, __) => ListChildrenScreen(
-        onSelected: (child) {
-          context.go(
-            RoutePaths.patientMedicalRecord,
-            extra: child,
-          );
-        },
-      ),
-    ),
-    GoRoute(
-      path: RoutePaths.patientMedicalRecordScreen,
-      builder: (context, state) => PatientMedicalHistoryScreen(
-        child: state.extra as Anak,
-      ),
-    ),
-    GoRoute(
       path: RoutePaths.vaccination,
       builder: (_, __) => VaksinasiPage(),
-    ),
-    GoRoute(
-      path: RoutePaths.listAnak,
-      builder: (_, state) => ListAnak(
-        page: (state.extra as Map<String, dynamic>)['page'],
-      ),
-    ),
-    GoRoute(
-      path: RoutePaths.patientMedicalRecord,
-      builder: (_, state) => RekamMedisPasienScreen(
-        anak: state.extra as Anak,
-      ),
     ),
     GoRoute(
       path: RoutePaths.healthWorkers,
@@ -228,8 +196,9 @@ final router = GoRouter(
       builder: (_, state) => ListJanjiVaksinasi(),
     ),
     GoRoute(
-      path: RoutePaths.healthyBook,
+      path: RootRoutePaths.healthyBook.path,
       builder: (_, state) => HealthyBookScreen(),
+      routes: HealthyBookRouter.routes,
     ),
     GoRoute(
       path: RoutePaths.error,

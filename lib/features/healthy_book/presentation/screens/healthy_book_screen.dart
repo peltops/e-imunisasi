@@ -1,5 +1,5 @@
 import 'package:eimunisasi/core/utils/constant.dart';
-import 'package:eimunisasi/routers/route_paths/route_paths.dart';
+import 'package:eimunisasi/routers/route_paths/healthy_book_route_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
@@ -7,7 +7,7 @@ import 'package:go_router/go_router.dart';
 
 class HealthyBookScreen extends StatelessWidget {
   void _navigateToPatientMedicalHistoryScreen(BuildContext context) {
-    context.push(RoutePaths.chooseChildMedicalRecord);
+    context.push(HealthyBookRoutePaths.chooseChildMedicalRecord.fullPath);
   }
 
   @override

@@ -94,7 +94,6 @@ class CheckupModel extends Equatable {
       if (beratBadan != null) 'weight': beratBadan,
       if (tinggiBadan != null) 'height': tinggiBadan,
       if (lingkarKepala != null) 'head_circumference': lingkarKepala,
-      // TODO: check if this is correct
       if (jenisVaksin != null) 'vaccine_type': jenisVaksin,
       if (riwayatKeluhan != null) 'complaint': riwayatKeluhan,
       if (diagnosa != null) 'diagnosis': diagnosa,

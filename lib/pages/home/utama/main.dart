@@ -82,7 +82,7 @@ class _MainPageState extends State<MainPage> {
                       TombolMenu(
                         icon: Icons.my_library_books_rounded,
                         onTap: () {
-                          context.push(RoutePaths.healthyBook);
+                          context.push(RootRoutePaths.healthyBook.fullPath);
                         },
                         label: 'Buku Sehat',
                       ),
