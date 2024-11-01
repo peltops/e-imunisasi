@@ -19,31 +19,7 @@ class RoutePaths {
 
   static const String listChildren = '/list-children';
 
-  static const String vaccination = '/vaccination';
-
-  static const String listAnak = '/list-anak';
-
-  static const String patientMedicalRecord = '/rekam-medis-pasien';
-
   static const String healthWorkers = '/health-workers';
 
   static const String clinics = '/clinics';
-
-  static const String vaccinationConfirmation = '/vaccination-confirmation';
-
-  static const String chooseHealthWorkers = '/choose-health-workers';
-
-  static const String makeAppointmentVaccination =
-      '/make-appointment-vaccination';
-
-  static const String chooseChildVaccination = '/choose-child-vaccination';
-
-  static const String appointmentVaccination = '/appointment-vaccination';
-
-  static const String healthyBook = '/healthy-book';
-
-  static const String chooseChildMedicalRecord = '/choose-child-medical-record';
-
-  static const String patientMedicalRecordScreen =
-      '/patient-medical-record-screen';
 }

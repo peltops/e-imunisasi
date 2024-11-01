@@ -19,7 +19,10 @@ class CheckupBloc extends Bloc<CheckupEvent, CheckupState> {
       OnGetCheckupsEvent event, Emitter<CheckupState> emit) async {
     emit(state.copyWith(statusGet: FormzSubmissionStatus.inProgress));
     try {
-      final checkups = await repository.getCheckups(event.childId);
+      if (event.childId == null) {
+        throw 'Child ID must not be null';
+      }
+      final checkups = await repository.getCheckups(event.childId!);
       emit(state.copyWith(
         statusGet: FormzSubmissionStatus.success,
         checkups: checkups,
@@ -27,7 +30,7 @@ class CheckupBloc extends Bloc<CheckupEvent, CheckupState> {
     } catch (e) {
       emit(state.copyWith(
         statusGet: FormzSubmissionStatus.failure,
-        errorMessage: e.toString(),
+        errorMessage: "Gagal mendapatkan data",
       ));
     }
   }

@@ -1,26 +1,24 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:injectable/injectable.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../models/checkup_model.dart';
 
 @injectable
 class CheckupRepository {
-  final FirebaseFirestore firestore;
+  final SupabaseClient supabase;
 
-  const CheckupRepository(this.firestore);
+  const CheckupRepository(this.supabase);
 
-  Future<List<CheckupModel>> getCheckups(String? uid) async {
+  Future<List<CheckupModel>> getCheckups(String childId) async {
     try {
-      final snapshot = await firestore
-          .collection('checkups')
-          .where('id_pasien', isEqualTo: uid)
-          .get();
-      return snapshot.docs.map((e) {
-        var data = Map<String, dynamic>.from(e.data());
-        return CheckupModel.fromFirebase(data, e.id);
-      }).toList();
-    } on FirebaseException catch (_) {
-      rethrow;
+      final response = await supabase
+          .from(CheckupModel.tableName)
+          .select()
+          .eq('child_id', childId)
+          .withConverter(
+            (json) => json.map((e) => CheckupModel.fromSeribase(e)).toList(),
+          );
+      return response;
     } catch (e) {
       rethrow;
     }

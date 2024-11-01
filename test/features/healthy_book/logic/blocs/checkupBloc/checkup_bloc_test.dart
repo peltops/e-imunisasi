@@ -24,7 +24,7 @@ void main() {
     "CheckupBloc on get checkups emit success",
     setUp: () {
       when(mockCheckupRepository.getCheckups(
-        any,
+        'childId',
       )).thenAnswer((_) async => [
             mockCheckupModel,
           ]);
@@ -32,7 +32,9 @@ void main() {
     build: () => CheckupBloc(
       mockCheckupRepository,
     ),
-    act: (bloc) => bloc.add(OnGetCheckupsEvent()),
+    act: (bloc) => bloc.add(OnGetCheckupsEvent(
+      childId: 'childId',
+    )),
     expect: () => [
       CheckupState(statusGet: FormzSubmissionStatus.inProgress),
       CheckupState(
@@ -45,7 +47,7 @@ void main() {
     "CheckupBloc on get checkups emit failure",
     setUp: () {
       when(mockCheckupRepository.getCheckups(
-        any,
+        'childId',
       )).thenThrow(Exception());
     },
     build: () => CheckupBloc(
@@ -55,7 +57,9 @@ void main() {
     expect: () => [
       CheckupState(statusGet: FormzSubmissionStatus.inProgress),
       CheckupState(
-          statusGet: FormzSubmissionStatus.failure, errorMessage: "Exception"),
+        statusGet: FormzSubmissionStatus.failure,
+        errorMessage: "Gagal mendapatkan data",
+      ),
     ],
   );
 }

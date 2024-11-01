@@ -1,15 +1,10 @@
 import 'package:eimunisasi/core/utils/constant.dart';
-import 'package:eimunisasi/routers/route_paths/healthy_book_route_paths.dart';
+import 'package:eimunisasi/routers/route_paths/vaccination_route_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
-
-class HealthyBookScreen extends StatelessWidget {
-  void _navigateToPatientMedicalHistoryScreen(BuildContext context) {
-    context.push(HealthyBookRoutePaths.chooseChildMedicalRecord.fullPath);
-  }
-
+class VaccinationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +13,7 @@ class HealthyBookScreen extends StatelessWidget {
         backgroundColor: Colors.pink[300],
         elevation: 0.0,
         title: Text(
-          AppConstant.HEALTH_BOOK_LABEL,
+          AppConstant.VACCINATION,
           style: TextStyle(fontWeight: FontWeight.w700),
         ),
       ),
@@ -29,27 +24,47 @@ class HealthyBookScreen extends StatelessWidget {
             margin: EdgeInsets.all(20),
             elevation: 0,
             child: Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
               child: Column(
                 children: [
                   SizedBox(
                     height: 150,
                     child: SvgPicture.asset(
-                      'assets/images/undraw_Books_l33t.svg',
+                      'assets/images/undraw_medical_care_movn.svg',
+                      semanticsLabel: 'A red up arrow',
                     ),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Card(
                     child: ListTile(
                       onTap: () {
-                        _navigateToPatientMedicalHistoryScreen(context);
+                        context.push(
+                          VaccinationRoutePaths.chooseChildVaccination.fullPath,
+                        );
                       },
                       leading: Icon(
-                        Icons.history,
+                        Icons.medical_services_outlined,
                         color: Theme.of(context).primaryColor,
                         size: 30,
                       ),
-                      title: Text('Buku Sehat'),
+                      title: Text('Vaksinasi'),
+                    ),
+                  ),
+                  Card(
+                    child: ListTile(
+                      onTap: () {
+                        context.push(
+                          VaccinationRoutePaths.appointmentVaccination.fullPath,
+                        );
+                      },
+                      leading: Icon(
+                        Icons.list_rounded,
+                        color: Theme.of(context).primaryColor,
+                        size: 30,
+                      ),
+                      title: Text('Daftar Janji'),
                     ),
                   ),
                 ],

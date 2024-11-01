@@ -1,6 +1,5 @@
 import 'package:eimunisasi/routers/route_paths/profile_route_paths.dart';
 import 'package:eimunisasi/routers/route_paths/root_route_paths.dart';
-import 'package:eimunisasi/routers/route_paths/route_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
@@ -75,14 +74,14 @@ class _MainPageState extends State<MainPage> {
                       TombolMenu(
                         icon: Icons.medical_services_rounded,
                         onTap: () {
-                          context.push(RoutePaths.vaccination);
+                          context.push(RootRoutePaths.vaccination.fullPath);
                         },
                         label: 'Vaksinasi',
                       ),
                       TombolMenu(
                         icon: Icons.my_library_books_rounded,
                         onTap: () {
-                          context.push(RoutePaths.healthyBook);
+                          context.push(RootRoutePaths.healthyBook.fullPath);
                         },
                         label: 'Buku Sehat',
                       ),
