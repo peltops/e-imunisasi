@@ -30,7 +30,7 @@ class CheckupBloc extends Bloc<CheckupEvent, CheckupState> {
     } catch (e) {
       emit(state.copyWith(
         statusGet: FormzSubmissionStatus.failure,
-        errorMessage: e.toString(),
+        errorMessage: "Gagal mendapatkan data",
       ));
     }
   }

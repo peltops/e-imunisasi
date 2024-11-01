@@ -58,7 +58,7 @@ void main() {
       CheckupState(statusGet: FormzSubmissionStatus.inProgress),
       CheckupState(
         statusGet: FormzSubmissionStatus.failure,
-        errorMessage: "Child ID must not be null",
+        errorMessage: "Gagal mendapatkan data",
       ),
     ],
   );
