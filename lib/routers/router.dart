@@ -14,6 +14,8 @@ import 'package:eimunisasi/features/healthy_book/presentation/screens/healthy_bo
 import 'package:eimunisasi/features/onboarding/onboarding.dart';
 import 'package:eimunisasi/features/profile/data/models/anak.dart';
 import 'package:eimunisasi/features/profile/presentation/screens/parent_profile_screen.dart';
+import 'package:eimunisasi/features/vaccination/presentation/screens/vaccination_register_screen.dart';
+import 'package:eimunisasi/features/vaccination/presentation/screens/vaccination_screen.dart';
 import 'package:eimunisasi/models/appointment.dart';
 import 'package:eimunisasi/models/informasi_aplikasi.dart';
 import 'package:eimunisasi/pages/home/bantuan/child/detail_informasi.dart';
@@ -22,22 +24,21 @@ import 'package:eimunisasi/pages/home/bantuan/child/menu_infomasi_kesehatan.dart
 import 'package:eimunisasi/pages/home/bantuan/child/menu_rumah_sakit.dart';
 import 'package:eimunisasi/pages/home/utama/kontak/klinik/list_daftar_klinik.dart';
 import 'package:eimunisasi/pages/home/utama/kontak/tenaga_kesehatan/list_daftar_nakes.dart';
-import 'package:eimunisasi/pages/home/utama/vaksinasi/daftar_vaksinasi.dart';
-import 'package:eimunisasi/pages/home/utama/vaksinasi/konfirmasi_janji.dart';
-import 'package:eimunisasi/pages/home/utama/vaksinasi/list_anak_vaksinasi.dart';
-import 'package:eimunisasi/pages/home/utama/vaksinasi/list_janji.dart';
-import 'package:eimunisasi/pages/home/utama/vaksinasi/list_nakes_vaksinasi.dart';
-import 'package:eimunisasi/pages/home/utama/vaksinasi/vaksinasi.dart';
 import 'package:eimunisasi/routers/auth_local_router.dart';
 import 'package:eimunisasi/routers/auth_router.dart';
 import 'package:eimunisasi/routers/profile_router.dart';
 import 'package:eimunisasi/routers/route_paths/auth_route_paths.dart';
 import 'package:eimunisasi/routers/route_paths/root_route_paths.dart';
 import 'package:eimunisasi/routers/route_paths/route_paths.dart';
+import 'package:eimunisasi/routers/route_paths/vaccination_route_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../features/profile/presentation/screens/list_children_screen.dart';
+import '../features/vaccination/presentation/screens/appointments_screen.dart';
+import '../features/vaccination/presentation/screens/choose_nakes_screen.dart';
+import '../features/vaccination/presentation/screens/vaccination_confirmation_screen.dart';
 import 'calendar_router.dart';
 import 'healthy_book_router.dart';
 
@@ -155,8 +156,53 @@ final router = GoRouter(
       routes: CalendarRouter.routes,
     ),
     GoRoute(
-      path: RoutePaths.vaccination,
-      builder: (_, __) => VaksinasiPage(),
+      path: RootRoutePaths.vaccination.path,
+      builder: (_, __) => VaccinationScreen(),
+      routes: [
+        GoRoute(
+          path: VaccinationRoutePaths.chooseChildVaccination.path,
+          builder: (context, __) => ListChildrenScreen(
+            onSelected: (child) {
+              context.push(
+                VaccinationRoutePaths.chooseNakesVaccination.fullPath,
+                extra: child,
+              );
+            },
+          ),
+        ),
+        GoRoute(
+          path: VaccinationRoutePaths.chooseNakesVaccination.path,
+          builder: (context, state) => ChooseNakesScreen(
+            anak: state.extra as Anak,
+            onSelected: (nakes) {
+              context.push(
+                VaccinationRoutePaths.makeAppointmentVaccination.fullPath,
+                extra: {
+                  'healthWorker': nakes,
+                  'child': state.extra as Anak,
+                },
+              );
+            },
+          ),
+        ),
+        GoRoute(
+          path: VaccinationRoutePaths.makeAppointmentVaccination.path,
+          builder: (_, state) => VaccinationRegisterScreen(
+            nakes: (state.extra as Map<String, dynamic>)['healthWorker'],
+            anak: (state.extra as Map<String, dynamic>)['child'],
+          ),
+        ),
+        GoRoute(
+          path: VaccinationRoutePaths.vaccinationConfirmation.path,
+          builder: (_, state) => VaccinationConfirmationScreen(
+            appointment: state.extra as AppointmentModel,
+          ),
+        ),
+        GoRoute(
+          path: VaccinationRoutePaths.appointmentVaccination.path,
+          builder: (_, state) => AppointmentsScreen(),
+        ),
+      ]
     ),
     GoRoute(
       path: RoutePaths.healthWorkers,
@@ -167,33 +213,6 @@ final router = GoRouter(
     GoRoute(
       path: RoutePaths.clinics,
       builder: (_, state) => ListDaftarKlinik(),
-    ),
-    GoRoute(
-      path: RoutePaths.vaccinationConfirmation,
-      builder: (_, state) => KonfirmasiVaksinasiPage(
-        appointment: state.extra as AppointmentModel,
-      ),
-    ),
-    GoRoute(
-      path: RoutePaths.chooseHealthWorkers,
-      builder: (_, state) => ChooseNakesScreen(
-        anak: state.extra as Anak,
-      ),
-    ),
-    GoRoute(
-      path: RoutePaths.makeAppointmentVaccination,
-      builder: (_, state) => DaftarVaksinasiPage(
-        nakes: (state.extra as Map<String, dynamic>)['healthWorker'],
-        anak: (state.extra as Map<String, dynamic>)['child'],
-      ),
-    ),
-    GoRoute(
-      path: RoutePaths.chooseChildVaccination,
-      builder: (_, state) => ListAnakVaksinasi(),
-    ),
-    GoRoute(
-      path: RoutePaths.appointmentVaccination,
-      builder: (_, state) => ListJanjiVaksinasi(),
     ),
     GoRoute(
       path: RootRoutePaths.healthyBook.path,

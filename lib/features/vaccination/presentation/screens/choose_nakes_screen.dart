@@ -1,14 +1,18 @@
 import 'package:eimunisasi/features/profile/data/models/anak.dart';
 import 'package:eimunisasi/models/nakes.dart';
 import 'package:eimunisasi/core/widgets/search_bar.dart';
-import 'package:eimunisasi/routers/route_paths/route_paths.dart';
 import 'package:eimunisasi/services/nakes_service.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class ChooseNakesScreen extends StatelessWidget {
   final Anak anak;
-  const ChooseNakesScreen({Key? key, required this.anak}) : super(key: key);
+  final Function(Nakes)? onSelected;
+
+  const ChooseNakesScreen({
+    Key? key,
+    required this.anak,
+    this.onSelected,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -48,25 +52,24 @@ class ChooseNakesScreen extends StatelessWidget {
                               itemBuilder: (context, index) {
                                 final nakes = data[index];
                                 return Card(
-                                    child: ListTile(
-                                  onTap: () {
-                                    context.push(
-                                      RoutePaths.makeAppointmentVaccination,
-                                      extra: {
-                                        'child': anak,
-                                        'healthWorker': nakes,
-                                      },
-                                    );
-                                  },
-                                  title: Text(
-                                    nakes.namaLengkap!,
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w700),
+                                  child: ListTile(
+                                    onTap: () {
+                                      if (onSelected != null) {
+                                        onSelected!(nakes);
+                                        return;
+                                      }
+                                    },
+                                    title: Text(
+                                      nakes.namaLengkap ?? "",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    subtitle: Text(nakes.profesi ?? ""),
+                                    trailing: Icon(
+                                        Icons.keyboard_arrow_right_rounded),
                                   ),
-                                  subtitle: Text(nakes.profesi ?? ""),
-                                  trailing:
-                                      Icon(Icons.keyboard_arrow_right_rounded),
-                                ));
+                                );
                               },
                             );
                           }

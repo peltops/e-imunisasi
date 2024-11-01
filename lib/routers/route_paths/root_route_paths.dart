@@ -31,4 +31,7 @@ class RootRoutePaths {
   static const RouteModel healthyBook = RouteModel(
     path: '/healthy-book',
   );
+  static const RouteModel vaccination = RouteModel(
+    path: '/vaccination',
+  );
 }
