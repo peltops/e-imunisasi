@@ -16,7 +16,7 @@ import 'package:eimunisasi/features/profile/data/models/anak.dart';
 import 'package:eimunisasi/features/profile/presentation/screens/parent_profile_screen.dart';
 import 'package:eimunisasi/features/vaccination/presentation/screens/vaccination_register_screen.dart';
 import 'package:eimunisasi/features/vaccination/presentation/screens/vaccination_screen.dart';
-import 'package:eimunisasi/models/appointment.dart';
+import 'package:eimunisasi/features/vaccination/data/models/appointment_model.dart';
 import 'package:eimunisasi/models/informasi_aplikasi.dart';
 import 'package:eimunisasi/pages/home/bantuan/child/detail_informasi.dart';
 import 'package:eimunisasi/pages/home/bantuan/child/menu_eimunisasi_manual.dart';

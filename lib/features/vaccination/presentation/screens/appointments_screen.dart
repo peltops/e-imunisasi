@@ -1,6 +1,5 @@
 import 'package:eimunisasi/features/authentication/logic/bloc/authentication_bloc/authentication_bloc.dart';
-import 'package:eimunisasi/models/appointment.dart';
-import 'package:eimunisasi/services/appointment_services.dart';
+import 'package:eimunisasi/features/vaccination/data/models/appointment_model.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -38,8 +37,8 @@ class AppointmentsScreen extends StatelessWidget {
                   child: Card(
                     elevation: 0,
                     child: FutureBuilder<List<AppointmentModel>>(
-                      future: AppointmentService(uid: currentUser.uid)
-                          .getAppointment(),
+                      // TODO: Implement the future
+                      future: Future.value([]),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           final data = snapshot.data;
@@ -58,15 +57,15 @@ class AppointmentsScreen extends StatelessWidget {
                                       );
                                     },
                                     title: Text(
-                                      appointment.anak!.nama! +
-                                          ' (${appointment.anak!.umurAnak})',
+                                      appointment.child!.nama! +
+                                          ' (${appointment.child!.umurAnak})',
                                       style: TextStyle(
                                         fontWeight: FontWeight.w700,
                                       ),
                                     ),
                                     subtitle: Text(
                                       DateFormat('dd MMMM yyyy')
-                                          .format(appointment.tanggal!),
+                                          .format(appointment.date!),
                                       style: TextStyle(
                                         fontWeight: FontWeight.w700,
                                       ),

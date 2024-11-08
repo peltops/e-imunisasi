@@ -1,5 +1,5 @@
 import 'package:eimunisasi/core/utils/constant.dart';
-import 'package:eimunisasi/models/appointment.dart';
+import 'package:eimunisasi/features/vaccination/data/models/appointment_model.dart';
 import 'package:eimunisasi/core/widgets/button_custom.dart';
 import 'package:eimunisasi/routers/route_paths/route_paths.dart';
 import 'package:flutter/material.dart';
@@ -78,14 +78,14 @@ class _VaccinationConfirmationScreenState
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              widget.appointment.anak!.nama!,
+                              widget.appointment.child!.nama!,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 15,
                               ),
                             ),
                             Text(
-                              widget.appointment.anak!.umurAnak,
+                              widget.appointment.child!.umurAnak,
                             ),
                           ],
                         ),
@@ -103,12 +103,12 @@ class _VaccinationConfirmationScreenState
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              widget.appointment.nakes!.namaLengkap!,
+                              widget.appointment.healthWorker!.namaLengkap!,
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 15),
                             ),
                             Text(
-                              widget.appointment.nakes!.profesi!,
+                              widget.appointment.healthWorker!.profesi!,
                             ),
                           ],
                         ),
@@ -126,7 +126,7 @@ class _VaccinationConfirmationScreenState
                             ),
                             Text(
                               DateFormat('dd MMMM yyyy')
-                                  .format(widget.appointment.tanggal!),
+                                  .format(widget.appointment.date!),
                             ),
                           ],
                         ),
@@ -138,7 +138,7 @@ class _VaccinationConfirmationScreenState
                                   fontWeight: FontWeight.bold, fontSize: 15),
                             ),
                             Text(
-                              widget.appointment.desc!.split(', ')[1],
+                              widget.appointment.note!.split(', ')[1],
                             ),
                           ],
                         ),
