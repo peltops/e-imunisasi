@@ -1,3 +1,4 @@
+import 'package:eimunisasi/features/authentication/data/models/user.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:eimunisasi/features/vaccination/data/repositories/appointment_repository.dart';
 import 'package:eimunisasi/features/vaccination/data/models/appointment_model.dart';
@@ -11,6 +12,9 @@ void main() {
     late var mockHttpClient;
     final data1 = AppointmentModel(
       id: 'd8bfed26-f491-4478-b182-fdc2e8074212c',
+      parent: Users(
+        uid: '1',
+      ),
       date: DateTime.now(),
       note: 'Note',
       purpose: 'Purpose',
@@ -37,7 +41,9 @@ void main() {
     group('getAppointments', () {
       test('returns a list of appointments when successful', () async {
         await repository.setAppointment(data1);
-        final result = await repository.getAppointments();
+        final result = await repository.getAppointments(
+          userId: '1',
+        );
 
         expect(result, isA<List<AppointmentModel>>());
         expect(result.length, 1);

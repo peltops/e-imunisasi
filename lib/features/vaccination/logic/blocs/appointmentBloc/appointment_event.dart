@@ -4,36 +4,25 @@ sealed class AppointmentEvent extends Equatable {
   const AppointmentEvent();
 }
 
-class LoadAppointment extends AppointmentEvent {
+class LoadAppointmentsEvent extends AppointmentEvent {
   final String userId;
-  const LoadAppointment(this.userId);
+  const LoadAppointmentsEvent(this.userId);
 
   @override
   List<Object?> get props => [userId];
 }
 
-class CreateAppointment extends AppointmentEvent {
+class CreateAppointmentEvent extends AppointmentEvent {
   final AppointmentModel appointment;
-
-  const CreateAppointment(this.appointment);
+  const CreateAppointmentEvent(this.appointment);
 
   @override
   List<Object?> get props => [appointment];
 }
 
-class UpdateAppointment extends AppointmentEvent {
+class UpdateAppointmentEvent extends AppointmentEvent {
   final AppointmentModel appointment;
-
-  const UpdateAppointment(this.appointment);
-
-  @override
-  List<Object?> get props => [appointment];
-}
-
-class DeleteAppointment extends AppointmentEvent {
-  final AppointmentModel appointment;
-
-  DeleteAppointment(this.appointment);
+  const UpdateAppointmentEvent(this.appointment);
 
   @override
   List<Object?> get props => [appointment];

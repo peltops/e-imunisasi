@@ -4,6 +4,7 @@ import 'package:eimunisasi/features/authentication/logic/bloc/authentication_blo
 import 'package:eimunisasi/features/profile/data/models/anak.dart';
 import 'package:eimunisasi/features/vaccination/data/models/appointment_model.dart';
 import 'package:eimunisasi/features/vaccination/logic/blocs/appointmentBloc/appointment_bloc.dart';
+import 'package:eimunisasi/injection.dart';
 import 'package:eimunisasi/models/nakes.dart';
 import 'package:eimunisasi/core/widgets/button_custom.dart';
 import 'package:eimunisasi/core/widgets/snackbar_custom.dart';
@@ -29,7 +30,7 @@ class VaccinationRegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AppointmentBloc(),
+      create: (context) => getIt<AppointmentBloc>(),
       child: _VaccinationRegisterScaffold(
         child: anak,
         healthWorker: nakes,
@@ -56,7 +57,6 @@ class _VaccinationRegisterScaffoldState
     extends State<_VaccinationRegisterScaffold> {
   String _tanggal = 'Pilih tanggal';
   JadwalPraktek? selectedRadioTile;
-  bool isLoading = false;
 
   final kFirstDay = DateTime.now();
   final kLastDay = DateTime(DateTime.now().year + 1);
@@ -94,158 +94,149 @@ class _VaccinationRegisterScaffoldState
             style: TextStyle(fontWeight: FontWeight.w700),
           ),
         ),
-        body: SizedBox.expand(
-          child: Container(
-            color: Colors.pink[100],
-            child: Card(
-              margin: EdgeInsets.all(20),
-              elevation: 0,
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Nama Nakes: ' +
-                            (widget.healthWorker.namaLengkap ?? '-'),
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 15),
+        body: BlocBuilder<AppointmentBloc, AppointmentState>(
+          builder: (context, state) {
+            return SizedBox.expand(
+              child: Container(
+                color: Colors.pink[100],
+                child: Card(
+                  margin: EdgeInsets.all(20),
+                  elevation: 0,
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 20,
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        'Jadwal Praktek',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 15),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      ...?widget.healthWorker.jadwal?.map((jadwal) {
-                        return Column(
-                          children: [
-                            Text(
-                              (jadwal.hari?.capitalize() ?? '') +
-                                  ', ' +
-                                  (jadwal.jam ?? ''),
-                            ),
-                            SizedBox(height: 5),
-                          ],
-                        );
-                      }).toList(),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        'Jadwal Praktek Imunisasi',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 15),
-                      ),
-                      Column(
-                        children: () {
-                          final jadwalImunisasi =
-                              widget.healthWorker.jadwalImunisasi;
-                          if (jadwalImunisasi == null) {
-                            return Text('Belum ada jadwal imunisasi');
-                          } else {
-                            return jadwalImunisasi
-                                .map(
-                                  (e) => RadioListTile(
-                                    dense: true,
-                                    contentPadding: EdgeInsets.all(0),
-                                    value: e,
-                                    groupValue: selectedRadioTile,
-                                    title: Text(
-                                      e.hari!.capitalize() + ', ' + e.jam!,
-                                    ),
-                                    onChanged: setSelectedRadioTile,
-                                  ),
-                                )
-                                .toList();
-                          }
-                        }() as List<Widget>,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      ListTile(
-                        shape: RoundedRectangleBorder(
-                          side: BorderSide(color: Colors.grey[300]!, width: 2),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        dense: true,
-                        onTap: () async {
-                          final date = await Picker.pickDate(context);
-                          if (date != null) {
-                            String formattedDate =
-                                DateFormat('yyyy-MM-dd').format(date);
-                            setState(() {
-                              _tanggal = formattedDate.toString();
-                            });
-                          }
-                        },
-                        trailing: Icon(
-                          Icons.date_range,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                        title: Text(_tanggal),
-                      ),
-                      SizedBox(height: 30),
-                      ButtonCustom(
-                        onPressed: isLoading
-                            ? null
-                            : () {
-                                setState(() {
-                                  isLoading = true;
-                                });
-                                if (selectedRadioTile == null ||
-                                    _tanggal == 'Pilih tanggal') {
-                                  snackbarCustom(
-                                    'Lengkapi data terlebih dahulu!',
-                                  ).show(context);
-                                  return;
-                                }
-                                final appointment = AppointmentModel(
-                                  date: DateTime.parse(_tanggal),
-                                  child: widget.child,
-                                  parent: user,
-                                  healthWorker: widget.healthWorker,
-                                  purpose: 'Imunisasi',
-                                  note: 'Imunisasi',
-                                );
-                                try {
-                                  // TODO: FIX THIS
-                                  context.read<AppointmentBloc>().add(
-                                        CreateAppointment(appointment),
-                                      );
-                                } catch (e) {
-                                  snackbarCustom(
-                                    AppConstant.MAKE_APPOINTMENT_FAILED,
-                                  ).show(context);
-                                } finally {
-                                  setState(() {
-                                    isLoading = false;
-                                  });
-                                }
-                              },
-                        child: isLoading
-                            ? Center(
-                                child: CircularProgressIndicator(),
-                              )
-                            : Text(
-                                'Buat Janji',
-                                style: TextStyle(color: Colors.white),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Nama Nakes: ' +
+                                (widget.healthWorker.namaLengkap ?? '-'),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 15),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            'Jadwal Praktek',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 15),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          ...?widget.healthWorker.jadwal?.map((jadwal) {
+                            return Column(
+                              children: [
+                                Text(
+                                  (jadwal.hari?.capitalize() ?? '') +
+                                      ', ' +
+                                      (jadwal.jam ?? ''),
+                                ),
+                                SizedBox(height: 5),
+                              ],
+                            );
+                          }).toList(),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            'Jadwal Praktek Imunisasi',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 15),
+                          ),
+                          Column(
+                            children: () {
+                              final jadwalImunisasi =
+                                  widget.healthWorker.jadwalImunisasi;
+                              if (jadwalImunisasi == null) {
+                                return Text('Belum ada jadwal imunisasi');
+                              } else {
+                                return jadwalImunisasi
+                                    .map(
+                                      (e) => RadioListTile(
+                                        dense: true,
+                                        contentPadding: EdgeInsets.all(0),
+                                        value: e,
+                                        groupValue: selectedRadioTile,
+                                        title: Text(
+                                          e.hari!.capitalize() + ', ' + e.jam!,
+                                        ),
+                                        onChanged: setSelectedRadioTile,
+                                      ),
+                                    )
+                                    .toList();
+                              }
+                            }() as List<Widget>,
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          ListTile(
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                                color: Colors.grey[300]!,
+                                width: 2,
                               ),
-                      )
-                    ],
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            dense: true,
+                            onTap: () async {
+                              final date = await Picker.pickDate(context);
+                              if (date != null) {
+                                String formattedDate =
+                                    DateFormat('yyyy-MM-dd').format(date);
+                                setState(() {
+                                  _tanggal = formattedDate.toString();
+                                });
+                              }
+                            },
+                            trailing: Icon(
+                              Icons.date_range,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            title: Text(_tanggal),
+                          ),
+                          SizedBox(height: 30),
+                          ButtonCustom(
+                            loading: state.statusSubmit ==
+                                FormzSubmissionStatus.inProgress,
+                            onPressed: () {
+                              if (selectedRadioTile == null ||
+                                  _tanggal == 'Pilih tanggal') {
+                                snackbarCustom(
+                                  'Lengkapi data terlebih dahulu!',
+                                ).show(context);
+                                return;
+                              }
+                              final appointment = AppointmentModel(
+                                date: DateTime.parse(_tanggal),
+                                child: widget.child,
+                                parent: user,
+                                healthWorker: widget.healthWorker,
+                                purpose: 'Imunisasi',
+                                note: 'Imunisasi',
+                              );
+                              context.read<AppointmentBloc>().add(
+                                    CreateAppointmentEvent(appointment),
+                                  );
+                            },
+                            child: Text(
+                              'Buat Janji',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
+            );
+          },
         ),
       ),
     );

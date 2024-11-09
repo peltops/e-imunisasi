@@ -1,11 +1,11 @@
-import 'package:eimunisasi/features/authentication/logic/bloc/authentication_bloc/authentication_bloc.dart';
-import 'package:eimunisasi/features/vaccination/data/models/appointment_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:formz/formz.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../routers/route_paths/vaccination_route_paths.dart';
+import '../../logic/blocs/appointmentBloc/appointment_bloc.dart';
 
 class AppointmentsScreen extends StatelessWidget {
   final page;
@@ -14,7 +14,6 @@ class AppointmentsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = (context.watch<AuthenticationBloc>().state as Authenticated).user;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.pink[300],
@@ -36,54 +35,47 @@ class AppointmentsScreen extends StatelessWidget {
                   width: double.infinity,
                   child: Card(
                     elevation: 0,
-                    child: FutureBuilder<List<AppointmentModel>>(
-                      // TODO: Implement the future
-                      future: Future.value([]),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          final data = snapshot.data;
-                          if (data != null && data.length > 0) {
-                            return ListView.builder(
-                              itemCount: data.length,
-                              itemBuilder: (context, index) {
-                                final appointment = data[index];
-                                return Card(
-                                  child: ListTile(
-                                    onTap: () {
-                                      context.push(
-                                        VaccinationRoutePaths
-                                            .vaccinationConfirmation.fullPath,
-                                        extra: appointment,
-                                      );
-                                    },
-                                    title: Text(
-                                      appointment.child!.nama! +
-                                          ' (${appointment.child!.umurAnak})',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                    subtitle: Text(
-                                      DateFormat('dd MMMM yyyy')
-                                          .format(appointment.date!),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                    trailing: Icon(
-                                      Icons.keyboard_arrow_right_rounded,
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          }
-                        } else if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
+                    child: BlocBuilder<AppointmentBloc, AppointmentState>(
+                      builder: (context, state) {
+                        if (state.statusGet ==
+                            FormzSubmissionStatus.inProgress) {
                           return Center(child: CircularProgressIndicator());
                         }
-                        return Center(
-                          child: Text('Tidak ada data'),
+                        final data = state.getAppointments;
+                        return ListView.builder(
+                          itemCount: data.length,
+                          itemBuilder: (context, index) {
+                            final appointment = data[index];
+                            return Card(
+                              child: ListTile(
+                                onTap: () {
+                                  context.push(
+                                    VaccinationRoutePaths
+                                        .vaccinationConfirmation.fullPath,
+                                    extra: appointment,
+                                  );
+                                },
+                                title: Text(
+                                  (appointment.child?.nama ?? '') +
+                                      ' ' +
+                                      (appointment.child?.umurAnak ?? ''),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  DateFormat('dd MMMM yyyy')
+                                      .format(appointment.date!),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                trailing: Icon(
+                                  Icons.keyboard_arrow_right_rounded,
+                                ),
+                              ),
+                            );
+                          },
                         );
                       },
                     ),

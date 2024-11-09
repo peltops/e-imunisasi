@@ -10,14 +10,17 @@ class AppointmentRepository {
     this.supabaseClient,
   );
 
-  Future<List<AppointmentModel>> getAppointments() async {
+  Future<List<AppointmentModel>> getAppointments({
+    required String userId,
+  }) async {
     final result = await supabaseClient
         .from(AppointmentModel.tableName)
         .select('''
           *,
           profiles:parent_id ( * ),
-          children:child_id ( * ),
+          children:child_id ( * )
         ''')
+        .eq('parent_id', userId)
         .order(
           'date',
           ascending: true,
@@ -39,7 +42,7 @@ class AppointmentRepository {
           '''
           *,
           profiles:parent_id ( * ),
-          children:child_id ( * ),
+          children:child_id ( * )
         ''',
         )
         .eq('id', id)
@@ -58,7 +61,7 @@ class AppointmentRepository {
             '''
             *,
             profiles:parent_id ( * ),
-            children:child_id ( * ),
+            children:child_id ( * )
           ''',
           )
           .limit(1)
