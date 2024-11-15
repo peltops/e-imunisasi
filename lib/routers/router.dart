@@ -37,7 +37,7 @@ import 'package:go_router/go_router.dart';
 
 import '../features/profile/presentation/screens/list_children_screen.dart';
 import '../features/vaccination/presentation/screens/appointments_screen.dart';
-import '../features/vaccination/presentation/screens/choose_nakes_screen.dart';
+import '../features/health_worker/presentation/screens/choose_nakes_screen.dart';
 import '../features/vaccination/presentation/screens/vaccination_confirmation_screen.dart';
 import 'calendar_router.dart';
 import 'healthy_book_router.dart';
@@ -172,8 +172,8 @@ final router = GoRouter(
         ),
         GoRoute(
           path: VaccinationRoutePaths.chooseNakesVaccination.path,
-          builder: (context, state) => ChooseNakesScreen(
-            anak: state.extra as Anak,
+          builder: (context, state) => ChooseHealthWorkerScreen(
+            child: state.extra as Anak,
             onSelected: (nakes) {
               context.push(
                 VaccinationRoutePaths.makeAppointmentVaccination.fullPath,
