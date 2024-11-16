@@ -1,5 +1,5 @@
+import 'package:eimunisasi/features/health_worker/data/models/health_worker_model.dart';
 import 'package:eimunisasi/features/profile/data/models/anak.dart';
-import 'package:eimunisasi/models/nakes.dart';
 import 'package:eimunisasi/features/authentication/data/models/user.dart';
 import 'package:equatable/equatable.dart';
 
@@ -8,7 +8,7 @@ class AppointmentModel extends Equatable {
   final DateTime? date;
   final Anak? child;
   final Users? parent;
-  final Nakes? healthWorker;
+  final HealthWorkerModel? healthWorker;
   final String? purpose;
   final String? note;
 
@@ -29,7 +29,7 @@ class AppointmentModel extends Equatable {
     DateTime? date,
     Anak? child,
     Users? parent,
-    Nakes? healthWorker,
+    HealthWorkerModel? healthWorker,
     String? note,
     String? purpose,
   }) {
@@ -68,6 +68,12 @@ class AppointmentModel extends Equatable {
           return null;
         }
       }(),
+      child: map['children'] != null
+          ? Anak.fromSeribase(map['children'])
+          : null,
+      parent: map['profiles'] != null
+          ? Users.fromSeribase(map['profiles'])
+          : null,
       note: map['note'],
       purpose: map['purpose'],
     );

@@ -129,7 +129,6 @@ class _ChooseHealthWorkerScaffold extends StatelessWidget {
                             onSelected: (healthWorker) {
                               if (onSelected != null) {
                                 onSelected!(healthWorker);
-                                Navigator.pop(context);
                               }
                             },
                           );

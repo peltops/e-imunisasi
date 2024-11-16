@@ -1,29 +1,45 @@
+import 'package:eimunisasi/core/extension.dart';
 import 'package:eimunisasi/core/utils/constant.dart';
-import 'package:eimunisasi/features/vaccination/data/models/appointment_model.dart';
 import 'package:eimunisasi/core/widgets/button_custom.dart';
-import 'package:eimunisasi/routers/route_paths/route_paths.dart';
+import 'package:eimunisasi/injection.dart';
+import 'package:eimunisasi/routers/route_paths/root_route_paths.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:formz/formz.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:intl/intl.dart';
 
-class VaccinationConfirmationScreen extends StatefulWidget {
-  final AppointmentModel appointment;
+import '../../logic/blocs/appointmentBloc/appointment_bloc.dart';
 
-  const VaccinationConfirmationScreen({Key? key, required this.appointment})
-      : super(key: key);
+class VaccinationConfirmationScreen extends StatelessWidget {
+  final String appointmentId;
+
+  const VaccinationConfirmationScreen({
+    Key? key,
+    required this.appointmentId,
+  }) : super(key: key);
 
   @override
-  _VaccinationConfirmationScreenState createState() =>
-      _VaccinationConfirmationScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => getIt<AppointmentBloc>()
+        ..add(
+          LoadAppointmentEvent(appointmentId),
+        ),
+      child: _VaccinationConfirmationScaffold(),
+    );
+  }
 }
 
-class _VaccinationConfirmationScreenState
-    extends State<VaccinationConfirmationScreen> {
+class _VaccinationConfirmationScaffold extends StatelessWidget {
+  const _VaccinationConfirmationScaffold();
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: Colors.pink[100],
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Colors.pink[300],
@@ -33,133 +49,153 @@ class _VaccinationConfirmationScreenState
           style: TextStyle(fontWeight: FontWeight.w700),
         ),
       ),
-      body: SizedBox.expand(
-        child: Container(
-          color: Colors.pink[100],
-          child: Card(
-            margin: EdgeInsets.all(20),
-            elevation: 0,
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 20,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Center(
-                      child: QrImageView(
-                        data: widget.appointment.id!,
-                        size: size.width * 0.5,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      'Konfirmasi Janji',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
-                      ),
-                    ),
-                    Text(
-                      'Janji dengan Nakes telah dibuat. Lihat detail Informasi berikut: ',
-                      style: TextStyle(color: Colors.red),
-                    ),
-                    SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.person,
-                          color: Colors.pink[300],
+      body: BlocBuilder<AppointmentBloc, AppointmentState>(
+        builder: (context, state) {
+          if (state.statusGetAppointment == FormzSubmissionStatus.inProgress) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          final date = () {
+            if (state.getAppointment?.date == null) {
+              return emptyString;
+            }
+            return DateFormat('dd MMMM yyyy')
+                .format(state.getAppointment!.date!);
+          }();
+          return Container(
+            color: Colors.pink[100],
+            child: Card(
+              margin: EdgeInsets.all(20),
+              elevation: 0,
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 20,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: QrImageView(
+                          data: state.getAppointment?.id ?? '',
+                          size: size.width * 0.5,
                         ),
-                        SizedBox(width: 10),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              widget.appointment.child!.nama!,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15,
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        'Konfirmasi Janji',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
+                      ),
+                      Text(
+                        'Janji dengan Nakes telah dibuat. Lihat detail Informasi berikut: ',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                      SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.person,
+                            color: Colors.pink[300],
+                          ),
+                          SizedBox(width: 10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                state.getAppointment?.child?.nama ?? '',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
                               ),
-                            ),
-                            Text(
-                              widget.appointment.child!.umurAnak,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.person,
-                          color: Colors.pink[300],
-                        ),
-                        SizedBox(width: 10),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              widget.appointment.healthWorker!.namaLengkap!,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 15),
-                            ),
-                            Text(
-                              widget.appointment.healthWorker!.profesi!,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    Table(
-                      children: [
-                        TableRow(
-                          children: [
-                            Text(
-                              'Tanggal :',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 15),
-                            ),
-                            Text(
-                              DateFormat('dd MMMM yyyy')
-                                  .format(widget.appointment.date!),
-                            ),
-                          ],
-                        ),
-                        TableRow(
-                          children: [
-                            Text(
-                              'Jam :',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 15),
-                            ),
-                            Text(
-                              widget.appointment.note!.split(', ')[1],
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 30),
-                    ButtonCustom(
-                      onPressed: () {
-                        context.pushReplacement(RoutePaths.home);
-                      },
-                      child: Text(
-                        'Halaman Utama',
-                        style: TextStyle(color: Colors.white),
+                              Text(
+                                state.getAppointment?.child?.umurAnak ?? '',
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    )
-                  ],
+                      SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.person,
+                            color: Colors.pink[300],
+                          ),
+                          SizedBox(width: 10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                state.getAppointment?.healthWorker?.fullName ??
+                                    '',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 15),
+                              ),
+                              Text(
+                                state.getAppointment?.healthWorker
+                                        ?.profession ??
+                                    '',
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                      Table(
+                        children: [
+                          TableRow(
+                            children: [
+                              Text(
+                                'Tanggal :',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
+                              ),
+                              Text(
+                                date,
+                              ),
+                            ],
+                          ),
+                          TableRow(
+                            children: [
+                              Text(
+                                'Jam :',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 15),
+                              ),
+                              Text(
+                                state.getAppointment?.note ?? '',
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 30),
+                      ButtonCustom(
+                        onPressed: () {
+                          context.pushReplacement(
+                            RootRoutePaths.dashboard.fullPath,
+                          );
+                        },
+                        child: Text(
+                          'Halaman Utama',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

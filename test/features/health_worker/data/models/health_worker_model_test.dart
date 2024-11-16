@@ -19,16 +19,22 @@ void main() {
           'email': 'test@example.com',
           'schedule': [
             {
-              'day': 'Monday',
-              'start_time': '2023-10-10T08:00:00.000Z',
-              'end_time': '2023-10-10T12:00:00.000Z'
+              'day': {
+                'id': 1,
+                'name': 'Senin',
+              },
+              'start_time': '12:00:00',
+              'end_time': '14:00:00'
             }
           ],
           'practice_schedules': [
             {
-              'day': 'Tuesday',
-              'start_time': '2023-10-11T08:00:00.000Z',
-              'end_time': '2023-10-11T12:00:00.000Z'
+              'day': {
+                'id': 2,
+                'name': 'Selasa',
+              },
+              'start_time': '10:00:00',
+              'end_time': '12:00:00'
             }
           ],
           'no_kartu_keluarga': '1234567890',
@@ -46,8 +52,8 @@ void main() {
         expect(healthWorker.id, '1');
         expect(healthWorker.clinic?.name, 'Clinic Name');
         expect(healthWorker.email, 'test@example.com');
-        expect(healthWorker.schedules?.first.day, 'Monday');
-        expect(healthWorker.practiceSchedules?.first.day, 'Tuesday');
+        expect(healthWorker.schedules?.first.day?.name, 'Senin');
+        expect(healthWorker.practiceSchedules?.first.day?.name, 'Selasa');
         expect(healthWorker.kartuKeluarga, '1234567890');
         expect(healthWorker.fullName, 'John Doe');
         expect(healthWorker.nik, '9876543210');
@@ -118,16 +124,22 @@ void main() {
           email: 'test@example.com',
           schedules: [
             Schedule(
-              day: 'Monday',
-              startTime: DateTime.parse('2023-10-10T08:00:00.000Z'),
-              endTime: DateTime.parse('2023-10-10T12:00:00.000Z'),
+              day: Day(
+                id: 1,
+                name: 'Senin',
+              ),
+              startTime: '08:23:45',
+              endTime: '12:23:45',
             )
           ],
           practiceSchedules: [
             Schedule(
-              day: 'Tuesday',
-              startTime: DateTime.parse('2023-10-11T08:00:00.000Z'),
-              endTime: DateTime.parse('2023-10-11T12:00:00.000Z'),
+              day: Day(
+                id: 2,
+                name: 'Selasa',
+              ),
+              startTime: '08:23:45',
+              endTime: '12:23:45',
             )
           ],
           kartuKeluarga: '1234567890',
@@ -145,8 +157,8 @@ void main() {
         expect(map['id'], '1');
         expect(map['clinic']['name'], 'Clinic Name');
         expect(map['email'], 'test@example.com');
-        expect(map['schedule'].first['day'], 'Monday');
-        expect(map['practice_schedules'].first['day'], 'Tuesday');
+        expect(map['schedule'].first['day_id'], 1);
+        expect(map['practice_schedules'].first['day_id'], 2);
         expect(map['no_kartu_keluarga'], '1234567890');
         expect(map['full_name'], 'John Doe');
         expect(map['no_induk_kependudukan'], '9876543210');
@@ -199,16 +211,22 @@ void main() {
           email: 'test@example.com',
           schedules: [
             Schedule(
-              day: 'Monday',
-              startTime: DateTime.parse('2023-10-10T08:00:00.000Z'),
-              endTime: DateTime.parse('2023-10-10T12:00:00.000Z'),
+              day: Day(
+                id: 1,
+                name: 'Senin',
+              ),
+              startTime: '08:23:45',
+              endTime: '12:23:45',
             )
           ],
           practiceSchedules: [
             Schedule(
-              day: 'Tuesday',
-              startTime: DateTime.parse('2023-10-11T08:00:00.000Z'),
-              endTime: DateTime.parse('2023-10-11T12:00:00.000Z'),
+              day: Day(
+                id: 2,
+                name: 'Selasa',
+              ),
+              startTime: '08:23:45',
+              endTime: '12:23:45',
             )
           ],
           kartuKeluarga: '1234567890',

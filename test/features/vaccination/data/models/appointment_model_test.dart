@@ -1,6 +1,6 @@
 import 'package:eimunisasi/features/authentication/data/models/user.dart';
+import 'package:eimunisasi/features/health_worker/data/models/health_worker_model.dart';
 import 'package:eimunisasi/features/profile/data/models/anak.dart';
-import 'package:eimunisasi/models/nakes.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:eimunisasi/features/vaccination/data/models/appointment_model.dart';
 import 'package:mockito/annotations.dart';
@@ -8,7 +8,7 @@ import 'package:mockito/annotations.dart';
 @GenerateNiceMocks([
   MockSpec<Anak>(),
   MockSpec<Users>(),
-  MockSpec<Nakes>(),
+  MockSpec<HealthWorkerModel>(),
 ])
 import 'appointment_model_test.mocks.dart';
 
@@ -79,7 +79,7 @@ void main() {
     test('copyWith no changes returns the same instance', () {
       final child = MockAnak();
       final parent = MockUsers();
-      final healthWorker = MockNakes();
+      final healthWorker = MockHealthWorkerModel();
 
       final appointment = AppointmentModel(
         id: '1',
@@ -99,7 +99,7 @@ void main() {
     test('copyWith change all attributes creates a copy of the instance', () {
       final child = MockAnak();
       final parent = MockUsers();
-      final healthWorker = MockNakes();
+      final healthWorker = MockHealthWorkerModel();
 
       final appointment = AppointmentModel(
         id: '1',

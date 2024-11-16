@@ -13,41 +13,52 @@ class AppointmentRepository {
   Future<List<AppointmentModel>> getAppointments({
     required String userId,
   }) async {
-    final result = await supabaseClient
-        .from(AppointmentModel.tableName)
-        .select('''
-          *,
-          profiles:parent_id ( * ),
-          children:child_id ( * )
-        ''')
-        .eq('parent_id', userId)
-        .order(
-          'date',
-          ascending: true,
-        )
-        .withConverter(
-          (json) => json.map((e) => AppointmentModel.fromSeribase(e)).toList(),
-        );
-    return result;
+    try {
+      final result = await supabaseClient
+          .from(AppointmentModel.tableName)
+          .select(
+            '''
+              *,
+              profiles:parent_id ( * ),
+              children:child_id ( * )
+            ''',
+          )
+          .eq('parent_id', userId)
+          .order(
+            'date',
+            ascending: true,
+          )
+          .withConverter(
+            (json) =>
+                json.map((e) => AppointmentModel.fromSeribase(e)).toList(),
+          );
+      return result;
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<AppointmentModel> getAppointment({
     required String id,
   }) async {
-    final data = await supabaseClient
-        .from(
-          AppointmentModel.tableName,
-        )
-        .select(
-          '''
-          *,
-          profiles:parent_id ( * ),
-          children:child_id ( * )
-        ''',
-        )
-        .eq('id', id)
-        .single();
-    return AppointmentModel.fromSeribase(data);
+    try {
+      final data = await supabaseClient
+          .from(
+            AppointmentModel.tableName,
+          )
+          .select(
+            '''
+              *,
+              profiles:parent_id ( * ),
+              children:child_id ( * )
+            ''',
+          )
+          .eq('id', id)
+          .single();
+      return AppointmentModel.fromSeribase(data);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<AppointmentModel> setAppointment(AppointmentModel model) async {

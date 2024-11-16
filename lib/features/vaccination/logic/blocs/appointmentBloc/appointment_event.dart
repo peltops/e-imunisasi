@@ -12,6 +12,14 @@ class LoadAppointmentsEvent extends AppointmentEvent {
   List<Object?> get props => [userId];
 }
 
+class LoadAppointmentEvent extends AppointmentEvent {
+  final String id;
+  const LoadAppointmentEvent(this.id);
+
+  @override
+  List<Object?> get props => [id];
+}
+
 class CreateAppointmentEvent extends AppointmentEvent {
   final AppointmentModel appointment;
   const CreateAppointmentEvent(this.appointment);

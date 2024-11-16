@@ -15,6 +15,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
 
   AppointmentBloc(this.appointmentRepository) : super(AppointmentState()) {
     on<LoadAppointmentsEvent>(_onLoadAppointments);
+    on<LoadAppointmentEvent>(_onLoadAppointment);
     on<CreateAppointmentEvent>(_onCreateAppointment);
     on<UpdateAppointmentEvent>(_onUpdateAppointment);
   }
@@ -23,19 +24,20 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     LoadAppointmentsEvent event,
     Emitter emit,
   ) async {
-    emit(state.copyWith(statusGet: FormzSubmissionStatus.inProgress));
+    emit(state.copyWith(
+        statusGetAppointments: FormzSubmissionStatus.inProgress));
     try {
       final appointments = await appointmentRepository.getAppointments(
         userId: event.userId,
       );
       emit(state.copyWith(
-        statusGet: FormzSubmissionStatus.success,
+        statusGetAppointments: FormzSubmissionStatus.success,
         getAppointments: appointments,
       ));
     } catch (e) {
       emit(
         state.copyWith(
-          statusGet: FormzSubmissionStatus.failure,
+          statusGetAppointments: FormzSubmissionStatus.failure,
           errorMessage: 'Gagal memuat data janji',
         ),
       );
@@ -81,6 +83,31 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
         state.copyWith(
           statusSubmit: FormzSubmissionStatus.failure,
           errorMessage: 'Gagal mengubah janji',
+        ),
+      );
+    }
+  }
+
+  void _onLoadAppointment(
+    LoadAppointmentEvent event,
+    Emitter emit,
+  ) async {
+    emit(
+      state.copyWith(statusGetAppointment: FormzSubmissionStatus.inProgress),
+    );
+    try {
+      final appointment = await appointmentRepository.getAppointment(
+        id: event.id,
+      );
+      emit(state.copyWith(
+        statusGetAppointment: FormzSubmissionStatus.success,
+        getAppointment: appointment,
+      ));
+    } catch (e) {
+      emit(
+        state.copyWith(
+          statusGetAppointment: FormzSubmissionStatus.failure,
+          errorMessage: 'Gagal memuat data janji',
         ),
       );
     }

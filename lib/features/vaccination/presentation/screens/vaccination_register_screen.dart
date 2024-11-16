@@ -1,11 +1,10 @@
-import 'package:eimunisasi/core/extension.dart';
 import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/features/authentication/logic/bloc/authentication_bloc/authentication_bloc.dart';
+import 'package:eimunisasi/features/health_worker/data/models/health_worker_model.dart';
 import 'package:eimunisasi/features/profile/data/models/anak.dart';
 import 'package:eimunisasi/features/vaccination/data/models/appointment_model.dart';
 import 'package:eimunisasi/features/vaccination/logic/blocs/appointmentBloc/appointment_bloc.dart';
 import 'package:eimunisasi/injection.dart';
-import 'package:eimunisasi/models/nakes.dart';
 import 'package:eimunisasi/core/widgets/button_custom.dart';
 import 'package:eimunisasi/core/widgets/snackbar_custom.dart';
 import 'package:eimunisasi/routers/route_paths/vaccination_route_paths.dart';
@@ -19,7 +18,7 @@ import '../../../../core/widgets/picker.dart';
 
 class VaccinationRegisterScreen extends StatelessWidget {
   final Anak anak;
-  final Nakes nakes;
+  final HealthWorkerModel nakes;
 
   const VaccinationRegisterScreen({
     Key? key,
@@ -41,7 +40,7 @@ class VaccinationRegisterScreen extends StatelessWidget {
 
 class _VaccinationRegisterScaffold extends StatefulWidget {
   final Anak child;
-  final Nakes healthWorker;
+  final HealthWorkerModel healthWorker;
 
   const _VaccinationRegisterScaffold({
     required this.child,
@@ -56,12 +55,12 @@ class _VaccinationRegisterScaffold extends StatefulWidget {
 class _VaccinationRegisterScaffoldState
     extends State<_VaccinationRegisterScaffold> {
   String _tanggal = 'Pilih tanggal';
-  JadwalPraktek? selectedRadioTile;
+  Schedule? selectedRadioTile;
 
   final kFirstDay = DateTime.now();
   final kLastDay = DateTime(DateTime.now().year + 1);
 
-  setSelectedRadioTile(JadwalPraktek? val) {
+  setSelectedRadioTile(Schedule? val) {
     setState(() {
       selectedRadioTile = val;
     });
@@ -76,7 +75,7 @@ class _VaccinationRegisterScaffoldState
         if (state.statusSubmit == FormzSubmissionStatus.success) {
           context.push(
             VaccinationRoutePaths.vaccinationConfirmation.fullPath,
-            extra: state.appointment,
+            extra: state.appointment?.id,
           );
         } else if (state.statusSubmit == FormzSubmissionStatus.failure) {
           snackbarCustom(
@@ -113,28 +112,19 @@ class _VaccinationRegisterScaffoldState
                         children: [
                           Text(
                             'Nama Nakes: ' +
-                                (widget.healthWorker.namaLengkap ?? '-'),
+                                (widget.healthWorker.fullName ?? '-'),
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 15),
                           ),
                           SizedBox(
                             height: 10,
                           ),
-                          Text(
-                            'Jadwal Praktek',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 15),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          ...?widget.healthWorker.jadwal?.map((jadwal) {
+                          ...?widget.healthWorker.schedules?.map((schedule) {
+                            final day = schedule.day?.name;
                             return Column(
                               children: [
                                 Text(
-                                  (jadwal.hari?.capitalize() ?? '') +
-                                      ', ' +
-                                      (jadwal.jam ?? ''),
+                                  '$day, ${schedule.time}',
                                 ),
                                 SizedBox(height: 5),
                               ],
@@ -151,25 +141,26 @@ class _VaccinationRegisterScaffoldState
                           Column(
                             children: () {
                               final jadwalImunisasi =
-                                  widget.healthWorker.jadwalImunisasi;
+                                  widget.healthWorker.practiceSchedules;
                               if (jadwalImunisasi == null) {
                                 return Text('Belum ada jadwal imunisasi');
-                              } else {
-                                return jadwalImunisasi
-                                    .map(
-                                      (e) => RadioListTile(
-                                        dense: true,
-                                        contentPadding: EdgeInsets.all(0),
-                                        value: e,
-                                        groupValue: selectedRadioTile,
-                                        title: Text(
-                                          e.hari!.capitalize() + ', ' + e.jam!,
-                                        ),
-                                        onChanged: setSelectedRadioTile,
-                                      ),
-                                    )
-                                    .toList();
                               }
+                              return jadwalImunisasi.map(
+                                (e) {
+                                  final day = e.day?.name;
+                                  return RadioListTile<Schedule>(
+                                    dense: true,
+                                    contentPadding: EdgeInsets.all(0),
+                                    value: e,
+                                    groupValue: selectedRadioTile,
+                                    title: Text(
+                                      '$day, ${e.time}',
+                                      style: TextStyle(fontSize: 12),
+                                    ),
+                                    onChanged: setSelectedRadioTile,
+                                  );
+                                },
+                              ).toList();
                             }() as List<Widget>,
                           ),
                           SizedBox(
