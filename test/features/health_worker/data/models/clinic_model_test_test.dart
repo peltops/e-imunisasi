@@ -34,7 +34,9 @@ void main() {
           'photos': 'invalid-photos-format',
         };
 
-        expect(() => ClinicModel.fromSeribase(map), throwsA(isA<TypeError>()));
+        final clinic = ClinicModel.fromSeribase(map);
+
+        expect(clinic.photos, isNull);
       });
     });
 

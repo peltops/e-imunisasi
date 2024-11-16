@@ -1,19 +1,30 @@
 import 'package:eimunisasi/features/authentication/data/models/user.dart';
+import 'package:eimunisasi/features/health_worker/data/models/health_worker_model.dart';
+import 'package:eimunisasi/features/health_worker/data/repositories/health_worker_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:eimunisasi/features/vaccination/data/repositories/appointment_repository.dart';
 import 'package:eimunisasi/features/vaccination/data/models/appointment_model.dart';
 import 'package:mock_supabase_http_client/mock_supabase_http_client.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+class MockHealthWorkerRepository extends Mock
+    implements HealthWorkerRepository {}
 
 void main() {
   group('AppointmentRepository', () {
     late SupabaseClient supabaseClient;
     late AppointmentRepository repository;
+    late HealthWorkerRepository healthWorkerRepository;
     late var mockHttpClient;
     final data1 = AppointmentModel(
       id: 'd8bfed26-f491-4478-b182-fdc2e8074212c',
       parent: Users(
         uid: '1',
+      ),
+      healthWorker: HealthWorkerModel(
+        id: '1',
+        fullName: 'John Doe',
       ),
       date: DateTime.now(),
       note: 'Note',
@@ -27,7 +38,11 @@ void main() {
         'test',
         httpClient: mockHttpClient,
       );
-      repository = AppointmentRepository(supabaseClient);
+      healthWorkerRepository = MockHealthWorkerRepository();
+      repository = AppointmentRepository(
+        healthWorkerRepository,
+        supabaseClient,
+      );
     });
 
     tearDown(() async {
@@ -52,6 +67,13 @@ void main() {
 
     group('getAppointment', () {
       test('returns an appointment when successful', () async {
+        when(() => healthWorkerRepository.getHealthWorkerById(any()))
+            .thenAnswer(
+          (_) async => HealthWorkerModel(
+            id: '1',
+            fullName: 'John Doe',
+          ),
+        );
         await repository.setAppointment(data1);
         final result = await repository.getAppointment(
           id: 'd8bfed26-f491-4478-b182-fdc2e8074212c',

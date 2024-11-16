@@ -14,7 +14,8 @@ class ClinicModel extends Equatable {
   });
 
   @override
-  List<Object?> get props => [
+  List<Object?> get props =>
+      [
         id,
         name,
         address,
@@ -25,12 +26,21 @@ class ClinicModel extends Equatable {
 
   factory ClinicModel.fromSeribase(Map<String, dynamic> data) {
     return ClinicModel(
-      id: data['id'],
-      name: data['name'],
-      address: data['address'],
-      motto: data['motto'],
-      phoneNumber: data['phone_number'],
-      photos: List<String>.from(data['photos']),
+        id: data['id'],
+        name: data['name'],
+        address: data['address'],
+        motto: data['motto'],
+        phoneNumber: data['phone_number'],
+        photos: () {
+          if (data['photos'] == null) {
+            return null;
+          }
+          try {
+            return List<String>.from(data['photos']);
+          } catch (e) {
+            return null;
+          }
+        }(),
     );
   }
 

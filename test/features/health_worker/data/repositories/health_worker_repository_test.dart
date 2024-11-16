@@ -134,5 +134,67 @@ void main() {
         );
       });
     });
+
+    group('getHealthWorkerById', () {
+      test('returns a health worker when successful', () async {
+        when(() => mockFunctionsClient.invoke(
+              'get-health-worker/1',
+              method: HttpMethod.get,
+            )).thenAnswer((_) async => FunctionResponse(
+              status: 200,
+              data: {'data': dataJson},
+            ));
+        when(() => mockSupabaseClient.functions)
+            .thenReturn(mockFunctionsClient);
+
+        final result = await repository.getHealthWorkerById('1');
+
+        expect(result, isA<HealthWorkerModel>());
+        expect(result?.id, '1');
+      });
+
+      test('returns null when successful', () async {
+        when(
+          () => mockFunctionsClient.invoke(
+            'get-health-worker/1',
+            method: HttpMethod.get,
+          ),
+        ).thenAnswer(
+          (_) async => FunctionResponse(
+            status: 404,
+            data: {'data': null},
+          ),
+        );
+        when(() => mockSupabaseClient.functions).thenReturn(
+          mockFunctionsClient,
+        );
+
+        final result = await repository.getHealthWorkerById('1');
+
+        expect(result, isNull);
+      });
+
+      test('throws an exception when an error occurs', () async {
+        when(
+          () => mockFunctionsClient.invoke(
+            'get-health-worker/1',
+            method: HttpMethod.get,
+          ),
+        ).thenAnswer(
+          (_) async => FunctionResponse(
+            status: 500,
+            data: {'error': 'Internal Server Error'},
+          ),
+        );
+        when(() => mockSupabaseClient.functions).thenReturn(
+          mockFunctionsClient,
+        );
+
+        expect(
+          () => repository.getHealthWorkerById('1'),
+          throwsException,
+        );
+      });
+    });
   });
 }

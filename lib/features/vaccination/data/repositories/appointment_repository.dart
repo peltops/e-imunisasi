@@ -1,12 +1,15 @@
+import 'package:eimunisasi/features/health_worker/data/repositories/health_worker_repository.dart';
 import 'package:eimunisasi/features/vaccination/data/models/appointment_model.dart';
 import 'package:injectable/injectable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 @injectable
 class AppointmentRepository {
+  final HealthWorkerRepository healthWorkerRepository;
   final SupabaseClient supabaseClient;
 
   AppointmentRepository(
+    this.healthWorkerRepository,
     this.supabaseClient,
   );
 
@@ -55,7 +58,13 @@ class AppointmentRepository {
           )
           .eq('id', id)
           .single();
-      return AppointmentModel.fromSeribase(data);
+      final result = AppointmentModel.fromSeribase(data);
+      final healthWorkerById = await healthWorkerRepository.getHealthWorkerById(
+        data['inspector_id'],
+      );
+      return result.copyWith(
+        healthWorker: healthWorkerById,
+      );
     } catch (e) {
       rethrow;
     }

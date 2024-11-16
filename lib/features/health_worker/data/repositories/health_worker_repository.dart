@@ -42,4 +42,28 @@ class HealthWorkerRepository {
       throw e;
     }
   }
+
+  Future<HealthWorkerModel?> getHealthWorkerById(String id) async {
+    try {
+      final fetch = await supabaseClient.functions.invoke(
+        'get-health-worker/${id}',
+        method: HttpMethod.get,
+      );
+
+      if (fetch.status == 404) {
+        return null;
+      }
+
+      if (fetch.status != 200) {
+        throw Exception('Failed to get health worker');
+      }
+
+      final data = fetch.data['data'];
+      final result = HealthWorkerModel.fromSeribase(data);
+
+      return result;
+    } catch (e) {
+      throw e;
+    }
+  }
 }
