@@ -1,6 +1,7 @@
 import 'package:eimunisasi/core/extension.dart';
 import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/core/widgets/button_custom.dart';
+import 'package:eimunisasi/core/widgets/error.dart';
 import 'package:eimunisasi/injection.dart';
 import 'package:eimunisasi/routers/route_paths/root_route_paths.dart';
 import 'package:flutter/material.dart';
@@ -27,13 +28,19 @@ class VaccinationConfirmationScreen extends StatelessWidget {
         ..add(
           LoadAppointmentEvent(appointmentId),
         ),
-      child: _VaccinationConfirmationScaffold(),
+      child: _VaccinationConfirmationScaffold(
+        appointmentId,
+      ),
     );
   }
 }
 
 class _VaccinationConfirmationScaffold extends StatelessWidget {
-  const _VaccinationConfirmationScaffold();
+  final String appointmentId;
+
+  const _VaccinationConfirmationScaffold(
+    this.appointmentId,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +51,14 @@ class _VaccinationConfirmationScaffold extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.pink[300],
         elevation: 0.0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            context.go(
+              RootRoutePaths.dashboard.fullPath,
+            );
+          },
+        ),
         title: Text(
           AppConstant.APPOINTMENT,
           style: TextStyle(fontWeight: FontWeight.w700),
@@ -54,6 +69,16 @@ class _VaccinationConfirmationScaffold extends StatelessWidget {
           if (state.statusGetAppointment == FormzSubmissionStatus.inProgress) {
             return Center(
               child: CircularProgressIndicator(),
+            );
+          }
+          if (state.statusGetAppointment == FormzSubmissionStatus.failure) {
+            return ErrorContainer(
+              message: state.errorMessage,
+              onRefresh: () {
+                context.read<AppointmentBloc>().add(
+                      LoadAppointmentEvent(appointmentId),
+                    );
+              },
             );
           }
           final date = () {
@@ -180,7 +205,7 @@ class _VaccinationConfirmationScaffold extends StatelessWidget {
                       SizedBox(height: 30),
                       ButtonCustom(
                         onPressed: () {
-                          context.pushReplacement(
+                          context.go(
                             RootRoutePaths.dashboard.fullPath,
                           );
                         },

@@ -33,6 +33,7 @@ class AppointmentState extends Equatable {
       getAppointment: getAppointment ?? this.getAppointment,
       getAppointments: getAppointments ?? this.getAppointments,
       statusSubmit: statusSubmit ?? this.statusSubmit,
+      statusGetAppointment: statusGetAppointment ?? this.statusGetAppointment,
       statusGetAppointments: statusGetAppointments ?? this.statusGetAppointments,
       errorMessage: errorMessage ?? this.errorMessage,
     );

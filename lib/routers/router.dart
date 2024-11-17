@@ -12,9 +12,7 @@ import 'package:eimunisasi/features/calendar/presentation/screens/calendar_scree
 import 'package:eimunisasi/features/calendar/presentation/screens/update_event_calendar_screen.dart';
 import 'package:eimunisasi/features/healthy_book/presentation/screens/healthy_book_screen.dart';
 import 'package:eimunisasi/features/onboarding/onboarding.dart';
-import 'package:eimunisasi/features/profile/data/models/anak.dart';
 import 'package:eimunisasi/features/profile/presentation/screens/parent_profile_screen.dart';
-import 'package:eimunisasi/features/vaccination/presentation/screens/vaccination_register_screen.dart';
 import 'package:eimunisasi/features/vaccination/presentation/screens/vaccination_screen.dart';
 import 'package:eimunisasi/models/informasi_aplikasi.dart';
 import 'package:eimunisasi/pages/home/bantuan/child/detail_informasi.dart';
@@ -29,15 +27,11 @@ import 'package:eimunisasi/routers/profile_router.dart';
 import 'package:eimunisasi/routers/route_paths/auth_route_paths.dart';
 import 'package:eimunisasi/routers/route_paths/root_route_paths.dart';
 import 'package:eimunisasi/routers/route_paths/route_paths.dart';
-import 'package:eimunisasi/routers/route_paths/vaccination_route_paths.dart';
+import 'package:eimunisasi/routers/vaccination_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../features/profile/presentation/screens/list_children_screen.dart';
-import '../features/vaccination/presentation/screens/appointments_screen.dart';
-import '../features/health_worker/presentation/screens/choose_nakes_screen.dart';
-import '../features/vaccination/presentation/screens/vaccination_confirmation_screen.dart';
 import 'calendar_router.dart';
 import 'healthy_book_router.dart';
 
@@ -157,51 +151,7 @@ final router = GoRouter(
     GoRoute(
       path: RootRoutePaths.vaccination.path,
       builder: (_, __) => VaccinationScreen(),
-      routes: [
-        GoRoute(
-          path: VaccinationRoutePaths.chooseChildVaccination.path,
-          builder: (context, __) => ListChildrenScreen(
-            onSelected: (child) {
-              context.push(
-                VaccinationRoutePaths.chooseNakesVaccination.fullPath,
-                extra: child,
-              );
-            },
-          ),
-        ),
-        GoRoute(
-          path: VaccinationRoutePaths.chooseNakesVaccination.path,
-          builder: (context, state) => ChooseHealthWorkerScreen(
-            child: state.extra as Anak,
-            onSelected: (nakes) {
-              context.push(
-                VaccinationRoutePaths.makeAppointmentVaccination.fullPath,
-                extra: {
-                  'healthWorker': nakes,
-                  'child': state.extra as Anak,
-                },
-              );
-            },
-          ),
-        ),
-        GoRoute(
-          path: VaccinationRoutePaths.makeAppointmentVaccination.path,
-          builder: (_, state) => VaccinationRegisterScreen(
-            nakes: (state.extra as Map<String, dynamic>)['healthWorker'],
-            anak: (state.extra as Map<String, dynamic>)['child'],
-          ),
-        ),
-        GoRoute(
-          path: VaccinationRoutePaths.vaccinationConfirmation.path,
-          builder: (_, state) => VaccinationConfirmationScreen(
-            appointmentId: state.extra as String,
-          ),
-        ),
-        GoRoute(
-          path: VaccinationRoutePaths.appointmentVaccination.path,
-          builder: (_, state) => AppointmentsScreen(),
-        ),
-      ]
+      routes: VaccinationRouter.routes,
     ),
     GoRoute(
       path: RoutePaths.healthWorkers,

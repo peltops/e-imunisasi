@@ -50,30 +50,25 @@ class _AppointmentsScaffold extends StatelessWidget {
         height: double.infinity,
         padding: EdgeInsets.all(20),
         color: Colors.pink[100],
-        child: Expanded(
-          child: Container(
-            width: double.infinity,
-            child: Card(
-              elevation: 0,
-              child: BlocBuilder<AppointmentBloc, AppointmentState>(
-                builder: (context, state) {
-                  if (state.statusGetAppointments ==
-                      FormzSubmissionStatus.inProgress) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                  final data = state.getAppointments;
-                  return ListView.builder(
-                    itemCount: data.length,
-                    itemBuilder: (context, index) {
-                      final appointment = data[index];
-                      return _ListAppointment(
-                        appointment,
-                      );
-                    },
+        child: Card(
+          elevation: 0,
+          child: BlocBuilder<AppointmentBloc, AppointmentState>(
+            builder: (context, state) {
+              if (state.statusGetAppointments ==
+                  FormzSubmissionStatus.inProgress) {
+                return Center(child: CircularProgressIndicator());
+              }
+              final data = state.getAppointments;
+              return ListView.builder(
+                itemCount: data.length,
+                itemBuilder: (context, index) {
+                  final appointment = data[index];
+                  return _ListAppointment(
+                    appointment,
                   );
                 },
-              ),
-            ),
+              );
+            },
           ),
         ),
       ),

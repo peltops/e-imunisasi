@@ -73,7 +73,7 @@ class _VaccinationRegisterScaffoldState
     return BlocListener<AppointmentBloc, AppointmentState>(
       listener: (context, state) {
         if (state.statusSubmit == FormzSubmissionStatus.success) {
-          context.push(
+          context.go(
             VaccinationRoutePaths.vaccinationConfirmation.fullPath,
             extra: state.appointment?.id,
           );
