@@ -20,6 +20,34 @@ void main() {
         'date': '2023-10-10T00:00:00.000Z',
         'note': 'First appointment',
         'purpose': 'Vaccination',
+        'children': {
+          'id': '1',
+          'name': 'First child',
+        },
+        'profiles': {
+          'user_id': '12',
+          'mother_name': 'Mom',
+        },
+      };
+
+      final appointment = AppointmentModel.fromSeribase(map);
+
+      expect(appointment.id, '1');
+      expect(appointment.date, DateTime.parse('2023-10-10T00:00:00.000Z'));
+      expect(appointment.note, 'First appointment');
+      expect(appointment.purpose, 'Vaccination');
+      expect(appointment.child!.id, '1');
+      expect(appointment.child!.nama, 'First child');
+      expect(appointment.parent!.uid, '12');
+      expect(appointment.parent!.momName, 'Mom');
+    });
+
+    test('fromSeribase creates an instance from a valid map with null children and profiles', () {
+      final map = {
+        'id': '1',
+        'date': '2023-10-10T00:00:00.000Z',
+        'note': 'First appointment',
+        'purpose': 'Vaccination',
       };
 
       final appointment = AppointmentModel.fromSeribase(map);

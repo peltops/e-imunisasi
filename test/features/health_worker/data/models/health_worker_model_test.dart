@@ -256,5 +256,72 @@ void main() {
         ]);
       });
     });
+
+    group('schedule model', () {
+      test('returns combine start time and end time with get time', () {
+        final schedule = Schedule(
+          day: Day(
+            id: 1,
+            name: 'Senin',
+          ),
+          startTime: '08:23:45',
+          endTime: '12:23:45',
+        );
+
+        expect(schedule.time, '08:23 - 12:23');
+      });
+
+      test('returns emptyString when start time and end time null with get time', () {
+        final schedule = Schedule(
+          day: Day(
+            id: 1,
+            name: 'Senin',
+          ),
+        );
+
+        expect(schedule.time, '');
+      });
+      test('returns correct props', () {
+        final schedule = Schedule(
+          day: Day(
+            id: 1,
+            name: 'Senin',
+          ),
+          startTime: '08:23:45',
+          endTime: '12:23:45',
+        );
+
+        expect(schedule.props, [
+          schedule.day,
+          '08:23:45',
+          '12:23:45',
+        ]);
+      });
+    });
+
+    group('day model', () {
+      test('toSeribase returns a valid map', () {
+        final day = Day(
+          id: 1,
+          name: 'Senin',
+        );
+
+        final map = day.toSeribase();
+
+        expect(map['id'], 1);
+        expect(map['name'], 'Senin');
+      });
+      test('returns correct props', () {
+        final day = Day(
+          id: 1,
+          name: 'Senin',
+        );
+
+        expect(day.props, [
+          1,
+          'Senin',
+        ]);
+      });
+    });
   });
 }

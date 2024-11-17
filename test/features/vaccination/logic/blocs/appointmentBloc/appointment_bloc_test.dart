@@ -157,4 +157,42 @@ void main() {
       ],
     );
   });
+
+  group('AppointmentEvent', () {
+    group('LoadAppointmentsEvent', () {
+      test('props', () {
+        expect(
+          LoadAppointmentsEvent('user1').props,
+          ['user1'],
+        );
+      });
+    });
+
+    group('CreateAppointmentEvent', () {
+      test('props', () {
+        expect(
+          CreateAppointmentEvent(AppointmentModel()).props,
+          [AppointmentModel()],
+        );
+      });
+    });
+
+    group('UpdateAppointmentEvent', () {
+      test('props', () {
+        expect(
+          UpdateAppointmentEvent(AppointmentModel()).props,
+          [AppointmentModel()],
+        );
+      });
+    });
+
+    group('LoadAppointmentEvent', () {
+      test('props', () {
+        expect(
+          LoadAppointmentEvent('1').props,
+          ['1'],
+        );
+      });
+    });
+  });
 }
