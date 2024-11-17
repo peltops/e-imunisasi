@@ -92,7 +92,7 @@ void main() {
         ).thenAnswer(
           (_) async => FunctionResponse(
             status: 200,
-            data: {'data': []},
+            data: {'data': null},
           ),
         );
         when(() => mockSupabaseClient.functions).thenReturn(
