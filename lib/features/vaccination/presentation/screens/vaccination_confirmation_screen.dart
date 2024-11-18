@@ -196,7 +196,9 @@ class _VaccinationConfirmationScaffold extends StatelessWidget {
                                     fontWeight: FontWeight.bold, fontSize: 15),
                               ),
                               Text(
-                                state.getAppointment?.note ?? '',
+                                (state.getAppointment?.startTime ?? '') +
+                                    ' - ' +
+                                    (state.getAppointment?.endTime ?? ''),
                               ),
                             ],
                           ),

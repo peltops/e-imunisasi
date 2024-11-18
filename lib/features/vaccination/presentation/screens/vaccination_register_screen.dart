@@ -56,6 +56,7 @@ class _VaccinationRegisterScaffoldState
     extends State<_VaccinationRegisterScaffold> {
   String _tanggal = 'Pilih tanggal';
   Schedule? selectedRadioTile;
+  String? _note;
 
   final kFirstDay = DateTime.now();
   final kLastDay = DateTime(DateTime.now().year + 1);
@@ -66,10 +67,39 @@ class _VaccinationRegisterScaffoldState
     });
   }
 
+  setNoteValue(String val) {
+    setState(() {
+      _note = val;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final user =
         (context.read<AuthenticationBloc>().state as Authenticated).user;
+
+    void onSubmit() {
+      if (selectedRadioTile == null || _tanggal == 'Pilih tanggal') {
+        snackbarCustom(
+          'Lengkapi data terlebih dahulu!',
+        ).show(context);
+        return;
+      }
+      final appointment = AppointmentModel(
+        date: DateTime.parse(_tanggal),
+        child: widget.child,
+        parent: user,
+        healthWorker: widget.healthWorker,
+        purpose: 'Imunisasi',
+        note: _note,
+        startTime: selectedRadioTile?.startTime,
+        endTime: selectedRadioTile?.endTime,
+      );
+      context.read<AppointmentBloc>().add(
+            CreateAppointmentEvent(appointment),
+          );
+    }
+
     return BlocListener<AppointmentBloc, AppointmentState>(
       listener: (context, state) {
         if (state.statusSubmit == FormzSubmissionStatus.success) {
@@ -191,30 +221,22 @@ class _VaccinationRegisterScaffoldState
                             ),
                             title: Text(_tanggal),
                           ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          TextFormField(
+                            onChanged: setNoteValue,
+                            maxLines: null,
+                            decoration: InputDecoration(
+                              labelText: 'Catatan (Opsional)',
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
                           SizedBox(height: 30),
                           ButtonCustom(
                             loading: state.statusSubmit ==
                                 FormzSubmissionStatus.inProgress,
-                            onPressed: () {
-                              if (selectedRadioTile == null ||
-                                  _tanggal == 'Pilih tanggal') {
-                                snackbarCustom(
-                                  'Lengkapi data terlebih dahulu!',
-                                ).show(context);
-                                return;
-                              }
-                              final appointment = AppointmentModel(
-                                date: DateTime.parse(_tanggal),
-                                child: widget.child,
-                                parent: user,
-                                healthWorker: widget.healthWorker,
-                                purpose: 'Imunisasi',
-                                note: 'Imunisasi',
-                              );
-                              context.read<AppointmentBloc>().add(
-                                    CreateAppointmentEvent(appointment),
-                                  );
-                            },
+                            onPressed: onSubmit,
                             child: Text(
                               'Buat Janji',
                               style: TextStyle(color: Colors.white),

@@ -28,6 +28,12 @@ void main() {
           'user_id': '12',
           'mother_name': 'Mom',
         },
+        'health_worker': {
+          'id': '1',
+          'full_name': 'First health worker',
+        },
+        'start_time': '08:00',
+        'end_time': '09:00',
       };
 
       final appointment = AppointmentModel.fromSeribase(map);

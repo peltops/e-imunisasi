@@ -11,6 +11,9 @@ class AppointmentModel extends Equatable {
   final HealthWorkerModel? healthWorker;
   final String? purpose;
   final String? note;
+  final String? startTime;
+  final String? endTime;
+
 
   const AppointmentModel({
     this.id,
@@ -20,6 +23,8 @@ class AppointmentModel extends Equatable {
     this.healthWorker,
     this.note,
     this.purpose,
+    this.startTime,
+    this.endTime,
   });
 
   static const String tableName = 'appointments';
@@ -32,6 +37,8 @@ class AppointmentModel extends Equatable {
     HealthWorkerModel? healthWorker,
     String? note,
     String? purpose,
+    String? startTime,
+    String? endTime,
   }) {
     return AppointmentModel(
       id: id ?? this.id,
@@ -41,6 +48,8 @@ class AppointmentModel extends Equatable {
       healthWorker: healthWorker ?? this.healthWorker,
       note: note ?? this.note,
       purpose: purpose ?? this.purpose,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
     );
   }
 
@@ -53,6 +62,8 @@ class AppointmentModel extends Equatable {
         healthWorker,
         note,
         purpose,
+        startTime,
+        endTime,
       ];
 
   factory AppointmentModel.fromSeribase(
@@ -76,6 +87,11 @@ class AppointmentModel extends Equatable {
           : null,
       note: map['note'],
       purpose: map['purpose'],
+      healthWorker: map['health_worker'] != null
+          ? HealthWorkerModel.fromSeribase(map['health_worker'])
+          : null,
+      startTime: map['start_time'],
+      endTime: map['end_time'],
     );
   }
 
@@ -88,6 +104,8 @@ class AppointmentModel extends Equatable {
       if (date != null) 'date': date?.toIso8601String(),
       if (note != null) 'note': note,
       if (purpose != null) 'purpose': purpose,
+      if (startTime != null) 'start_time': startTime,
+      if (endTime != null) 'end_time': endTime,
     };
   }
 }
