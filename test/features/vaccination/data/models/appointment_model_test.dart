@@ -32,7 +32,7 @@ void main() {
           'id': '1',
           'full_name': 'First health worker',
         },
-        'start_time': '08:00',
+        'start_time': '08:00:33',
         'end_time': '09:00',
       };
 
@@ -46,6 +46,7 @@ void main() {
       expect(appointment.child!.nama, 'First child');
       expect(appointment.parent!.uid, '12');
       expect(appointment.parent!.momName, 'Mom');
+      expect(appointment.time, '08:00 - 09:00');
     });
 
     test('fromSeribase creates an instance from a valid map with null children and profiles', () {
@@ -62,6 +63,10 @@ void main() {
       expect(appointment.date, DateTime.parse('2023-10-10T00:00:00.000Z'));
       expect(appointment.note, 'First appointment');
       expect(appointment.purpose, 'Vaccination');
+      expect(appointment.child, isNull);
+      expect(appointment.parent, isNull);
+      expect(appointment.healthWorker, isNull);
+      expect(appointment.time, isEmpty);
     });
 
     test('fromSeribase returns null for invalid date format', () {

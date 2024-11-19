@@ -8,6 +8,7 @@ class Picker {
     bool showTitleActions = true,
     DateTime? currentTime,
     Locale? locale = const Locale('id', 'ID'),
+    bool Function(DateTime)? selectableDayPredicate,
   }) async {
     final currentTimeDefault = DateTime.now();
     final minTimeDefault = DateTime(currentTimeDefault.year - 5);
@@ -18,6 +19,7 @@ class Picker {
       firstDate: minTime ?? minTimeDefault,
       lastDate: maxTime ?? maxTimeDefault,
       locale: locale,
+      selectableDayPredicate: selectableDayPredicate,
     );
   }
 

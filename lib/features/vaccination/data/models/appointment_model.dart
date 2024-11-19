@@ -3,6 +3,8 @@ import 'package:eimunisasi/features/profile/data/models/anak.dart';
 import 'package:eimunisasi/features/authentication/data/models/user.dart';
 import 'package:equatable/equatable.dart';
 
+import '../../../../core/extension.dart';
+
 class AppointmentModel extends Equatable {
   final String? id;
   final DateTime? date;
@@ -13,6 +15,15 @@ class AppointmentModel extends Equatable {
   final String? note;
   final String? startTime;
   final String? endTime;
+
+  String get time => (){
+    if(startTime != null && endTime != null){
+      final startTime = this.startTime?.split(":").getRange(0, 2).join(":");
+      final endTime = this.endTime?.split(":").getRange(0, 2).join(":");
+      return "$startTime - $endTime";
+    }
+    return emptyString;
+  }();
 
 
   const AppointmentModel({

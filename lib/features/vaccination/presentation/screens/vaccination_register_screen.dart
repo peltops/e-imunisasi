@@ -54,11 +54,11 @@ class _VaccinationRegisterScaffold extends StatefulWidget {
 
 class _VaccinationRegisterScaffoldState
     extends State<_VaccinationRegisterScaffold> {
-  String _tanggal = 'Pilih tanggal';
+  DateTime? _selectedDate;
   Schedule? selectedRadioTile;
   String? _note;
 
-  final kFirstDay = DateTime.now();
+  final kFirstDay = DateTime.now().add(Duration(days: 1));
   final kLastDay = DateTime(DateTime.now().year + 1);
 
   setSelectedRadioTile(Schedule? val) {
@@ -79,14 +79,14 @@ class _VaccinationRegisterScaffoldState
         (context.read<AuthenticationBloc>().state as Authenticated).user;
 
     void onSubmit() {
-      if (selectedRadioTile == null || _tanggal == 'Pilih tanggal') {
+      if (selectedRadioTile == null || _selectedDate == null) {
         snackbarCustom(
           'Lengkapi data terlebih dahulu!',
         ).show(context);
         return;
       }
       final appointment = AppointmentModel(
-        date: DateTime.parse(_tanggal),
+        date: _selectedDate,
         child: widget.child,
         parent: user,
         healthWorker: widget.healthWorker,
@@ -144,7 +144,9 @@ class _VaccinationRegisterScaffoldState
                             'Nama Nakes: ' +
                                 (widget.healthWorker.fullName ?? '-'),
                             style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 15),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                            ),
                           ),
                           SizedBox(
                             height: 10,
@@ -160,22 +162,97 @@ class _VaccinationRegisterScaffoldState
                               ],
                             );
                           }).toList(),
-                          SizedBox(
-                            height: 10,
+                          SizedBox(height: 20),
+                          TextField(
+                            readOnly: true,
+                            controller: TextEditingController(
+                                text: _selectedDate == null
+                                    ? null
+                                    : DateFormat('dd MMMM yyyy')
+                                        .format(_selectedDate!)),
+                            decoration: InputDecoration(
+                              suffixIcon: Icon(Icons.date_range),
+                              suffixIconColor: Colors.pink,
+                              labelText: 'Tanggal',
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.pink,
+                                  width: 2.0,
+                                ),
+                              ),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.pink,
+                                  width: 2.0,
+                                ),
+                              ),
+                            ),
+                            onTap: () async {
+                              final date = await Picker.pickDate(
+                                context,
+                                currentTime: () {
+                                  final days = widget.healthWorker.practiceSchedules
+                                      ?.map((e) => e.day?.id)
+                                      .whereType<int>()
+                                      .toList();
+
+                                  if (days == null || days.isEmpty) {
+                                    return null;
+                                  }
+
+                                  final tomorrowDate = DateTime.now().add(Duration(days: 1));
+                                  final tomorrow = tomorrowDate.weekday;
+
+                                  final nextAvailableDay = days.firstWhere(
+                                        (element) => element >= tomorrow,
+                                    orElse: () => days.first,
+                                  );
+
+                                  final difference = (nextAvailableDay - tomorrow) % 7;
+                                  return tomorrowDate.add(Duration(days: difference));
+                                }(),
+                                maxTime: kLastDay,
+                                minTime: kFirstDay,
+                                selectableDayPredicate: (DateTime day) {
+                                  final daySchedule = widget
+                                      .healthWorker.practiceSchedules
+                                      ?.where((element) {
+                                    return element.day?.id == day.weekday;
+                                  });
+                                  return daySchedule?.isNotEmpty ?? false;
+                                },
+                              );
+                              setState(() {
+                                _selectedDate = date;
+                              });
+                            },
                           ),
+                          SizedBox(height: 20),
                           Text(
                             'Jadwal Praktek Imunisasi',
                             style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 15),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                            ),
                           ),
                           Column(
                             children: () {
-                              final jadwalImunisasi =
+                              if (_selectedDate == null) {
+                                return [
+                                  Text('Pilih tanggal terlebih dahulu'),
+                                ];
+                              }
+                              final schedules =
                                   widget.healthWorker.practiceSchedules;
-                              if (jadwalImunisasi == null) {
+                              if (schedules == null || schedules.isEmpty) {
                                 return Text('Belum ada jadwal imunisasi');
                               }
-                              return jadwalImunisasi.map(
+                              return schedules.where(
+                                (element) {
+                                  return element.day?.id ==
+                                      _selectedDate?.weekday;
+                                },
+                              ).map(
                                 (e) {
                                   final day = e.day?.name;
                                   return RadioListTile<Schedule>(
@@ -193,43 +270,26 @@ class _VaccinationRegisterScaffoldState
                               ).toList();
                             }() as List<Widget>,
                           ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          ListTile(
-                            shape: RoundedRectangleBorder(
-                              side: BorderSide(
-                                color: Colors.grey[300]!,
-                                width: 2,
-                              ),
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            dense: true,
-                            onTap: () async {
-                              final date = await Picker.pickDate(context);
-                              if (date != null) {
-                                String formattedDate =
-                                    DateFormat('yyyy-MM-dd').format(date);
-                                setState(() {
-                                  _tanggal = formattedDate.toString();
-                                });
-                              }
-                            },
-                            trailing: Icon(
-                              Icons.date_range,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                            title: Text(_tanggal),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
+                          SizedBox(height: 20),
                           TextFormField(
                             onChanged: setNoteValue,
                             maxLines: null,
+                            minLines: 3,
                             decoration: InputDecoration(
                               labelText: 'Catatan (Opsional)',
-                              border: OutlineInputBorder(),
+                              floatingLabelBehavior: FloatingLabelBehavior.auto,
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.pink,
+                                  width: 2.0,
+                                ),
+                              ),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.pink,
+                                  width: 2.0,
+                                ),
+                              ),
                             ),
                           ),
                           SizedBox(height: 30),
