@@ -75,7 +75,7 @@ class AuthenticationBloc
         emit(Unauthenticated(isSeenOnboarding: isSeenOnboarding));
       }
     } catch (_) {
-      emit(Unauthenticated());
+      emit(Unauthenticated(isSeenOnboarding: true));
     }
   }
 
