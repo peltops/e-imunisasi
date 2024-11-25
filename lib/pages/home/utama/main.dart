@@ -85,6 +85,13 @@ class _MainPageState extends State<MainPage> {
                         },
                         label: 'Buku Sehat',
                       ),
+                      TombolMenu(
+                        icon: Icons.contact_mail_rounded,
+                        onTap: () {
+                          context.push(RootRoutePaths.contact.fullPath);
+                        },
+                        label: 'Kontak',
+                      ),
                     ],
                   ),
                 ),

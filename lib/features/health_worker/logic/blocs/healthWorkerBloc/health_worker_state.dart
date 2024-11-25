@@ -9,7 +9,7 @@ class HealthWorkerState extends Equatable {
 
   const HealthWorkerState({
     this.page = 1,
-    this.perPage = 10,
+    this.perPage = 20,
     this.search,
     this.healthWorkers = const [],
     this.statusGetHealthWorkers = FormzSubmissionStatus.initial,

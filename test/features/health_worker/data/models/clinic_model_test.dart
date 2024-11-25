@@ -12,6 +12,24 @@ void main() {
           'motto': 'Health First',
           'phone_number': '1234567890',
           'photos': ['photo1.jpg', 'photo2.jpg'],
+          'clinic_schedules': [
+            {
+              'day': {
+                'id': 1,
+                'name': 'SENIN',
+              },
+              'start_time': '08:00',
+              'end_time': '16:00',
+            },
+            {
+              'day': {
+                'id': 2,
+                'name': 'SELASA',
+              },
+              'start_time': '08:00',
+              'end_time': '16:00',
+            },
+          ],
         };
 
         final clinic = ClinicModel.fromSeribase(map);
@@ -22,6 +40,7 @@ void main() {
         expect(clinic.motto, 'Health First');
         expect(clinic.phoneNumber, '1234567890');
         expect(clinic.photos, ['photo1.jpg', 'photo2.jpg']);
+        expect(clinic.schedules.length, 2);
       });
 
       test('returns null for invalid photos format', () {
@@ -96,6 +115,7 @@ void main() {
           'Health First',
           '1234567890',
           ['photo1.jpg', 'photo2.jpg'],
+          [],
         ]);
       });
     });
