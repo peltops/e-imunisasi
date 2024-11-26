@@ -54,6 +54,7 @@ void main() {
     };
     final responseJsonHealthWorkers = {
       'data': [dataJson],
+      'metadata': {'total': 1, 'page': 1, 'pageSize': 10},
       'isSuccessful': true,
     };
 
