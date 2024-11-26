@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:eimunisasi/core/models/pagination_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 import 'package:injectable/injectable.dart';
@@ -23,9 +24,14 @@ class HealthWorkerBloc extends Bloc<HealthWorkerEvent, HealthWorkerState> {
   }
 
   void _onGetHealthWorkers(
-      GetHealthWorkers event, Emitter<HealthWorkerState> emit) async {
-    emit(state.copyWith(
-        statusGetHealthWorkers: FormzSubmissionStatus.inProgress));
+    GetHealthWorkers event,
+    Emitter<HealthWorkerState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+        statusGetHealthWorkers: FormzSubmissionStatus.inProgress,
+      ),
+    );
     try {
       final healthWorkers = await healthWorkerRepository.getHealthWorkers(
         page: state.page,
@@ -33,22 +39,32 @@ class HealthWorkerBloc extends Bloc<HealthWorkerEvent, HealthWorkerState> {
         search: state.search,
       );
       emit(state.copyWith(
-        healthWorkers: () {
-          if (state.page == 1) {
-            return healthWorkers;
-          } else {
-            return [...state.healthWorkers, ...healthWorkers];
-          }
-        }(),
+        healthWorkers: BasePagination<HealthWorkerModel>(
+          data: state.page == 1
+              ? healthWorkers.data
+              : [
+                  ...?state.healthWorkers.data,
+                  ...?healthWorkers.data,
+                ],
+          metadata: healthWorkers.metadata,
+        ),
         statusGetHealthWorkers: FormzSubmissionStatus.success,
       ));
     } catch (e) {
-      emit(state.copyWith(
-          statusGetHealthWorkers: FormzSubmissionStatus.failure));
+      emit(
+        state.copyWith(
+          statusGetHealthWorkers: FormzSubmissionStatus.failure,
+        ),
+      );
     }
   }
 
   void _onChangePage(ChangePage event, Emitter<HealthWorkerState> emit) {
+    if ((state.healthWorkers.data?.length ?? 0) >=
+            (state.healthWorkers.metadata?.total ?? 0) &&
+        event.page != 1) {
+      return;
+    }
     emit(state.copyWith(page: event.page));
     add(GetHealthWorkers());
   }

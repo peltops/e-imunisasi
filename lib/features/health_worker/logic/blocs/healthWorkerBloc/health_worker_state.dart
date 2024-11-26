@@ -4,14 +4,14 @@ class HealthWorkerState extends Equatable {
   final int page;
   final int perPage;
   final String? search;
-  final List<HealthWorkerModel> healthWorkers;
+  final BasePagination<HealthWorkerModel> healthWorkers;
   final FormzSubmissionStatus statusGetHealthWorkers;
 
   const HealthWorkerState({
     this.page = 1,
-    this.perPage = 20,
+    this.perPage = 10,
     this.search,
-    this.healthWorkers = const [],
+    this.healthWorkers = const BasePagination<HealthWorkerModel>(),
     this.statusGetHealthWorkers = FormzSubmissionStatus.initial,
   });
 
@@ -19,7 +19,7 @@ class HealthWorkerState extends Equatable {
     int? page,
     int? perPage,
     String? search,
-    List<HealthWorkerModel>? healthWorkers,
+    BasePagination<HealthWorkerModel>? healthWorkers,
     FormzSubmissionStatus? statusGetHealthWorkers,
   }) {
     return HealthWorkerState(

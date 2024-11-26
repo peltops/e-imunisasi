@@ -4,14 +4,14 @@ class ClinicState extends Equatable {
   final int page;
   final int perPage;
   final String? search;
-  final List<ClinicModel> clinics;
+  final BasePagination<ClinicModel> clinics;
   final FormzSubmissionStatus statusGetClinic;
 
   const ClinicState({
     this.page = 1,
     this.perPage = 10,
     this.search,
-    this.clinics = const [],
+    this.clinics = const BasePagination<ClinicModel>(),
     this.statusGetClinic = FormzSubmissionStatus.initial,
   });
 
@@ -19,7 +19,7 @@ class ClinicState extends Equatable {
     int? page,
     int? perPage,
     String? search,
-    List<ClinicModel>? clinics,
+    BasePagination<ClinicModel>? clinics,
     FormzSubmissionStatus? statusGetClinic,
   }) {
     return ClinicState(

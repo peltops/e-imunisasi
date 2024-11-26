@@ -38,6 +38,7 @@ class _HealthWorkerListScaffold extends StatefulWidget {
 class _HealthWorkerListScaffoldState extends State<_HealthWorkerListScaffold>
     with AutomaticKeepAliveClientMixin {
   late ScrollController _scrollController;
+  bool _isFetching = false;
 
   @override
   void initState() {
@@ -59,8 +60,12 @@ class _HealthWorkerListScaffoldState extends State<_HealthWorkerListScaffold>
   void _onScroll() {
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
+      if (_isFetching) return;
       final currentPage = context.read<HealthWorkerBloc>().state.page;
       context.read<HealthWorkerBloc>().add(ChangePage(currentPage + 1));
+      setState(() {
+        _isFetching = true;
+      });
     }
   }
 
@@ -85,104 +90,118 @@ class _HealthWorkerListScaffoldState extends State<_HealthWorkerListScaffold>
             elevation: 0,
             child: Padding(
               padding: const EdgeInsets.all(10.0),
-              child: BlocBuilder<HealthWorkerBloc, HealthWorkerState>(
-                builder: (context, state) {
-                  if (state.statusGetHealthWorkers ==
-                          FormzSubmissionStatus.inProgress &&
-                      state.healthWorkers.isEmpty) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (state.statusGetHealthWorkers ==
-                      FormzSubmissionStatus.failure) {
-                    return ErrorContainer(
-                      message: "Gagal memuat data",
-                      onRefresh: () {
-                        context
-                            .read<HealthWorkerBloc>()
-                            .add(GetHealthWorkers());
-                      },
-                    );
+              child: BlocListener<HealthWorkerBloc, HealthWorkerState>(
+                listener: (context, state) {
+                  if (state.statusGetHealthWorkers !=
+                      FormzSubmissionStatus.inProgress) {
+                    setState(() {
+                      _isFetching = false;
+                    });
                   }
-                  if (state.healthWorkers.isEmpty) {
-                    return ErrorContainer(
-                      message: "Data tidak ditemukan",
-                      onRefresh: () {
-                        context
-                            .read<HealthWorkerBloc>()
-                            .add(GetHealthWorkers());
-                      },
-                    );
-                  }
-                  var data = state.healthWorkers;
-                  return Column(
-                    children: [
-                      SearchBarPeltops(
-                        onChanged: (value) {
-                          context.read<HealthWorkerBloc>().add(
-                                ChangeSearch(value),
-                              );
+                },
+                child: BlocBuilder<HealthWorkerBloc, HealthWorkerState>(
+                  builder: (context, state) {
+                    final data = state.healthWorkers.data ?? [];
+                    if (state.statusGetHealthWorkers ==
+                            FormzSubmissionStatus.inProgress &&
+                        data.isEmpty) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (state.statusGetHealthWorkers ==
+                        FormzSubmissionStatus.failure) {
+                      return ErrorContainer(
+                        message: "Gagal memuat data",
+                        onRefresh: () {
+                          context
+                              .read<HealthWorkerBloc>()
+                              .add(GetHealthWorkers());
                         },
-                      ),
-                      Flexible(
-                        child: ListView.builder(
-                          controller: _scrollController,
-                          itemCount: () {
-                            if (state.statusGetHealthWorkers ==
-                                FormzSubmissionStatus.inProgress) {
-                              return data.length + 1;
-                            }
-                            return data.length;
-                          }(),
-                          itemBuilder: (context, index) {
-                            if (index == data.length &&
-                                state.statusGetHealthWorkers ==
-                                    FormzSubmissionStatus.inProgress) {
-                              return Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            }
-                            return Card(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Card(
-                                    color:
-                                        Theme.of(context).colorScheme.secondary,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Text(
-                                        data[index].fullName ?? '-',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
+                      );
+                    }
+                    if (data.isEmpty) {
+                      return ErrorContainer(
+                        message: "Data tidak ditemukan",
+                        onRefresh: () {
+                          context
+                              .read<HealthWorkerBloc>()
+                              .add(GetHealthWorkers());
+                        },
+                      );
+                    }
+                    return Column(
+                      children: [
+                        SearchBarPeltops(
+                          onChanged: (value) {
+                            context.read<HealthWorkerBloc>().add(
+                                  ChangeSearch(value),
+                                );
+                          },
+                        ),
+                        Flexible(
+                          child: ListView.builder(
+                            controller: _scrollController,
+                            itemCount: () {
+                              if (state.statusGetHealthWorkers ==
+                                  FormzSubmissionStatus.inProgress) {
+                                return data.length + 1;
+                              }
+                              return data.length;
+                            }(),
+                            itemBuilder: (context, index) {
+                              if (index == data.length &&
+                                  state.statusGetHealthWorkers ==
+                                      FormzSubmissionStatus.inProgress) {
+                                return Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                              return Card(
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    Card(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Text(
+                                          data[index].fullName ?? '-',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  ListTile(
-                                    leading: Icon(
-                                      Icons.phone,
-                                      color: Theme.of(context).primaryColor,
+                                    ListTile(
+                                      leading: Icon(
+                                        Icons.phone,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                      title:
+                                          Text(data[index].phoneNumber ?? '-'),
                                     ),
-                                    title: Text(data[index].phoneNumber ?? '-'),
-                                  ),
-                                  ListTile(
-                                    leading: Icon(
-                                      Icons.medical_services_rounded,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                    title: Text(data[index].profession ?? '-'),
-                                  )
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      )
-                    ],
-                  );
-                },
+                                    ListTile(
+                                      leading: Icon(
+                                        Icons.medical_services_rounded,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                      title:
+                                          Text(data[index].profession ?? '-'),
+                                    )
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        )
+                      ],
+                    );
+                  },
+                ),
               ),
             ),
           ),

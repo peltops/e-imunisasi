@@ -77,9 +77,9 @@ void main() {
         final result = await repository.getHealthWorkers(
             page: 1, perPage: 10, search: 'John');
 
-        expect(result, isA<List<HealthWorkerModel>>());
-        expect(result.length, 1);
-        expect(result.first.id, '1');
+        expect(result.data, isA<List<HealthWorkerModel>>());
+        expect(result.data?.length, 1);
+        expect(result.data?.first.id, '1');
       });
 
       test('returns an empty list of health workers when successful', () async {
@@ -102,9 +102,7 @@ void main() {
         final result = await repository.getHealthWorkers(
             page: 1, perPage: 10, search: 'John');
 
-        expect(result, isA<List<HealthWorkerModel>>());
-        expect(result, List<HealthWorkerModel>.empty());
-        expect(result.length, 0);
+        expect(result.data, isNull);
       });
 
       test('throws an exception when an error occurs', () async {

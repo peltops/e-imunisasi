@@ -41,6 +41,7 @@ class _ClinicListScaffold extends StatefulWidget {
 class _ClinicListScaffoldState extends State<_ClinicListScaffold>
     with AutomaticKeepAliveClientMixin {
   late ScrollController _scrollController;
+  bool _isFetching = false;
 
   @override
   void initState() {
@@ -62,8 +63,12 @@ class _ClinicListScaffoldState extends State<_ClinicListScaffold>
   void _onScroll() {
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
+      if (_isFetching) return;
       final currentPage = context.read<ClinicBloc>().state.page;
       context.read<ClinicBloc>().add(ChangePage(currentPage + 1));
+      setState(() {
+        _isFetching = true;
+      });
     }
   }
 
@@ -88,102 +93,111 @@ class _ClinicListScaffoldState extends State<_ClinicListScaffold>
             elevation: 0,
             child: Padding(
               padding: const EdgeInsets.all(10.0),
-              child: BlocBuilder<ClinicBloc, ClinicState>(
-                builder: (context, state) {
-                  if (state.statusGetClinic ==
-                          FormzSubmissionStatus.inProgress &&
-                      state.clinics.isEmpty) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (state.statusGetClinic ==
-                      FormzSubmissionStatus.failure) {
-                    return ErrorContainer(
-                      message: "Gagal memuat data",
-                      onRefresh: () {
-                        context.read<ClinicBloc>().add(GetClinics());
-                      },
-                    );
+              child: BlocListener<ClinicBloc, ClinicState>(
+                listener: (context, state) {
+                  if (state.statusGetClinic == FormzSubmissionStatus.success) {
+                    setState(() {
+                      _isFetching = false;
+                    });
                   }
-                  if (state.clinics.isEmpty) {
-                    return ErrorContainer(
-                      message: "Data tidak ditemukan",
-                      onRefresh: () {
-                        context.read<ClinicBloc>().add(GetClinics());
-                      },
-                    );
-                  }
-                  var data = state.clinics;
-                  return Column(
-                    children: [
-                      SearchBarPeltops(
-                        onChanged: (value) {
-                          context.read<ClinicBloc>().add(
-                                ChangeSearch(value),
-                              );
+                },
+                child: BlocBuilder<ClinicBloc, ClinicState>(
+                  builder: (context, state) {
+                    final data = state.clinics.data ?? [];
+                    if (state.statusGetClinic ==
+                            FormzSubmissionStatus.inProgress &&
+                        data.isEmpty) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (state.statusGetClinic ==
+                        FormzSubmissionStatus.failure) {
+                      return ErrorContainer(
+                        message: "Gagal memuat data",
+                        onRefresh: () {
+                          context.read<ClinicBloc>().add(GetClinics());
                         },
-                      ),
-                      Flexible(
-                        child: ListView.builder(
-                            controller: _scrollController,
-                            itemCount: () {
-                              if (state.statusGetClinic ==
-                                  FormzSubmissionStatus.inProgress) {
-                                return data.length + 1;
-                              }
-                              return data.length;
-                            }(),
-                            itemBuilder: (context, index) {
-                              if (index == data.length &&
-                                  state.statusGetClinic ==
-                                      FormzSubmissionStatus.inProgress) {
-                                return Center(
-                                  child: CircularProgressIndicator(),
+                      );
+                    }
+                    if (data.isEmpty) {
+                      return ErrorContainer(
+                        message: "Data tidak ditemukan",
+                        onRefresh: () {
+                          context.read<ClinicBloc>().add(GetClinics());
+                        },
+                      );
+                    }
+                    return Column(
+                      children: [
+                        SearchBarPeltops(
+                          onChanged: (value) {
+                            context.read<ClinicBloc>().add(
+                                  ChangeSearch(value),
                                 );
-                              }
-                              return Card(
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: [
-                                    Card(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: Text(
-                                          data[index].name ?? '',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
+                          },
+                        ),
+                        Flexible(
+                          child: ListView.builder(
+                              controller: _scrollController,
+                              itemCount: () {
+                                if (state.statusGetClinic ==
+                                    FormzSubmissionStatus.inProgress) {
+                                  return data.length + 1;
+                                }
+                                return data.length;
+                              }(),
+                              itemBuilder: (context, index) {
+                                if (index == data.length &&
+                                    state.statusGetClinic ==
+                                        FormzSubmissionStatus.inProgress) {
+                                  return Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                }
+                                return Card(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      Card(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: Text(
+                                            data[index].name ?? '',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    ListTile(
-                                      leading: Icon(
-                                        Icons.phone,
-                                        color: Theme.of(context).primaryColor,
+                                      ListTile(
+                                        leading: Icon(
+                                          Icons.phone,
+                                          color: Theme.of(context).primaryColor,
+                                        ),
+                                        title:
+                                            Text(data[index].phoneNumber ?? ''),
                                       ),
-                                      title:
-                                          Text(data[index].phoneNumber ?? ''),
-                                    ),
-                                    ListTile(
-                                      leading: Icon(
-                                        Icons.maps_home_work_rounded,
-                                        color: Theme.of(context).primaryColor,
+                                      ListTile(
+                                        leading: Icon(
+                                          Icons.maps_home_work_rounded,
+                                          color: Theme.of(context).primaryColor,
+                                        ),
+                                        title: Text(data[index].address ?? ''),
                                       ),
-                                      title: Text(data[index].address ?? ''),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            }),
-                      )
-                    ],
-                  );
-                },
+                                    ],
+                                  ),
+                                );
+                              }),
+                        )
+                      ],
+                    );
+                  },
+                ),
               ),
             ),
           ),

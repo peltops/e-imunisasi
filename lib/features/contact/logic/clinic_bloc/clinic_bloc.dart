@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:eimunisasi/core/models/pagination_model.dart';
 import 'package:eimunisasi/features/health_worker/data/models/clinic_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
@@ -23,7 +24,13 @@ class ClinicBloc extends Bloc<ClinicEvent, ClinicState> {
   }
 
   void _onChangePage(ChangePage event, Emitter<ClinicState> emit) {
+    if ((state.clinics.data?.length ?? 0) >=
+        (state.clinics.metadata?.total ?? 0) &&
+        event.page != 1) {
+      return;
+    }
     emit(state.copyWith(page: event.page));
+    add(GetClinics());
   }
 
   void _onChangeSearch(ChangeSearch event, Emitter<ClinicState> emit) {
@@ -40,7 +47,15 @@ class ClinicBloc extends Bloc<ClinicEvent, ClinicState> {
       );
       emit(
         state.copyWith(
-          clinics: clinics,
+          clinics: BasePagination<ClinicModel>(
+            data: state.page == 1
+                ? clinics.data
+                : [
+                    ...?state.clinics.data,
+                    ...?clinics.data,
+                  ],
+            metadata: clinics.metadata,
+          ),
           statusGetClinic: FormzSubmissionStatus.success,
         ),
       );

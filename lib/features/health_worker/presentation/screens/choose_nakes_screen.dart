@@ -48,6 +48,7 @@ class _ChooseHealthWorkerScaffoldState
     extends State<_ChooseHealthWorkerScaffold>
     with AutomaticKeepAliveClientMixin {
   late ScrollController _scrollController;
+  bool _isFetching = false;
 
   @override
   void initState() {
@@ -69,8 +70,12 @@ class _ChooseHealthWorkerScaffoldState
   void _onScroll() {
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
+      if (_isFetching) return;
       final currentPage = context.read<HealthWorkerBloc>().state.page;
       context.read<HealthWorkerBloc>().add(ChangePage(currentPage + 1));
+      setState(() {
+        _isFetching = true;
+      });
     }
   }
 
@@ -107,66 +112,76 @@ class _ChooseHealthWorkerScaffoldState
               Expanded(
                 child: Container(
                   width: double.infinity,
-                  child: BlocBuilder<HealthWorkerBloc, HealthWorkerState>(
-                    builder: (context, state) {
-                      if (state.statusGetHealthWorkers ==
-                              FormzSubmissionStatus.inProgress &&
-                          state.healthWorkers.isEmpty) {
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
+                  child: BlocListener<HealthWorkerBloc, HealthWorkerState>(
+                    listener: (context, state) {
+                      if (state.statusGetHealthWorkers !=
+                          FormzSubmissionStatus.inProgress) {
+                        setState(() {
+                          _isFetching = false;
+                        });
                       }
-                      if (state.statusGetHealthWorkers ==
-                          FormzSubmissionStatus.failure) {
-                        return ErrorContainer(
-                          message: 'Gagal memuat data',
-                          onRefresh: () {
-                            context
-                                .read<HealthWorkerBloc>()
-                                .add(GetHealthWorkers());
-                          },
-                        );
-                      }
-                      final data = state.healthWorkers;
-                      if (data.isEmpty) {
-                        return ErrorContainer(
-                          message: 'Data tidak ditemukan',
-                          onRefresh: () {
-                            context
-                                .read<HealthWorkerBloc>()
-                                .add(GetHealthWorkers());
-                          },
-                        );
-                      }
-                      return ListView.builder(
-                        controller: _scrollController,
-                        itemCount: () {
-                          if (state.statusGetHealthWorkers ==
-                              FormzSubmissionStatus.inProgress) {
-                            return data.length + 1;
-                          }
-                          return data.length;
-                        }(),
-                        itemBuilder: (context, index) {
-                          if (index == data.length &&
-                              state.statusGetHealthWorkers ==
-                                  FormzSubmissionStatus.inProgress) {
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
-                          final healthWorker = data[index];
-                          return _ListTileHealthWorker(
-                            healthWorker: healthWorker,
-                            onSelected: (healthWorker) {
-                              if (widget.onSelected != null) {
-                                widget.onSelected!(healthWorker);
-                              }
+                    },
+                    child: BlocBuilder<HealthWorkerBloc, HealthWorkerState>(
+                      builder: (context, state) {
+                        final data = state.healthWorkers.data ?? [];
+                        if (state.statusGetHealthWorkers ==
+                                FormzSubmissionStatus.inProgress &&
+                            data.isEmpty) {
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        if (state.statusGetHealthWorkers ==
+                            FormzSubmissionStatus.failure) {
+                          return ErrorContainer(
+                            message: 'Gagal memuat data',
+                            onRefresh: () {
+                              context
+                                  .read<HealthWorkerBloc>()
+                                  .add(GetHealthWorkers());
                             },
                           );
-                        },
-                      );
-                    },
+                        }
+                        if (data.isEmpty) {
+                          return ErrorContainer(
+                            message: 'Data tidak ditemukan',
+                            onRefresh: () {
+                              context
+                                  .read<HealthWorkerBloc>()
+                                  .add(GetHealthWorkers());
+                            },
+                          );
+                        }
+                        return ListView.builder(
+                          controller: _scrollController,
+                          itemCount: () {
+                            if (state.statusGetHealthWorkers ==
+                                FormzSubmissionStatus.inProgress) {
+                              return data.length + 1;
+                            }
+                            return data.length;
+                          }(),
+                          itemBuilder: (context, index) {
+                            if (index == data.length &&
+                                state.statusGetHealthWorkers ==
+                                    FormzSubmissionStatus.inProgress) {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                            final healthWorker = data[index];
+                            return _ListTileHealthWorker(
+                              healthWorker: healthWorker,
+                              onSelected: (healthWorker) {
+                                if (widget.onSelected != null) {
+                                  widget.onSelected!(healthWorker);
+                                }
+                              },
+                            );
+                          },
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
