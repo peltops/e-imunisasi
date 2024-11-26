@@ -25,7 +25,7 @@ class ClinicBloc extends Bloc<ClinicEvent, ClinicState> {
 
   void _onChangePage(ChangePage event, Emitter<ClinicState> emit) {
     if ((state.clinics.data?.length ?? 0) >=
-        (state.clinics.metadata?.total ?? 0) &&
+            (state.clinics.metadata?.total ?? 0) &&
         event.page != 1) {
       return;
     }
@@ -34,7 +34,11 @@ class ClinicBloc extends Bloc<ClinicEvent, ClinicState> {
   }
 
   void _onChangeSearch(ChangeSearch event, Emitter<ClinicState> emit) {
-    emit(state.copyWith(search: event.search));
+    emit(state.copyWith(
+      search: event.search,
+      page: 1,
+    ));
+    add(GetClinics());
   }
 
   void _onGetClinics(GetClinics event, Emitter<ClinicState> emit) async {
