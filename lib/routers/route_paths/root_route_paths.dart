@@ -34,4 +34,7 @@ class RootRoutePaths {
   static const RouteModel vaccination = RouteModel(
     path: '/vaccination',
   );
+  static const RouteModel contact = RouteModel(
+    path: '/contact',
+  );
 }

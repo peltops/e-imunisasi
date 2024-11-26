@@ -1,3 +1,4 @@
+import 'package:eimunisasi/core/models/pagination_model.dart';
 import 'package:eimunisasi/features/health_worker/data/models/health_worker_model.dart';
 import 'package:injectable/injectable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -8,7 +9,7 @@ class HealthWorkerRepository {
 
   const HealthWorkerRepository(this.supabaseClient);
 
-  Future<List<HealthWorkerModel>> getHealthWorkers({
+  Future<BasePagination<HealthWorkerModel>> getHealthWorkers({
     int? page,
     int? perPage,
     String? search,
@@ -30,14 +31,19 @@ class HealthWorkerRepository {
         throw Exception('Failed to get health workers');
       }
 
-      final data = fetch.data['data'] as List?;
-      final result = data
-          ?.map(
-            (e) => HealthWorkerModel.fromSeribase(e),
-          )
-          .toList();
+      final data = fetch.data;
+      final result = BasePagination<HealthWorkerModel>(
+        data: data['data']?.map<HealthWorkerModel>((e) {
+          return HealthWorkerModel.fromSeribase(e);
+        }).toList(),
+        metadata: () {
+          final metadata = data['metadata'];
+          if (metadata == null) return null;
+          return MetadataPaginationModel.fromMap(metadata);
+        }(),
+      );
 
-      return result ?? [];
+      return result;
     } catch (e) {
       throw e;
     }
