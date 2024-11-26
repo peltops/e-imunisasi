@@ -30,7 +30,7 @@ class ChooseHealthWorkerScreen extends StatelessWidget {
   }
 }
 
-class _ChooseHealthWorkerScaffold extends StatelessWidget {
+class _ChooseHealthWorkerScaffold extends StatefulWidget {
   final Anak child;
   final Function(HealthWorkerModel)? onSelected;
 
@@ -40,17 +40,43 @@ class _ChooseHealthWorkerScaffold extends StatelessWidget {
   });
 
   @override
+  State<_ChooseHealthWorkerScaffold> createState() =>
+      _ChooseHealthWorkerScaffoldState();
+}
+
+class _ChooseHealthWorkerScaffoldState
+    extends State<_ChooseHealthWorkerScaffold>
+    with AutomaticKeepAliveClientMixin {
+  late ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+
+  void _onScroll() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      final currentPage = context.read<HealthWorkerBloc>().state.page;
+      context.read<HealthWorkerBloc>().add(ChangePage(currentPage + 1));
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final currentPage = context.watch<HealthWorkerBloc>().state.page;
-    final ScrollController _scrollController = ScrollController();
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent - 50) {
-        context.read<HealthWorkerBloc>().add(
-              ChangePage(currentPage + 1),
-            );
-      }
-    });
+    super.build(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.pink[300],
@@ -84,9 +110,11 @@ class _ChooseHealthWorkerScaffold extends StatelessWidget {
                   child: BlocBuilder<HealthWorkerBloc, HealthWorkerState>(
                     builder: (context, state) {
                       if (state.statusGetHealthWorkers ==
-                          FormzSubmissionStatus.inProgress &&
+                              FormzSubmissionStatus.inProgress &&
                           state.healthWorkers.isEmpty) {
-                        return Center(child: CircularProgressIndicator());
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
                       }
                       if (state.statusGetHealthWorkers ==
                           FormzSubmissionStatus.failure) {
@@ -112,23 +140,27 @@ class _ChooseHealthWorkerScaffold extends StatelessWidget {
                       }
                       return ListView.builder(
                         controller: _scrollController,
-                        itemCount: (){
-                          if (state.page == 1) {
-                            return data.length;
-                          } else {
+                        itemCount: () {
+                          if (state.statusGetHealthWorkers ==
+                              FormzSubmissionStatus.inProgress) {
                             return data.length + 1;
                           }
+                          return data.length;
                         }(),
                         itemBuilder: (context, index) {
-                          if (index == data.length) {
-                            return LinearProgressIndicator();
+                          if (index == data.length &&
+                              state.statusGetHealthWorkers ==
+                                  FormzSubmissionStatus.inProgress) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
                           }
                           final healthWorker = data[index];
                           return _ListTileHealthWorker(
                             healthWorker: healthWorker,
                             onSelected: (healthWorker) {
-                              if (onSelected != null) {
-                                onSelected!(healthWorker);
+                              if (widget.onSelected != null) {
+                                widget.onSelected!(healthWorker);
                               }
                             },
                           );
