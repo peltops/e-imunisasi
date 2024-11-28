@@ -2,9 +2,10 @@ import 'dart:collection';
 
 import 'package:eimunisasi/core/extension.dart';
 import 'package:eimunisasi/features/calendar/data/models/hive_calendar_activity_model.dart';
+import 'package:equatable/equatable.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class CalendarModel {
+class CalendarModel extends Equatable {
   final String? uid;
   final DateTime? date;
   final String? activity;
@@ -83,6 +84,387 @@ class CalendarModel {
       ..id = createdDate?.millisecondsSinceEpoch
       ..date = date;
   }
+
+  static List<CalendarModel> vaccinationSchedules(
+    uid,
+    DateTime tglLahir,
+    String namaAnak,
+  ) =>
+      [
+        CalendarModel(
+          uid: uid,
+          activity: 'Hepatitis B' + ' (' + namaAnak + ')',
+          date: DateTime(
+            tglLahir.year,
+            tglLahir.month + 2,
+            tglLahir.day,
+            tglLahir.hour + 6,
+          ),
+          readOnly: true,
+        ),
+        CalendarModel(
+          uid: uid,
+          activity: 'Hepatitis B' + ' (' + namaAnak + ')',
+          date: DateTime(
+            tglLahir.year,
+            tglLahir.month + 3,
+            tglLahir.day,
+            tglLahir.hour + 6,
+          ),
+          readOnly: true,
+        ),
+        CalendarModel(
+          uid: uid,
+          activity: 'Hepatitis B' + ' (' + namaAnak + ')',
+          date: DateTime(
+            tglLahir.year,
+            tglLahir.month + 4,
+            tglLahir.day,
+            tglLahir.hour + 6,
+          ),
+          readOnly: true,
+        ),
+        CalendarModel(
+          uid: uid,
+          activity: 'Polio' + ' (' + namaAnak + ')',
+          date: DateTime(
+            tglLahir.year,
+            tglLahir.month + 1,
+            tglLahir.day,
+            tglLahir.hour + 6,
+          ),
+          readOnly: true,
+        ),
+        CalendarModel(
+          uid: uid,
+          activity: 'Polio' + ' (' + namaAnak + ')',
+          date: DateTime(
+            tglLahir.year,
+            tglLahir.month + 2,
+            tglLahir.day,
+            tglLahir.hour + 6,
+          ),
+          readOnly: true,
+        ),
+        CalendarModel(
+          uid: uid,
+          activity: 'Polio' + ' (' + namaAnak + ')',
+          date: DateTime(
+            tglLahir.year,
+            tglLahir.month + 3,
+            tglLahir.day,
+            tglLahir.hour + 6,
+          ),
+          readOnly: true,
+        ),
+        CalendarModel(
+          uid: uid,
+          activity: 'Polio' + ' (' + namaAnak + ')',
+          date: DateTime(
+            tglLahir.year,
+            tglLahir.month + 4,
+            tglLahir.day,
+            tglLahir.hour + 6,
+          ),
+          readOnly: true,
+        ),
+        CalendarModel(
+          uid: uid,
+          activity: 'Polio' + ' (' + namaAnak + ')',
+          date: DateTime(
+            tglLahir.year,
+            tglLahir.month + 18,
+            tglLahir.day,
+            tglLahir.hour + 6,
+          ),
+          readOnly: true,
+        ),
+        CalendarModel(
+          uid: uid,
+          activity: 'BCG' + ' (' + namaAnak + ')',
+          date: DateTime(
+            tglLahir.year,
+            tglLahir.month + 2,
+            tglLahir.day,
+            tglLahir.hour + 6,
+          ),
+          readOnly: true,
+        ),
+        CalendarModel(
+          uid: uid,
+          activity: 'DPT' + ' (' + namaAnak + ')',
+          date: DateTime(
+            tglLahir.year,
+            tglLahir.month + 2,
+            tglLahir.day,
+            tglLahir.hour + 6,
+          ),
+          readOnly: true,
+        ),
+        CalendarModel(
+          uid: uid,
+          activity: 'DPT' + ' (' + namaAnak + ')',
+          date: DateTime(
+            tglLahir.year,
+            tglLahir.month + 3,
+            tglLahir.day,
+            tglLahir.hour + 6,
+          ),
+          readOnly: true,
+        ),
+        CalendarModel(
+          uid: uid,
+          activity: 'DPT' + ' (' + namaAnak + ')',
+          date: DateTime(
+            tglLahir.year,
+            tglLahir.month + 4,
+            tglLahir.day,
+            tglLahir.hour + 6,
+          ),
+          readOnly: true,
+        ),
+        CalendarModel(
+          uid: uid,
+          activity: 'HIB' + ' (' + namaAnak + ')',
+          date: DateTime(
+            tglLahir.year,
+            tglLahir.month + 2,
+            tglLahir.day,
+            tglLahir.hour + 6,
+          ),
+          readOnly: true,
+        ),
+        CalendarModel(
+          uid: uid,
+          activity: 'HIB' + '(' + namaAnak + ')',
+          date: DateTime(
+            tglLahir.year,
+            tglLahir.month + 3,
+            tglLahir.day,
+            tglLahir.hour + 6,
+          ),
+          readOnly: true,
+        ),
+        CalendarModel(
+          uid: uid,
+          activity: 'HIB' + '(' + namaAnak + ')',
+          date: DateTime(
+            tglLahir.year,
+            tglLahir.month + 4,
+            tglLahir.day,
+            tglLahir.hour + 6,
+          ),
+          readOnly: true,
+        ),
+        CalendarModel(
+          uid: uid,
+          activity: 'HIB' + ' (' + namaAnak + ')',
+          date: DateTime(
+            tglLahir.year,
+            tglLahir.month + 15,
+            tglLahir.day,
+            tglLahir.hour + 6,
+          ),
+          readOnly: true,
+        ),
+        CalendarModel(
+          uid: uid,
+          activity: 'PCV' + ' (' + namaAnak + ')',
+          date: DateTime(
+            tglLahir.year,
+            tglLahir.month + 2,
+            tglLahir.day,
+            tglLahir.hour + 6,
+          ),
+          readOnly: true,
+        ),
+        CalendarModel(
+          uid: uid,
+          activity: 'PCV' + ' (' + namaAnak + ')',
+          date: DateTime(
+            tglLahir.year,
+            tglLahir.month + 4,
+            tglLahir.day,
+            tglLahir.hour + 6,
+          ),
+          readOnly: true,
+        ),
+        CalendarModel(
+          uid: uid,
+          activity: 'PCV' + ' (' + namaAnak + ')',
+          date: DateTime(
+            tglLahir.year,
+            tglLahir.month + 6,
+            tglLahir.day,
+            tglLahir.hour + 6,
+          ),
+          readOnly: true,
+        ),
+        CalendarModel(
+          uid: uid,
+          activity: 'PCV' + ' (' + namaAnak + ')',
+          date: DateTime(
+            tglLahir.year,
+            tglLahir.month + 12,
+            tglLahir.day,
+            tglLahir.hour + 6,
+          ),
+          readOnly: true,
+        ),
+        CalendarModel(
+          uid: uid,
+          activity: 'Rotavirus' + ' (' + namaAnak + ')',
+          date: DateTime(
+            tglLahir.year,
+            tglLahir.month + 2,
+            tglLahir.day,
+            tglLahir.hour + 6,
+          ),
+          readOnly: true,
+        ),
+        CalendarModel(
+          uid: uid,
+          activity: 'Rotavirus' + ' (' + namaAnak + ')',
+          date: DateTime(
+            tglLahir.year,
+            tglLahir.month + 4,
+            tglLahir.day,
+            tglLahir.hour + 6,
+          ),
+          readOnly: true,
+        ),
+        CalendarModel(
+          uid: uid,
+          activity: 'Rotavirus' + ' (' + namaAnak + ')',
+          date: DateTime(
+            tglLahir.year,
+            tglLahir.month + 6,
+            tglLahir.day,
+            tglLahir.hour + 6,
+          ),
+          readOnly: true,
+        ),
+        CalendarModel(
+          uid: uid,
+          activity: 'Infuenza' + ' (' + namaAnak + ')',
+          date: DateTime(
+            tglLahir.year,
+            tglLahir.month + 6,
+            tglLahir.day,
+            tglLahir.hour + 6,
+          ),
+          readOnly: true,
+        ),
+        CalendarModel(
+          uid: uid,
+          activity: 'MR' + ' (' + namaAnak + ')',
+          date: DateTime(
+            tglLahir.year,
+            tglLahir.month + 9,
+            tglLahir.day,
+            tglLahir.hour + 6,
+          ),
+          readOnly: true,
+        ),
+        CalendarModel(
+          uid: uid,
+          activity: 'MR' + ' (' + namaAnak + ')',
+          date: DateTime(
+            tglLahir.year,
+            tglLahir.month + 18,
+            tglLahir.day,
+            tglLahir.hour + 6,
+          ),
+          readOnly: true,
+        ),
+        CalendarModel(
+          uid: uid,
+          activity: 'JE' + ' (' + namaAnak + ')',
+          date: DateTime(
+            tglLahir.year,
+            tglLahir.month + 12,
+            tglLahir.day,
+            tglLahir.hour + 6,
+          ),
+          readOnly: true,
+        ),
+        CalendarModel(
+          uid: uid,
+          activity: 'JE' + ' (' + namaAnak + ')',
+          date: DateTime(
+            tglLahir.year,
+            tglLahir.month + 24,
+            tglLahir.day,
+            tglLahir.hour + 6,
+          ),
+          readOnly: true,
+        ),
+        CalendarModel(
+          uid: uid,
+          activity: 'Varisela' + ' (' + namaAnak + ')',
+          date: DateTime(
+            tglLahir.year,
+            tglLahir.month + 12,
+            tglLahir.day,
+            tglLahir.hour + 6,
+          ),
+          readOnly: true,
+        ),
+        CalendarModel(
+          uid: uid,
+          activity: 'Varisela' + ' (' + namaAnak + ')',
+          date: DateTime(
+            tglLahir.year,
+            tglLahir.month + 18,
+            tglLahir.day,
+            tglLahir.hour + 6,
+          ),
+          readOnly: true,
+        ),
+        CalendarModel(
+          uid: uid,
+          activity: 'Hepatitis A' + ' (' + namaAnak + ')',
+          date: DateTime(
+            tglLahir.year,
+            tglLahir.month + 12,
+            tglLahir.day,
+            tglLahir.hour + 6,
+          ),
+          readOnly: true,
+        ),
+        CalendarModel(
+          uid: uid,
+          activity: 'Hepatitis A' + ' (' + namaAnak + ')',
+          date: DateTime(
+            tglLahir.year,
+            tglLahir.month + 24,
+            tglLahir.day,
+            tglLahir.hour + 6,
+          ),
+          readOnly: true,
+        ),
+        CalendarModel(
+          uid: uid,
+          activity: 'Tifoid' + ' (' + namaAnak + ')',
+          date: DateTime(
+            tglLahir.year,
+            tglLahir.month + 24,
+            tglLahir.day,
+            tglLahir.hour + 6,
+          ),
+          readOnly: true,
+        ),
+      ];
+
+  @override
+  List<Object?> get props => [
+        uid,
+        activity,
+        date,
+        documentID,
+        readOnly,
+        createdDate,
+      ];
 }
 
 extension CalendarModelExtension on List<CalendarModel> {

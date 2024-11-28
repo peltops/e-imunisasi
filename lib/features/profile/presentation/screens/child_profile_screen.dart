@@ -4,9 +4,9 @@ import 'package:eimunisasi/core/widgets/button_custom.dart';
 import 'package:eimunisasi/core/widgets/image_picker.dart';
 import 'package:eimunisasi/core/widgets/spacer.dart';
 import 'package:eimunisasi/core/widgets/text_form_custom.dart';
-import 'package:eimunisasi/features/profile/data/models/anak.dart';
+import 'package:eimunisasi/features/profile/data/models/child_model.dart';
 import 'package:eimunisasi/features/profile/logic/blocs/childBloc/child_profile_bloc.dart';
-import 'package:eimunisasi/utils/dismiss_keyboard.dart';
+import 'package:eimunisasi/core/utils/dismiss_keyboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
@@ -26,7 +26,7 @@ enum ChildProfileScreenMode { add, edit }
 
 class ChildProfileScreen extends StatelessWidget {
   final ChildProfileScreenMode mode;
-  final Anak? child;
+  final ChildModel? child;
   const ChildProfileScreen({
     super.key,
     required this.mode,
@@ -50,7 +50,7 @@ class ChildProfileScreen extends StatelessWidget {
 
 class _ChildProfileScaffold extends StatelessWidget {
   final ChildProfileScreenMode mode;
-  final Anak? child;
+  final ChildModel? child;
 
   const _ChildProfileScaffold({
     required this.mode,
@@ -214,7 +214,7 @@ class _ChildProfileScaffold extends StatelessWidget {
 }
 
 class _HeaderChildProfile extends StatelessWidget {
-  final Anak? child;
+  final ChildModel? child;
 
   const _HeaderChildProfile({
     Key? key,

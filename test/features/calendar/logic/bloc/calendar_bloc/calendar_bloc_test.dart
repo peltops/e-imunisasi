@@ -4,7 +4,7 @@ import 'package:eimunisasi/features/calendar/data/models/calendar_model.dart';
 import 'package:eimunisasi/features/calendar/data/repositories/calendar_repository.dart';
 import 'package:eimunisasi/features/calendar/logic/bloc/calendar_bloc/calendar_bloc.dart';
 import 'package:eimunisasi/services/notifications.dart';
-import 'package:eimunisasi/utils/string_extension.dart';
+import 'package:eimunisasi/core/utils/string_extension.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:formz/formz.dart';
 import 'package:mockito/annotations.dart';

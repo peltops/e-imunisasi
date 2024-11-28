@@ -2,14 +2,13 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:eimunisasi/features/authentication/data/models/email.dart';
 import 'package:eimunisasi/features/authentication/data/models/password.dart';
 import 'package:eimunisasi/features/authentication/data/repositories/auth_repository.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:formz/formz.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 import 'package:eimunisasi/features/authentication/logic/cubit/login_cubit/login_cubit.dart';
 
-@GenerateMocks([AuthRepository, UserCredential])
+@GenerateMocks([AuthRepository])
 import 'login_cubit_test.mocks.dart';
 
 void main() {

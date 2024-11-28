@@ -3,8 +3,8 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:eimunisasi/features/calendar/data/models/calendar_model.dart';
-import 'package:eimunisasi/utils/datetime_extension.dart';
-import 'package:eimunisasi/utils/string_extension.dart';
+import 'package:eimunisasi/core/utils/datetime_extension.dart';
+import 'package:eimunisasi/core/utils/string_extension.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 import 'package:injectable/injectable.dart';

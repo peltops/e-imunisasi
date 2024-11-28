@@ -1,7 +1,7 @@
 import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/features/authentication/logic/bloc/authentication_bloc/authentication_bloc.dart';
 import 'package:eimunisasi/features/health_worker/data/models/health_worker_model.dart';
-import 'package:eimunisasi/features/profile/data/models/anak.dart';
+import 'package:eimunisasi/features/profile/data/models/child_model.dart';
 import 'package:eimunisasi/features/vaccination/data/models/appointment_model.dart';
 import 'package:eimunisasi/features/vaccination/logic/blocs/appointmentBloc/appointment_bloc.dart';
 import 'package:eimunisasi/injection.dart';
@@ -17,7 +17,7 @@ import 'package:intl/intl.dart';
 import '../../../../core/widgets/picker.dart';
 
 class VaccinationRegisterScreen extends StatelessWidget {
-  final Anak anak;
+  final ChildModel anak;
   final HealthWorkerModel nakes;
 
   const VaccinationRegisterScreen({
@@ -39,7 +39,7 @@ class VaccinationRegisterScreen extends StatelessWidget {
 }
 
 class _VaccinationRegisterScaffold extends StatefulWidget {
-  final Anak child;
+  final ChildModel child;
   final HealthWorkerModel healthWorker;
 
   const _VaccinationRegisterScaffold({

@@ -9,14 +9,14 @@ class ProfileState extends Equatable {
     this.errorMessage,
   });
 
-  final Users? user;
+  final UserProfile? user;
   final FormzSubmissionStatus statusGet;
   final FormzSubmissionStatus statusUpdate;
   final FormzSubmissionStatus statusUpdateAvatar;
   final String? errorMessage;
 
   ProfileState copyWith({
-    Users? user,
+    UserProfile? user,
     FormzSubmissionStatus? statusGet,
     FormzSubmissionStatus? statusUpdate,
     FormzSubmissionStatus? statusUpdateAvatar,

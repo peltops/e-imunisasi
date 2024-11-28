@@ -1,7 +1,7 @@
 import 'package:eimunisasi/core/widgets/error.dart';
 import 'package:eimunisasi/features/health_worker/data/models/health_worker_model.dart';
 import 'package:eimunisasi/features/health_worker/logic/blocs/healthWorkerBloc/health_worker_bloc.dart';
-import 'package:eimunisasi/features/profile/data/models/anak.dart';
+import 'package:eimunisasi/features/profile/data/models/child_model.dart';
 import 'package:eimunisasi/core/widgets/search_bar.dart';
 import 'package:eimunisasi/injection.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 
 class ChooseHealthWorkerScreen extends StatelessWidget {
-  final Anak child;
+  final ChildModel child;
   final Function(HealthWorkerModel)? onSelected;
 
   const ChooseHealthWorkerScreen({
@@ -31,7 +31,7 @@ class ChooseHealthWorkerScreen extends StatelessWidget {
 }
 
 class _ChooseHealthWorkerScaffold extends StatefulWidget {
-  final Anak child;
+  final ChildModel child;
   final Function(HealthWorkerModel)? onSelected;
 
   const _ChooseHealthWorkerScaffold({

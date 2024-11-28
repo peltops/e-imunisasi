@@ -1,4 +1,4 @@
-import 'package:eimunisasi/features/authentication/data/models/user.dart';
+import 'package:eimunisasi/features/authentication/data/models/user_profile.dart';
 import 'package:eimunisasi/features/health_worker/data/models/health_worker_model.dart';
 import 'package:eimunisasi/features/health_worker/data/repositories/health_worker_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -19,7 +19,7 @@ void main() {
     late var mockHttpClient;
     final data1 = AppointmentModel(
       id: 'd8bfed26-f491-4478-b182-fdc2e8074212c',
-      parent: Users(
+      parent: UserProfile(
         uid: '1',
       ),
       healthWorker: HealthWorkerModel(

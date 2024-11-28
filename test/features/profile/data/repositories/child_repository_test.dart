@@ -1,4 +1,4 @@
-import 'package:eimunisasi/features/profile/data/models/anak.dart';
+import 'package:eimunisasi/features/profile/data/models/child_model.dart';
 import 'package:eimunisasi/features/profile/data/repositories/child_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_supabase_http_client/mock_supabase_http_client.dart';
@@ -11,7 +11,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 ])
 @GenerateNiceMocks([
   MockSpec<User>(),
-  MockSpec<Anak>(),
+  MockSpec<ChildModel>(),
 ])
 import 'child_repository_test.mocks.dart';
 
@@ -42,26 +42,42 @@ void main() {
   group('ChildRepository', () {
     final mockUser = MockUser();
 
-    // test('getAllChildren returns list of children', () async {
-    //   final child1 = MockAnak();
-    //   final child2 = MockAnak();
-    //   final List<Anak> mockData = [
-    //     child1,
-    //     child2,
-    //   ];
-    //
-    //   when(mockUser.id).thenReturn('1');
-    //   await mockSupabaseClient.from('children').insert(mockData.map((e) {
-    //         return e.toSeribaseMap();
-    //       }).toList());
-    //   final result = await childRepository.getAllChildren();
-    //
-    //   expect(result, isA<List<Anak>>());
-    //   expect(result.length, 2);
-    // });
+    test('getAllChildren returns list of children', () async {
+      final child1 = ChildModel(
+        parentId: '1',
+        nik: '1234567890',
+        tempatLahir: 'Jakarta',
+        jenisKelamin: 'L',
+        golDarah: 'A',
+        nama: 'Child',
+        tanggalLahir: DateTime.now(),
+        photoURL: 'https://example.com',
+      );
+      final child2 = child1.copyWith(
+        nik: '0987654321',
+        nama: 'Child 2',
+      );
+      final List<ChildModel> mockData = [
+        child1,
+        child2,
+      ];
+
+      for (var element in mockData) {
+        final data = element.toSeribaseMap();
+        data.addAll({'created_at': DateTime.now().toIso8601String()});
+        await mockSupabaseClient
+            .from('children')
+            .insert(data);
+      }
+
+      final result = await childRepository.getAllChildren();
+
+      expect(result, isA<List<ChildModel>>());
+      expect(result.length, 2);
+    });
 
     test('setChild inserts a child and returns it with id', () async {
-      final anak = Anak(
+      final anak = ChildModel(
         parentId: mockUser.id,
         nik: '1234567890',
         tempatLahir: 'Jakarta',

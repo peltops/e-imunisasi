@@ -1,6 +1,6 @@
 import 'package:eimunisasi/features/health_worker/data/models/health_worker_model.dart';
-import 'package:eimunisasi/features/profile/data/models/anak.dart';
-import 'package:eimunisasi/features/authentication/data/models/user.dart';
+import 'package:eimunisasi/features/profile/data/models/child_model.dart';
+import 'package:eimunisasi/features/authentication/data/models/user_profile.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../../core/extension.dart';
@@ -8,8 +8,8 @@ import '../../../../core/extension.dart';
 class AppointmentModel extends Equatable {
   final String? id;
   final DateTime? date;
-  final Anak? child;
-  final Users? parent;
+  final ChildModel? child;
+  final UserProfile? parent;
   final HealthWorkerModel? healthWorker;
   final String? purpose;
   final String? note;
@@ -43,8 +43,8 @@ class AppointmentModel extends Equatable {
   AppointmentModel copyWith({
     String? id,
     DateTime? date,
-    Anak? child,
-    Users? parent,
+    ChildModel? child,
+    UserProfile? parent,
     HealthWorkerModel? healthWorker,
     String? note,
     String? purpose,
@@ -91,10 +91,10 @@ class AppointmentModel extends Equatable {
         }
       }(),
       child: map['children'] != null
-          ? Anak.fromSeribase(map['children'])
+          ? ChildModel.fromSeribase(map['children'])
           : null,
       parent: map['profiles'] != null
-          ? Users.fromSeribase(map['profiles'])
+          ? UserProfile.fromSeribase(map['profiles'])
           : null,
       note: map['note'],
       purpose: map['purpose'],

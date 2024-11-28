@@ -18,7 +18,7 @@ class Loading extends AuthenticationState {
 }
 
 class Authenticated extends AuthenticationState {
-  final Users user;
+  final UserProfile user;
   const Authenticated({required this.user});
 
   @override

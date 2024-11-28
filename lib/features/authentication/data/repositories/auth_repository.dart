@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
 
-import '../models/user.dart';
+import '../models/user_profile.dart';
 
 @Injectable()
 class AuthRepository {
@@ -49,7 +49,7 @@ class AuthRepository {
   }
 
   Future<void> insertUserToDatabase({
-    required Users user,
+    required UserProfile user,
   }) async {
     try {
       await supabaseClient.auth.updateUser(
@@ -83,14 +83,14 @@ class AuthRepository {
     return currentUser != null;
   }
 
-  Future<Users?> getUser() async {
+  Future<UserProfile?> getUser() async {
     final user = await supabaseClient.auth.currentUser;
     final userExpand = await supabaseClient.from(_tableName).select().eq(
           'user_id',
           user!.id,
         );
     if (userExpand.isNotEmpty) {
-      final userResult = Users.fromSeribase(userExpand.first);
+      final userResult = UserProfile.fromSeribase(userExpand.first);
       return userResult.copyWith(
         email: user.email,
         verified: user.emailConfirmedAt != null,
