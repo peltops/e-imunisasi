@@ -20,7 +20,7 @@ class ProfileRouter {
                 as ChildProfileBloc,
             child: ChildProfileScreen(
               mode: ChildProfileScreenMode.add,
-              child: ChildModel.empty(),
+              child: ChildModel(),
             ),
           ),
         ),

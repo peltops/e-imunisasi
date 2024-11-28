@@ -21,7 +21,7 @@ class ChildModel extends Equatable {
     return '${years.floor()} tahun, ${months.floor()} bulan';
   }
 
-  ChildModel({
+  const ChildModel({
     this.id,
     this.parentId,
     this.nik,
@@ -32,27 +32,6 @@ class ChildModel extends Equatable {
     this.tanggalLahir,
     this.photoURL,
   });
-
-  factory ChildModel.fromMap(Map data) {
-    return ChildModel(
-      id: data['id'],
-      parentId: data['parent_id'],
-      nama: data['nama'],
-      nik: data['nik'] ?? '',
-      tempatLahir: data['tempat_lahir'] ?? '',
-      // timestamp to date
-      tanggalLahir: (){
-        try {
-          return DateTime.parse(data['tanggal_lahir']);
-        } catch (e) {
-          return null;
-        }
-      }(),
-      jenisKelamin: data['jenis_kelamin'] ?? '',
-      golDarah: data['gol_darah'] ?? '',
-      photoURL: data['photo_url'] ?? '',
-    );
-  }
 
   factory ChildModel.fromSeribase(Map<String, dynamic> data) {
     return ChildModel(
@@ -72,33 +51,6 @@ class ChildModel extends Equatable {
       golDarah: data['blood_type'] ?? '',
       photoURL: data['avatar_url'] ?? '',
     );
-  }
-
-  factory ChildModel.empty() {
-    return ChildModel(
-      id: '',
-      parentId: '',
-      nama: '',
-      nik: '',
-      tempatLahir: '',
-      tanggalLahir: null,
-      jenisKelamin: '',
-      golDarah: '',
-      photoURL: '',
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'parent_id': parentId,
-      "nama": nama,
-      "nik": nik,
-      "tempat_lahir": tempatLahir,
-      "tanggal_lahir": tanggalLahir,
-      "jenis_kelamin": jenisKelamin,
-      "gol_darah": golDarah,
-      "photo_url": photoURL,
-    };
   }
 
   Map<String, dynamic> toSeribaseMap() {

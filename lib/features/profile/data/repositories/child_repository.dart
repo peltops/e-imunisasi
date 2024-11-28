@@ -16,12 +16,16 @@ class ChildRepository {
   );
 
   Future<List<ChildModel>> getAllChildren() async {
-    final data = await supabaseClient.from(_tableName).select().order(
-          'created_at',
-          ascending: true,
-        );
-    final result = data.map((e) => ChildModel.fromSeribase(e)).toList();
-    return result;
+    try {
+      final data = await supabaseClient.from(_tableName).select().order(
+            'created_at',
+            ascending: true,
+          );
+      final result = data.map((e) => ChildModel.fromSeribase(e)).toList();
+      return result;
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<ChildModel> setChild(ChildModel anak) async {

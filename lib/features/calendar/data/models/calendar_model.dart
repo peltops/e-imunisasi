@@ -2,9 +2,10 @@ import 'dart:collection';
 
 import 'package:eimunisasi/core/extension.dart';
 import 'package:eimunisasi/features/calendar/data/models/hive_calendar_activity_model.dart';
+import 'package:equatable/equatable.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class CalendarModel {
+class CalendarModel extends Equatable {
   final String? uid;
   final DateTime? date;
   final String? activity;
@@ -84,11 +85,11 @@ class CalendarModel {
       ..date = date;
   }
 
-  List<CalendarModel> vaccinationSchedules(
-      uid,
-      DateTime tglLahir,
-      String namaAnak,
-      ) =>
+  static List<CalendarModel> vaccinationSchedules(
+    uid,
+    DateTime tglLahir,
+    String namaAnak,
+  ) =>
       [
         CalendarModel(
           uid: uid,
@@ -453,6 +454,16 @@ class CalendarModel {
           ),
           readOnly: true,
         ),
+      ];
+
+  @override
+  List<Object?> get props => [
+        uid,
+        activity,
+        date,
+        documentID,
+        readOnly,
+        createdDate,
       ];
 }
 
