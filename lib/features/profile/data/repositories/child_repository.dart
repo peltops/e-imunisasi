@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:eimunisasi/features/profile/data/models/anak.dart';
+import 'package:eimunisasi/features/profile/data/models/child_model.dart';
 import 'package:injectable/injectable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -15,16 +15,16 @@ class ChildRepository {
     this.supabaseClient,
   );
 
-  Future<List<Anak>> getAllChildren() async {
+  Future<List<ChildModel>> getAllChildren() async {
     final data = await supabaseClient.from(_tableName).select().order(
           'created_at',
           ascending: true,
         );
-    final result = data.map((e) => Anak.fromSeribase(e)).toList();
+    final result = data.map((e) => ChildModel.fromSeribase(e)).toList();
     return result;
   }
 
-  Future<Anak> setChild(Anak anak) async {
+  Future<ChildModel> setChild(ChildModel anak) async {
     final _currentUser = supabaseClient.auth.currentUser;
     try {
       final data = anak.copyWith(parentId: _currentUser?.id);
@@ -42,7 +42,7 @@ class ChildRepository {
     }
   }
 
-  Future<Anak> updateChild(Anak anak) async {
+  Future<ChildModel> updateChild(ChildModel anak) async {
     final _currentUser = supabaseClient.auth.currentUser;
     try {
       final data = anak.copyWith(parentId: _currentUser?.id);

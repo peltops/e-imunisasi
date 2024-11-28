@@ -4,7 +4,6 @@ import '../../../data/models/email.dart';
 import '../../../data/models/password.dart';
 import '../../../data/repositories/auth_repository.dart';
 import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:formz/formz.dart';
 
 part 'login_state.dart';
@@ -49,9 +48,11 @@ class LoginCubit extends Cubit<LoginState> {
         password: state.password.value,
       );
       emit(state.copyWith(status: FormzSubmissionStatus.success));
-    } on FirebaseAuthException catch (e) {
+    } catch (e) {
       emit(state.copyWith(
-          status: FormzSubmissionStatus.failure, errorMessage: e.message));
+        status: FormzSubmissionStatus.failure,
+        errorMessage: 'Failed to login with email and password',
+      ));
     }
   }
 

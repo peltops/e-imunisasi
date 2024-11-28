@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:eimunisasi/core/utils/bloc_observer.dart';
 import 'package:eimunisasi/services/notifications.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -15,7 +14,6 @@ import 'injection.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
   await Supabase.initialize(
     url: 'https://eimunisasi-base-staging.peltops.com',
     anonKey:

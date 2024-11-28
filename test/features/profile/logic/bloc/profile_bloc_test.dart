@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:eimunisasi/core/utils/list_constant.dart';
-import 'package:eimunisasi/features/authentication/data/models/user.dart';
+import 'package:eimunisasi/features/authentication/data/models/user_profile.dart';
 import 'package:eimunisasi/features/authentication/data/repositories/auth_repository.dart';
 import 'package:eimunisasi/features/profile/logic/blocs/parentBloc/profile_bloc.dart';
 import 'package:formz/formz.dart';
@@ -22,14 +22,14 @@ void main() {
   final job = ListConstant.JOB[0];
   final bloodType = ListConstant.TYPE_BLOOD[0];
 
-  final user = Users(
+  final user = UserProfile(
     momName: momName,
-    tempatLahir: placeOfBirth,
-    tanggalLahir: dateOfBirth,
+    placeOfBirth: placeOfBirth,
+    dateOfBirth: dateOfBirth,
     noKTP: identityNumber,
     noKK: familyCardNumber,
-    pekerjaanIbu: job,
-    golDarahIbu: bloodType,
+    momJob: job,
+    momBloodType: bloodType,
   );
 
   group("OnChangeFieldEvent", () {
@@ -63,7 +63,7 @@ void main() {
       expect: () => [
         initialState.copyWith(
           user: initialState.user?.copyWith(
-            tempatLahir: placeOfBirth,
+            placeOfBirth: placeOfBirth,
           ),
         ),
       ],
@@ -76,7 +76,7 @@ void main() {
       expect: () => [
         initialState.copyWith(
           user: initialState.user?.copyWith(
-            tanggalLahir: dateOfBirth,
+            dateOfBirth: dateOfBirth,
           ),
         ),
       ],
@@ -115,7 +115,7 @@ void main() {
       expect: () => [
         initialState.copyWith(
           user: initialState.user?.copyWith(
-            pekerjaanIbu: job,
+            momJob: job,
           ),
         ),
       ],
@@ -128,7 +128,7 @@ void main() {
       expect: () => [
         initialState.copyWith(
           user: initialState.user?.copyWith(
-            golDarahIbu: bloodType,
+            momBloodType: bloodType,
           ),
         ),
       ],

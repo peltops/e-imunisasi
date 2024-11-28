@@ -5,7 +5,7 @@ abstract class ChildProfileEvent extends Equatable {
 }
 
 class OnInitialEvent extends ChildProfileEvent {
-  final Anak? child;
+  final ChildModel? child;
 
   OnInitialEvent({this.child});
 

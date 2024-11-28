@@ -1,4 +1,4 @@
-import 'package:eimunisasi/features/profile/data/models/anak.dart';
+import 'package:eimunisasi/features/profile/data/models/child_model.dart';
 import 'package:eimunisasi/routers/route_paths/healthy_book_route_paths.dart';
 import 'package:go_router/go_router.dart';
 
@@ -21,7 +21,7 @@ class HealthyBookRouter {
     GoRoute(
       path: HealthyBookRoutePaths.patientMedicalRecordScreen.path,
       builder: (context, state) => PatientMedicalHistoryScreen(
-        child: state.extra as Anak,
+        child: state.extra as ChildModel,
       ),
     ),
   ];

@@ -4,11 +4,11 @@ import 'package:eimunisasi/features/authentication/logic/cubit/signup_cubit/sign
 import 'package:eimunisasi/core/widgets/snackbar_custom.dart';
 import 'package:eimunisasi/features/authentication/presentation/screens/auth/otp_screen.dart';
 import 'package:eimunisasi/routers/route_paths/auth_route_paths.dart';
-import 'package:eimunisasi/utils/string_extension.dart';
+import 'package:eimunisasi/core/utils/string_extension.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/widgets/text_form_custom.dart';
 import '../../../../core/widgets/button_custom.dart';
-import '../../../../utils/dismiss_keyboard.dart';
+import '../../../../core/utils/dismiss_keyboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';

@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:eimunisasi/core/utils/list_constant.dart';
-import 'package:eimunisasi/features/profile/data/models/anak.dart';
+import 'package:eimunisasi/features/profile/data/models/child_model.dart';
 import 'package:eimunisasi/features/profile/data/repositories/child_repository.dart';
 import 'package:eimunisasi/features/profile/logic/blocs/childBloc/child_profile_bloc.dart';
 import 'package:formz/formz.dart';
@@ -23,7 +23,7 @@ void main() {
   final bloodType = ListConstant.TYPE_BLOOD[0];
   final genderType = ListConstant.GENDER[0];
 
-  final child = Anak(
+  final child = ChildModel(
     id: id,
     parentId: parentId,
     nama: name,

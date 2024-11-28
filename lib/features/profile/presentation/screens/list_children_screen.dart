@@ -10,11 +10,11 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/utils/constant.dart';
 import '../../../../core/widgets/top_app_bar.dart';
 import '../../../../injection.dart';
-import '../../data/models/anak.dart';
+import '../../data/models/child_model.dart';
 import '../../logic/blocs/childBloc/child_profile_bloc.dart';
 
 class ListChildrenScreen extends StatelessWidget {
-  final Function(Anak?)? onSelected;
+  final Function(ChildModel?)? onSelected;
 
   const ListChildrenScreen({
     Key? key,

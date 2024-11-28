@@ -12,14 +12,9 @@ import 'package:eimunisasi/features/calendar/presentation/screens/calendar_scree
 import 'package:eimunisasi/features/calendar/presentation/screens/update_event_calendar_screen.dart';
 import 'package:eimunisasi/features/contact/presentation/contact_screen.dart';
 import 'package:eimunisasi/features/healthy_book/presentation/screens/healthy_book_screen.dart';
-import 'package:eimunisasi/features/onboarding/onboarding.dart';
+import 'package:eimunisasi/features/onboarding/presentation/screens/onboarding.dart';
 import 'package:eimunisasi/features/profile/presentation/screens/parent_profile_screen.dart';
 import 'package:eimunisasi/features/vaccination/presentation/screens/vaccination_screen.dart';
-import 'package:eimunisasi/models/informasi_aplikasi.dart';
-import 'package:eimunisasi/pages/home/bantuan/child/detail_informasi.dart';
-import 'package:eimunisasi/pages/home/bantuan/child/menu_eimunisasi_manual.dart';
-import 'package:eimunisasi/pages/home/bantuan/child/menu_infomasi_kesehatan.dart';
-import 'package:eimunisasi/pages/home/bantuan/child/menu_rumah_sakit.dart';
 import 'package:eimunisasi/routers/auth_local_router.dart';
 import 'package:eimunisasi/routers/auth_router.dart';
 import 'package:eimunisasi/routers/contact_router.dart';
@@ -123,24 +118,6 @@ final router = GoRouter(
       path: RoutePaths.updateEventCalendar,
       builder: (_, state) => UpdateEventCalendarScreen(
         event: state.extra as CalendarModel,
-      ),
-    ),
-    GoRoute(
-      path: RoutePaths.hospitals,
-      builder: (_, __) => ListDaftarRumahSakit(),
-    ),
-    GoRoute(
-      path: RoutePaths.medicalInformation,
-      builder: (_, __) => InformasiKesehatanPage(),
-    ),
-    GoRoute(
-      path: RoutePaths.appManual,
-      builder: (_, __) => EimunisasiManualPage(),
-    ),
-    GoRoute(
-      path: RoutePaths.detailInformasi,
-      builder: (_, state) => DetailInformasiPage(
-        data: state.extra as InformasiAplikasiModel,
       ),
     ),
     GoRoute(

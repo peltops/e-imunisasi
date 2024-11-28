@@ -2,7 +2,7 @@ import 'package:eimunisasi/routers/route_paths/vaccination_route_paths.dart';
 import 'package:go_router/go_router.dart';
 
 import '../features/health_worker/presentation/screens/choose_nakes_screen.dart';
-import '../features/profile/data/models/anak.dart';
+import '../features/profile/data/models/child_model.dart';
 import '../features/profile/presentation/screens/list_children_screen.dart';
 import '../features/vaccination/presentation/screens/appointments_screen.dart';
 import '../features/vaccination/presentation/screens/vaccination_confirmation_screen.dart';
@@ -24,13 +24,13 @@ class VaccinationRouter {
     GoRoute(
       path: VaccinationRoutePaths.chooseNakesVaccination.path,
       builder: (context, state) => ChooseHealthWorkerScreen(
-        child: state.extra as Anak,
+        child: state.extra as ChildModel,
         onSelected: (nakes) {
           context.push(
             VaccinationRoutePaths.makeAppointmentVaccination.fullPath,
             extra: {
               'healthWorker': nakes,
-              'child': state.extra as Anak,
+              'child': state.extra as ChildModel,
             },
           );
         },

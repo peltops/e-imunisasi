@@ -1,4 +1,4 @@
-import 'package:eimunisasi/features/profile/data/models/anak.dart';
+import 'package:eimunisasi/features/profile/data/models/child_model.dart';
 import 'package:eimunisasi/routers/route_paths/profile_route_paths.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -20,7 +20,7 @@ class ProfileRouter {
                 as ChildProfileBloc,
             child: ChildProfileScreen(
               mode: ChildProfileScreenMode.add,
-              child: Anak.empty(),
+              child: ChildModel.empty(),
             ),
           ),
         ),

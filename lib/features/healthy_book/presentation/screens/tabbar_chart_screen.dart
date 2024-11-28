@@ -1,14 +1,14 @@
+import 'package:eimunisasi/features/healthy_book/data/models/chart/head_circumference_chart.dart';
+import 'package:eimunisasi/features/healthy_book/data/models/chart/weight_chart.dart';
 import 'package:eimunisasi/features/healthy_book/data/models/checkup_model.dart';
-import 'package:eimunisasi/models/grafik/grafik_berat_badan.dart';
-import 'package:eimunisasi/models/grafik/grafik_lingkar_kepala.dart';
-import 'package:eimunisasi/models/grafik/grafik_tinggi_badan.dart';
 import 'package:flutter/material.dart';
 
-import '../../../profile/data/models/anak.dart';
+import '../../../profile/data/models/child_model.dart';
+import '../../data/models/chart/height_chart.dart';
 
 class TabBarChartScreen extends StatelessWidget {
   final List<CheckupModel>? checkup;
-  final Anak? child;
+  final ChildModel? child;
   const TabBarChartScreen({
     Key? key,
     this.checkup,

@@ -5,7 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../../data/models/anak.dart';
+import '../../../data/models/child_model.dart';
 import '../../../data/repositories/child_repository.dart';
 
 part 'child_profile_event.dart';

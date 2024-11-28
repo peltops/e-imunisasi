@@ -1,7 +1,7 @@
 import 'package:eimunisasi/features/calendar/data/models/calendar_model.dart';
 import 'package:eimunisasi/features/calendar/data/models/hive_calendar_activity_model.dart';
 import 'package:eimunisasi/features/calendar/data/repositories/calendar_repository.dart';
-import 'package:eimunisasi/utils/string_extension.dart';
+import 'package:eimunisasi/core/utils/string_extension.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
 import 'package:mock_supabase_http_client/mock_supabase_http_client.dart';

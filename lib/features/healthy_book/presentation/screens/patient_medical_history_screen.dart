@@ -4,7 +4,7 @@ import 'package:eimunisasi/features/healthy_book/presentation/screens/tabbar_cha
 import 'package:eimunisasi/features/healthy_book/presentation/screens/tabbar_diagnosa_screen.dart';
 import 'package:eimunisasi/features/healthy_book/presentation/screens/tabbar_table_screen.dart';
 import 'package:eimunisasi/features/healthy_book/presentation/screens/tabbar_vaccine_screen.dart';
-import 'package:eimunisasi/features/profile/data/models/anak.dart';
+import 'package:eimunisasi/features/profile/data/models/child_model.dart';
 import 'package:eimunisasi/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,7 +13,7 @@ import 'package:formz/formz.dart';
 import '../../logic/blocs/checkupBloc/checkup_bloc.dart';
 
 class PatientMedicalHistoryScreen extends StatelessWidget {
-  final Anak? child;
+  final ChildModel? child;
 
   const PatientMedicalHistoryScreen({Key? key, this.child}) : super(key: key);
 
@@ -61,7 +61,7 @@ class PatientMedicalHistoryScreen extends StatelessWidget {
 }
 
 class PatientMedicalHistoryScaffold extends StatelessWidget {
-  final Anak? child;
+  final ChildModel? child;
 
   const PatientMedicalHistoryScaffold({Key? key, this.child}) : super(key: key);
 

@@ -5,7 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../../../authentication/data/models/user.dart';
+import '../../../../authentication/data/models/user_profile.dart';
 import '../../../../authentication/data/repositories/auth_repository.dart';
 
 part 'profile_event.dart';
@@ -31,7 +31,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     on<OnChangePlaceOfBirthEvent>((event, emit) {
       emit(
         state.copyWith(
-          user: state.user?.copyWith(tempatLahir: event.placeOfBirth),
+          user: state.user?.copyWith(placeOfBirth: event.placeOfBirth),
           statusUpdate: FormzSubmissionStatus.initial,
         ),
       );
@@ -39,7 +39,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     on<OnChangeDateOfBirthEvent>((event, emit) {
       emit(
         state.copyWith(
-          user: state.user?.copyWith(tanggalLahir: event.dateOfBirth),
+          user: state.user?.copyWith(dateOfBirth: event.dateOfBirth),
           statusUpdate: FormzSubmissionStatus.initial,
         ),
       );
@@ -63,7 +63,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     on<OnChangeJobEvent>((event, emit) {
       emit(
         state.copyWith(
-          user: state.user?.copyWith(pekerjaanIbu: event.job),
+          user: state.user?.copyWith(momJob: event.job),
           statusUpdate: FormzSubmissionStatus.initial,
         ),
       );
@@ -71,7 +71,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     on<OnChangeBloodTypeEvent>((event, emit) {
       emit(
         state.copyWith(
-          user: state.user?.copyWith(golDarahIbu: event.bloodType),
+          user: state.user?.copyWith(momBloodType: event.bloodType),
           statusUpdate: FormzSubmissionStatus.initial,
         ),
       );

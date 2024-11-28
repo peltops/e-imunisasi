@@ -12,8 +12,8 @@ class ChildProfileState extends Equatable {
     this.errorMessage,
   });
 
-  final List<Anak>? children;
-  final Anak? child;
+  final List<ChildModel>? children;
+  final ChildModel? child;
   final FormzSubmissionStatus statusGetChildren;
   final FormzSubmissionStatus statusGet;
   final FormzSubmissionStatus statusUpdate;
@@ -22,8 +22,8 @@ class ChildProfileState extends Equatable {
   final String? errorMessage;
 
   ChildProfileState copyWith({
-    List<Anak>? children,
-    Anak? child,
+    List<ChildModel>? children,
+    ChildModel? child,
     FormzSubmissionStatus? statusGetChildren,
     FormzSubmissionStatus? statusGet,
     FormzSubmissionStatus? statusUpdate,

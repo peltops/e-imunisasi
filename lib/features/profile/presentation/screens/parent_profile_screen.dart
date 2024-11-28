@@ -6,13 +6,13 @@ import 'package:eimunisasi/core/widgets/picker.dart';
 import 'package:eimunisasi/core/widgets/spacer.dart';
 import 'package:eimunisasi/core/widgets/text.dart';
 import 'package:eimunisasi/core/widgets/top_app_bar.dart';
+import 'package:eimunisasi/features/authentication/logic/bloc/authentication_bloc/authentication_bloc.dart';
 import 'package:eimunisasi/injection.dart';
 import 'package:eimunisasi/core/widgets/button_custom.dart';
 import 'package:eimunisasi/core/widgets/image_picker.dart';
 import 'package:eimunisasi/core/widgets/snackbar_custom.dart';
 import 'package:eimunisasi/core/widgets/text_form_custom.dart';
-import 'package:eimunisasi/utils/dismiss_keyboard.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:eimunisasi/core/utils/dismiss_keyboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
@@ -78,7 +78,7 @@ class ParentProfileScreen extends StatelessWidget {
                         Row(children: [
                           Expanded(
                             child: TextFormCustom(
-                              initialValue: state.user?.tempatLahir,
+                              initialValue: state.user?.placeOfBirth,
                               label: AppConstant.LABEL_PLACE_OF_BIRTH,
                               onChanged: (val) {
                                 bloc.add(OnChangePlaceOfBirthEvent(val.trim()));
@@ -96,8 +96,8 @@ class ParentProfileScreen extends StatelessWidget {
                               },
                               readOnly: true,
                               label: AppConstant.LABEL_DATE_OF_BIRTH,
-                              hintText: state.user?.tanggalLahir != null
-                                  ? (state.user?.tanggalLahir).formattedDate()
+                              hintText: state.user?.dateOfBirth != null
+                                  ? (state.user?.dateOfBirth).formattedDate()
                                   : AppConstant.LABEL_CHOICE_DATE_OF_BIRTH,
                             ),
                           ),
@@ -122,7 +122,7 @@ class ParentProfileScreen extends StatelessWidget {
                         VerticalSpacer(val: 5),
                         DropdownPeltops(
                           label: AppConstant.LABEL_JOB,
-                          initialValue: state.user?.pekerjaanIbu ?? emptyString,
+                          initialValue: state.user?.momJob ?? emptyString,
                           hint: AppConstant.LABEL_CHOICE_JOB,
                           listItem:
                               ListConstant.JOB.map((e) => Pair(e, e)).toList(),
@@ -133,7 +133,7 @@ class ParentProfileScreen extends StatelessWidget {
                         VerticalSpacer(val: 5),
                         DropdownPeltops(
                           label: AppConstant.LABEL_BLOOD_TYPE,
-                          initialValue: state.user?.golDarahIbu ?? emptyString,
+                          initialValue: state.user?.momBloodType ?? emptyString,
                           listItem: ListConstant.TYPE_BLOOD
                               .map((e) => Pair(e, e))
                               .toList(),
@@ -153,11 +153,11 @@ class ParentProfileScreen extends StatelessWidget {
                             label: AppConstant.LABEL_EMAIL,
                             onChanged: (val) {},
                           ),
-                        if (state.user?.nomorhpIbu != null &&
-                            state.user?.nomorhpIbu != emptyString)
+                        if (state.user?.momPhoneNumber != null &&
+                            state.user?.momPhoneNumber != emptyString)
                           TextFormCustom(
                             readOnly: true,
-                            initialValue: state.user?.nomorhpIbu,
+                            initialValue: state.user?.momPhoneNumber,
                             label: AppConstant.LABEL_MOM_PHONE_NUMBER,
                             onChanged: (val) {},
                           ),
@@ -205,11 +205,13 @@ class _PhotoProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _currentUser = FirebaseAuth.instance.currentUser;
+    final _currentUser = (context.read<AuthenticationBloc>().state is Authenticated)
+        ? (context.read<AuthenticationBloc>().state as Authenticated).user
+        : null;
     final bloc = context.read<ProfileBloc>();
-    final url = _currentUser?.photoURL ?? this.url;
+    final url = _currentUser?.avatarURL ?? this.url;
     final isVerified =
-        _currentUser?.email != null && _currentUser?.emailVerified == true;
+        _currentUser?.email != null && _currentUser?.verified == true;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: Column(

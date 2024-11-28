@@ -1,4 +1,4 @@
-import 'package:eimunisasi/features/profile/data/models/anak.dart';
+import 'package:eimunisasi/features/profile/data/models/child_model.dart';
 import 'package:eimunisasi/features/profile/data/repositories/child_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mock_supabase_http_client/mock_supabase_http_client.dart';
@@ -11,7 +11,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 ])
 @GenerateNiceMocks([
   MockSpec<User>(),
-  MockSpec<Anak>(),
+  MockSpec<ChildModel>(),
 ])
 import 'child_repository_test.mocks.dart';
 
@@ -61,7 +61,7 @@ void main() {
     // });
 
     test('setChild inserts a child and returns it with id', () async {
-      final anak = Anak(
+      final anak = ChildModel(
         parentId: mockUser.id,
         nik: '1234567890',
         tempatLahir: 'Jakarta',

@@ -5,7 +5,7 @@ import 'package:bloc/bloc.dart';
 import 'package:eimunisasi/features/splash/data/repositories/splash_repository.dart';
 import 'package:injectable/injectable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../../data/models/user.dart';
+import '../../../data/models/user_profile.dart';
 import '../../../data/repositories/auth_repository.dart';
 import 'package:equatable/equatable.dart';
 part 'authentication_event.dart';

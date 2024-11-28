@@ -4,7 +4,7 @@ import 'package:eimunisasi/features/authentication/data/models/email.dart';
 import 'package:eimunisasi/features/authentication/data/models/password.dart';
 import 'package:eimunisasi/features/authentication/data/models/phone.dart';
 import 'package:eimunisasi/features/authentication/data/repositories/auth_repository.dart';
-import 'package:eimunisasi/features/authentication/data/models/user.dart';
+import 'package:eimunisasi/features/authentication/data/models/user_profile.dart';
 import 'package:formz/formz.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -14,12 +14,17 @@ import 'package:eimunisasi/features/authentication/logic/cubit/signup_cubit/sign
 
 @GenerateMocks([AuthRepository])
 @GenerateNiceMocks(
-    [MockSpec<Users>(), MockSpec<AuthResponse>(), MockSpec<User>()])
+  [
+    MockSpec<UserProfile>(),
+    MockSpec<AuthResponse>(),
+    MockSpec<User>(),
+  ],
+)
 import 'signup_cubit_test.mocks.dart';
 
 void main() {
   late AuthRepository authRepository;
-  late Users user;
+  late UserProfile user;
   late User userFirebase;
   late AuthResponse authResponse;
 
@@ -34,7 +39,7 @@ void main() {
 
   setUp(() {
     authRepository = MockAuthRepository();
-    user = MockUsers();
+    user = MockUserProfile();
     userFirebase = MockUser();
     authResponse = MockAuthResponse();
   });
