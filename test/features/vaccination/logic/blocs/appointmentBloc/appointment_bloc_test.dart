@@ -26,8 +26,9 @@ void main() {
       'emits [inProgress, success] when LoadAppointmentsEvent is added and getAppointments succeeds',
       build: () {
         when(() => appointmentRepository.getAppointments(
-                userId: any(named: 'userId')))
-            .thenAnswer((_) async => <AppointmentModel>[]);
+              userId: any(named: 'userId'),
+              sortCriteria: any(named: 'sortCriteria'),
+            )).thenAnswer((_) async => <AppointmentModel>[]);
         return appointmentBloc;
       },
       act: (bloc) => bloc.add(LoadAppointmentsEvent('user1')),
@@ -156,6 +157,19 @@ void main() {
             errorMessage: 'Gagal memuat data janji'),
       ],
     );
+
+    blocTest<AppointmentBloc, AppointmentState>(
+      'emits sortCriteria when ChangeSortCriteriaEvent is added',
+      build: () {
+        return appointmentBloc;
+      },
+      act: (bloc) => bloc.add(ChangeSortCriteriaEvent('name')),
+      expect: () => [
+        AppointmentState(
+          sortCriteria: 'name',
+        ),
+      ],
+    );
   });
 
   group('AppointmentEvent', () {
@@ -191,6 +205,15 @@ void main() {
         expect(
           LoadAppointmentEvent('1').props,
           ['1'],
+        );
+      });
+    });
+
+    group('ChangeSortCriteriaEvent', () {
+      test('props', () {
+        expect(
+          ChangeSortCriteriaEvent('name').props,
+          ['name'],
         );
       });
     });

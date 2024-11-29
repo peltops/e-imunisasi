@@ -2,6 +2,7 @@ part of 'appointment_bloc.dart';
 
 class AppointmentState extends Equatable {
   const AppointmentState({
+    this.sortCriteria = 'date',
     this.appointment,
     this.getAppointment,
     this.getAppointments = const [],
@@ -11,6 +12,7 @@ class AppointmentState extends Equatable {
     this.errorMessage,
   });
 
+  final String sortCriteria;
   final AppointmentModel? appointment;
   final AppointmentModel? getAppointment;
   final List<AppointmentModel> getAppointments;
@@ -20,6 +22,7 @@ class AppointmentState extends Equatable {
   final String? errorMessage;
 
   AppointmentState copyWith({
+    String? sortCriteria,
     AppointmentModel? appointment,
     AppointmentModel? getAppointment,
     List<AppointmentModel>? getAppointments,
@@ -29,6 +32,7 @@ class AppointmentState extends Equatable {
     String? errorMessage,
   }) {
     return AppointmentState(
+      sortCriteria: sortCriteria ?? this.sortCriteria,
       appointment: appointment ?? this.appointment,
       getAppointment: getAppointment ?? this.getAppointment,
       getAppointments: getAppointments ?? this.getAppointments,
@@ -41,6 +45,7 @@ class AppointmentState extends Equatable {
 
   @override
   List<Object?> get props => [
+    sortCriteria,
     appointment,
     getAppointment,
     getAppointments,
