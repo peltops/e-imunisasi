@@ -15,25 +15,38 @@ class AppointmentRepository {
 
   Future<List<AppointmentModel>> getAppointments({
     required String userId,
+    String? sortCriteria,
   }) async {
     try {
+      final orderBy = () {
+        if (sortCriteria == 'date') {
+          return 'date';
+        } else if (sortCriteria == 'name') {
+          return 'children ( name )';
+        } else {
+          return 'date';
+        }
+      }();
       final result = await supabaseClient
           .from(AppointmentModel.tableName)
           .select(
             '''
               *,
               profiles:parent_id ( * ),
-              children:child_id ( * )
+              children ( * )
             ''',
           )
           .eq('parent_id', userId)
           .order(
-            'date',
+            orderBy,
             ascending: true,
           )
           .withConverter(
-            (json) =>
-                json.map((e) => AppointmentModel.fromSeribase(e)).toList(),
+            (json) => json
+                .map(
+                  (e) => AppointmentModel.fromSeribase(e),
+                )
+                .toList(),
           );
       return result;
     } catch (e) {

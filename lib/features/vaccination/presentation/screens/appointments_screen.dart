@@ -50,26 +50,77 @@ class _AppointmentsScaffold extends StatelessWidget {
         height: double.infinity,
         padding: EdgeInsets.all(20),
         color: Colors.pink[100],
-        child: Card(
-          elevation: 0,
-          child: BlocBuilder<AppointmentBloc, AppointmentState>(
-            builder: (context, state) {
-              if (state.statusGetAppointments ==
-                  FormzSubmissionStatus.inProgress) {
-                return Center(child: CircularProgressIndicator());
-              }
-              final data = state.getAppointments;
-              return ListView.builder(
-                itemCount: data.length,
-                itemBuilder: (context, index) {
-                  final appointment = data[index];
-                  return _ListAppointment(
-                    appointment,
-                  );
-                },
-              );
-            },
-          ),
+        child: Column(
+          children: [
+            BlocConsumer<AppointmentBloc, AppointmentState>(
+              listenWhen: (previous, current) =>
+                  previous.sortCriteria != current.sortCriteria,
+              listener: (context, state) {
+                final userId = (context.read<AuthenticationBloc>().state
+                        as Authenticated)
+                    .user
+                    .uid ?? '';
+                context.read<AppointmentBloc>().add(
+                      LoadAppointmentsEvent(
+                        userId,
+                      ),
+                    );
+              },
+              builder: (context, state) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Urutkan berdasarkan',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    DropdownButton<String>(
+                      value: state.sortCriteria,
+                      onChanged: (String? newValue) {
+                        context.read<AppointmentBloc>().add(
+                              ChangeSortCriteriaEvent(newValue),
+                            );
+                      },
+                      items: [
+                        DropdownMenuItem(
+                          value: 'date',
+                          child: Text('Tanggal'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'name',
+                          child: Text('Nama'),
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              },
+            ),
+            Expanded(
+              child: Card(
+                elevation: 0,
+                child: BlocBuilder<AppointmentBloc, AppointmentState>(
+                  builder: (context, state) {
+                    if (state.statusGetAppointments ==
+                        FormzSubmissionStatus.inProgress) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    final data = state.getAppointments;
+                    return ListView.builder(
+                      itemCount: data.length,
+                      itemBuilder: (context, index) {
+                        final appointment = data[index];
+                        return _ListAppointment(
+                          appointment,
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -35,3 +35,11 @@ class UpdateAppointmentEvent extends AppointmentEvent {
   @override
   List<Object?> get props => [appointment];
 }
+
+class ChangeSortCriteriaEvent extends AppointmentEvent {
+  final String? sortCriteria;
+  const ChangeSortCriteriaEvent(this.sortCriteria);
+
+  @override
+  List<Object?> get props => [sortCriteria];
+}

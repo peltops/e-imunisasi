@@ -18,6 +18,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     on<LoadAppointmentEvent>(_onLoadAppointment);
     on<CreateAppointmentEvent>(_onCreateAppointment);
     on<UpdateAppointmentEvent>(_onUpdateAppointment);
+    on<ChangeSortCriteriaEvent>(_onChangeSortCriteria);
   }
 
   void _onLoadAppointments(
@@ -25,10 +26,12 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     Emitter emit,
   ) async {
     emit(state.copyWith(
-        statusGetAppointments: FormzSubmissionStatus.inProgress));
+      statusGetAppointments: FormzSubmissionStatus.inProgress,
+    ));
     try {
       final appointments = await appointmentRepository.getAppointments(
         userId: event.userId,
+        sortCriteria: state.sortCriteria,
       );
       emit(state.copyWith(
         statusGetAppointments: FormzSubmissionStatus.success,
@@ -111,5 +114,12 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
         ),
       );
     }
+  }
+
+  void _onChangeSortCriteria(
+    ChangeSortCriteriaEvent event,
+    Emitter emit,
+  ) async {
+    emit(state.copyWith(sortCriteria: event.sortCriteria));
   }
 }
