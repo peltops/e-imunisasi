@@ -75,6 +75,7 @@ jobs:
 
   release:
     permissions:
+      packages: write
       contents: write
     name: Release apk
     needs: build
