@@ -6,8 +6,6 @@ on:
     tags:
     - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
-permissions: read-all
-
 jobs:
   build:
     name: Build apk
@@ -76,19 +74,16 @@ jobs:
           retention-days: 30 
 
   release:
+    permissions:
+      contents: write
     name: Release apk
     needs: build
     runs-on: ubuntu-latest
-    permissions: write-all
     steps:
       - name: Download apk
         uses: actions/download-artifact@v4
         with:
-          name: apk  
-      - shell: bash
-        run: |
-          ls -al
-          unzip *.zip
+          name: apk
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
