@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:eimunisasi/features/splash/data/repositories/splash_repository.dart';
+import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../data/models/user_profile.dart';
@@ -42,6 +43,8 @@ class AuthenticationBloc
       event,
     ) {
       final authEvent = event.event;
+      debugPrint('accessToken: ${event.session?.accessToken}');
+
       if (authEvent == AuthChangeEvent.signedIn) {
         add(LoggedIn());
         return;
