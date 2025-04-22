@@ -6,6 +6,7 @@ import 'package:eimunisasi/features/payment/data/repositories/payment_repository
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class MockSupabaseClient extends Mock implements SupabaseClient {}
 
@@ -21,6 +22,12 @@ void main() {
   late MockFunctionsClient mockFunctionsClient;
   late MockGotrueClient mockGotrueClient;
   late MockSession mockSession;
+
+  setUpAll(() {
+    dotenv.testLoad(fileInput: '''
+      PAYMENT_GATEWAY=midtrans
+    ''');
+  });
 
   setUp(() {
     mockSupabaseClient = MockSupabaseClient();
@@ -54,6 +61,7 @@ void main() {
       when(() => mockFunctionsClient.invoke(
             any(),
             method: HttpMethod.post,
+            body: any(named: 'body'),
             headers: any(named: 'headers'),
           )).thenAnswer(
         (_) async => FunctionResponse(
@@ -80,6 +88,7 @@ void main() {
       verify(() => mockFunctionsClient.invoke(
             'payment/initiate',
             method: HttpMethod.post,
+            body: any(named: 'body'),
             headers: any(named: 'headers'),
           )).called(1);
     });
@@ -92,6 +101,7 @@ void main() {
       when(() => mockFunctionsClient.invoke(
             any(),
             method: HttpMethod.post,
+            body: any(named: 'body'),
             headers: any(named: 'headers'),
           )).thenAnswer(
         (_) async => FunctionResponse(

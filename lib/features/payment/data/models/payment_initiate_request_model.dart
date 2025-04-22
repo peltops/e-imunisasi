@@ -10,6 +10,18 @@ class PaymentInitiateRequestModel extends Equatable {
     this.items,
   });
 
+  PaymentInitiateRequestModel copyWith({
+    String? gateway,
+    String? currency,
+    List<ItemModel>? items,
+  }) {
+    return PaymentInitiateRequestModel(
+      gateway: gateway ?? this.gateway,
+      currency: currency ?? this.currency,
+      items: items ?? this.items,
+    );
+  }
+
   @override
   List<Object?> get props => [
         gateway,

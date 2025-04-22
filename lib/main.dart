@@ -7,6 +7,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'app.dart';
 import 'features/calendar/data/models/hive_calendar_activity_model.dart';
@@ -28,6 +29,7 @@ void main() async {
   if (kDebugMode) {
     Bloc.observer = AppBlocObserver();
   }
+  await dotenv.load(fileName: ".env");
   await configureDependencies();
   runApp(App());
 }

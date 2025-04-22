@@ -3,6 +3,7 @@ import 'package:eimunisasi/features/payment/data/models/payment_initiate_request
 import 'package:eimunisasi/features/payment/data/models/payment_initiate_response_model.dart';
 import 'package:injectable/injectable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../models/order_model.dart';
 
@@ -16,9 +17,15 @@ class PaymentRepository {
     PaymentInitiateRequestModel request,
   ) async {
     try {
+      final requestBody = request
+          .copyWith(
+            gateway: dotenv.env['PAYMENT_GATEWAY'] ?? 'midtrans',
+          )
+          .toSeribase();
       final fetch = await supabaseClient.functions.invoke(
         'payment/initiate',
         method: HttpMethod.post,
+        body: requestBody,
         headers: {
           'Content-Type': 'application/json',
           'Authorization':
