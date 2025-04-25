@@ -4,12 +4,14 @@ import 'package:eimunisasi/core/models/base_response_model.dart';
 import 'package:eimunisasi/features/payment/data/models/payment_initiate_request_model.dart';
 import 'package:eimunisasi/features/payment/data/models/payment_initiate_response_model.dart';
 import 'package:eimunisasi/features/payment/data/repositories/payment_repository.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../../data/models/order_model.dart';
 
 part 'payment_event.dart';
 part 'payment_state.dart';
 
+@injectable
 class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
   final PaymentRepository paymentRepository;
 
