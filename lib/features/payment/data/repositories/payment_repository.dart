@@ -1,17 +1,20 @@
 import 'package:eimunisasi/core/models/base_response_model.dart';
 import 'package:eimunisasi/features/payment/data/models/payment_initiate_request_model.dart';
 import 'package:eimunisasi/features/payment/data/models/payment_initiate_response_model.dart';
-import 'package:injectable/injectable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../models/order_model.dart';
 
-@injectable
 class PaymentRepository {
   final SupabaseClient supabaseClient;
 
-  const PaymentRepository(this.supabaseClient);
+  PaymentRepository({SupabaseClient? supabaseClient})
+      : supabaseClient = supabaseClient ??
+            SupabaseClient(
+              'https://payment-base-staging.peltops.com',
+              '',
+            );
 
   Future<BaseResponse<PaymentInitiateResponseModel>> initiate(
     PaymentInitiateRequestModel request,
@@ -23,7 +26,7 @@ class PaymentRepository {
           )
           .toSeribase();
       final fetch = await supabaseClient.functions.invoke(
-        'payment/initiate',
+        'payments/initiate',
         method: HttpMethod.post,
         body: requestBody,
         headers: {

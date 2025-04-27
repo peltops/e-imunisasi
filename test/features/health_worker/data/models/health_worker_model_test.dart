@@ -237,6 +237,7 @@ void main() {
           profession: 'Doctor',
           date_of_birth: DateTime.parse(dateString),
           place_of_date: 'City',
+          bookingFee: '100'
         );
 
         expect(healthWorker.props, [
@@ -253,6 +254,7 @@ void main() {
           'Doctor',
           DateTime.parse(dateString),
           'City',
+          '100'
         ]);
       });
     });

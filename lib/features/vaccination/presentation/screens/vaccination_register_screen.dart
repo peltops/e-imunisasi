@@ -13,8 +13,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/widgets/picker.dart';
+import '../../../payment/data/models/payment_initiate_request_model.dart';
+import '../../../payment/logic/blocs/payment_bloc/payment_bloc.dart';
 
 class VaccinationRegisterScreen extends StatelessWidget {
   final ChildModel anak;
@@ -28,8 +31,15 @@ class VaccinationRegisterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => getIt<AppointmentBloc>(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => getIt<AppointmentBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => getIt<PaymentBloc>(),
+        ),
+      ],
       child: _VaccinationRegisterScaffold(
         child: anak,
         healthWorker: nakes,
@@ -85,6 +95,21 @@ class _VaccinationRegisterScaffoldState
         ).show(context);
         return;
       }
+
+      context.read<PaymentBloc>().add(
+            InitiatePaymentEvent(
+              PaymentInitiateRequestModel(
+                currency: 'idr',
+                items: [
+                  ItemModel(
+                    /// This is booking fee ID
+                    id: '4cf70de1-35d6-4794-a249-9b79c328f086',
+                    quantity: 1,
+                  ),
+                ],
+              ),
+            ),
+          );
       final appointment = AppointmentModel(
         date: _selectedDate,
         child: widget.child,
@@ -100,19 +125,41 @@ class _VaccinationRegisterScaffoldState
           );
     }
 
-    return BlocListener<AppointmentBloc, AppointmentState>(
-      listener: (context, state) {
-        if (state.statusSubmit == FormzSubmissionStatus.success) {
-          context.go(
-            VaccinationRoutePaths.vaccinationConfirmation.fullPath,
-            extra: state.appointment?.id,
-          );
-        } else if (state.statusSubmit == FormzSubmissionStatus.failure) {
-          snackbarCustom(
-            AppConstant.MAKE_APPOINTMENT_FAILED,
-          ).show(context);
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<AppointmentBloc, AppointmentState>(
+          listener: (context, state) {
+            if (state.statusSubmit == FormzSubmissionStatus.success) {
+              context.go(
+                VaccinationRoutePaths.vaccinationConfirmation.fullPath,
+                extra: state.appointment?.id,
+              );
+            } else if (state.statusSubmit == FormzSubmissionStatus.failure) {
+              snackbarCustom(
+                AppConstant.MAKE_APPOINTMENT_FAILED,
+              ).show(context);
+            }
+          },
+        ),
+        BlocListener<PaymentBloc, PaymentState>(
+          listener: (context, state) {
+            if (state is PaymentFailure) {
+              snackbarCustom(
+                'Terjadi kesalahan saat melakukan pembayaran',
+              ).show(context);
+            } else if (state is PaymentInitiateSuccess) {
+              final gateway = state.response.data?.gateway;
+              if (gateway == 'midtrans') {
+                final paymentUrl = state.response.data?.redirectUrl ?? '';
+                final paymentUri = Uri.parse(paymentUrl);
+                launchUrl(paymentUri);
+              } else if (gateway == 'stripe') {
+                // TODO: handle with https://pub.dev/packages/flutter_stripe
+              }
+            }
+          },
+        ),
+      ],
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -191,7 +238,8 @@ class _VaccinationRegisterScaffoldState
                               final date = await Picker.pickDate(
                                 context,
                                 currentTime: () {
-                                  final days = widget.healthWorker.practiceSchedules
+                                  final days = widget
+                                      .healthWorker.practiceSchedules
                                       ?.map((e) => e.day?.id)
                                       .whereType<int>()
                                       .toList();
@@ -200,16 +248,19 @@ class _VaccinationRegisterScaffoldState
                                     return null;
                                   }
 
-                                  final tomorrowDate = DateTime.now().add(Duration(days: 1));
+                                  final tomorrowDate =
+                                      DateTime.now().add(Duration(days: 1));
                                   final tomorrow = tomorrowDate.weekday;
 
                                   final nextAvailableDay = days.firstWhere(
-                                        (element) => element >= tomorrow,
+                                    (element) => element >= tomorrow,
                                     orElse: () => days.first,
                                   );
 
-                                  final difference = (nextAvailableDay - tomorrow) % 7;
-                                  return tomorrowDate.add(Duration(days: difference));
+                                  final difference =
+                                      (nextAvailableDay - tomorrow) % 7;
+                                  return tomorrowDate
+                                      .add(Duration(days: difference));
                                 }(),
                                 maxTime: kLastDay,
                                 minTime: kFirstDay,
@@ -293,12 +344,27 @@ class _VaccinationRegisterScaffoldState
                             ),
                           ),
                           SizedBox(height: 30),
+                          ListTile(
+                            title: Text(
+                              'Booking Fee: ',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
+                            ),
+                            subtitle: Text(
+                              'Rp. ${widget.healthWorker.bookingFee}',
+                              style: TextStyle(
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
                           ButtonCustom(
                             loading: state.statusSubmit ==
                                 FormzSubmissionStatus.inProgress,
                             onPressed: onSubmit,
                             child: Text(
-                              'Buat Janji',
+                              'Bayar dan Buat Janji',
                               style: TextStyle(color: Colors.white),
                             ),
                           )

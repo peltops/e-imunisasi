@@ -34,7 +34,7 @@ void main() {
     mockFunctionsClient = MockFunctionsClient();
     mockSession = MockSession();
     mockGotrueClient = MockGotrueClient();
-    repository = PaymentRepository(mockSupabaseClient);
+    repository = PaymentRepository(supabaseClient: mockSupabaseClient);
 
     when(() => mockSupabaseClient.functions).thenReturn(mockFunctionsClient);
     when(() => mockSupabaseClient.auth).thenReturn(mockGotrueClient);
@@ -86,7 +86,7 @@ void main() {
       // Assert
       expect(result, isA<BaseResponse<PaymentInitiateResponseModel>>());
       verify(() => mockFunctionsClient.invoke(
-            'payment/initiate',
+            'payments/initiate',
             method: HttpMethod.post,
             body: any(named: 'body'),
             headers: any(named: 'headers'),

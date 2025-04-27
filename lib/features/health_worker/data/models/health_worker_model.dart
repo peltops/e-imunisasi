@@ -16,6 +16,7 @@ class HealthWorkerModel extends Equatable {
   final String? profession;
   final DateTime? date_of_birth;
   final String? place_of_date;
+  final String? bookingFee;
 
   const HealthWorkerModel({
     this.id,
@@ -31,6 +32,7 @@ class HealthWorkerModel extends Equatable {
     this.profession,
     this.date_of_birth,
     this.place_of_date,
+    this.bookingFee,
   });
 
   factory HealthWorkerModel.fromSeribase(Map<String, dynamic> data) {
@@ -76,6 +78,7 @@ class HealthWorkerModel extends Equatable {
         }
       }(),
       place_of_date: data['place_of_birth'],
+      bookingFee: data['booking_fee'],
     );
   }
 
@@ -97,6 +100,7 @@ class HealthWorkerModel extends Equatable {
       if (date_of_birth != null)
         "date_of_birth": date_of_birth?.toIso8601String(),
       if (place_of_date != null) "place_of_birth": place_of_date,
+      if (bookingFee != null) "booking_fee": bookingFee,
     };
   }
 
@@ -115,6 +119,7 @@ class HealthWorkerModel extends Equatable {
         profession,
         date_of_birth,
         place_of_date,
+        bookingFee,
       ];
 }
 
