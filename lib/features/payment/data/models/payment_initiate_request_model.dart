@@ -50,7 +50,7 @@ class PaymentInitiateRequestModel extends Equatable {
   Map<String, dynamic> toSeribase() {
     return {
       if (gateway != null) "gateway": gateway,
-      if (currency != null) "currency": currency,
+      if (currency != null) "currency": currency?.toLowerCase(),
       if (items != null)
         "items": List<dynamic>.from(items!.map((x) => x.toSeribase())),
     };

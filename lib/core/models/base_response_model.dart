@@ -40,7 +40,7 @@ class BaseResponse<T> extends Equatable {
     T Function(Map<String, dynamic>) fromJsonT,
   ) {
     return BaseResponse<T>(
-      isSuccessful: json['isSuccessful'] as bool? ?? false,
+      isSuccessful: json['is_successful'] as bool? ?? false,
       message: json['message'] as String?,
       error: json['error'] != null ? fromJsonT(json['error']) : null,
       data: json['data'] != null ? fromJsonT(json['data']) : null,

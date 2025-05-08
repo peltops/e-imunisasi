@@ -1,18 +1,21 @@
 import 'package:eimunisasi/core/models/base_response_model.dart';
 import 'package:eimunisasi/features/payment/data/models/payment_initiate_request_model.dart';
 import 'package:eimunisasi/features/payment/data/models/payment_initiate_response_model.dart';
+import 'package:injectable/injectable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../models/order_model.dart';
 
+@injectable
 class PaymentRepository {
   final SupabaseClient supabaseClient;
 
-  PaymentRepository({SupabaseClient? supabaseClient})
-      : supabaseClient = supabaseClient ??
+  PaymentRepository({
+    @factoryParam SupabaseClient? supabaseClient,
+  }) : supabaseClient = supabaseClient ??
             SupabaseClient(
-              'https://payment-base-staging.peltops.com',
+              dotenv.env['PAYMENT_URL'] ?? '',
               '',
             );
 
@@ -23,6 +26,7 @@ class PaymentRepository {
       final requestBody = request
           .copyWith(
             gateway: dotenv.env['PAYMENT_GATEWAY'] ?? 'midtrans',
+            currency: dotenv.env['PAYMENT_CURRENCY'] ?? 'IDR',
           )
           .toSeribase();
       final fetch = await supabaseClient.functions.invoke(
@@ -32,7 +36,7 @@ class PaymentRepository {
         headers: {
           'Content-Type': 'application/json',
           'Authorization':
-              'Bearer ${supabaseClient.auth.currentSession?.accessToken}',
+              'Bearer ${Supabase.instance.client.auth.currentSession?.accessToken}',
         },
       );
 
@@ -55,12 +59,12 @@ class PaymentRepository {
   Future<BaseResponse<OrderModel>?> getOrderDetail(String orderId) async {
     try {
       final fetch = await supabaseClient.functions.invoke(
-        'payment/order/$orderId',
+        'payments/order/$orderId',
         method: HttpMethod.get,
         headers: {
           'Content-Type': 'application/json',
           'Authorization':
-              'Bearer ${supabaseClient.auth.currentSession?.accessToken}',
+              'Bearer ${Supabase.instance.client.auth.currentSession?.accessToken}',
         },
       );
 

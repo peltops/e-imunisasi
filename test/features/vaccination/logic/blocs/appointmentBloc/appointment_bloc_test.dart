@@ -1,4 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:eimunisasi/features/vaccination/data/models/appointment_payment_entity.dart';
 import 'package:eimunisasi/features/vaccination/logic/blocs/appointmentBloc/appointment_bloc.dart';
 import 'package:eimunisasi/features/vaccination/data/models/appointment_model.dart';
 import 'package:eimunisasi/features/vaccination/data/repositories/appointment_repository.dart';
@@ -62,7 +63,7 @@ void main() {
       'emits [inProgress, success] when CreateAppointmentEvent is added and setAppointment succeeds',
       build: () {
         when(() => appointmentRepository.setAppointment(any())).thenAnswer(
-          (_) async => AppointmentModel(),
+          (_) async => AppointmentOrderEntity(),
         );
         return appointmentBloc;
       },
@@ -71,7 +72,7 @@ void main() {
         AppointmentState(statusSubmit: FormzSubmissionStatus.inProgress),
         AppointmentState(
           statusSubmit: FormzSubmissionStatus.success,
-          appointment: AppointmentModel(),
+          appointmentWithOrder: AppointmentOrderEntity(),
         ),
       ],
     );
@@ -103,8 +104,11 @@ void main() {
       expect: () => [
         AppointmentState(statusSubmit: FormzSubmissionStatus.inProgress),
         AppointmentState(
-            statusSubmit: FormzSubmissionStatus.success,
-            appointment: AppointmentModel()),
+          statusSubmit: FormzSubmissionStatus.success,
+          appointmentWithOrder: AppointmentOrderEntity(
+            appointment: AppointmentModel(),
+          ),
+        ),
       ],
     );
 
@@ -128,7 +132,7 @@ void main() {
       'emits [inProgress, success] when LoadAppointmentEvent is added and getAppointment succeeds',
       build: () {
         when(() => appointmentRepository.getAppointment(id: any(named: 'id')))
-            .thenAnswer((_) async => AppointmentModel());
+            .thenAnswer((_) async => AppointmentOrderEntity());
         return appointmentBloc;
       },
       act: (bloc) => bloc.add(LoadAppointmentEvent('1')),
@@ -137,7 +141,7 @@ void main() {
             statusGetAppointment: FormzSubmissionStatus.inProgress),
         AppointmentState(
             statusGetAppointment: FormzSubmissionStatus.success,
-            getAppointment: AppointmentModel()),
+            getAppointmentWithOrder: AppointmentOrderEntity()),
       ],
     );
 

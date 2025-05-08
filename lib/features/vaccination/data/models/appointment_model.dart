@@ -6,7 +6,7 @@ import 'package:equatable/equatable.dart';
 import '../../../../core/extension.dart';
 
 class AppointmentModel extends Equatable {
-  final String? id;
+  final String? id, orderId;
   final DateTime? date;
   final ChildModel? child;
   final UserProfile? parent;
@@ -16,18 +16,18 @@ class AppointmentModel extends Equatable {
   final String? startTime;
   final String? endTime;
 
-  String get time => (){
-    if(startTime != null && endTime != null){
-      final startTime = this.startTime?.split(":").getRange(0, 2).join(":");
-      final endTime = this.endTime?.split(":").getRange(0, 2).join(":");
-      return "$startTime - $endTime";
-    }
-    return emptyString;
-  }();
-
+  String get time => () {
+        if (startTime != null && endTime != null) {
+          final startTime = this.startTime?.split(":").getRange(0, 2).join(":");
+          final endTime = this.endTime?.split(":").getRange(0, 2).join(":");
+          return "$startTime - $endTime";
+        }
+        return emptyString;
+      }();
 
   const AppointmentModel({
     this.id,
+    this.orderId,
     this.date,
     this.child,
     this.parent,
@@ -42,6 +42,7 @@ class AppointmentModel extends Equatable {
 
   AppointmentModel copyWith({
     String? id,
+    String? orderId,
     DateTime? date,
     ChildModel? child,
     UserProfile? parent,
@@ -53,6 +54,7 @@ class AppointmentModel extends Equatable {
   }) {
     return AppointmentModel(
       id: id ?? this.id,
+      orderId: orderId ?? this.orderId,
       date: date ?? this.date,
       child: child ?? this.child,
       parent: parent ?? this.parent,
@@ -67,6 +69,7 @@ class AppointmentModel extends Equatable {
   @override
   List<Object?> get props => [
         id,
+        orderId,
         date,
         child,
         parent,
@@ -82,6 +85,7 @@ class AppointmentModel extends Equatable {
   ) {
     return AppointmentModel(
       id: map['id'],
+      orderId: map['order_id'],
       date: () {
         try {
           if (map['date'] == null) return null;
@@ -109,6 +113,7 @@ class AppointmentModel extends Equatable {
   Map<String, dynamic> toSeribase() {
     return {
       if (id != null) 'id': id,
+      if (orderId != null) 'order_id': orderId,
       if (parent != null) 'parent_id': parent?.uid,
       if (child != null) 'child_id': child?.id,
       if (healthWorker != null) 'inspector_id': healthWorker?.id,

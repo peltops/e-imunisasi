@@ -13,11 +13,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/widgets/picker.dart';
-import '../../../payment/data/models/payment_initiate_request_model.dart';
-import '../../../payment/logic/blocs/payment_bloc/payment_bloc.dart';
 
 class VaccinationRegisterScreen extends StatelessWidget {
   final ChildModel anak;
@@ -31,15 +28,8 @@ class VaccinationRegisterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => getIt<AppointmentBloc>(),
-        ),
-        BlocProvider(
-          create: (context) => getIt<PaymentBloc>(),
-        ),
-      ],
+    return BlocProvider(
+      create: (context) => getIt<AppointmentBloc>(),
       child: _VaccinationRegisterScaffold(
         child: anak,
         healthWorker: nakes,
@@ -95,21 +85,6 @@ class _VaccinationRegisterScaffoldState
         ).show(context);
         return;
       }
-
-      context.read<PaymentBloc>().add(
-            InitiatePaymentEvent(
-              PaymentInitiateRequestModel(
-                currency: 'idr',
-                items: [
-                  ItemModel(
-                    /// This is booking fee ID
-                    id: '4cf70de1-35d6-4794-a249-9b79c328f086',
-                    quantity: 1,
-                  ),
-                ],
-              ),
-            ),
-          );
       final appointment = AppointmentModel(
         date: _selectedDate,
         child: widget.child,
@@ -125,41 +100,19 @@ class _VaccinationRegisterScaffoldState
           );
     }
 
-    return MultiBlocListener(
-      listeners: [
-        BlocListener<AppointmentBloc, AppointmentState>(
-          listener: (context, state) {
-            if (state.statusSubmit == FormzSubmissionStatus.success) {
-              context.go(
-                VaccinationRoutePaths.vaccinationConfirmation.fullPath,
-                extra: state.appointment?.id,
-              );
-            } else if (state.statusSubmit == FormzSubmissionStatus.failure) {
-              snackbarCustom(
-                AppConstant.MAKE_APPOINTMENT_FAILED,
-              ).show(context);
-            }
-          },
-        ),
-        BlocListener<PaymentBloc, PaymentState>(
-          listener: (context, state) {
-            if (state is PaymentFailure) {
-              snackbarCustom(
-                'Terjadi kesalahan saat melakukan pembayaran',
-              ).show(context);
-            } else if (state is PaymentInitiateSuccess) {
-              final gateway = state.response.data?.gateway;
-              if (gateway == 'midtrans') {
-                final paymentUrl = state.response.data?.redirectUrl ?? '';
-                final paymentUri = Uri.parse(paymentUrl);
-                launchUrl(paymentUri);
-              } else if (gateway == 'stripe') {
-                // TODO: handle with https://pub.dev/packages/flutter_stripe
-              }
-            }
-          },
-        ),
-      ],
+    return BlocListener<AppointmentBloc, AppointmentState>(
+      listener: (context, state) {
+        if (state.statusSubmit == FormzSubmissionStatus.success) {
+          context.go(
+            VaccinationRoutePaths.vaccinationConfirmation.fullPath,
+            extra: state.appointmentWithOrder?.appointment?.id,
+          );
+        } else if (state.statusSubmit == FormzSubmissionStatus.failure) {
+          snackbarCustom(
+            AppConstant.MAKE_APPOINTMENT_FAILED,
+          ).show(context);
+        }
+      },
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -353,21 +306,21 @@ class _VaccinationRegisterScaffoldState
                               ),
                             ),
                             subtitle: Text(
-                              'Rp. ${widget.healthWorker.bookingFee}',
+                              'Rp. ${widget.healthWorker.bookingFee ?? '-'}',
                               style: TextStyle(
                                 fontSize: 15,
                               ),
                             ),
                           ),
                           ButtonCustom(
+                            onPressed: onSubmit,
                             loading: state.statusSubmit ==
                                 FormzSubmissionStatus.inProgress,
-                            onPressed: onSubmit,
                             child: Text(
-                              'Bayar dan Buat Janji',
+                              'Buat Janji',
                               style: TextStyle(color: Colors.white),
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),

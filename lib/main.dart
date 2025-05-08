@@ -3,6 +3,7 @@ import 'package:eimunisasi/core/utils/bloc_observer.dart';
 import 'package:eimunisasi/services/notifications.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -15,11 +16,12 @@ import 'injection.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
   await Supabase.initialize(
-    url: 'https://eimunisasi-base-staging.peltops.com',
-    anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ewogICJyb2xlIjogImFub24iLAogICJpc3MiOiAic3VwYWJhc2UiLAogICJpYXQiOiAxNzIzNDEzNjAwLAogICJleHAiOiAxODgxMTgwMDAwCn0.LP3Zca0w11eNX1974BpPg0GWShJysP6jw9732kL-Y9c',
+    url: dotenv.env['SUPABASE_URL'] ?? '',
+    anonKey: dotenv.env['SUPABASE_ANON_KEY'] ?? '',
   );
+  Stripe.publishableKey = dotenv.env['STRIPE_PUBLISHABLE_KEY'] ?? '';
 
   await Hive.initFlutter();
   Hive.registerAdapter(CalendarActivityHiveAdapter());
@@ -29,7 +31,6 @@ void main() async {
   if (kDebugMode) {
     Bloc.observer = AppBlocObserver();
   }
-  await dotenv.load(fileName: ".env");
   await configureDependencies();
   runApp(App());
 }

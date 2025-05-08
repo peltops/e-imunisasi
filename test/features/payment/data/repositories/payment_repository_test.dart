@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MockSupabaseClient extends Mock implements SupabaseClient {}
 
@@ -22,11 +23,17 @@ void main() {
   late MockFunctionsClient mockFunctionsClient;
   late MockGotrueClient mockGotrueClient;
   late MockSession mockSession;
-
-  setUpAll(() {
+  setUpAll(() async {
+    // Set up SharedPreferences for testing
+    SharedPreferences.setMockInitialValues({});
+    // Load environment variables from .env file
     dotenv.testLoad(fileInput: '''
       PAYMENT_GATEWAY=midtrans
     ''');
+    await Supabase.initialize(
+      url: 'https://test.com',
+      anonKey: 'test',
+    );
   });
 
   setUp(() {
@@ -165,7 +172,7 @@ void main() {
         // Assert
         expect(result, isA<BaseResponse<OrderModel>?>());
         verify(() => mockFunctionsClient.invoke(
-              'payment/order/$orderId',
+              'payments/order/$orderId',
               method: HttpMethod.get,
               headers: any(named: 'headers'),
             )).called(1);

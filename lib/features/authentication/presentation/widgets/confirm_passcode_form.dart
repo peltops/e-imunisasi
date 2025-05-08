@@ -72,7 +72,7 @@ class _NextButton extends StatelessWidget {
           previous.statusSet != current.statusSet,
       listener: (context, state) {
         if (state.statusSet.isSuccess) {
-          context.go(RootRoutePaths.dashboard.fullPath);
+          context.pushReplacement(RootRoutePaths.dashboard.fullPath);
         } else if (state.statusSet.isFailure) {
           snackbarCustom(state.errorMessage ?? 'Gagal').show(context);
         }

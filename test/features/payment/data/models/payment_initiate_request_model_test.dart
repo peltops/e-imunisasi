@@ -5,7 +5,7 @@ void main() {
   group('PaymentInitiateRequestModel', () {
     final tPaymentModel = PaymentInitiateRequestModel(
       gateway: 'test_gateway',
-      currency: 'IDR',
+      currency: 'idr',
       items: [
         ItemModel(
           id: 'test_product',
@@ -16,7 +16,7 @@ void main() {
 
     final tMap = {
       'gateway': 'test_gateway',
-      'currency': 'IDR',
+      'currency': 'idr',
       'items': [
         {
           'name': 'test_product',

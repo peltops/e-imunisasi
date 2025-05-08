@@ -1,3 +1,4 @@
+import 'package:eimunisasi/features/payment/data/models/payment_initiate_response_model.dart';
 import 'package:equatable/equatable.dart';
 
 import 'product_model.dart';
@@ -5,14 +6,16 @@ import 'product_model.dart';
 class OrderModel extends Equatable {
   final String? id, status;
   final double? totalAmount;
-  final OrderItemModel? orderItem;
+  final List<OrderItemModel>? orderItems;
+  final PaymentInitiateResponseModel? payment;
   final DateTime? createdAt, updatedAt;
 
   const OrderModel({
     this.id,
     this.status,
-    this.orderItem,
+    this.orderItems,
     this.totalAmount,
+    this.payment,
     this.createdAt,
     this.updatedAt,
   });
@@ -22,6 +25,7 @@ class OrderModel extends Equatable {
         id,
         status,
         totalAmount,
+        orderItems,
         createdAt,
         updatedAt,
       ];
@@ -31,13 +35,26 @@ class OrderModel extends Equatable {
       id: data['order_id'],
       status: data['status'],
       totalAmount: data['total_amount']?.toDouble(),
+      payment: data['gateway_response'] != null
+          ? PaymentInitiateResponseModel.fromSeribase(data['gateway_response'])
+          : null,
       createdAt: data['created_at'] != null
           ? DateTime.parse(data['created_at']).toLocal()
           : null,
       updatedAt: data['updated_at'] != null
           ? DateTime.parse(data['updated_at']).toLocal()
           : null,
-      orderItem: OrderItemModel.fromSeribase(data['order_items']),
+      orderItems: () {
+        if (data['order_items'] == null) {
+          return null;
+        }
+        try {
+          return List<OrderItemModel>.from(
+              data['order_items'].map((x) => OrderItemModel.fromSeribase(x)));
+        } catch (e) {
+          return null;
+        }
+      }(),
     );
   }
 
@@ -46,9 +63,11 @@ class OrderModel extends Equatable {
       if (id != null) "order_id": id,
       if (status != null) "status": status,
       if (totalAmount != null) "total_amount": totalAmount,
+      if (payment != null) "gateway_response": payment?.toSeribase(),
       if (createdAt != null) "created_at": createdAt?.toIso8601String(),
       if (updatedAt != null) "updated_at": updatedAt?.toIso8601String(),
-      if (orderItem != null) "order_item": orderItem?.toSeribase(),
+      if (orderItems != null)
+        "order_items": orderItems?.map((x) => x.toSeribase()),
     };
   }
 }

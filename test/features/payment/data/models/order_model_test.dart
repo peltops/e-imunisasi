@@ -11,19 +11,21 @@ void main() {
         'total_amount': 100.0,
         'created_at': '2023-10-01T00:00:00Z',
         'updated_at': '2023-10-01T00:00:00Z',
-        'order_items': {
-          'order_item_id': '456',
-          'product': {
-            'product_id': 'product-1',
-            'name': 'Product 1',
+        'order_items': [
+          {
+            'order_item_id': '456',
+            'product': {
+              'product_id': 'product-1',
+              'name': 'Product 1',
+              'price': 50.0,
+              'quantity': 2,
+            },
             'price': 50.0,
             'quantity': 2,
-          },
-          'price': 50.0,
-          'quantity': 2,
-          'created_at': '2023-10-01T00:00:00Z',
-          'updated_at': '2023-10-01T00:00:00Z',
-        },
+            'created_at': '2023-10-01T00:00:00Z',
+            'updated_at': '2023-10-01T00:00:00Z',
+          }
+        ],
       };
 
       final OrderModel order = OrderModel.fromSeribase(json);
@@ -33,7 +35,7 @@ void main() {
       expect(order.totalAmount, 100.0);
       expect(order.createdAt?.year, testDate.year);
       expect(order.updatedAt?.year, testDate.year);
-      expect(order.orderItem?.id, '456');
+      expect(order.orderItems?.first.id, '456');
     });
 
     test('toSeribase should return correct map', () {
@@ -44,11 +46,13 @@ void main() {
         totalAmount: 100.0,
         createdAt: testDate,
         updatedAt: testDate,
-        orderItem: OrderItemModel(
-          id: '456',
-          price: 50.0,
-          quantity: 2,
-        ),
+        orderItems: [
+          OrderItemModel(
+            id: '456',
+            price: 50.0,
+            quantity: 2,
+          ),
+        ],
       );
 
       final Map<String, dynamic> json = order.toSeribase();

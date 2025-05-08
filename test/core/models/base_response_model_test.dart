@@ -49,7 +49,7 @@ void main() {
 
     test('fromJson should correctly parse JSON data', () {
       final json = {
-        'isSuccessful': true,
+        'is_successful': true,
         'message': 'Success message',
         'error': {'value': 'Error data'},
         'data': {'value': 'Test data'},
@@ -57,7 +57,7 @@ void main() {
 
       final response = BaseResponse<Map<String, String>>.fromJson(
         json,
-        (json) => Map<String, String>.from(json),
+        (jsonIn) => Map<String, String>.from(jsonIn),
       );
 
       expect(response.isSuccessful, true);

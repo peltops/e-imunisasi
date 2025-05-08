@@ -84,9 +84,11 @@ void main() {
         date: DateTime.now(),
         documentID: '1',
       );
-      final insert = await calendarRepository.setEvent(testEvent);
+      await supabaseClient
+          .from(CalendarModel.tableName)
+          .insert(testEvent.toSeribase());
 
-      final result = calendarRepository.updateEvent(insert.copyWith(
+      final result = calendarRepository.updateEvent(testEvent.copyWith(
         activity: 'changed title',
       ));
       final resultAwait = await result;

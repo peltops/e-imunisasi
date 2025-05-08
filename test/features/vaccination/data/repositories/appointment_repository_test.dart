@@ -1,6 +1,13 @@
+import 'package:eimunisasi/core/models/base_response_model.dart';
 import 'package:eimunisasi/features/authentication/data/models/user_profile.dart';
 import 'package:eimunisasi/features/health_worker/data/models/health_worker_model.dart';
 import 'package:eimunisasi/features/health_worker/data/repositories/health_worker_repository.dart';
+import 'package:eimunisasi/features/payment/data/models/order_model.dart';
+import 'package:eimunisasi/features/payment/data/models/payment_initiate_request_model.dart';
+import 'package:eimunisasi/features/payment/data/models/payment_initiate_response_model.dart';
+import 'package:eimunisasi/features/payment/data/models/product_model.dart';
+import 'package:eimunisasi/features/payment/data/repositories/payment_repository.dart';
+import 'package:eimunisasi/features/vaccination/data/models/appointment_payment_entity.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:eimunisasi/features/vaccination/data/repositories/appointment_repository.dart';
 import 'package:eimunisasi/features/vaccination/data/models/appointment_model.dart';
@@ -11,14 +18,18 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class MockHealthWorkerRepository extends Mock
     implements HealthWorkerRepository {}
 
+class MockPaymentRepository extends Mock implements PaymentRepository {}
+
 void main() {
   group('AppointmentRepository', () {
     late SupabaseClient supabaseClient;
     late AppointmentRepository repository;
     late HealthWorkerRepository healthWorkerRepository;
-    late var mockHttpClient;
+    late PaymentRepository paymentRepository;
+    late MockSupabaseHttpClient mockHttpClient;
     final data1 = AppointmentModel(
       id: 'd8bfed26-f491-4478-b182-fdc2e8074212c',
+      orderId: 'd8bfed26-f491-4478-b182-fdc2e8074212c',
       parent: UserProfile(
         uid: '1',
       ),
@@ -39,8 +50,10 @@ void main() {
         httpClient: mockHttpClient,
       );
       healthWorkerRepository = MockHealthWorkerRepository();
+      paymentRepository = MockPaymentRepository();
       repository = AppointmentRepository(
         healthWorkerRepository,
+        paymentRepository,
         supabaseClient,
       );
     });
@@ -53,9 +66,17 @@ void main() {
       mockHttpClient.close();
     });
 
+    setUpAll(() {
+      registerFallbackValue(
+        PaymentInitiateRequestModel(),
+      );
+    });
+
     group('getAppointments', () {
       test('returns a list of appointments when successful', () async {
-        await repository.setAppointment(data1);
+        await supabaseClient
+            .from(AppointmentModel.tableName)
+            .insert(data1.toSeribase());
         final result = await repository.getAppointments(
           userId: '1',
         );
@@ -74,32 +95,74 @@ void main() {
             fullName: 'John Doe',
           ),
         );
-        await repository.setAppointment(data1);
+
+        when(() => paymentRepository.getOrderDetail(any())).thenAnswer(
+          (_) async => BaseResponse<OrderModel>(
+            data: OrderModel(
+              id: '1',
+              status: 'draft',
+            ),
+          ),
+        );
+
+        await supabaseClient
+            .from(AppointmentModel.tableName)
+            .insert(data1.toSeribase());
+
         final result = await repository.getAppointment(
           id: 'd8bfed26-f491-4478-b182-fdc2e8074212c',
         );
 
-        expect(result, isA<AppointmentModel>());
-        expect(result.id, data1.id);
+        expect(result, isA<AppointmentOrderEntity>());
+        expect(result.appointment?.id, data1.id);
+        expect(result.appointment?.orderId, data1.orderId);
+        expect(result.order?.id, '1');
       });
     });
 
     group('setAppointment', () {
       test('inserts and returns an appointment when successful', () async {
+       
+        when(() => paymentRepository.initiate(any())).thenAnswer(
+          (_) async => BaseResponse<PaymentInitiateResponseModel>(
+            data: PaymentInitiateResponseModel(
+              orderId: '1',
+            ),
+          ),
+        );
+        when(() => paymentRepository.getOrderDetail(any())).thenAnswer(
+          (_) async => BaseResponse<OrderModel>(
+            data: OrderModel(
+              id: '1',
+              status: 'draft',
+              orderItems: [
+                OrderItemModel(
+                  id: '1',
+                  product: ProductModel(
+                    id: '1',
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
         final result = await repository.setAppointment(data1.copyWith(
           note: 'Note Set',
           purpose: 'Purpose Set',
         ));
 
-        expect(result, isA<AppointmentModel>());
-        expect(result.note, 'Note Set');
-        expect(result.purpose, 'Purpose Set');
+        expect(result, isA<AppointmentOrderEntity>());
+        expect(result.appointment?.note, 'Note Set');
+        expect(result.appointment?.purpose, 'Purpose Set');
       });
     });
 
     group('updateAppointment', () {
       test('updates and returns the appointment when successful', () async {
-        await repository.setAppointment(data1);
+        await supabaseClient
+            .from(AppointmentModel.tableName)
+            .insert(data1.toSeribase());
+
         final result = await repository.updateAppointment(
           data1.copyWith(
             date: DateTime.now(),

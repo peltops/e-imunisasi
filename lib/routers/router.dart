@@ -6,10 +6,7 @@ import 'package:eimunisasi/features/authentication/presentation/screens/auth/log
 import 'package:eimunisasi/features/authentication/presentation/screens/local_auth/passcode_screen.dart';
 import 'package:eimunisasi/features/authentication/presentation/screens/splash/splash_screen.dart';
 import 'package:eimunisasi/features/bottom_navbar/presentation/screens/bottom_navbar.dart';
-import 'package:eimunisasi/features/calendar/data/models/calendar_model.dart';
-import 'package:eimunisasi/features/calendar/presentation/screens/add_event_calendar_screen.dart';
 import 'package:eimunisasi/features/calendar/presentation/screens/calendar_screen.dart';
-import 'package:eimunisasi/features/calendar/presentation/screens/update_event_calendar_screen.dart';
 import 'package:eimunisasi/features/contact/presentation/contact_screen.dart';
 import 'package:eimunisasi/features/healthy_book/presentation/screens/healthy_book_screen.dart';
 import 'package:eimunisasi/features/onboarding/presentation/screens/onboarding.dart';
@@ -31,6 +28,8 @@ import 'calendar_router.dart';
 import 'healthy_book_router.dart';
 
 final router = GoRouter(
+  debugLogDiagnostics: true,
+  initialLocation: RootRoutePaths.root.fullPath,
   routes: [
     GoRoute(
       path: RootRoutePaths.root.path,
@@ -104,41 +103,33 @@ final router = GoRouter(
     GoRoute(
       path: RootRoutePaths.dashboard.path,
       builder: (_, __) => BottomNavbarWrapper(),
-    ),
-    GoRoute(
-      path: RootRoutePaths.profile.path,
-      builder: (_, __) => ParentProfileScreen(),
-      routes: ProfileRouter.routes,
-    ),
-    GoRoute(
-      path: RoutePaths.addEventCalendar,
-      builder: (_, __) => AddEventCalendarScreen(),
-    ),
-    GoRoute(
-      path: RoutePaths.updateEventCalendar,
-      builder: (_, state) => UpdateEventCalendarScreen(
-        event: state.extra as CalendarModel,
-      ),
-    ),
-    GoRoute(
-      path: RootRoutePaths.calendar.path,
-      builder: (_, __) => const CalendarScreen(),
-      routes: CalendarRouter.routes,
-    ),
-    GoRoute(
-      path: RootRoutePaths.vaccination.path,
-      builder: (_, __) => VaccinationScreen(),
-      routes: VaccinationRouter.routes,
-    ),
-    GoRoute(
-      path: RootRoutePaths.contact.path,
-      builder: (_, __) => ContactScreen(),
-      routes: ContactRouter.routes,
-    ),
-    GoRoute(
-      path: RootRoutePaths.healthyBook.path,
-      builder: (_, state) => HealthyBookScreen(),
-      routes: HealthyBookRouter.routes,
+      routes: [
+        GoRoute(
+          path: RootRoutePaths.profile.path,
+          builder: (_, __) => ParentProfileScreen(),
+          routes: ProfileRouter.routes,
+        ),
+        GoRoute(
+          path: RootRoutePaths.calendar.path,
+          builder: (_, __) => const CalendarScreen(),
+          routes: CalendarRouter.routes,
+        ),
+        GoRoute(
+          path: RootRoutePaths.vaccination.path,
+          builder: (_, __) => VaccinationScreen(),
+          routes: VaccinationRouter.routes,
+        ),
+        GoRoute(
+          path: RootRoutePaths.contact.path,
+          builder: (_, __) => ContactScreen(),
+          routes: ContactRouter.routes,
+        ),
+        GoRoute(
+          path: RootRoutePaths.healthyBook.path,
+          builder: (_, state) => HealthyBookScreen(),
+          routes: HealthyBookRouter.routes,
+        ),
+      ],
     ),
     GoRoute(
       path: RoutePaths.error,

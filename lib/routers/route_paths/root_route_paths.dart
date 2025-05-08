@@ -24,17 +24,22 @@ class RootRoutePaths {
   );
   static const RouteModel profile = RouteModel(
     path: '/profile',
+    parent: dashboard,
   );
   static const RouteModel calendar = RouteModel(
     path: '/calendar',
+    parent: dashboard,
   );
   static const RouteModel healthyBook = RouteModel(
     path: '/healthy-book',
+    parent: dashboard,
   );
   static const RouteModel vaccination = RouteModel(
     path: '/vaccination',
+    parent: dashboard,
   );
   static const RouteModel contact = RouteModel(
     path: '/contact',
+    parent: dashboard,
   );
 }

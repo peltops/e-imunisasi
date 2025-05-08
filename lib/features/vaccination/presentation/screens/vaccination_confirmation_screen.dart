@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:eimunisasi/core/extension.dart';
 import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/core/widgets/button_custom.dart';
@@ -6,11 +8,14 @@ import 'package:eimunisasi/injection.dart';
 import 'package:eimunisasi/routers/route_paths/root_route_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_stripe/flutter_stripe.dart' as stripe;
 import 'package:formz/formz.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../core/widgets/snackbar_custom.dart';
 import '../../logic/blocs/appointmentBloc/appointment_bloc.dart';
 
 class VaccinationConfirmationScreen extends StatelessWidget {
@@ -51,14 +56,6 @@ class _VaccinationConfirmationScaffold extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.pink[300],
         elevation: 0.0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            context.go(
-              RootRoutePaths.dashboard.fullPath,
-            );
-          },
-        ),
         title: Text(
           AppConstant.APPOINTMENT,
           style: TextStyle(fontWeight: FontWeight.w700),
@@ -81,12 +78,13 @@ class _VaccinationConfirmationScaffold extends StatelessWidget {
               },
             );
           }
+          final appointment = state.getAppointmentWithOrder?.appointment;
+          final order = state.getAppointmentWithOrder?.order;
           final date = () {
-            if (state.getAppointment?.date == null) {
+            if (appointment?.date == null) {
               return emptyString;
             }
-            return DateFormat('dd MMMM yyyy')
-                .format(state.getAppointment!.date!);
+            return DateFormat('dd MMMM yyyy').format(appointment!.date!);
           }();
           return Container(
             color: Colors.pink[100],
@@ -104,7 +102,7 @@ class _VaccinationConfirmationScaffold extends StatelessWidget {
                     children: [
                       Center(
                         child: QrImageView(
-                          data: state.getAppointment?.id ?? '',
+                          data: appointment?.id ?? '',
                           size: size.width * 0.5,
                         ),
                       ),
@@ -132,14 +130,14 @@ class _VaccinationConfirmationScaffold extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                state.getAppointment?.child?.nama ?? '',
+                                appointment?.child?.nama ?? '',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 15,
                                 ),
                               ),
                               Text(
-                                state.getAppointment?.child?.umurAnak ?? '',
+                                appointment?.child?.umurAnak ?? '',
                               ),
                             ],
                           ),
@@ -157,15 +155,12 @@ class _VaccinationConfirmationScaffold extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                state.getAppointment?.healthWorker?.fullName ??
-                                    '',
+                                appointment?.healthWorker?.fullName ?? '',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 15),
                               ),
                               Text(
-                                state.getAppointment?.healthWorker
-                                        ?.profession ??
-                                    '',
+                                appointment?.healthWorker?.profession ?? '',
                               ),
                             ],
                           ),
@@ -193,19 +188,166 @@ class _VaccinationConfirmationScaffold extends StatelessWidget {
                               Text(
                                 'Jam :',
                                 style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 15),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
                               ),
                               Text(
-                                state.getAppointment?.time ?? '',
+                                appointment?.time ?? '',
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      // Create detail order UI
+                      SizedBox(height: 20),
+                      Text(
+                        'Detail Pesanan',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
+                      ),
+                      Text(
+                        'Berikut adalah detail pesanan anda',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                      SizedBox(height: 10),
+                      Table(
+                        children: [
+                          TableRow(
+                            children: [
+                              Text(
+                                'ID Pesanan :',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
+                              ),
+                              Text(
+                                order?.id ?? '',
+                              ),
+                            ],
+                          ),
+                          ...?order?.orderItems?.map(
+                            (item) => TableRow(
+                              children: [
+                                Text(
+                                  item.product?.name ?? '',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                                Text(
+                                  '${item.price} x ${item.quantity}',
+                                ),
+                              ],
+                            ),
+                          ),
+                          TableRow(
+                            children: [
+                              Text(
+                                'Status Pesanan :',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
+                              ),
+                              Text(
+                                order?.status ?? '',
+                              ),
+                            ],
+                          ),
+                          TableRow(
+                            children: [
+                              Text(
+                                'Total Pembayaran :',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
+                              ),
+                              Text(
+                                order?.totalAmount.toString() ?? '',
                               ),
                             ],
                           ),
                         ],
                       ),
                       SizedBox(height: 30),
+                      if (order?.status == 'draft') ...[
+                        Row(
+                          children: [
+                            Expanded(
+                              child: ButtonCustom(
+                                onPressed: () async {
+                                  final payment = order?.payment;
+                                  final gateway = payment?.gateway;
+                                  try {
+                                    if (gateway == 'midtrans') {
+                                      final paymentUrl =
+                                          payment?.redirectUrl ?? '';
+                                      final paymentUri = Uri.parse(paymentUrl);
+                                      if (await canLaunchUrl(paymentUri)) {
+                                        await launchUrl(paymentUri);
+                                      } else {
+                                        snackbarCustom(
+                                          'Terjadi kesalahan saat melakukan pembayaran',
+                                        ).show(context);
+                                      }
+                                    } else if (gateway == 'stripe') {
+                                      await stripe.Stripe.instance
+                                          .initPaymentSheet(
+                                        paymentSheetParameters:
+                                            stripe.SetupPaymentSheetParameters(
+                                          paymentIntentClientSecret:
+                                              payment?.token,
+                                          customFlow: false,
+                                          style: ThemeMode.light,
+                                          merchantDisplayName: 'E-Imunisasi',
+                                        ),
+                                      );
+                                      await stripe.Stripe.instance
+                                          .presentPaymentSheet();
+                                    }
+                                    context.read<AppointmentBloc>().add(
+                                          LoadAppointmentEvent(appointmentId),
+                                        );
+                                  } catch (e) {
+                                    log('Error launching payment: $e');
+                                    snackbarCustom(
+                                      'Terjadi kesalahan saat melakukan pembayaran',
+                                    ).show(context);
+                                  }
+                                },
+                                child: Text(
+                                  'Bayar',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            Expanded(
+                              child: ButtonCustom(
+                                child: Text(
+                                  'Check Status',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                onPressed: () {
+                                  context.read<AppointmentBloc>().add(
+                                        LoadAppointmentEvent(appointmentId),
+                                      );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                      SizedBox(height: 15),
                       ButtonCustom(
                         onPressed: () {
-                          context.go(
+                          context.pushReplacement(
                             RootRoutePaths.dashboard.fullPath,
                           );
                         },
@@ -213,7 +355,7 @@ class _VaccinationConfirmationScaffold extends StatelessWidget {
                           'Halaman Utama',
                           style: TextStyle(color: Colors.white),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
