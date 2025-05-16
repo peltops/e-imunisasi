@@ -4,6 +4,7 @@ import 'package:eimunisasi/core/extension.dart';
 import 'package:eimunisasi/core/utils/constant.dart';
 import 'package:eimunisasi/core/widgets/button_custom.dart';
 import 'package:eimunisasi/core/widgets/error.dart';
+import 'package:eimunisasi/features/payment/data/models/order_model.dart';
 import 'package:eimunisasi/injection.dart';
 import 'package:eimunisasi/routers/route_paths/root_route_paths.dart';
 import 'package:flutter/material.dart';
@@ -275,79 +276,17 @@ class _VaccinationConfirmationScaffold extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 30),
                       if (order?.status == 'draft') ...[
-                        Row(
-                          children: [
-                            Expanded(
-                              child: ButtonCustom(
-                                onPressed: () async {
-                                  final payment = order?.payment;
-                                  final gateway = payment?.gateway;
-                                  try {
-                                    if (gateway == 'midtrans') {
-                                      final paymentUrl =
-                                          payment?.redirectUrl ?? '';
-                                      final paymentUri = Uri.parse(paymentUrl);
-                                      if (await canLaunchUrl(paymentUri)) {
-                                        await launchUrl(paymentUri);
-                                      } else {
-                                        snackbarCustom(
-                                          'Terjadi kesalahan saat melakukan pembayaran',
-                                        ).show(context);
-                                      }
-                                    } else if (gateway == 'stripe') {
-                                      await stripe.Stripe.instance
-                                          .initPaymentSheet(
-                                        paymentSheetParameters:
-                                            stripe.SetupPaymentSheetParameters(
-                                          paymentIntentClientSecret:
-                                              payment?.token,
-                                          customFlow: false,
-                                          style: ThemeMode.light,
-                                          merchantDisplayName: 'E-Imunisasi',
-                                        ),
-                                      );
-                                      await stripe.Stripe.instance
-                                          .presentPaymentSheet();
-                                    }
-                                    context.read<AppointmentBloc>().add(
-                                          LoadAppointmentEvent(appointmentId),
-                                        );
-                                  } catch (e) {
-                                    log('Error launching payment: $e');
-                                    snackbarCustom(
-                                      'Terjadi kesalahan saat melakukan pembayaran',
-                                    ).show(context);
-                                  }
-                                },
-                                child: Text(
-                                  'Bayar',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            Expanded(
-                              child: ButtonCustom(
-                                child: Text(
-                                  'Check Status',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                onPressed: () {
-                                  context.read<AppointmentBloc>().add(
-                                        LoadAppointmentEvent(appointmentId),
-                                      );
-                                },
-                              ),
-                            ),
-                          ],
+                        SizedBox(height: 30),
+                        _PaymentButtonsRow(
+                          appointmentId: appointmentId,
+                          order: order,
                         ),
                       ],
                       SizedBox(height: 15),
                       ButtonCustom(
                         onPressed: () {
-                          context.pushReplacement(
+                          context.go(
                             RootRoutePaths.dashboard.fullPath,
                           );
                         },
@@ -364,6 +303,81 @@ class _VaccinationConfirmationScaffold extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+}
+
+class _PaymentButtonsRow extends StatelessWidget {
+  final String appointmentId;
+  final OrderModel? order;
+
+  const _PaymentButtonsRow({
+    required this.appointmentId,
+    required this.order,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: ButtonCustom(
+            onPressed: () async {
+              final payment = order?.payment;
+              final gateway = payment?.gateway;
+              try {
+                if (gateway == 'midtrans') {
+                  final paymentUrl = payment?.redirectUrl ?? '';
+                  final paymentUri = Uri.parse(paymentUrl);
+                  if (await canLaunchUrl(paymentUri)) {
+                    await launchUrl(paymentUri);
+                  } else {
+                    snackbarCustom(
+                      'Terjadi kesalahan saat melakukan pembayaran',
+                    ).show(context);
+                  }
+                } else if (gateway == 'stripe') {
+                  await stripe.Stripe.instance.initPaymentSheet(
+                    paymentSheetParameters: stripe.SetupPaymentSheetParameters(
+                      paymentIntentClientSecret: payment?.token,
+                      customFlow: false,
+                      style: ThemeMode.light,
+                      merchantDisplayName: 'E-Imunisasi',
+                    ),
+                  );
+                  await stripe.Stripe.instance.presentPaymentSheet();
+                }
+                context.read<AppointmentBloc>().add(
+                      LoadAppointmentEvent(appointmentId),
+                    );
+              } catch (e) {
+                log('Error launching payment: $e');
+                snackbarCustom(
+                  'Terjadi kesalahan saat melakukan pembayaran',
+                ).show(context);
+              }
+            },
+            child: Text(
+              'Bayar',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+        SizedBox(width: 10),
+        Expanded(
+          child: ButtonCustom(
+            child: Text(
+              'Check Status',
+              style: TextStyle(color: Colors.white),
+            ),
+            onPressed: () {
+              context.read<AppointmentBloc>().add(
+                    LoadAppointmentEvent(appointmentId),
+                  );
+            },
+          ),
+        ),
+      ],
     );
   }
 }

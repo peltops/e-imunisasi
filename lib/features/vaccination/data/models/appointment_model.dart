@@ -117,7 +117,7 @@ class AppointmentModel extends Equatable {
       if (parent != null) 'parent_id': parent?.uid,
       if (child != null) 'child_id': child?.id,
       if (healthWorker != null) 'inspector_id': healthWorker?.id,
-      if (date != null) 'date': date?.toIso8601String(),
+      if (date != null) 'date': date?.toIso8601String().split("T").first,
       if (note != null) 'note': note,
       if (purpose != null) 'purpose': purpose,
       if (startTime != null) 'start_time': startTime,
