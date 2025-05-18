@@ -1,0 +1,1 @@
+Icon should be placed here with dimensions 512x512 pixels.

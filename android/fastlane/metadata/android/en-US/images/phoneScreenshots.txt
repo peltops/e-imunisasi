@@ -1,0 +1,4 @@
+Place at least 2 screenshots here with names like:
+phoneScreenshots/1.png
+phoneScreenshots/2.png
+etc.
