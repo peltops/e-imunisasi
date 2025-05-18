@@ -1,0 +1,4 @@
+- Initial F-Droid release
+- Improved app stability
+- Updated dependencies
+- Bug fixes and performance improvements

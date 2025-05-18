@@ -1,0 +1,38 @@
+# Exclude iOS-specific files
+ios/
+*.xcodeproj/
+*.xcworkspace/
+Podfile
+Podfile.lock
+
+# Exclude web-specific files
+web/
+
+# Exclude development files
+.idea/
+.vscode/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub/
+build/
+*.iml
+
+# Exclude documentation and other non-essential files
+doc/
+docs/
+*.md
+!README.md
+!FDROID.md
+!LICENSE
+
+# Exclude test files (optional, but can reduce package size)
+test/
+integration_test/
+
+# Exclude version control files
+.git/
+.gitignore
+.gitlab-ci.yml
+.github/

@@ -1,0 +1,1 @@
+Feature graphic should be placed here with dimensions 1024x500 pixels.

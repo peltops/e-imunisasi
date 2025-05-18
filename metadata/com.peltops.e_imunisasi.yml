@@ -1,0 +1,52 @@
+Categories:
+  - Health & Fitness
+  - Medical
+License: GPL-3.0-or-later
+AuthorName: Peltops
+AuthorEmail: info@peltops.com
+AuthorWebSite: https://peltops.com
+WebSite: https://eimunisasi-app.peltops.com
+SourceCode: https://github.com/peltops/e-imunisasi
+IssueTracker: https://github.com/peltops/e-imunisasi/issues
+Changelog: https://github.com/peltops/e-imunisasi/releases
+
+AutoName: e-imunisasi
+Summary: App for scheduling and tracking child immunization and vaccination
+Description: |-
+  e-imunisasi is a mobile application designed for families and healthcare workers to simplify the immunization and vaccination process for infants and young children.
+
+  Features:
+  - Immunization schedules and history tracking
+  - Appointment booking with clinics
+  - Quick check-in to clinics
+  - Digital immunization record book
+  - Reminders for upcoming vaccinations
+
+  This app helps parents keep track of their children's immunization schedules, ensuring they receive all necessary vaccines at the appropriate times.
+
+RepoType: git
+Repo: https://github.com/peltops/e-imunisasi
+
+Builds:
+  - versionName: 2.1.1
+    versionCode: 10
+    commit: v2.1.1
+    subdir: android
+    sudo:
+      - apt-get update
+      - apt-get install -y openjdk-11-jdk-headless
+    gradle:
+      - yes
+    rm:
+      - ios
+      - web
+    prebuild:
+      - flutter pub get
+    build:
+      - flutter build apk --release
+    output: build/app/outputs/flutter-apk/app-release.apk
+
+AutoUpdateMode: Version
+UpdateCheckMode: Tags
+CurrentVersion: 2.1.1
+CurrentVersionCode: 10

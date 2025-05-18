@@ -1,0 +1,10 @@
+e-imunisasi is a mobile application designed for families and healthcare workers to simplify the immunization and vaccination process for infants and young children.
+
+Features:
+- Immunization schedules and history tracking
+- Appointment booking with clinics
+- Quick check-in to clinics
+- Digital immunization record book
+- Reminders for upcoming vaccinations
+
+This app helps parents keep track of their children's immunization schedules, ensuring they receive all necessary vaccines at the appropriate times.

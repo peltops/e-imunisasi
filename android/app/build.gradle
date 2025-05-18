@@ -47,10 +47,13 @@ android {
 
     signingConfigs {
         release {
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-            storePassword keystoreProperties['storePassword']
+            // F-Droid handles signing, so we make this conditional
+            if (keystoreProperties['keyAlias'] != null) {
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+                storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+                storePassword keystoreProperties['storePassword']
+            }
         }
         debug {
             def debugKeystorePath = "${rootProject.projectDir}/${keystoreProperties['debugStoreFile']}"
@@ -67,7 +70,10 @@ android {
 
     buildTypes {
         release {
-            signingConfig signingConfigs.release
+            // Only use signingConfig if not building for F-Droid
+            if (System.getenv("FDROID_BUILD") != "1" && signingConfigs.release.storeFile != null) {
+                signingConfig signingConfigs.release
+            }
         }
         debug {
             applicationIdSuffix ".debug"
