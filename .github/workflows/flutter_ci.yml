@@ -38,11 +38,11 @@ jobs:
       - name: Check Flutter
         run: flutter doctor -v
 
-      - name: Install packages
-        run: flutter pub get
-
-      - name: Run build-runner
-        run: flutter pub run build_runner build --delete-conflicting-outputs
+      - name: Install Dependencies and environment
+        run: |
+          flutter pub get
+          flutter pub run build_runner build --delete-conflicting-outputs
+          cp .env.dev .env
 
       - name: Run tests
         run: flutter test --coverage
