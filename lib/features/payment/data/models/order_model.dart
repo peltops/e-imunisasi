@@ -67,7 +67,7 @@ class OrderModel extends Equatable {
       if (createdAt != null) "created_at": createdAt?.toIso8601String(),
       if (updatedAt != null) "updated_at": updatedAt?.toIso8601String(),
       if (orderItems != null)
-        "order_items": orderItems?.map((x) => x.toSeribase()),
+        "order_items": orderItems?.map((x) => x.toSeribase()).toList(),
     };
   }
 }
