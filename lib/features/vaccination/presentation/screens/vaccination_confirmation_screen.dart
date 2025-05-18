@@ -15,6 +15,7 @@ import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../../../core/widgets/snackbar_custom.dart';
 import '../../logic/blocs/appointmentBloc/appointment_bloc.dart';
@@ -330,7 +331,30 @@ class _PaymentButtonsRow extends StatelessWidget {
                   final paymentUrl = payment?.redirectUrl ?? '';
                   final paymentUri = Uri.parse(paymentUrl);
                   if (await canLaunchUrl(paymentUri)) {
-                    await launchUrl(paymentUri);
+                    await showDialog(
+                      context: context,
+                      builder: (context) {
+                        return Dialog.fullscreen(
+                          child: WebViewWidget(
+                            controller: WebViewController()
+                              ..setJavaScriptMode(JavaScriptMode.unrestricted)
+                              ..setNavigationDelegate(NavigationDelegate(
+                                onNavigationRequest: (request) {
+                                  if (request.url.startsWith(
+                                      'https://eimunisasi-app.peltops.com/payment/midtrans')) {
+                                    context.pop();
+
+                                    return NavigationDecision.prevent;
+                                  }
+                                  return NavigationDecision.navigate;
+                                },
+                              ))
+                              ..setBackgroundColor(Colors.transparent)
+                              ..loadRequest(paymentUri),
+                          ),
+                        );
+                      },
+                    );
                   } else {
                     snackbarCustom(
                       'Terjadi kesalahan saat melakukan pembayaran',

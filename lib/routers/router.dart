@@ -138,6 +138,9 @@ final router = GoRouter(
         final desc = state.uri.queryParameters['error_description'];
 
         return Scaffold(
+          appBar: AppBar(
+            leading: BackButton(),
+          ),
           body: ErrorContainer(
             title: title,
             message: desc,
@@ -148,9 +151,12 @@ final router = GoRouter(
   ],
   errorBuilder: (context, state) {
     return Scaffold(
+      appBar: AppBar(
+        leading: BackButton(),
+      ),
       body: ErrorContainer(
-        title: 'Error',
-        message: state.error.toString(),
+        title: 'Oops! Something went wrong',
+        message: state.error?.message,
       ),
     );
   },
