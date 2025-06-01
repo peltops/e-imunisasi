@@ -26,6 +26,7 @@ class OrderModel extends Equatable {
         status,
         totalAmount,
         orderItems,
+        payment,
         createdAt,
         updatedAt,
       ];
