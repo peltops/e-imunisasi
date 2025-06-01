@@ -30,7 +30,7 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     compileSdkVersion 34
-    namespace 'com.peltops.e_imunisasi' // Replace with your actual package name
+    namespace 'com.peltops.e_imunisasi'
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
