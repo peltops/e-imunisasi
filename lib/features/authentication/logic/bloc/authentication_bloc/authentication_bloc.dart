@@ -45,7 +45,8 @@ class AuthenticationBloc
     ) {
       final authEvent = event.event;
       if (!kReleaseMode) {
-        debugPrint('accessToken: ${event.session?.accessToken}');
+        final maskedToken = event.session?.accessToken?.substring(0, 6) ?? 'N/A';
+        debugPrint('accessToken: $maskedToken...');
       }
       if (authEvent == AuthChangeEvent.signedIn) {
         add(LoggedIn());
