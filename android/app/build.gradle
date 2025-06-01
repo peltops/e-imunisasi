@@ -39,7 +39,6 @@ android {
     defaultConfig {
         applicationId "com.peltops.e_imunisasi"
         minSdkVersion 23
-        compileSdkVersion 35
         targetSdkVersion 35
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
