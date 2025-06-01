@@ -22,9 +22,11 @@ class CalendarRepository {
           .insert(
             modelWithCreatedDate.toSeribase(),
           )
-          .select('id')
-          .single();
-      return modelWithCreatedDate.copyWith(documentID: result['id']);
+          .select('id');
+      if (result.isEmpty) {
+        throw Exception('Failed to create event');
+      }
+      return modelWithCreatedDate.copyWith(documentID: result.first['id']);
     } catch (e) {
       rethrow;
     }

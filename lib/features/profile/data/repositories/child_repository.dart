@@ -38,9 +38,11 @@ class ChildRepository {
             data.toSeribaseMap(),
           )
           .select('id')
-          .limit(1)
-          .single();
-      return data.copyWith(id: result['id'] ?? '');
+          .limit(1);
+      if (result.isEmpty) {
+        throw Exception('Gagal menambahkan anak');
+      }
+      return data.copyWith(id: result.first['id']);
     } catch (e) {
       rethrow;
     }

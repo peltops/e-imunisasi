@@ -3,8 +3,8 @@ part of 'appointment_bloc.dart';
 class AppointmentState extends Equatable {
   const AppointmentState({
     this.sortCriteria = 'date',
-    this.appointment,
-    this.getAppointment,
+    this.appointmentWithOrder,
+    this.getAppointmentWithOrder,
     this.getAppointments = const [],
     this.statusSubmit = FormzSubmissionStatus.initial,
     this.statusGetAppointments = FormzSubmissionStatus.initial,
@@ -13,8 +13,8 @@ class AppointmentState extends Equatable {
   });
 
   final String sortCriteria;
-  final AppointmentModel? appointment;
-  final AppointmentModel? getAppointment;
+  final AppointmentOrderEntity? appointmentWithOrder;
+  final AppointmentOrderEntity? getAppointmentWithOrder;
   final List<AppointmentModel> getAppointments;
   final FormzSubmissionStatus statusSubmit;
   final FormzSubmissionStatus statusGetAppointments;
@@ -23,8 +23,8 @@ class AppointmentState extends Equatable {
 
   AppointmentState copyWith({
     String? sortCriteria,
-    AppointmentModel? appointment,
-    AppointmentModel? getAppointment,
+    AppointmentOrderEntity? appointmentWithOrder,
+    AppointmentOrderEntity? getAppointmentWithOrder,
     List<AppointmentModel>? getAppointments,
     FormzSubmissionStatus? statusSubmit,
     FormzSubmissionStatus? statusGetAppointments,
@@ -33,26 +33,27 @@ class AppointmentState extends Equatable {
   }) {
     return AppointmentState(
       sortCriteria: sortCriteria ?? this.sortCriteria,
-      appointment: appointment ?? this.appointment,
-      getAppointment: getAppointment ?? this.getAppointment,
+      appointmentWithOrder: appointmentWithOrder ?? this.appointmentWithOrder,
+      getAppointmentWithOrder:
+          getAppointmentWithOrder ?? this.getAppointmentWithOrder,
       getAppointments: getAppointments ?? this.getAppointments,
       statusSubmit: statusSubmit ?? this.statusSubmit,
       statusGetAppointment: statusGetAppointment ?? this.statusGetAppointment,
-      statusGetAppointments: statusGetAppointments ?? this.statusGetAppointments,
+      statusGetAppointments:
+          statusGetAppointments ?? this.statusGetAppointments,
       errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 
   @override
   List<Object?> get props => [
-    sortCriteria,
-    appointment,
-    getAppointment,
-    getAppointments,
-    statusSubmit,
-    statusGetAppointment,
-    statusGetAppointments,
-    errorMessage,
-  ];
+        sortCriteria,
+        appointmentWithOrder,
+        getAppointmentWithOrder,
+        getAppointments,
+        statusSubmit,
+        statusGetAppointment,
+        statusGetAppointments,
+        errorMessage,
+      ];
 }
-

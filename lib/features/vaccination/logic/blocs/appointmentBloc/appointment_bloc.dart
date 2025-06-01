@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:eimunisasi/features/vaccination/data/models/appointment_model.dart';
+import 'package:eimunisasi/features/vaccination/data/models/appointment_payment_entity.dart';
 import 'package:eimunisasi/features/vaccination/data/repositories/appointment_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
@@ -57,7 +58,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
       final result = await appointmentRepository.setAppointment(appointment);
       emit(state.copyWith(
         statusSubmit: FormzSubmissionStatus.success,
-        appointment: result,
+        appointmentWithOrder: result,
       ));
     } catch (e) {
       emit(
@@ -79,7 +80,9 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
       final result = await appointmentRepository.updateAppointment(appointment);
       emit(state.copyWith(
         statusSubmit: FormzSubmissionStatus.success,
-        appointment: result,
+        appointmentWithOrder: AppointmentOrderEntity(
+          appointment: result,
+        ),
       ));
     } catch (e) {
       emit(
@@ -104,7 +107,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
       );
       emit(state.copyWith(
         statusGetAppointment: FormzSubmissionStatus.success,
-        getAppointment: appointment,
+        getAppointmentWithOrder: appointment,
       ));
     } catch (e) {
       emit(

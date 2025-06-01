@@ -95,7 +95,7 @@ void main() {
 
       final map = appointment.toSeribase();
 
-      expect(map['date'], '2023-10-10T00:00:00.000Z');
+      expect(map['date'], '2023-10-10');
       expect(map['note'], 'First appointment');
       expect(map['purpose'], 'Vaccination');
     });

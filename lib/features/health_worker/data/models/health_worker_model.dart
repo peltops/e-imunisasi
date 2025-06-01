@@ -16,6 +16,7 @@ class HealthWorkerModel extends Equatable {
   final String? profession;
   final DateTime? date_of_birth;
   final String? place_of_date;
+  final String? bookingFee;
 
   const HealthWorkerModel({
     this.id,
@@ -31,6 +32,7 @@ class HealthWorkerModel extends Equatable {
     this.profession,
     this.date_of_birth,
     this.place_of_date,
+    this.bookingFee,
   });
 
   factory HealthWorkerModel.fromSeribase(Map<String, dynamic> data) {
@@ -76,6 +78,7 @@ class HealthWorkerModel extends Equatable {
         }
       }(),
       place_of_date: data['place_of_birth'],
+      bookingFee: data['booking_fee'].toString(),
     );
   }
 
@@ -87,7 +90,8 @@ class HealthWorkerModel extends Equatable {
       if (schedules != null)
         "schedule": schedules!.map((e) => e.toSeribase()).toList(),
       if (practiceSchedules != null)
-        "practice_schedules": practiceSchedules!.map((e) => e.toSeribase()).toList(),
+        "practice_schedules":
+            practiceSchedules!.map((e) => e.toSeribase()).toList(),
       if (kartuKeluarga != null) "no_kartu_keluarga": kartuKeluarga,
       if (fullName != null) "full_name": fullName,
       if (nik != null) "no_induk_kependudukan": nik,
@@ -115,6 +119,7 @@ class HealthWorkerModel extends Equatable {
         profession,
         date_of_birth,
         place_of_date,
+        bookingFee,
       ];
 }
 
@@ -129,14 +134,14 @@ class Schedule extends Equatable {
     this.endTime,
   });
 
-  String get time => (){
-    if(startTime != null && endTime != null){
-      final startTime = this.startTime?.split(":").getRange(0, 2).join(":");
-      final endTime = this.endTime?.split(":").getRange(0, 2).join(":");
-      return "$startTime - $endTime";
-    }
-    return emptyString;
-  }();
+  String get time => () {
+        if (startTime != null && endTime != null) {
+          final startTime = this.startTime?.split(":").getRange(0, 2).join(":");
+          final endTime = this.endTime?.split(":").getRange(0, 2).join(":");
+          return "$startTime - $endTime";
+        }
+        return emptyString;
+      }();
 
   factory Schedule.fromSeribase(Map<String, dynamic> data) {
     return Schedule(

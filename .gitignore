@@ -44,6 +44,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+/android/app/.cxx
 
 # Keys jks
 /keys
@@ -61,3 +62,4 @@ coverage/
 
 # FVM Version Cache
 .fvm/
+*.env

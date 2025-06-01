@@ -89,7 +89,7 @@ void main() {
       );
       final result = await childRepository.setChild(anak);
 
-      expect(result.id, '');
+      expect(result.id, null);
       expect(result.parentId, mockUser.id);
     });
 

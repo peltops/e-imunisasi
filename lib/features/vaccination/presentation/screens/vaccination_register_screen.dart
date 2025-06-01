@@ -105,7 +105,7 @@ class _VaccinationRegisterScaffoldState
         if (state.statusSubmit == FormzSubmissionStatus.success) {
           context.go(
             VaccinationRoutePaths.vaccinationConfirmation.fullPath,
-            extra: state.appointment?.id,
+            extra: state.appointmentWithOrder?.appointment?.id,
           );
         } else if (state.statusSubmit == FormzSubmissionStatus.failure) {
           snackbarCustom(
@@ -191,7 +191,8 @@ class _VaccinationRegisterScaffoldState
                               final date = await Picker.pickDate(
                                 context,
                                 currentTime: () {
-                                  final days = widget.healthWorker.practiceSchedules
+                                  final days = widget
+                                      .healthWorker.practiceSchedules
                                       ?.map((e) => e.day?.id)
                                       .whereType<int>()
                                       .toList();
@@ -200,16 +201,19 @@ class _VaccinationRegisterScaffoldState
                                     return null;
                                   }
 
-                                  final tomorrowDate = DateTime.now().add(Duration(days: 1));
+                                  final tomorrowDate =
+                                      DateTime.now().add(Duration(days: 1));
                                   final tomorrow = tomorrowDate.weekday;
 
                                   final nextAvailableDay = days.firstWhere(
-                                        (element) => element >= tomorrow,
+                                    (element) => element >= tomorrow,
                                     orElse: () => days.first,
                                   );
 
-                                  final difference = (nextAvailableDay - tomorrow) % 7;
-                                  return tomorrowDate.add(Duration(days: difference));
+                                  final difference =
+                                      (nextAvailableDay - tomorrow) % 7;
+                                  return tomorrowDate
+                                      .add(Duration(days: difference));
                                 }(),
                                 maxTime: kLastDay,
                                 minTime: kFirstDay,
@@ -293,15 +297,30 @@ class _VaccinationRegisterScaffoldState
                             ),
                           ),
                           SizedBox(height: 30),
+                          ListTile(
+                            title: Text(
+                              'Booking Fee: ',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
+                            ),
+                            subtitle: Text(
+                              'Rp. ${widget.healthWorker.bookingFee ?? '-'}',
+                              style: TextStyle(
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
                           ButtonCustom(
+                            onPressed: onSubmit,
                             loading: state.statusSubmit ==
                                 FormzSubmissionStatus.inProgress,
-                            onPressed: onSubmit,
                             child: Text(
                               'Buat Janji',
                               style: TextStyle(color: Colors.white),
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),

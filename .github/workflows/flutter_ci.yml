@@ -15,10 +15,10 @@ jobs:
       matrix:
         target: ["apk --debug", "appbundle --debug"]
     steps:
-      - name: Set up JDK 11
+      - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          java-version: 11
+          java-version: 17
           distribution: 'temurin'
 
       - name: Checkout code
@@ -38,11 +38,11 @@ jobs:
       - name: Check Flutter
         run: flutter doctor -v
 
-      - name: Install packages
-        run: flutter pub get
-
-      - name: Run build-runner
-        run: flutter pub run build_runner build --delete-conflicting-outputs
+      - name: Install Dependencies and environment
+        run: |
+          flutter pub get
+          flutter pub run build_runner build --delete-conflicting-outputs
+          cp .env.dev .env
 
       - name: Run tests
         run: flutter test --coverage
