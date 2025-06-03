@@ -3,9 +3,11 @@
 **e-imunisasi** is a mobile application designed to help parents manage and monitor their children's immunization schedules and records with ease.
 
 ## Download
+Get the latest APK 
 
-Get the latest APK:
-[Download app-debug.apk](https://github.com/peltops/e-imunisasi/releases/download/v1.1.7/app-debug.apk)
+[Download APK with Midtrans Payment](https://github.com/peltops/e-imunisasi/releases/download/v1.2.0/app-midtrans-v1.2.0-debug.apk)
+
+[Download APK with Stripe Payment](https://github.com/peltops/e-imunisasi/releases/download/v1.2.0/app-stripe-v1.2.0-debug.apk)
 
 ## Features
 
