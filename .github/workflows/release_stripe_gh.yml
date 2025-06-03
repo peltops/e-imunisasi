@@ -1,4 +1,4 @@
-name: Release to Github - Midtrans version
+name: Release to Github - Stripe version
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Build apk with Midtrans payment
+    name: Build apk with Stripe payment
     runs-on: ubuntu-latest
     steps:
       - name: Set up JDK 17
@@ -38,7 +38,7 @@ jobs:
         run: |
           flutter pub get
           flutter pub run build_runner build --delete-conflicting-outputs
-          echo "$ENV_MIDTRANS_DEV" > .env
+          echo "$ENV_STRIPE_DEV" > .env
           
       - name: Run tests
         run: flutter test --coverage
@@ -68,13 +68,13 @@ jobs:
 
       - name: Rename apk
         run: |
-          mv build/app/outputs/flutter-apk/app-debug.apk build/app/outputs/flutter-apk/app-midtrans-${{ github.ref_name }}-debug.apk
+          mv build/app/outputs/flutter-apk/app-debug.apk build/app/outputs/flutter-apk/app-stripe-${{ github.ref_name }}-debug.apk
 
       - name: Upload apk
         uses: actions/upload-artifact@v4
         with:
           name: apk
-          path: build/app/outputs/flutter-apk/app-midtrans-${{ github.ref_name }}-debug.apk   
+          path: build/app/outputs/flutter-apk/app-stripe-${{ github.ref_name }}-debug.apk   
           retention-days: 30 
 
   release:
@@ -93,4 +93,4 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            app-midtrans-${{ github.ref_name }}-debug.apk        
+            app-stripe-${{ github.ref_name }}-debug.apk        
