@@ -87,13 +87,13 @@ jobs:
         
       - name: Rename apk
         run: |
-          mv build/app/outputs/flutter-apk/app-debug.apk build/app/outputs/flutter-apk/app-${{ github.event.inputs.payment }}-${{ github.ref_name }}-debug.apk
+          mv build/app/outputs/flutter-apk/app-debug.apk build/app/outputs/flutter-apk/app-${{ github.event.inputs.payment }}-${{ github.event.inputs.version }}-debug.apk
 
       - name: Upload apk
         uses: actions/upload-artifact@v4
         with:
           name: apk
-          path: build/app/outputs/flutter-apk/app-${{ github.event.inputs.payment }}-${{ github.ref_name }}-debug.apk    
+          path: build/app/outputs/flutter-apk/app-${{ github.event.inputs.payment }}-${{ github.event.inputs.version }}-debug.apk    
           retention-days: 30 
 
   release:
@@ -113,4 +113,4 @@ jobs:
         with:
           tag_name: ${{ github.event.inputs.version }}
           files: |
-            app-${{ github.event.inputs.payment }}-${{ github.ref_name }}-debug.apk 
+            app-${{ github.event.inputs.payment }}-${{ github.event.inputs.version }}-debug.apk 
