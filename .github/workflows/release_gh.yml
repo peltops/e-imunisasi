@@ -1,14 +1,23 @@
-name: Release to Github
+name: Manual Release to Github
 
 on:
-  push:
-    # Sequence of patterns matched against refs/tags
-    tags:
-    - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
-
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., v1.0.0)'
+        required: true
+        type: string
+      payment:
+        description: 'Payment Environment'
+        required: true
+        type: choice
+        options:
+          - midtrans
+          - stripe
+          - paypal
 jobs:
   build:
-    name: Build apk
+    name: Build apk for ${{ github.event.inputs.payment }}
     runs-on: ubuntu-latest
     steps:
       - name: Set up JDK 17
@@ -38,7 +47,17 @@ jobs:
         run: |
           flutter pub get
           flutter pub run build_runner build --delete-conflicting-outputs
-          cp .env.dev .env
+          SECRET_NAME="ENV_$(echo "${{ github.event.inputs.payment }}" | tr '[:lower:]' '[:upper:]')_DEV"
+          SECRET_VALUE="${{ secrets.ENV_MIDTRANS_DEV }}"
+          if [ "$SECRET_NAME" = "ENV_MIDTRANS_DEV" ]; then
+            SECRET_VALUE="${{ secrets.ENV_MIDTRANS_DEV }}"
+          elif [ "$SECRET_NAME" = "ENV_STRIPE_DEV" ]; then
+            SECRET_VALUE="${{ secrets.ENV_STRIPE_DEV }}"
+          elif [ "$SECRET_NAME" = "ENV_PAYPAL_DEV" ]; then
+            SECRET_VALUE="${{ secrets.ENV_PAYPAL_DEV }}"
+          fi
+          echo "$SECRET_VALUE" > .env
+          cat .env # Debug: show .env content
           
       - name: Run tests
         run: flutter test --coverage
@@ -65,12 +84,16 @@ jobs:
 
       - name: Build
         run: flutter build apk --debug
-
+        
+      - name: Rename apk
+        run: |
+          mv build/app/outputs/flutter-apk/app-debug.apk build/app/outputs/flutter-apk/app-${{ github.event.inputs.payment }}-${{ github.ref_name }}-debug.apk
+          
       - name: Upload apk
         uses: actions/upload-artifact@v4
         with:
           name: apk
-          path: build/app/outputs/flutter-apk/app-debug.apk     
+          path: build/app/outputs/flutter-apk/app-${{ github.event.inputs.payment }}-${{ github.ref_name }}-debug.apk    
           retention-days: 30 
 
   release:
@@ -89,4 +112,4 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            app-debug.apk         
+            app-${{ github.event.inputs.payment }}-${{ github.ref_name }}-debug.apk 
